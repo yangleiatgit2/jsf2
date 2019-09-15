@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<faces-config
+
+    xmlns="http://java.sun.com/xml/ns/javaee"
+
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_1_2.xsd"
+
+    version="1.2">
+
+<!-- 配置托管Bean -->
+
+<managed-bean>
+
+<managed-bean-name>dw</managed-bean-name>
+
+<managed-bean-class>com.dw.action.MyJsfAction</managed-bean-class>
+
+<managed-bean-scope>session</managed-bean-scope>
+
+</managed-bean>
+
+<!-- 定义导航规则与页面 -->
+
+<navigation-rule>
+
+<from-view-id>/userChoose.jsp</from-view-id>
+
+<navigation-case>
+
+<from-outcome>JAVA</from-outcome>
+
+<to-view-id>/newJava.jsp</to-view-id>
+
+</navigation-case>
+
+<navigation-case>
+
+<from-outcome>C</from-outcome>
+
+<to-view-id>/newC.jsp</to-view-id>
+
+</navigation-case>
+
+</navigation-rule>
+
+</faces-config>

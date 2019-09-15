@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+
+xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+
+xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+
+id="WebApp_ID" version="2.5">
+
+<display-name>FirstJSFTestProject</display-name>
+
+<listener>
+
+<listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
+
+</listener>
+<listener>
+      <listener-class>com.sun.faces.config.ConfigureListener</listener-class>
+  </listener>
+
+<!-- 配置JSF的配置文件 -->
+
+<context-param>
+
+<param-name>javax.faces.CONFIG_FILES</param-name>
+
+<param-value>/WEB-INF/faces-config.xml</param-value>
+
+</context-param>
+
+<!-- 处理请求的servlet -->
+
+<servlet>
+
+<servlet-name>Faces Servlet</servlet-name>
+
+<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+
+<load-on-startup>0</load-on-startup>
+
+</servlet>
+
+<!-- 配置所有.jsf结尾的请求都由JSF处理 -->
+
+<servlet-mapping>
+
+<servlet-name>Faces Servlet</servlet-name>
+
+<url-pattern>*.jsf</url-pattern>
+
+</servlet-mapping>
+
+</web-app>
