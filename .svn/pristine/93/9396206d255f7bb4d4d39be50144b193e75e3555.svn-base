@@ -1,0 +1,174 @@
+package cn.uce.suc.common.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.OrgExtend;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.OrgExtendVo;
+import cn.uce.suc.common.cache.IADcSubOrgCacheProcessor;
+import cn.uce.suc.common.cache.OmgCmsOrgCache;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.dao.IOrgExtendDao;
+import cn.uce.utils.StringUtil;
+
+/**
+ * @Description: 组织机构扩展信息Service类
+ * @author liwei
+ * @date 2017年10月22日 下午10:06:24
+ */
+@Service("orgExtendService")
+public class OrgExtendService {
+	
+	/**
+	 * 组织机构缓存
+	 */
+	@Resource(name = "omgCmsOrgCache")
+	OmgCmsOrgCache omgCmsOrgCache;
+	
+	/**
+	 * 注入组织机构扩展信息Dao
+	 */
+	@Resource
+	private IOrgExtendDao orgExtendDao;
+	
+	/**
+	 * @Description: 新增组织机构扩展信息
+	 * @param orgExtend 组织机构扩展信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public int addOrgExtend(OrgExtend orgExtend) {
+		int rec = orgExtendDao.insert(orgExtend);
+		//新增成功,刷新集货点缓存
+		if (rec > 0) {
+			refreshSubOrgExtendCache(orgExtend);
+		}
+		return rec;
+	}
+	
+	/**
+	 * @Description: 修改组织机构扩展信息
+	 * @param orgExtend 组织机构扩展信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public int updateById(OrgExtend orgExtend) {
+		OrgExtend dbOrgExtend = findById(orgExtend.getId());
+		int rec =orgExtendDao.updateById(orgExtend);
+		if (rec > 0) {
+			//刷新集货点缓存
+			refreshSubOrgExtendCache(dbOrgExtend);
+		}
+		return rec;
+	}
+	
+	/**
+	 * @Description: 删除组织机构扩展信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public int deleteById(Long id) {
+		OrgExtend oldOrgExtend = findById(id);
+		int rec = orgExtendDao.deleteById(id);
+		if (rec > 0) {
+			//刷新集货点缓存
+			refreshSubOrgExtendCache(oldOrgExtend);
+		}
+		return rec;
+	}
+	
+	/**
+	 * @Description: 根据ID查询组织机构扩展信息
+	 * @param id 主键
+	 * @return 组织机构扩展信息
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public OrgExtend findById(Long id) {
+		return orgExtendDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询组织机构扩展信息
+	 * @param orgExtendVo 组织机构扩展信息
+	 * @param page 分页参数
+	 * @return 组织机构扩展信息
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public Pagination<OrgExtend> findByPagination(OrgExtendVo orgExtendVo, Page page) {
+		Pagination<OrgExtend> paginationOrgExtend = orgExtendDao.findByPagination(orgExtendVo, page);
+		return paginationOrgExtend;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询组织机构扩展信息
+	 * @param orgExtendVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月27日 下午4:58:40
+	 */
+	public List<OrgExtendVo> findByCombine(OrgExtendVo orgExtendVo){
+		return orgExtendDao.findByCombine(orgExtendVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询集货点 
+	 * @param orgExtendVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午3:58:15
+	 */
+	public List<OrgExtendVo> findByCondition(OrgExtendVo orgExtendVo){
+		return orgExtendDao.findByCondition(orgExtendVo);
+	}
+	
+	/**
+	 * 
+	 * @Description:获取所属机构编号 
+	 * @param id
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月15日 下午8:49:57
+	 */
+	private String getParentOrgCode(String baseOrgCode){
+		OrgExtendVo search = new OrgExtendVo();
+		search.setBaseOrgCode(baseOrgCode);
+		List<OrgExtendVo> orgExtendVos = findByCombine(search);
+		//获取上级机构，根据交货关系
+		if (orgExtendVos != null && !orgExtendVos.isEmpty()) {
+			return orgExtendVos.get(0).getParentOrgCode();
+		}
+		return "";
+	}
+	
+	/**
+	 * 
+	 * @Description: 刷新集货点缓存 
+	 * @param orgExtend
+	 * @author laizhendong
+	 * @date 2017年12月7日 上午11:31:44
+	 */
+	private void refreshSubOrgExtendCache(OrgExtend orgExtend){
+		String type = orgExtend.getSiteType();
+		//集货点，直接根据上级刷新缓存
+		if (BkgConstants.SITE_TYPE_SUB.equals(type)) {
+			IADcSubOrgCacheProcessor.refresh(orgExtend.getOperateCenter());
+		}else {
+		//网点或分拨，根据网点的交货关系去刷新上级缓存
+			IADcSubOrgCacheProcessor.refresh(getParentOrgCode(orgExtend.getBaseOrgCode()));
+		}
+	}
+}

@@ -1,0 +1,29 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.LineGroupRel;
+import cn.uce.suc.bkg.vo.operation.LineGroupRelVo;
+
+/**
+ * @Description: 班次订单需求等关系新DAO接口类
+ * @author liwei
+ * @date 2017年11月06日 下午03:52:11
+ */
+@Repository("lineGroupRelDao")
+public interface ILineGroupRelDao extends IBaseDao<LineGroupRel, Long> {
+	
+	/**
+	 * @Description: 分页查询班次订单需求等关系新
+	 * @param lineGroupRelVo 班次订单需求等关系新
+	 * @param page 分页参数
+	 * @return 班次订单需求等关系新
+	 * @author liwei
+	 * @date 2017年11月06日 下午03:52:11
+	 */
+	public Pagination<LineGroupRel> findByPagination(LineGroupRelVo lineGroupRelVo, Page page);
+	
+}

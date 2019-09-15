@@ -1,0 +1,273 @@
+package cn.uce.suc.bkg.vo.datastatis;
+
+import java.util.Date;
+
+import cn.uce.base.vo.BaseVo;
+import cn.uce.core.excel.annotation.Excel;
+
+/**
+ * 
+ * @Description:  司机服务评价Vo类
+ * @author xiesonglin
+ * @date 2017年12月1日 上午11:33:13
+ */
+public class DriverEvaluateReportVo extends BaseVo {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 发车计划id
+	 */
+	private Long id;
+	/**
+	 * 发车计划编号
+	 */
+	@Excel(name = "发车计划编号")
+	private String drivingPlanCode;
+	/**
+	 * 发车计划开始时间
+	 */
+
+	@Excel(name = "发车计划开始时间", format = "yyyy-MM-dd HH:mm:ss")
+	private String departTime;
+
+	/**
+	 * 发出计划结束时间
+	 */
+	@Excel(name = "发车计划结束时间", format = "yyyy-MM-dd HH:mm:ss")
+	private String arrivalTime;
+	
+	/**
+	 * 司机手机号
+	 */
+	private String driverPhone;
+	
+	/**
+	 * 司机姓名
+	 */
+	@Excel(name = "司机姓名")
+	private String driverName;
+	/**
+	 * 运力类型
+	 */
+	private String driverType;
+
+	@Excel(name = "运力类型")
+	private String driverTypeName;
+
+	/**
+	 * 司机状态
+	 */
+	private Integer driverStatus;
+
+	@Excel(name = "司机状态")
+	private String driverStatusName;
+	/**
+	 * 好评率
+	 */
+	@Excel(name = "好评率", suffix = "%")
+	private Double praiseRate;
+	/**
+	 * 评价量
+	 */
+	@Excel(name = "评价量")
+	private Integer appraised;
+	/**
+	 * 未评价量
+	 */
+	@Excel(name = "未评价量")
+	private Integer notAppraised;
+
+	/**
+	 * 查询条件好评率底限
+	 */
+	private String praiseRateBegin;
+
+	/**
+	 * 查询条件好评率上限
+	 */
+	private String praiseRateEnd;
+
+	/**
+	 * 获得 查询条件好评率底线
+	 */
+	public String getPraiseRateBegin() {
+		return praiseRateBegin;
+	}
+	/**
+	 * 设置 查询条件好评率底线
+	 */
+	public void setPraiseRateBegin(String praiseRateBegin) {
+		this.praiseRateBegin = praiseRateBegin;
+	}
+	/**
+	 * 获得 查询条件好评率上限
+	 */
+	public String getPraiseRateEnd() {
+		return praiseRateEnd;
+	}
+	/**
+	 * 设置 查询条件好评率上限
+	 */
+	public void setPraiseRateEnd(String praiseRateEnd) {
+		this.praiseRateEnd = praiseRateEnd;
+	}
+	/**
+	 * 获得 发车计划编号
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	/**
+	 * 设置 发车计划编号
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+	/**
+	 * 获得 离开时间
+	 */
+	public String getDepartTime() {
+		return departTime;
+	}
+	/**
+	 * 设置 离开时间
+	 */
+	public void setDepartTime(String departTime) {
+		this.departTime = departTime;
+	}
+	/**
+	 * 获得 到达时间
+	 */
+	public String getArrivalTime() {
+		return arrivalTime;
+	}
+	/**
+	 * 设置 到达时间
+	 */
+	public void setArrivalTime(String arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+	/**
+	 * 获得 司机名称
+	 */
+	public String getDriverName() {
+		return driverName;
+	}
+	/**
+	 * 设置 司机名称
+	 */
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+	/**
+	 * 获得 运力类型编号
+	 */
+	public String getDriverType() {
+		return driverType;
+	}
+	/**
+	 * 设置 运力类型编号
+	 */
+	public void setDriverType(String driverType) {
+		this.driverType = driverType;
+	}
+	/**
+	 * 获得 司机状态编号
+	 */
+	public Integer getDriverStatus() {
+		return driverStatus;
+	}
+	/**
+	 * 设置 司机状态编号 
+	 */
+	public void setDriverStatus(Integer driverStatus) {
+		this.driverStatus = driverStatus;
+	}
+	/**
+	 * 获得 好评率
+	 */
+	public Double getPraiseRate() {
+		return praiseRate;
+	}
+	/**
+	 * 设置 好评率
+	 */
+	public void setPraiseRate(Double praiseRate) {
+		this.praiseRate = praiseRate;
+	}
+	/**
+	 * 获得 评价量
+	 */
+	public Integer getAppraised() {
+		return appraised;
+	}
+	/**
+	 * 设置 评价量
+	 */
+	public void setAppraised(Integer appraised) {
+		this.appraised = appraised;
+	}
+	/**
+	 * 获得 未评价量
+	 */
+	public Integer getNotAppraised() {
+		return notAppraised;
+	}
+	/**
+	 * 设置 未评价量
+	 */
+	public void setNotAppraised(Integer notAppraised) {
+		this.notAppraised = notAppraised;
+	}
+	/**
+	 * 获得 发车计划主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	/**
+	 * 设置 发车计划主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+	/**
+	 * 获得 运力类型名称
+	 */
+	public String getDriverTypeName() {
+		return driverTypeName;
+	}
+	/**
+	 * 设置 运力类型名称 
+	 */
+	public void setDriverTypeName(String driverTypeName) {
+		this.driverTypeName = driverTypeName;
+	}
+	/**
+	 * 获得 司机状态名称
+	 */
+	public String getDriverStatusName() {
+		return driverStatusName;
+	}
+	/**
+	 * 设置 司机状态名称
+	 */
+	public void setDriverStatusName(String driverStatusName) {
+		this.driverStatusName = driverStatusName;
+	}
+	/**
+	 * 获得 司机手机号
+	 */
+	public String getDriverPhone() {
+		return driverPhone;
+	}
+	/**
+	 * 设置 司机手机号
+	 */
+	public void setDriverPhone(String driverPhone) {
+		this.driverPhone = driverPhone;
+	}
+
+}

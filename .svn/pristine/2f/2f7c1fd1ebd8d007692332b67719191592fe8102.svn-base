@@ -1,0 +1,307 @@
+package cn.uce.suc.app.service;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import cn.uce.suc.app.dao.ICaptchaDao;
+import cn.uce.suc.app.dao.IappCaptchaDao;
+import cn.uce.suc.app.entity.Captcha;
+import cn.uce.suc.app.vo.CaptchaVo;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.dao.IMobileuserDao;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.service.NoticePushService;
+import cn.uce.suc.common.util.SucAppConstants;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.utils.StringUtil;
+
+/**
+ * 
+ * @Description: 注册服务
+ * @author liwei
+ * @date 2017年11月21日 下午5:53:05
+ */
+@Service("appRegisterService")
+public class AppRegisterService {
+	Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	/**
+	 * 用户
+	 */
+	@Resource
+	private IMobileuserDao mobileuserDao;
+	/**
+	 * 验证码
+	 */
+	@Resource
+	private IappCaptchaDao appCaptchaDao;
+	/**
+	 * 
+	 */
+	@Resource
+	private ICaptchaDao captchaDao;
+
+	@Resource
+	private CaptchaService captchaService;
+
+	/**
+	 * 短信推送服务
+	 */
+	@Resource
+	private NoticePushService noticePushService;
+	@Resource
+	private MobileuserService mobileuserService;
+
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+
+	/**
+	 * 
+	 * @Description: 获取验证码
+	 * @param telephone
+	 * @param userType
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月11日 下午1:59:04
+	 */
+	public Map<String, Object> getCaptcha(String telephone, String userType) {
+
+		// 2.查询该电话号码是否已经注册过。
+		// 2.1 如果已经注册过，则返回失败信息，告之前端跳转到登陆界面
+
+		boolean isDot = (null != userType && userType.equals("dot"));
+		// boolean isDpt = (null != userType && userType.equals("dpt"));
+
+		boolean isExistFlag = checkUser(telephone, userType, isDot);
+
+		logger.info("用户[" + telephone + "]是否已经注册过:" + isExistFlag);
+		if (isExistFlag) {
+			return noticePushService
+					.initResultEntity(SucAppConstants.Code_PHONE_EXIST.value(), "该手机号已经注册过，请直接登录", null);
+		}
+
+		// 2. 生成验证码
+		// 初始化验证码实体类
+		Captcha captcha = captchaService.initCaptchaEntity(telephone, userType);
+		//String captchastr = captcha.getContent();
+
+		// 3. 向短信平台发送请求，发送验证码给用户手机
+		String requeParams = noticePushService.initParams(SucConstants.CAPTCH_REGIST_ACCOUNT, captcha, telephone,
+				userType);
+
+		// String url = "http://113.106.93.46/smsc/smsp/sendMessage.action";
+		/*
+		 * String smsurl = getsmsurl(); if(StringUtil.isBlank(smsurl)){ return
+		 * initResultEntity(SucAppConstants.INTERNAL_SERVER_ERROR.value(),
+		 * "系统异常", null); }
+		 */
+		Map<String, Object> resultEntity = noticePushService.sendMessageToPhone(requeParams);
+		String sendFlag = (String) resultEntity.get("resultFlag");
+
+		if (SucAppConstants.OK.value() == sendFlag) {
+			// 发送成功
+			captchaDao.insert(captcha);
+		}
+
+		return resultEntity;
+
+	}
+
+	/**
+	 * @Description: 注册
+	 * @param phoneNumber
+	 * @param userType
+	 * @param passWord
+	 * @param captcha
+	 * @return
+	 * @author renxu
+	 * @date 2017年10月15日 下午5:25:33
+	 */
+	public Map<String, Object> register(String phoneNumber, String userType, String passWord, String captcha) {
+
+		// 2. 校验验证码
+		// 2.1 初始化验证码实体类
+		CaptchaVo captchaVo = new CaptchaVo();
+		captchaVo.setMobilePhone(phoneNumber);
+		captchaVo.setContent(captcha);
+
+		captchaVo.setUserType(userType);
+
+		// 2.2 根据手机号，验证码查询
+		Captcha captcha1 = captchaService.findByCondition(captchaVo);
+		// 没查到数据，则直接返回失败
+		if (null == captcha1) {
+			return noticePushService.initResultEntity(SucAppConstants.Code_CAPTCHA_ERROR.value(), "验证码不正确或者已经失效", null);
+		}
+
+		int count = captcha1.getCount();
+		if (count > 10) {
+			return noticePushService.initResultEntity(SucAppConstants.CODE_CAPTCHA_OUTNUMBER.value(),
+					"该验证码使用次数超过10次,请重新生成验证码", null);
+		}
+		MobileuserVo mobileuserVo = new MobileuserVo();
+		mobileuserVo.setMobilephone(phoneNumber);
+		if (StringUtil.isNotBlank(userType)) {
+			if (userType.equals(SucConstants.CAPTCH_PLATFROM_DOT)) {
+				mobileuserVo.setDotType(true);
+				mobileuserVo.setDptType(false);
+			} else if (userType.equals(SucConstants.CAPTCH_PLATFORM_DPT)) {
+				mobileuserVo.setDptType(true);
+				mobileuserVo.setDotType(false);
+			}
+		}
+		Mobileuser user = null;
+		// 3. 开始注册
+		List<MobileuserVo> mobileuserVos = mobileuserDao.findByCondition(mobileuserVo);
+		if (null == mobileuserVos || mobileuserVos.size() == 0) {
+			user = null;
+		} else {
+			MobileuserVo mobileuserVo2 = mobileuserVos.get(0);
+			if (null == mobileuserVo2) {
+				user = null;
+			} else {
+				user = new Mobileuser();
+			}
+		}
+
+		captcha1.setCount(count + 1);
+		if (null == user) {
+			user = initMobileuser(phoneNumber, userType, passWord);
+
+			if (mobileuserService.addMobileuser(user) > 0) {
+				captcha1.setDeleteFlag(false);
+				captchaService.updateById(captcha1);
+				return noticePushService.initResultEntity(SucAppConstants.OK.value(), "注册成功", null);
+			}
+		} else {
+			// 3.1該手機注冊過
+			// 是否注冊過dot
+			if (("dot").equalsIgnoreCase(userType)) {
+				// 1.1 本次注冊也是注冊dot
+				if (null != user.getDotType() && user.getDotType()) {
+					return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "该手机已经注册过",
+							null);
+				}
+
+				// 1.2 沒有注冊過dot,但是本次注冊不是注冊dot
+				user.setDotType(true);
+
+			} else if (null != user.getDotType()) {
+				// 本次注冊是注冊dpt
+				// 是否注冊過 dpt
+				if (user.getDotType()) {
+					// 注冊過
+					return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "该手机已经注册过",
+							null);
+				}
+
+				// 沒有注冊過
+				user.setDptType(true);
+
+			}
+
+			user.setUpdateTime(new Date());
+			// 注册用户认证标示
+			user.setCertifiFlag(false);
+			// 更新數據，並返回更新結果
+			if (mobileuserDao.updateById(user) > 0) {
+				// 成功
+				// 设置验证码已经使用过，置为失效
+				captcha1.setDeleteFlag(true);
+				captchaService.updateById(captcha1);
+				return noticePushService.initResultEntity(SucAppConstants.OK.value(), "注册成功", null);
+			} else {
+				// 失敗
+				return noticePushService.initResultEntity(SucAppConstants.INTERNAL_SERVER_ERROR.value(), "服务器异常", null);
+			}
+
+		}
+
+		// 異常結果
+		return noticePushService.initResultEntity(SucAppConstants.INTERNAL_SERVER_ERROR.value(), "注册失败异常", null);
+	}
+
+	/**
+	 * @Description: 初始化用户
+	 * @return
+	 * @author renxu
+	 * @date 2017年10月15日 下午5:17:53
+	 */
+	private Mobileuser initMobileuser(String phoneNumber, String userType, String passWord) {
+		Mobileuser user = new Mobileuser();
+		user.setCreateEmp("suc");
+		user.setCreateOrg("suc");
+
+		Date createTime = new Date();
+		user.setCreateTime(createTime);
+		user.setDelFlag(new Boolean(false));
+		if (("dot").equalsIgnoreCase(userType)) {
+			user.setDotType(true);
+			user.setDptType(false);
+		} else {
+			user.setDptType(true);
+			user.setDotType(false);
+		}
+		user.setMobilephone(phoneNumber);
+		user.setPassword(passWord);
+		user.setUpdateEmp("suc");
+		user.setUpdateOrg("suc");
+		user.setUpdateTime(createTime);
+		user.setVersion(0);
+		//System.out.println(user.toString());
+		return user;
+	}
+
+	/**
+	 * @Description: 注册类型没有注册过，则返回false
+	 * @param telephone
+	 * @param userType
+	 * @return
+	 * @author renxu
+	 * @throws DaoException
+	 * @date 2017年10月15日 下午7:23:50
+	 */
+	private boolean checkUser(String telephone, String userType, boolean isDot) {
+		Mobileuser userEntity = new Mobileuser();
+		userEntity.setMobilephone(telephone);
+		if (isDot) {
+			userEntity.setDotType(true);
+		} else {
+			userEntity.setDptType(true);
+		}
+		long count = mobileuserDao.findMobileUser(userEntity);
+
+		if (count > 0) {
+			return true;
+		}
+
+		/*
+		 * // 1.默认没有注册过 // 2.该电话号码没有注册过 if (null == user) { // 如果不存在，则返回false
+		 * return false; }
+		 * 
+		 * // 3.当此注册属于dot注册 System.out.println(user.toString()); if (null !=
+		 * userType && userType.equals("dot")) { if (null == user.getDot_type())
+		 * { return false; } // dot注册过，dotType为true Boolean isDot =
+		 * user.getDot_type(); if (isDot) { return true; }
+		 * 
+		 * return false; }
+		 * 
+		 * // 4. 当此注册属于dpt注册 if (null != userType && userType.equals("dpt")) {
+		 * if (null == user.getDpt_type()) { return false; } //
+		 * dpt注册过，dptType为true if (user.getDpt_type()) { return true; } }
+		 */
+
+		return false;
+
+	}
+
+}

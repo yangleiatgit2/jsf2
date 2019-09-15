@@ -1,0 +1,81 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.ia.IIaSyncBiz;
+import cn.uce.suc.bkg.biz.operation.IIaMonitorBiz;
+import cn.uce.suc.bkg.entity.operation.IaMonitor;
+import cn.uce.suc.bkg.vo.ia.FreigtCombineVo;
+import cn.uce.suc.bkg.vo.operation.IaMonitorVo;
+import cn.uce.web.common.base.BaseController;
+
+/**
+ * 
+ * @Description: 只能算法监控controller
+ * @author laizhendong
+ * @date 2017年11月28日 上午10:54:12
+ */
+@Controller
+@RequestMapping("/iaMonitor")
+public class IaMonitorController extends BaseController {
+	
+	/**
+	 * 智能算法监控biz
+	 */
+	@Resource
+	private IIaMonitorBiz iaMonitorBiz;
+	
+	/**
+	 * 异步执行
+	 */
+	@Resource
+	private IIaSyncBiz iaSyncBiz;
+	
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/iaMonitor";
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件分页查找算法参数 
+	 * @param iaConfVo
+	 * @param page
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月19日 下午8:54:14
+	 */
+	@RequestMapping(value = "/findByPagination")
+	@ResponseBody
+	public Map<String, Object> findByPagination(IaMonitorVo iaMonitorVo,Page page){
+		Pagination<IaMonitor> pagination = iaMonitorBiz.findByPagination(iaMonitorVo, page);
+		return returnSuccess(pagination);
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 页面智能排班 
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月7日 下午9:13:57
+	 */
+	@RequestMapping("reSchedule")
+	@ResponseBody
+	public Map<String, Object> reSchedule(FreigtCombineVo freigtCombineVo) {
+		//异步执行智能排班
+		iaSyncBiz.smartSchedule(freigtCombineVo);
+		return returnSuccess("后台排班中，请稍后。。。");
+	}
+}

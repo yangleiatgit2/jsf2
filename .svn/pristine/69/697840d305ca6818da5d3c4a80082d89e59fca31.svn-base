@@ -1,0 +1,85 @@
+package cn.uce.suc.common.biz;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.OmgCmsOrg;
+import cn.uce.suc.common.vo.ComboOrgVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.OrgVo;
+import cn.uce.suc.common.vo.ZTreeVo;
+
+/**
+ * @Description: 乾坤机构BIZ接口类
+ * @author liwei
+ * @date 2017年10月15日 下午09:57:58
+ */
+public interface IOmgCmsOrgBiz {
+
+	/**
+	 * @Description: 分页查询乾坤机构
+	 * @param omgCmsOrgVo
+	 *            乾坤机构
+	 * @param page
+	 *            分页参数
+	 * @return 乾坤机构
+	 * @author liwei
+	 * @date 2017年10月15日 下午09:57:58
+	 */
+	public Pagination<OmgCmsOrg> findByPagination(OmgCmsOrgVo omgCmsOrgVo, Page page);
+
+	/**
+	 * 
+	 * @Description: 前端查询乾坤组织机构
+	 * @param omgCmsOrgVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午10:18:38
+	 */
+	public Pagination<ComboOrgVo> findByCombox(OmgCmsOrgVo omgCmsOrgVo, Page page);
+
+	/**
+	 * 
+	 * @Description: 根据baseOrgCode获取组织机构对象
+	 * @param baseOrgCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午11:24:29
+	 */
+	public OmgCmsOrgVo findByBaseOrgCode(String baseOrgCode);
+
+	/**
+	 * 
+	 * @Description: 根据parentOrg,orgType获取其下面所有的组织机构对象
+	 * @param parentOrg
+	 *            ,orgType
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月9日 下午15:24:29
+	 */
+	public List<OmgCmsOrg> findOperationByVo(OmgCmsOrgVo omgCmsOrgVo);
+
+	/**
+	 * 
+	 * @Description: 获取所有的分拨中心数量
+	 * @param status
+	 *            ,orgType
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月17日 下午15:24:29
+	 */
+	public int getAllOperationCount(OmgCmsOrgVo omgCmsOrgVo);
+
+	/**
+	 * 
+	 * @Description:获取下级组织
+	 * @param orgVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月29日 下午7:23:33
+	 */
+	public List<ZTreeVo> findChildOrgList(OrgVo orgVo);
+
+}

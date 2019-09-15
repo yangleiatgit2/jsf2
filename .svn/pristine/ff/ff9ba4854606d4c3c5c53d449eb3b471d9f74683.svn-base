@@ -1,0 +1,94 @@
+package cn.uce.suc.common.service;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.Notice;
+import cn.uce.suc.common.vo.NoticeVo;
+import cn.uce.suc.common.dao.INoticeDao;
+
+/**
+ * @Description: 系统公告信息Service类
+ * @author liwei
+ * @date 2017年10月25日 下午08:36:46
+ */
+@Service("noticeService")
+public class NoticeService {
+	
+	/**
+	 * 注入系统公告信息Dao
+	 */
+	@Resource
+	private INoticeDao noticeDao;
+	
+	/**
+	 * @Description: 新增系统公告信息
+	 * @param notice 系统公告信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public int addNotice(Notice notice) {
+		return noticeDao.insert(notice);
+	}
+	
+	/**
+	 * @Description: 修改系统公告信息
+	 * @param notice 系统公告信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public int updateById(Notice notice) {
+		return noticeDao.updateById(notice);
+	}
+	
+	/**
+	 * @Description: 删除系统公告信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public int deleteById(Long id) {
+		return noticeDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询系统公告信息
+	 * @param id 主键
+	 * @return 系统公告信息
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public Notice findById(Long id) {
+		return noticeDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询系统公告信息
+	 * @param noticeVo 系统公告信息
+	 * @param page 分页参数
+	 * @return 系统公告信息
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public Pagination<Notice> findByPagination(NoticeVo noticeVo, Page page) {
+		Pagination<Notice> paginationNotice = noticeDao.findByPagination(noticeVo, page);
+		return paginationNotice;
+	}
+	/**
+	 * @Description: 条件查询公告
+	 * @param notice
+	 * @return NoticeVo
+	 * @author huhaizhou
+	 * @date 2017年12月8日 下午08:36:46
+	 */
+	public NoticeVo findbywhere(Notice notice) {
+		return noticeDao.findbywhere(notice);
+	}
+	
+}

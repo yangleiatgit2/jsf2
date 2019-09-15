@@ -1,0 +1,226 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderCombineBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleBiz;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.entity.operation.LineGroup;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.entity.price.PricingRule;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * 
+ * @Description:订单组合单元测试
+ * @author liwei
+ * @date 2017年10月22日 下午2:54:35
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class FreightOrderCombineBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 订单组合
+	 */
+	@Resource
+	private IFreightOrderCombineBiz freightOrderCombineBiz;
+
+	/**
+	 * 班次
+	 */
+	@Resource
+	private ILineGroupBiz lineGroupBiz;
+	/**
+	 * 班次明细
+	 */
+	@Resource
+	private ILineGroupDetailBiz lineGroupDetailBiz;
+	/**
+	 * 订单组合
+	 */
+	FreightOrderCombine freightOrderCombine;
+	/**
+	 * 订单组合
+	 */
+	FreightOrderCombineVo freightOrderCombineVo;
+	/**
+	 * 定价规则
+	 */
+	@Resource
+	IPricingRuleBiz pricingRuleBiz;
+	/**
+ */
+	Page page;
+	Long id;
+	SucCurrentUser sucCurrentUser;
+
+	/**
+	 * 编码规则
+	 */
+	@Resource
+	private IIdsWorker redisIdsWorker;
+	
+	String orderCombineCode;
+
+	@Before
+	public void before() {
+		page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(30);
+		freightOrderCombine = new FreightOrderCombine();
+		freightOrderCombineVo = new FreightOrderCombineVo();
+		freightOrderCombine.setAutoGenerateRule("lbnwxly");
+		freightOrderCombine.setBusinessMode("1");
+		freightOrderCombine.setCarDeparturePlanCode("FCJH");
+		freightOrderCombine.setDemandCodes("XQ001,XQ002");
+		freightOrderCombine.setIntegenceScheduleCode("ZNPB001");
+		// 从规则池中获取订单组合编号
+		 orderCombineCode = redisIdsWorker.nextId(IdsConstants.IdsPrefix.OZ);
+		// 设置订单组合
+		freightOrderCombine.setOrderCombineCode(orderCombineCode);
+		freightOrderCombine.setLineGroupCode("BCZU001");
+		freightOrderCombine.setOrderCodes("OD001");
+		freightOrderCombine.setOrderCombineType("00");
+		freightOrderCombine.setOrderCombineStatus("00");
+		freightOrderCombine.setOrderCombineName("TEST001");
+		freightOrderCombineVo = ObjectConvertUtil.convertObject(freightOrderCombine, FreightOrderCombineVo.class);
+		id = freightOrderCombineBiz.addFreightOrderCombine(freightOrderCombine);
+		freightOrderCombine.setId(id);
+		sucCurrentUser = new SucCurrentUser();
+	}
+
+	/**
+	 * 
+	 * @Description: 订单组合新增
+	 * @author liwei
+	 * @date 2017年10月22日 下午3:10:05
+	 */
+	@Test
+	public void addFreightOrderCombine() {
+		freightOrderCombineBiz.updateFreightOrderCombine(freightOrderCombine);
+		freightOrderCombineBiz.updStatusByCombineCode(freightOrderCombineVo);
+		freightOrderCombineBiz.stopFreightOrderCombine(freightOrderCombine);
+		freightOrderCombineBiz.findById(id);
+		freightOrderCombineBiz.deleteFreightOrderCombine(id);
+		freightOrderCombineBiz.findByCondition(freightOrderCombineVo);
+		freightOrderCombineBiz.findByPagination(freightOrderCombineVo, page);
+	}
+
+	@Test(expected = BkgModuleException.class)
+	public void orderCombinSendPricing() {
+		freightOrderCombineBiz.orderCombinSendPricing(id, sucCurrentUser);
+
+	}
+
+	@Test
+	public void linegroup() {
+		LineGroup lineGroup = find();
+		LineGroupVo lineGroupVo = ObjectConvertUtil.convertObject(lineGroup, LineGroupVo.class);
+		lineGroup.setDeleteFlag(false);
+		lineGroupBiz.updateLineGroup(lineGroup);
+		freightOrderCombineBiz.deleteLineGroup(lineGroupVo);
+		SucCurrentUser sucCurrentUser = new SucCurrentUser();
+		List<LineGroupDetail> lineGroupDetails = lineGroupDetailBiz.findByLineGroupCode(lineGroup.getLineGroupCode());
+		String lineGroupDetailIds = null;
+		for (LineGroupDetail lineGroupDetail : lineGroupDetails) {
+			if (StringUtil.isBlank(lineGroupDetailIds)) {
+				lineGroupDetailIds = lineGroupDetail.getId().toString();
+			} else {
+				lineGroupDetailIds = lineGroupDetailIds + "," + lineGroupDetail.getId();
+			}
+		}
+		lineGroup.setDeleteFlag(false);
+		lineGroupBiz.updateLineGroup(lineGroup);
+		freightOrderCombineBiz.saveLineGroup(lineGroup.getId(), lineGroupDetailIds, sucCurrentUser);
+
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年12月3日 下午9:35:02
+	 */
+	@Test
+	public void addLineGroup() {
+		LineGroup lineGroup = find();
+		lineGroup.setDeleteFlag(false);
+		lineGroupBiz.updateLineGroup(lineGroup);
+		List<LineGroupDetail> lineGroupDetails = lineGroupDetailBiz.findByLineGroupCode(lineGroup.getLineGroupCode());
+		String lineGroupDetailIds = null;
+		for (LineGroupDetail lineGroupDetail : lineGroupDetails) {
+			if (StringUtil.isBlank(lineGroupDetailIds)) {
+				lineGroupDetailIds = lineGroupDetail.getId().toString();
+			} else {
+				lineGroupDetailIds = lineGroupDetailIds + "," + lineGroupDetail.getId();
+			}
+		}
+		freightOrderCombineBiz.addLineGroup(orderCombineCode, lineGroupDetails, sucCurrentUser);
+
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月3日 下午9:34:57
+	 */
+	private LineGroup find() {
+		LineGroupVo lineGroupVo = new LineGroupVo();
+
+		List<LineGroup> linegroups = lineGroupBiz.findByLineGroupVo(lineGroupVo);
+		for (LineGroup lineGroup : linegroups) {
+			List<LineGroupDetail> lineGroupDetails = lineGroupDetailBiz.findByLineGroupCode(lineGroup
+					.getLineGroupCode());
+			if (null != lineGroupDetails && lineGroupDetails.size() != 0) {
+				return lineGroup;
+			}
+		}
+		return null;
+
+	}
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个方法的作用) 
+ * @author liwei
+ * @date 2017年12月6日 下午6:01:00
+ */
+	@Test
+	public void generateOrderQuotation() {
+		PricingRuleVo pricingRuleVo = new PricingRuleVo();
+		pricingRuleVo.setCombineType("2");
+
+		List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findByCondition(pricingRuleVo);
+		if (null == pricingRuleVos || pricingRuleVos.size() == 0) {
+			return;
+		}
+		try {
+			freightOrderCombineBiz.generateOrderQuotation(pricingRuleVos.get(0));
+		} catch (Exception e) {
+		}
+
+	}
+}

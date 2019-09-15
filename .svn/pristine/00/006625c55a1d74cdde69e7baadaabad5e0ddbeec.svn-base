@@ -1,0 +1,670 @@
+package cn.uce.suc.bkg.control.infomon;
+
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.ICarManageBiz;
+import cn.uce.suc.bkg.biz.datamain.IExceptionManagerBiz;
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanDetailBiz;
+import cn.uce.suc.bkg.biz.impl.operation.LineGroupDetailBiz;
+import cn.uce.suc.bkg.biz.infomon.IVisibleTransportBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+import cn.uce.suc.bkg.vo.operation.VisibleTransportInfoVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.biz.imp.MobileuserBiz;
+import cn.uce.suc.common.biz.imp.NoticeDetailBiz;
+import cn.uce.suc.common.biz.imp.OrgExtendBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.entity.OmgCmsOrg;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.suc.common.vo.OrgExtendVo;
+import cn.uce.suc.common.vo.OrgVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.suc.common.vo.ZTreeVo;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.WebUtil;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.entity.operation.LineGroup;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.utils.StringUtil;
+/**
+ * 
+ * @Description: 可视化运输
+ * @author liuhai
+ * @date 2017年10月25日 下午4:31:33
+ */
+@Controller
+@RequestMapping("/visibleTransport")
+public class VisibleTransportController extends BaseController{
+	/**
+	 * 可视化visibleTransportBiz
+	 */
+	@Resource
+	private IVisibleTransportBiz visibleTransportBiz;
+	/**
+	 * 异常exceptionBiz
+	 */
+	@Resource
+	private IExceptionManagerBiz exceptionBiz;
+	/**
+	 * 发车计划dirvingPlanBiz
+	 */
+	@Resource
+	private IDirvingPlanBiz dirvingPlanBiz;
+	/**
+	 * 生成编号redisIdsWorker
+	 */
+	@Resource
+    private IIdsWorker  redisIdsWorker;
+	/**
+	 * 班次lineGroupBiz
+	 */
+	@Resource
+	private ILineGroupBiz lineGroupBiz;
+	/**
+	 * 班次详情lineGroupDetailBiz
+	 */
+	@Resource
+	private ILineGroupDetailBiz lineGroupDetailBiz;
+	/**
+	 * 发车计划详情dirvingPlanDetailBiz
+	 */
+	@Resource
+	private DirvingPlanDetailBiz dirvingPlanDetailBiz;
+	@Resource
+	LineGroupDetailBiz LineGroupDetailBiz;
+	@Resource
+	OrgExtendBiz orgExtendBiz;
+	@Resource
+	IOmgCmsOrgBiz omgCmsOrgBiz;
+	@Resource
+	ICarManageBiz carManageBiz;
+	@Resource
+	private NoticeDetailBiz noticeDetailBiz;
+	@Resource
+	ISystemConfigBiz systemConfigBiz;
+	@Resource
+	private MobileuserBiz mobileuserBiz;
+	/**
+	 * 
+	 * @Description: 可视化页面跳转页面
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月7日 上午10:30:10
+	 */
+	@RequestMapping(value = "/forward")
+	public ModelAndView  get(HttpServletRequest request, HttpServletResponse response) {
+		//查询百度地图系统配置AK
+		SystemConfig sc=systemConfigBiz.findCacheByCode("BAIDU_API_AK");
+		DirvingPlanVo oldDp=new DirvingPlanVo();
+		//查询异常列表信息(不包含终止)
+		oldDp.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END);
+		//查询异常列表
+		List<ExceptionManager> exceptionList=visibleTransportBiz.queryExceptionInfo(oldDp);
+		ModelAndView mad = new ModelAndView("bkg/visibleTransport");
+		mad.addObject("exceptionList",exceptionList);
+		mad.addObject("systemConfig",sc);
+		return mad;
+	}
+	
+	/**
+	 * 根据查询条件查询运输信息并在地图上展示
+	 * @param visibleTransportInfoVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午8:47:26
+	 */
+	@PostMapping(value  = "/searchTransportInfo" )
+	@ResponseBody
+	public Map<String, Object> searchTransportInfo(VisibleTransportInfoVo visibleTransportInfoVo) {
+		Map<String,Object> allMap=new HashMap<String,Object>();
+		String vehicleNo="";
+		List<DirvingPlanVo> oldDpList=new ArrayList<DirvingPlanVo>();
+		List<DirvingPlanDetail> dpDedatilList=new ArrayList<DirvingPlanDetail>();
+		List<CarManage> vtList=new ArrayList<CarManage>();
+		List<OrgExtendVo> ocg=new ArrayList<OrgExtendVo>();
+		List<OrgExtendVo> sitList=new ArrayList<OrgExtendVo>();
+		String throughStr="";
+		DirvingPlanVo oldDp=new DirvingPlanVo();
+		if(StringUtil.isNotBlank(visibleTransportInfoVo.getDrivingPlanCode())){
+			oldDp.setDrivingPlanCode(visibleTransportInfoVo.getDrivingPlanCode());
+			//发车计划信息
+			oldDpList=visibleTransportBiz.queryDirvingPlan(oldDp);
+			//发车计划详细信息
+			dpDedatilList=visibleTransportBiz.queryDirvingPlanDetail(oldDp);
+			if(dpDedatilList!=null&&dpDedatilList.size()>0){
+				for(int i=0;i<dpDedatilList.size();i++){
+					throughStr=throughStr+dpDedatilList.get(i).getWayPointName()+",";
+				}
+				
+			}
+			//发车计划
+			allMap.put("dirvingPlan", oldDpList);
+			//发车计划途经点
+			allMap.put("throughAdress", (",".equals(throughStr)||"".equals(throughStr))?"":(throughStr.subSequence(0, throughStr.length()-1)));
+			
+			CarManageVo carManage=new CarManageVo();
+			//查询车辆信息
+			if(oldDpList!=null&&oldDpList.size()>0){
+				vehicleNo=oldDpList.get(0).getPlateNumber();
+				carManage.setPlateNumbers(vehicleNo);
+				carManage.setDirvingPlanCode(visibleTransportInfoVo.getDrivingPlanCode());
+				vtList = visibleTransportBiz.searchCarInfo(carManage);
+			}
+			allMap.put("carInfo", vtList);
+			
+			List<DirvingPlanDetail> dpDetail=visibleTransportBiz.queryDirvingPlanDetail(oldDp);
+			if(CollectionUtils.isNotEmpty(dpDetail)){
+				for(int i=0;i<dpDetail.size();i++){
+					OrgExtendVo ovo=orgExtendBiz.findByBaseOrgCode(dpDetail.get(i).getWayPointCode());
+					//如果经过点是分拨中心
+					if(ovo!=null&&(String.valueOf(BkgConstants.ORG_TYPE_OPERATE_CENTER).equals(ovo.getSiteType()))){
+						ocg.add(ovo);
+					//如果经过点是分拨中心
+					}else if(ovo!=null&&(String.valueOf(BkgConstants.ORG_TYPE_SITE).equals(ovo.getSiteType()))){
+						sitList.add(ovo);
+					}
+				}
+			}
+			
+			//查询分拨中心信息
+			allMap.put("groupCenterInfo", ocg);
+			//查询网点信息
+			allMap.put("sitInfo", sitList);
+		}else{
+			//分拨中心不为空
+			if(StringUtil.isNotBlank(visibleTransportInfoVo.getGroupCenterCode())){
+				OrgExtendVo ov=new OrgExtendVo();
+				ov.setBaseOrgCode(visibleTransportInfoVo.getGroupCenterCode());
+				ocg=orgExtendBiz.findByCondition(ov);
+				allMap.put("groupCenterInfo", ocg);
+			}else{
+				//站点名称不空
+				if(StringUtil.isNotBlank(visibleTransportInfoVo.getDotNameCode())){
+					OrgExtendVo ov=new OrgExtendVo();
+					ov.setBaseOrgCode(visibleTransportInfoVo.getDotNameCode());
+					sitList=orgExtendBiz.findByCondition(ov);
+					DirvingPlanDetailVo pvd=new DirvingPlanDetailVo();
+					pvd.setWayPointCode(visibleTransportInfoVo.getDotNameCode());
+					pvd.setStatus( BkgConstants.PLAN_CODE_EXECUTING);
+					oldDpList=visibleTransportBiz.queryDirvingPlanByOrgCode(pvd);
+					if(CollectionUtils.isNotEmpty(oldDpList)){
+						//发车计划
+						allMap.put("dirvingPlan", oldDpList);
+					}
+					allMap.put("sitInfo", sitList);
+				}else{
+					//车牌号不为空
+					if(StringUtil.isNotBlank(visibleTransportInfoVo.getCarName())){
+						vehicleNo=visibleTransportInfoVo.getCarSimple()+visibleTransportInfoVo.getCarName();
+						CarManageVo carManage=new CarManageVo();
+						carManage.setPlateNumbers(vehicleNo);
+						vtList = visibleTransportBiz.searchCarInfo(carManage);
+						allMap.put("carInfo", vtList);
+					}else{
+						//车辆所属不为空
+						if(StringUtil.isNotBlank(visibleTransportInfoVo.getCarBelongType())){
+							CarManageVo carManageVo=new CarManageVo();
+							carManageVo.setCarType(visibleTransportInfoVo.getCarBelongType());
+							vtList=visibleTransportBiz.queryCarInfo(carManageVo);
+							allMap.put("carInfo", vtList);
+						}
+					}
+				}
+			}
+		}
+		//查询异常信息
+		oldDp.setExceptionStatus("");
+		List<ExceptionManager> exceptionList=visibleTransportBiz.queryExceptionInfo(oldDp);
+		allMap.put("exceptionList", exceptionList);
+		LineGroup line=null;
+		if(CollectionUtils.isNotEmpty(oldDpList)){
+			if(null!=oldDpList)
+			if(null !=oldDpList.get(0))
+			//查询班次
+			line= lineGroupBiz.findByLineGroupCode(oldDpList.get(0).getLineGroupCode());
+		}
+		allMap.put("lineGroup", line);
+		return returnSuccess(allMap);
+	}
+	/**
+	 * 
+	 * @Description: 根据发车计划查询异常
+	 * @param drivingPlanCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午8:46:36
+	 */
+	@PostMapping(value  = "/queryExceptionInfo" )
+	@ResponseBody
+	public Map<String, Object> queryExceptionInfo(String drivingPlanCode,String exceptionCode) {
+		List<DirvingPlanDetail> dpDedatilList=new ArrayList<DirvingPlanDetail>();
+		Map<String,Object> allMap=new HashMap<String,Object>();
+		DirvingPlanVo oldDp=new DirvingPlanVo();
+		oldDp.setDrivingPlanCode(drivingPlanCode);
+		//oldDp.setExceptionStatus("");
+		//oldDp.setUtf1(exceptionCode);
+		List<ExceptionManager> exceptionList=visibleTransportBiz.queryExceptionInfo(oldDp);
+		//发车计划信息
+		List<DirvingPlanVo> oldDpList=new ArrayList<DirvingPlanVo>();
+		//List<DirvingPlanVo> oldDpList=visibleTransportBiz.queryDirvingPlan(oldDp);
+		//发车计划详细信息
+		dpDedatilList=visibleTransportBiz.queryDirvingPlanDetail(oldDp);
+		String throughStr="";
+		if(dpDedatilList!=null&&dpDedatilList.size()>0){
+			for(int i=0;i<dpDedatilList.size();i++){
+				throughStr=throughStr+dpDedatilList.get(i).getWayPointName()+",";
+			}
+			
+		}
+//		LineGroup line=null;
+//		if(CollectionUtils.isNotEmpty(oldDpList)&&StringUtil.isNotBlank(oldDpList.get(0).getLineGroupCode())){
+//			//查询班次
+//			line= lineGroupBiz.findByLineGroupCode(oldDpList.get(0).getLineGroupCode());
+//		}
+		//发车计划途经点
+		allMap.put("throughAdress", (",".equals(throughStr)||"".equals(throughStr))?"":(throughStr.subSequence(0, throughStr.length()-1)));
+		//查询异常
+		
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(drivingPlanCode);
+		if(plan ==null){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		BeanUtils.copyProperties(plan, oldDp);
+		oldDpList.add(oldDp);
+		String lineGroupCode=plan.getLineGroupCode();
+		if(StringUtils.isNotBlank(lineGroupCode)){
+			LineGroup line= lineGroupBiz.findByLineGroupCode(lineGroupCode);
+			if(line!=null){
+				allMap.put("lineGroup", line);
+			}
+		}else{
+			return returnError(Resources.getMessage("没有找到相关班次"));
+		}
+		
+		allMap.put("exceptionList", exceptionList);
+		allMap.put("dirvingPlan", oldDpList);
+		return returnSuccess(allMap);
+	}
+	/**
+	 * 通过radion选据查询
+	 * @param selectType
+	 * @param regionCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午8:45:15
+	 */
+	@PostMapping(value  = "/queryRadioData" )
+	@ResponseBody
+	public Map<String, Object> searchTransportInfo(String selectType,String regionCode) {
+		Map<String,Object> allMap=new HashMap<String,Object>();
+		OmgCmsOrg omgCmsOrg=new OmgCmsOrg();
+		//所有网点
+		List<OrgExtendVo> sitList=new ArrayList<OrgExtendVo>();
+		//查询分拨中心
+		List<OrgExtendVo> ocg=null;
+		//所有车辆
+		List<CarManage> vtList=null;
+		//如果选择“显示所有网点”
+		if("allSit".equals(selectType)){
+			sitList=getSiteList(regionCode);
+			allMap.put("sitInfo", sitList);
+		//如果选择“显示所有车辆”
+		}else if("allCar".equals(selectType)){
+			CarManageVo carManageVo=new CarManageVo();
+			carManageVo.setCarOrg(regionCode);
+			vtList=visibleTransportBiz.queryCarInfo(carManageVo);
+			allMap.put("carInfo", vtList);
+		//如果选择“显示分拨中心”
+		}else if("viewGroupCenter".equals(selectType)){
+			OrgExtendVo ov=new OrgExtendVo();
+			ov.setBaseOrgCode(regionCode);
+			ocg=orgExtendBiz.findByCondition(ov);
+			allMap.put("groupCenterInfo", ocg);
+		//如果选择“显示延误的车辆”
+		}else if("delayCar".equals(selectType)){
+			
+		//如果选择“显示异常的车辆”
+		}else if("exceptionCar".equals(selectType)){
+			omgCmsOrg.setBaseOrgCode(regionCode);
+			vtList=visibleTransportBiz.queryExceptionCar(omgCmsOrg);
+			allMap.put("carInfo", vtList);
+		}
+		return returnSuccess(allMap);
+	}
+	/**
+	 * 通过组织编码（分拨中心）查询所有网点的信息
+	 * @param regionCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月18日 下午8:02:56
+	 */
+	public List<OrgExtendVo> getSiteList(String regionCode){
+		List<OrgExtendVo> sitList=new ArrayList<OrgExtendVo>();
+		if(!"".equals(regionCode)){
+			OrgVo orgVo=new OrgVo();
+			orgVo.setOrgCode(regionCode);
+			List<String> strings=new ArrayList<String>();
+			strings.add("30");
+			orgVo.setOrgTypeList(strings);
+			//通过分拨中心查询所有网点
+			List<ZTreeVo> ztList=omgCmsOrgBiz.findChildOrgList(orgVo);
+			OrgExtendVo ov=new OrgExtendVo();
+			for(ZTreeVo zv:ztList){
+				ov.setBaseOrgCode(zv.getId());
+				//查询组织扩展信息
+				List<OrgExtendVo> sList=orgExtendBiz.findByCondition(ov);
+				if(CollectionUtils.isNotEmpty(sList)){
+					sitList.add(sList.get(0));
+				}
+			}
+		}
+		return sitList;
+	}
+	/**
+	 * 查询是否已存在异常
+	 * @param drivingPlanCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午8:44:18
+	 */
+	@PostMapping(value  = "/ReportException" )
+	@ResponseBody
+	public Map<String, Object> exceptionReport(String drivingPlanCode) {
+		DirvingPlanVo dirvingPlanVo=new DirvingPlanVo();
+		dirvingPlanVo.setDrivingPlanCode(drivingPlanCode);
+		//通过发车计划号查询异常
+		List<ExceptionManager> eList=visibleTransportBiz.queryExceptionByDrivingPlanCode(dirvingPlanVo);
+		if(CollectionUtils.isNotEmpty(eList)){
+			return returnError(Resources.getMessage("common.get.fail"));
+		}else{
+			return returnSuccess();
+		}
+	}
+	/**
+	 * 
+	 * @Description: 保存异常上报 
+	 * @param exceptionManager
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午8:43:31
+	 */
+	@PostMapping(value  = "/saveReportException" )
+	@ResponseBody
+	public Map<String, Object> saveReportException(ExceptionManager exceptionManager) {
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		//保存上报异常信息
+		List<ExceptionManager> exceptionList=visibleTransportBiz.saveReportException(exceptionManager,redisIdsWorker.nextId(IdsPrefix.YC),userInfo);
+		return returnSuccess(exceptionList);
+	}
+	/**
+	 * @Description: 异常确认
+	 * @param drivingPlanCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午6:25:38
+	 */
+	@PostMapping(value  = "/exceptionConfirm" )
+	@ResponseBody
+	public Map<String, Object> exceptionConfirm(String drivingPlanCode,String exceptionCode) {
+		int i=0;
+		DirvingPlanVo dirvingPlanVo=new DirvingPlanVo();
+		dirvingPlanVo.setDrivingPlanCode(drivingPlanCode);
+		dirvingPlanVo.setUtf1(exceptionCode);
+		i=visibleTransportBiz.exceptionConfirm(drivingPlanCode,exceptionCode);
+		if(i>0){
+			//查询异常列表
+			List<ExceptionManager>  eList=visibleTransportBiz.queryExceptionByDrivingPlanCode(dirvingPlanVo);
+			return returnSuccess(eList);
+		}else{
+			return returnError(Resources.getMessage("common.update.fail"));
+		}
+	}
+	/**
+	 * 异常打回
+	 * @param drivingPlanCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午6:26:30
+	 */
+	@PostMapping(value  = "/exceptionBack" )
+	@ResponseBody
+	public Map<String, Object> exceptionBack(String drivingPlanCode,String exceptionCode) {
+		Map<String,Object> allMap=new HashMap<String,Object>();
+		int i=visibleTransportBiz.exceptionBack(drivingPlanCode, exceptionCode);
+		DirvingPlanVo dirvingPlanVo=new DirvingPlanVo();
+		if(i>0){
+			dirvingPlanVo.setDrivingPlanCode("");
+			dirvingPlanVo.setExceptionStatus("3");
+			List<ExceptionManager> eList=visibleTransportBiz.queryExceptionInfo(dirvingPlanVo);
+			allMap.put("eList", eList);
+			DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(drivingPlanCode);
+			allMap.put("dirvingPlan", plan);
+			return returnSuccess(allMap);
+		}else{
+			return returnError(Resources.getMessage("common.update.fail"));
+		}
+	}
+	/**
+	 * 异常小结
+	 * @param drivingPlanCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午6:26:30
+	 */
+	@PostMapping(value  = "/saveExceptionSummary" )
+	@ResponseBody
+	public Map<String, Object> saveExceptionSummary(String drivingPlanCode,String exceptionHandle) {
+		int i=0;
+		DirvingPlanVo dirvingPlanVo=new DirvingPlanVo();
+		dirvingPlanVo.setDrivingPlanCode(drivingPlanCode);
+		List<ExceptionManager> eList=visibleTransportBiz.queryExceptionByDrivingPlanCode(dirvingPlanVo);
+		if(CollectionUtils.isNotEmpty(eList)){
+			ExceptionManager ex=exceptionBiz.findById(eList.get(0).getId());
+			ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END);
+			ex.setUtf1(exceptionHandle);//utf1 暂存放 异常小结字段
+			i=exceptionBiz.updateException(ex);
+		}
+		if(i>0){
+			return returnSuccess();
+		}else{
+			return returnError(Resources.getMessage("common.update.fail"));
+		}
+	}
+	
+	/**
+	 * 终止发车计划
+	 * @param drivingPlanCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午6:26:30
+	 */
+	@PostMapping(value  = "/stopDrivePlan" )
+	@ResponseBody
+	public Map<String, Object> stopDrivePlan(String drivingPlanCode) {
+		int i=visibleTransportBiz.stopDrivePlan(drivingPlanCode);
+		DirvingPlanVo dirvingPlanVo=new DirvingPlanVo();
+		dirvingPlanVo.setDrivingPlanCode(drivingPlanCode);
+		if(i>0){
+			dirvingPlanVo.setExceptionStatus("");
+			List<ExceptionManager> eList=visibleTransportBiz.queryExceptionInfo(dirvingPlanVo);
+			return returnSuccess(eList);
+		}else{
+			return returnError(Resources.getMessage("common.update.fail"));
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据异常获取相应的班次 lineGroup 信息包括路段lineGroupDetail 信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月6日 下午9:58:07
+	 */
+	@RequestMapping(value = "getLineGroup", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getLineGroup(String classCode) {
+		LineGroup line= lineGroupBiz.findByLineGroupCode(classCode);
+		if(line!=null){
+			Map<String,Object> map=new HashMap <String,Object>();
+			map.put("lineGroup", line);
+			return map;
+		}
+		return null;
+	}
+	/**
+	 * 
+	 * @Description: 根据异常id查询班次详情
+	 * @param page
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月3日 下午3:11:00
+	 */
+	@RequestMapping(value = "/findLineGroupDetailByExceptionId")
+	@ResponseBody
+	public Map<String, Object> findLineGroupDetailByExceptionId(String classCode, Page page) {
+		Pagination<LineGroupDetail> pagination=lineGroupDetailBiz.findPageByPagination(classCode, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * 
+	 * @Description: 终止班次
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月7日 上午9:58:07
+	 */
+	@RequestMapping(value = "stopLineGroup", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> stopLineGroup(String classCode,String drivingPlanCode) {
+		List<ExceptionManager> eList=null;
+		DirvingPlanVo dirvingPlanVo=new DirvingPlanVo();
+		dirvingPlanVo.setDrivingPlanCode(drivingPlanCode);
+		if(visibleTransportBiz.stopLineGroup(classCode,drivingPlanCode)>0){
+			//根据发车计划查询异常信
+			dirvingPlanVo.setExceptionStatus("");
+			eList=visibleTransportBiz.queryExceptionInfo(dirvingPlanVo);
+			
+		}
+		return returnSuccess(eList);
+	}
+	/**
+	 * 重绑发车计划(生成新的发车计划，班次不变)
+	 * @param dirvingPlan
+	 * @return
+	 */
+	@RequestMapping(value = "/updateDeparturePlan")
+	@ResponseBody
+	public Map<String,Object>  updateDeparturePlan(DirvingPlan dirvingPlan){
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		DirvingPlanVo temp=new DirvingPlanVo();
+		String planCode=dirvingPlan.getDrivingPlanCode();
+		if(dirvingPlan.getDrivingPlanCode().contains("_")){
+			 planCode=planCode.substring(0, planCode.indexOf("_"));
+	    }
+		temp.setDrivingPlanCode(planCode);
+		int count=dirvingPlanBiz.getUncomfirmDrivingPlanNum(temp);
+		//更新发车计划
+		if(visibleTransportBiz.updateDeparturePlan(dirvingPlan,planCode+"_"+count,userInfo)>0){
+			return returnSuccess(Resources.getMessage("common.update.success"));
+		}else{
+			return returnError(Resources.getMessage("common.update.fail"));
+		}
+	}
+	/**
+	 * 
+	 * @Description: 新增需求或新增发车计划
+	 * @param page
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月7日 下午3:11:00
+	 */
+	@RequestMapping(value = "/saveLineGroupAndDrivePlan")
+	@ResponseBody
+	public Map<String, Object> saveLineGroupAndDrivePlan(String lineGroupStr, String drivePlanStr, String detailVos,  HttpServletRequest request) {
+		//保存
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		if(visibleTransportBiz.saveLineGroupAndDrivePlan(lineGroupStr,drivePlanStr,detailVos,userInfo)>0){
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}else{
+			return returnError(Resources.getMessage("common.save.fail"));
+		}
+	}
+	/**
+	 * 班次明细查询列表
+	 * @param lineGroupVo
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping(value = "/findWorkDetailByPage")
+	@ResponseBody
+	public Map<String,Object> findWorkDetailByPage(LineGroupDetailVo lineGroupDetailVo,Page page,String lineGroupCode){
+		lineGroupDetailVo.setLineGroupCode(StringUtil.isBlank(lineGroupCode)?lineGroupDetailVo.getSearchLineGroupCode():lineGroupCode);
+		//分页查询班次明细查询列表
+		Pagination<LineGroupDetailVo> pagination = LineGroupDetailBiz.findByPagination(lineGroupDetailVo, page);
+		return returnSuccess(pagination);
+	}
+
+	/**
+	 * @Description: 发送消息
+	 * @param DirvingPlan plan
+	 * @return
+	 * @author yanglei
+	 * @date 2017年12月13日 下午9:58:07
+	 */
+	private int sendNotice(String noticeRuleCode,DirvingPlan plan,Long businessId,String businessType) {
+		NoticeDetailVo noticeDetailVo=new NoticeDetailVo();
+		noticeDetailVo.setNoticeRuleCode(noticeRuleCode);
+		noticeDetailVo.setCreateEmp(plan.getUpdateEmp());
+		noticeDetailVo.setCreateOrg(plan.getUpdateOrg());
+		noticeDetailVo.setCreateTime(plan.getUpdateTime());
+		noticeDetailVo.setUserPhone(plan.getDriverPhone());
+		noticeDetailVo.setBusinessId(businessId);
+		noticeDetailVo.setBusinessType(businessType);
+		noticeDetailVo.setDisplayWays(BkgConstants.DISPLAY_WAYS_HOME+","+BkgConstants.DISPLAY_WAYS_NOTICE+","+BkgConstants.DISPLAY_WAYS_NEWS);
+		int noticeDetailRes =noticeDetailBiz.generateMessage(plan, noticeDetailVo);
+		return noticeDetailRes;
+	}
+
+}

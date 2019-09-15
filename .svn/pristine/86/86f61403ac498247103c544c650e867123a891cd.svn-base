@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context   
+           http://www.springframework.org/schema/context/spring-context.xsd  
+        http://code.alibabatech.com/schema/dubbo
+        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+        http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">  
+	
+	<!-- 员工 begin -->
+	<bean id="omgEmpSyncListener" class="cn.uce.core.sync.mq.ReceivePushMsgBodyListener">
+		<property name="receivePushMsgBiz" ref="omgSyncEmpBiz"></property>
+		<property name="msgEntityClassName" value="cn.uce.omg.sync.vo.EmpVo"></property>
+ 		<property name="consumeSkipFromTime" value="${omgEmp.consumeSkipFromTime}"></property>
+	</bean>
+	<bean id="omgEmpRocketListenerContainer" class="cn.uce.core.mq.rocket.listener.RocketMessageListenerContainer" init-method="start" destroy-method="shutdown">
+		<property name="consumer">
+			<bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" parent="mqClientConfig">
+				<property name="consumerGroup" value="CID_SUC_SYNC_OMG_EMP"></property>
+				<property name="consumeThreadMin" value="${omgEmpSyncListener.consumeThreadNum}"></property>
+				<property name="consumeThreadMax" value="${omgEmpSyncListener.consumeThreadNum}"></property>
+			</bean>
+		</property>
+		<property name="subscriptionMap">
+			<map>
+				<entry value-ref="omgEmpSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgEmpPush" />
+						</bean>
+					</key>
+				</entry>
+				<entry value-ref="omgEmpSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgEmpRepairPush" />
+							<property name="tag" value="SUC"></property>
+						</bean>
+					</key>
+				</entry>
+			</map>
+		</property>
+	</bean> 
+	<!-- 员工 end -->
+	
+	<!-- 机构 begin -->
+	<bean id="omgOrgSyncListener" class="cn.uce.core.sync.mq.ReceivePushMsgBodyListener">
+		<property name="receivePushMsgBiz" ref="omgSyncOrgBiz"></property>
+		<property name="msgEntityClassName" value="cn.uce.omg.sync.vo.OrgVo"></property>
+		<property name="consumeSkipFromTime" value="${omgOrg.consumeSkipFromTime}"></property>
+	</bean>
+	<bean id="omgOrgRocketListenerContainer" class="cn.uce.core.mq.rocket.listener.RocketMessageListenerContainer" init-method="start" destroy-method="shutdown">
+		<property name="consumer">
+			<bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" parent="mqClientConfig">
+				<property name="consumerGroup" value="CID_SUC_SYNC_OMG_ORG"></property>
+				<property name="consumeThreadMin" value="${omgOrgSyncListener.consumeThreadNum}"></property>
+				<property name="consumeThreadMax" value="${omgOrgSyncListener.consumeThreadNum}"></property>
+			</bean>
+		</property>
+		<property name="subscriptionMap">
+			<map>
+				<entry value-ref="omgOrgSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgOrgPush" />
+						</bean>
+					</key>
+				</entry>
+				<entry value-ref="omgOrgSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgOrgRepairPush" />
+							<property name="tag" value="SUC"></property>
+						</bean>
+					</key>
+				</entry>
+			</map>
+		</property>
+	</bean> 
+	<!-- 机构 end -->
+	
+	<!-- 营运机构 begin -->
+	<bean id="omgNosOrgSyncListener" class="cn.uce.core.sync.mq.ReceivePushMsgListener">
+		<property name="receivePushMsgBiz" ref="omgSyncNosBiz"></property>
+		<property name="consumeSkipFromTime" value="${omgNosOrg.consumeSkipFromTime}"></property>
+	</bean>
+	<bean id="omgNosOrgRocketListenerContainer" class="cn.uce.core.mq.rocket.listener.RocketMessageListenerContainer" init-method="start" destroy-method="shutdown">
+		<property name="consumer">
+			<bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" parent="mqClientConfig">
+				<property name="consumerGroup" value="CID_SUC_SYNC_OMG_NOS_ORG"></property>
+				<property name="consumeThreadMin" value="${omgNosOrgSyncListener.consumeThreadNum}"></property>
+				<property name="consumeThreadMax" value="${omgNosOrgSyncListener.consumeThreadNum}"></property>
+			</bean>
+		</property>
+		<property name="subscriptionMap">
+			<map>
+				<entry value-ref="omgNosOrgSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgNosOrgPush" />
+						</bean>
+					</key>
+				</entry>
+				<entry value-ref="omgNosOrgSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgNosOrgRepairPush" />
+							<property name="tag" value="SUC"></property>
+						</bean>
+					</key>
+				</entry>
+			</map>
+		</property>
+	</bean> 
+	<!-- 营运机构 end -->
+
+	<!-- 地区begin -->
+	<bean id="omgAreaSyncListener" class="cn.uce.core.sync.mq.ReceivePushMsgBodyListener">
+		<property name="receivePushMsgBiz" ref="omgSyncAreaBiz"></property>
+		<property name="msgEntityClassName" value="cn.uce.omg.sync.vo.AreaVo"></property>
+		<property name="consumeSkipFromTime" value="${omgArea.consumeSkipFromTime}"></property>
+	</bean>
+	<bean id="omgAreaRocketListenerContainer" class="cn.uce.core.mq.rocket.listener.RocketMessageListenerContainer" init-method="start" destroy-method="shutdown">
+		<property name="consumer">
+			<bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" parent="mqClientConfig">
+				<property name="consumerGroup" value="CID_SUC_SYNC_OMG_AREA"></property>
+				<property name="consumeThreadMin" value="${omgAreaSyncListener.consumeThreadNum}"></property>
+				<property name="consumeThreadMax" value="${omgAreaSyncListener.consumeThreadNum}"></property>
+			</bean>
+		</property>
+		<property name="subscriptionMap">
+			<map>
+				<entry value-ref="omgAreaSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgAreaPush" />
+						</bean>
+					</key>
+				</entry>
+				<entry value-ref="omgAreaSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgAreaRepairPush" />
+							<property name="tag" value="SUC"></property>
+						</bean>
+					</key>
+				</entry>
+			</map>
+		</property>
+	</bean> 
+	<!-- 地区end -->
+	<!-- 员工绑定关系begin -->
+	<bean id="omgOtherEmpRelationSyncListener" class="cn.uce.core.sync.mq.ReceivePushMsgBodyListener">
+		<property name="receivePushMsgBiz" ref="omgSyncOtherEmpRelationBiz"></property>
+		<property name="msgEntityClassName" value="cn.uce.omg.sync.vo.OtherEmpRelationVo"></property>
+		<property name="consumeSkipFromTime" value="${omgOtherEmpRelation.consumeSkipFromTime}"></property>
+	</bean>
+	<bean id="omgOtherEmpRelationRocketListenerContainer" class="cn.uce.core.mq.rocket.listener.RocketMessageListenerContainer" init-method="start" destroy-method="shutdown">
+		<property name="consumer">
+			<bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" parent="mqClientConfig">
+				<property name="consumerGroup" value="CID_SUC_SYNC_OMG_OTHEREMPRELATION"></property>
+				<property name="consumeThreadMin" value="${omgOtherEmpRelationSyncListener.consumeThreadNum}"></property>
+				<property name="consumeThreadMax" value="${omgOtherEmpRelationSyncListener.consumeThreadNum}"></property>
+			</bean>
+		</property>
+		<property name="subscriptionMap">
+			<map>
+				<entry value-ref="omgOtherEmpRelationSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgOtherEmpRelationPush" />
+						</bean>
+					</key>
+				</entry>
+				<entry value-ref="omgOtherEmpRelationSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgOtherEmpRelationRepairPush" />
+							<property name="tag" value="SUC"></property>
+						</bean>
+					</key>
+				</entry>
+			</map>
+		</property>
+	</bean> 
+	<!-- 员工绑定关系end -->
+	<!-- 机构绑定关系begin -->
+	<bean id="omgOtherOrgRelationSyncListener" class="cn.uce.core.sync.mq.ReceivePushMsgBodyListener">
+		<property name="receivePushMsgBiz" ref="omgSyncOtherOrgRelationBiz"></property>
+		<property name="msgEntityClassName" value="cn.uce.omg.sync.vo.OtherOrgRelationVo"></property>
+		<property name="consumeSkipFromTime" value="${omgOtherOrgRelation.consumeSkipFromTime}"></property>
+	</bean>
+	<bean id="omgOtherOrgRelationRocketListenerContainer" class="cn.uce.core.mq.rocket.listener.RocketMessageListenerContainer" init-method="start" destroy-method="shutdown">
+		<property name="consumer">
+			<bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" parent="mqClientConfig">
+				<property name="consumerGroup" value="CID_SUC_SYNC_OMG_OTHERORGRELATION"></property>
+				<property name="consumeThreadMin" value="${omgOtherOrgRelationSyncListener.consumeThreadNum}"></property>
+				<property name="consumeThreadMax" value="${omgOtherOrgRelationSyncListener.consumeThreadNum}"></property>
+			</bean>
+		</property>
+		<property name="subscriptionMap">
+			<map>
+				<entry value-ref="omgOtherOrgRelationSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgOtherOrgRelationPush" />
+						</bean>
+					</key>
+				</entry>
+				<entry value-ref="omgOtherOrgRelationSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgOtherOrgRelationRepairPush" />
+							<property name="tag" value="SUC"></property>
+						</bean>
+					</key>
+				</entry>
+			</map>
+		</property>
+	</bean> 
+	<!-- 机构绑定关系end -->
+	<!-- 用户begin -->
+	<bean id="omgUserSyncListener" class="cn.uce.core.sync.mq.ReceivePushMsgBodyListener">
+		<property name="receivePushMsgBiz" ref="omgSyncUserBiz"></property>
+		<property name="msgEntityClassName" value="cn.uce.omg.sync.vo.UserVo"></property>
+		<property name="consumeSkipFromTime" value="${omgUser.consumeSkipFromTime}"></property>
+	</bean>
+	<bean id="omgUserRocketListenerContainer" class="cn.uce.core.mq.rocket.listener.RocketMessageListenerContainer" init-method="start" destroy-method="shutdown">
+		<property name="consumer">
+			<bean class="com.alibaba.rocketmq.client.consumer.DefaultMQPushConsumer" parent="mqClientConfig">
+				<property name="consumerGroup" value="CID_SUC_SYNC_OMG_USER"></property>
+				<property name="consumeThreadMin" value="${omgUserSyncListener.consumeThreadNum}"></property>
+				<property name="consumeThreadMax" value="${omgUserSyncListener.consumeThreadNum}"></property>
+			</bean>
+		</property>
+		<property name="subscriptionMap">
+			<map>
+				<entry value-ref="omgUserSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgUserPush" />
+						</bean>
+					</key>
+				</entry>
+				<entry value-ref="omgUserSyncListener">
+					<key>
+						<bean class="cn.uce.core.mq.api.listener.Subscription">
+							<property name="topicName" value="omgUserRepairPush" />
+							<property name="tag" value="SUC"></property>
+						</bean>
+					</key>
+				</entry>
+			</map>
+		</property>
+	</bean> 
+	<!-- 用户end -->
+</beans>

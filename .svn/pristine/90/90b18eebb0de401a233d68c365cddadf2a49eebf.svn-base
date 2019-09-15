@@ -1,0 +1,183 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+/**
+ * @Description: 班次订单需求等关系新Entity类
+ * @author liwei
+ * @date 2017年11月06日 下午03:52:11
+ */
+@Table("t_suc_bkg_line_group_rel")
+public class LineGroupRel extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 班次编号 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 业务编号，订单，需求，组合等编号 
+	 */
+	private String businessCode;
+    /** 
+	 * 业务类型-进港出港 
+	 */
+	private String businessType;
+    /** 
+	 * 业务模式-长期,临时 
+	 */
+	private String businessMode;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 删除标示 
+	 */
+	private Integer deleteFalg;
+    /** 
+	 * 更新组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+	
+	
+	/**
+	 * 获取 班次编号
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 班次编号
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+	
+	/**
+	 * 获取 业务编号，订单，需求，组合等编号
+	 */
+	public String getBusinessCode() {
+		return businessCode;
+	}
+	
+	/**
+	 * 设置 业务编号，订单，需求，组合等编号
+	 */
+	public void setBusinessCode(String businessCode) {
+		this.businessCode = businessCode;
+	}
+	
+	/**
+	 * 获取 业务类型-进港出港
+	 */
+	public String getBusinessType() {
+		return businessType;
+	}
+	
+	/**
+	 * 设置 业务类型-进港出港
+	 */
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
+	}
+	
+	/**
+	 * 获取 业务模式-长期,临时
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	
+	/**
+	 * 设置 业务模式-长期,临时
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Integer getDeleteFalg() {
+		return deleteFalg;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFalg(Integer deleteFalg) {
+		this.deleteFalg = deleteFalg;
+	}
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	
+}

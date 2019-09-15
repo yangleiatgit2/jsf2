@@ -1,0 +1,147 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.DeparPlanForApp;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.vo.operation.AppDriverPlanVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+
+/**
+ * @Description: 发车计划DAO接口类
+ * @author liwei
+ * @date 2017年10月26日 下午05:05:42
+ */
+@Repository("dirvingPlanDao")
+public interface IDirvingPlanDao extends IBaseDao<DirvingPlan, Long> {
+
+	/**
+	 * @Description: 分页查询发车计划
+	 * @param dirvingPlanVo
+	 *            发车计划
+	 * @param page
+	 *            分页参数
+	 * @return 发车计划
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:42
+	 */
+	public Pagination<DirvingPlan> findByPagination(DirvingPlanVo dirvingPlanVo, Page page);
+
+	/**
+	 * 
+	 * @Description: 根据车牌号查询发车计划
+	 * @param plateNumber
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月6日 下午4:10:33
+	 */
+	public List<DirvingPlan> findByPlageNumber(String plateNumber);
+	/**
+	 * 
+	 * @Description: 查询司机是否在执行发车计划
+	 * @param telephone
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月20日 上午9:24:51
+	 */
+	public List<DirvingPlan> findPlaneByTelphone(String driverPhone) ;
+	/**
+	 * 
+	 * @Description: 根据发车计划号来修改状态
+	 * @param
+	 * @return 修改的数目
+	 * @author zhangqiang
+	 * @date 2017年11月6日 下午4:10:33
+	 */
+	public int updateByCode(DirvingPlan dirvingPlan);
+
+	/**
+	 * @Description: 通过发车计划号获取全部信息
+	 * @param drivingPlanCode
+	 *            发车计划号
+	 * @return drivingPlan
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:42
+	 */
+	public DirvingPlan findByPlanCode(String dirvingPlanVo);
+
+	/**
+	 * 
+	 * @Description: 网点端 查询运输动态列表
+	 * @param deparPlanForApp
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月15日 下午6:16:06
+	 */
+	public List<DeparPlanForApp> findPLanBySiteCode(DeparPlanForApp deparPlanForApp);
+
+	/**
+	 * 根据时间，网点查询出对应的发车计划信息
+	 * 
+	 * @return
+	 */
+	public List<DeparPlanForApp> findDepartureForApp(Map<String, String> map);
+
+	public List<DirvingPlan> findByDepartTimeAndType(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * @Description: 通过发车计划号获取全部信息
+	 * @param drivingPlanCode 发车计划号
+	 * @return drivingPlan
+	 * @author liwei
+	 * @date 2017年11月20日 下午05:05:42
+	 */
+	public List<DirvingPlan> findListByPlanCode(String dirvingPlanVo);
+
+	/**
+	 * 
+	 * @Description:手机号查询
+	 * @param phone
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月20日 上午6:36:37
+	 */
+	public DirvingPlanVo findByPhone(String driverPhone);
+	/**
+	 * @Description: 司机获取所有的未确认的 任务
+	 * @param dirvingPlanVo  
+	 * @param page 	 页面显示的数量
+	 * @return  Pagination<AppDriverPlan>  该状态下的发车计划号
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	public Pagination<AppDriverPlanVo> getUnconfirm(
+			DirvingPlanVo dirvingPlanVo, Page page);
+	/**
+	 * @Description: 司机获取所有未确认发车计划号的数量
+	 * @param dirvingPlanVo  
+	 * @return  Int  未确认的发车计划号的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	public Integer getUncomfirmDrivingPlanNum(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: 根据班次查询发车计划
+	 * @param lineGroupCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月13日 上午10:11:20
+	 */
+	public List<DirvingPlan> findByGroupCpde(String lineGroupCode);
+	/**
+	 * 
+	 * @Description: 通过车辆code查询车辆的长度
+	 * @param carType
+	 * @return String
+	 * @author huhaizhou
+	 * @date 2017年12月13日 上午10:11:20
+	 */
+	public String findCarTypeValue(String carType);
+
+}

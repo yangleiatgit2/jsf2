@@ -1,0 +1,322 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSON;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.price.IPricingRuleBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleDetailBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleDetailRelBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleTypeBiz;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailRelVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.WebUtil;
+/**
+ * 
+ * @Description: 智能算法参数controller
+ * @author laizhendong
+ * @date 2017年10月19日 下午4:14:48
+ */
+@Controller
+@RequestMapping("/pricingRule")
+public class PricingRuleController extends BaseController {
+	
+	/**
+	 * 定价规则biz
+	 */
+	@Resource
+	private IPricingRuleBiz pricingRuleBiz;
+	
+	/**
+	 * 定价分类biz
+	 */
+	@Resource
+	private IPricingRuleTypeBiz pricingRuleTypeBiz;
+	
+	/**
+	 * 定价规则详情biz
+	 */
+	@Resource
+	private IPricingRuleDetailBiz pricingRuleDetailBiz;
+	
+	/**
+	 * 定价规则详情关系biz
+	 */
+	@Resource
+	private IPricingRuleDetailRelBiz pricingRuleDetailRelBiz;
+	
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/pricingRule";
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件分页查找定价规则
+	 * @param iaConfVo
+	 * @param page
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月19日 下午8:54:14
+	 */
+	@RequestMapping(value = "/findByPagination")
+	@ResponseBody
+	public Map<String, Object> findByPagination(PricingRuleVo pricingRuleVo,Page page){
+		Pagination<PricingRuleVo> pagination =  pricingRuleBiz.findByPagination(pricingRuleVo, page);
+		return returnSuccess(pagination);
+	}
+	
+	/**
+	 * 
+	 * @Description: 审核 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午3:48:03
+	 */
+	@RequestMapping(value = "/auditPricingRule")
+	@ResponseBody
+	public Map<String, Object> auditPricingRule(PricingRuleVo pricingRuleVo){
+		int count = 0 ;
+		String jsonStr = pricingRuleVo.getUtf1();
+		if(StringUtil.isNotBlank(jsonStr)){
+			//获取当前登录用户信息
+			SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+			List<PricingRuleVo> pricingRuleVos = JSON.parseArray(jsonStr, PricingRuleVo.class);
+			for (PricingRuleVo auditPricingRule : pricingRuleVos) {
+				auditPricingRule.setStatus(BkgConstants.PRICING_RULE_STATUS_OFFICIAL);
+				auditPricingRule.setOfficialVersion(BkgConstants.DEFALUT_VERSION);
+				//设置创建人、创建机构、创建时间
+				auditPricingRule.setUpdateEmp(userInfo.getEmpName());
+				auditPricingRule.setUpdateOrg(userInfo.getCmsBaseOrgCode());
+				auditPricingRule.setUpdateTime(new Date());
+			}
+			count = pricingRuleBiz.auditPricingRule(pricingRuleVos);
+		}
+		return count > 0 ? returnSuccess(Resources.getMessage("common.verify.success")) : returnError(Resources
+				.getMessage("common.verify.fail"));
+	}
+	
+	/**
+	 * 
+	 * @Description: 批量更新定价详情
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月5日 下午4:08:32
+	 */
+	@RequestMapping(value = "/batchUpdateDetail")
+	@ResponseBody
+	public Map<String, Object> batchUpdateDetail(PricingRuleVo pricingRuleVo){
+		//获取当前登录用户信息
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		//设置创建人、创建机构、创建时间
+		pricingRuleVo.setUpdateEmp(userInfo.getEmpName());
+		pricingRuleVo.setUpdateOrg(userInfo.getCmsBaseOrgCode());
+		pricingRuleVo.setUpdateTime(new Date());
+		int count = pricingRuleBiz.batchUpdateDetail(pricingRuleVo);
+		if (count > 0) {
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}
+		return returnError(Resources.getMessage("common.save.fail"));
+	}
+	
+	/**
+	 * 
+	 * @Description: 升级
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午9:44:10
+	 */
+	@RequestMapping(value = "/upgrade")
+	@ResponseBody
+	public Map<String, Object> upgrade(PricingRuleVo pricingRuleVo){
+		//获取当前登录用户信息
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		//设置创建人、创建机构、创建时间
+		pricingRuleVo.setUpdateEmp(userInfo.getEmpName());
+		pricingRuleVo.setUpdateOrg(userInfo.getCmsBaseOrgCode());
+		pricingRuleVo.setUpdateTime(new Date());
+		pricingRuleVo.setUpgradeType("手动升级");
+		int count = pricingRuleBiz.upgrade(pricingRuleVo);
+		if (count > 0) {
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}
+		return returnError(Resources.getMessage("common.save.fail"));
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 是否已存在通用标识 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午8:02:47
+	 */
+	@RequestMapping(value = "/isExistGeneral")
+	@ResponseBody
+	public Map<String, Object> isExistGeneral(PricingRuleVo pricingRuleVo){
+		pricingRuleVo.setGeneralFlag(true);
+		pricingRuleVo.setDeleteFlag(false);
+		List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findByCondition(pricingRuleVo);
+		if (null != pricingRuleVos && !pricingRuleVos.isEmpty()) {
+			return returnSuccess(pricingRuleVos.get(0).getId());
+		}
+		return returnSuccess(false);
+	}
+	
+	/**
+	 * 
+	 * @Description: 设置通用规则 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午4:13:29
+	 */
+	@RequestMapping(value = "/setGeneral")
+	@ResponseBody
+	public Map<String, Object> setGeneral(PricingRuleVo pricingRuleVo){
+		//获取当前登录用户信息
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		//设置创建人、创建机构、创建时间
+		pricingRuleVo.setUpdateEmp(userInfo.getEmpName());
+		pricingRuleVo.setUpdateOrg(userInfo.getCmsBaseOrgCode());
+		pricingRuleVo.setUpdateTime(new Date());
+		int count = pricingRuleBiz.setGeneralRule(pricingRuleVo);
+		if (count > 0) {
+			return returnSuccess("设置通用规则成功");
+		}
+		return returnError("设置通用规则失败");
+	}
+	
+	
+	
+	
+	/**===============================详情=======================================*/
+	
+	/**
+	 * 
+	 * @Description: 根据条件分页查找定价规则详情
+	 * @param pricingRuleDetailVo
+	 * @param page
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 上午9:51:42
+	 */
+	@RequestMapping(value = "/findDetailsByPagination")
+	@ResponseBody
+	public Map<String, Object> findDetailsByPagination(PricingRuleDetailVo pricingRuleDetailVo,Page page){
+		Pagination<PricingRuleDetailVo> pagination =  pricingRuleDetailBiz.findByPagination(pricingRuleDetailVo, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查找定价规则详情
+	 * @param pricingRuleDetailVo
+	 * @param page
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 上午9:51:42
+	 */
+	@RequestMapping(value = "/findDetailsByCondition")
+	@ResponseBody
+	public List<PricingRuleDetailVo> findDetailsByCondition(PricingRuleDetailVo pricingRuleDetailVo){
+		List<PricingRuleDetailVo> pricingRuleDetailVos =  pricingRuleDetailBiz.findByCondition(pricingRuleDetailVo);
+		return pricingRuleDetailVos;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据定价分类分组分页查询
+	 * @param pricingRuleDetailVo
+	 * @param page
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 上午11:24:12
+	 */
+	@RequestMapping(value = "/findByPriceTypeGroup")
+	@ResponseBody
+	public Map<String, Object> findByPriceTypeGroup(PricingRuleDetailVo pricingRuleDetailVo, Page page){
+		Pagination<PricingRuleDetailVo> pagination =  pricingRuleDetailBiz.findByPriceTypeGroup(pricingRuleDetailVo, page);
+		return returnSuccess(pagination);
+	}
+	
+	/**
+	 * 
+	 * @Description: 更新算法参数 
+	 * @param iaConfVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月19日 下午8:47:28
+	 */
+	@RequestMapping(value = "/updatePricingRuleDetail")
+	@ResponseBody
+	public Map<String, Object> updatePricingRuleDetail(PricingRuleDetailVo pricingRuleDetailVo){
+		//获取当前登录用户信息
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		//设置创建人、创建机构、创建时间
+		pricingRuleDetailVo.setUpdateEmp(userInfo.getEmpName());
+		pricingRuleDetailVo.setUpdateOrg(userInfo.getCmsBaseOrgCode());
+		pricingRuleDetailVo.setUpdateTime(new Date());
+		int count = pricingRuleDetailBiz.updatePricingRuleDetail(pricingRuleDetailVo);
+		if (count > 0) {
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}
+		return returnError(Resources.getMessage("common.save.fail"));
+	}
+
+	
+	
+	/**================================详情关系==================================*/
+	 /**
+	  * 
+	  * @Description: 查询关联网点 
+	  * @param pricingRuleDetailRelVo
+	  * @param page
+	  * @return
+	  * @author laizhendong
+	  * @date 2017年11月5日 下午4:51:00
+	  */
+	@RequestMapping(value = "/findRelByPagination")
+	@ResponseBody
+	public Map<String, Object> findRelByPagination(PricingRuleDetailRelVo pricingRuleDetailRelVo,Page page){
+		Pagination<PricingRuleDetailRelVo> pagination =  pricingRuleDetailRelBiz.findByPagination(pricingRuleDetailRelVo, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询报价    根据组合号查询定价规则
+	 * @param combineCode
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月9日 下午12:12:22
+	 */
+	@RequestMapping(value = "/findSelectPrice")
+	@ResponseBody
+	public List<PricingRuleVo> findPriceByCondtion(PricingRuleVo pricingRule){
+		List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findSelectPrice(pricingRule);
+		return pricingRuleVos;
+	}
+	
+}

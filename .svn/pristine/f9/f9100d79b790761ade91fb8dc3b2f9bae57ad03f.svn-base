@@ -1,0 +1,47 @@
+package cn.uce.suc.bkg.dao.datamain;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.datamain.CapacityManagement;
+import cn.uce.suc.bkg.vo.datamain.CapacityManagementVo;
+
+/**
+ * @Description: 网点运力管理DAO接口类
+ * @author UCE-lixueyuan
+ * @date 2017年10月23日 下午06:54:13
+ */
+@Repository("capacityManagementDao")
+public interface ICapacityManagementDao extends IBaseDao<CapacityManagement, Long> {
+	
+	/**
+	 * @Description: 分页查询网点运力管理
+	 * @param capacityManagementVo 网点运力管理
+	 * @param page 分页参数
+	 * @return 网点运力管理
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	public Pagination<CapacityManagement> findByPagination(CapacityManagementVo capacityManagementVo, Page page);
+	/**
+	 * 
+	 * @Description: 网点端,我的运力查询 -
+	 * @param capacityManagementVo
+	 * @param page
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月7日 下午4:26:57
+	 */
+	public Pagination<CapacityManagementVo> findByBelongSiteCodePagination(CapacityManagementVo capacityManagementVo, Page page);
+	/**
+	 * @Description: 定时器修改过期的运力状态为过期
+	 * @param 
+	 * @return 
+	 * @author UCE-haizhou
+	 * @date 2017年11月3日 下午06:54:13
+	 */
+	public int updateTimeOver();
+	
+}

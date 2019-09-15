@@ -1,0 +1,116 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.ICarManageBiz;
+import cn.uce.suc.bkg.biz.datamain.ITransportEffectiveBiz;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.entity.datamain.TransportEffective;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 时效单元测试类
+ * @author yanglei
+ * @date 2017年11月21日 下午7:42:23
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class TransportEffectiveBizTest {
+	/**
+	 * 注入biz
+	 */
+
+	@Resource
+	private ITransportEffectiveBiz transportEffectiveBiz;
+    @Resource
+    private IIdsWorker  redisIdsWorker;
+	/**
+	 * 运输时效
+	 */
+	private TransportEffective trans;
+	private TransportEffectiveVo transVo;
+	private TransportEffectiveVo trans2;
+
+	/**
+	 * 页码类
+	 */
+	private Page page;
+	/**
+	 * 
+	 * @Description: 初始化方法
+	 * @author yanglei
+	 * @date 2017年11月21日 下午10:15:33
+	 */
+	@Before
+	public void init() {
+		System.out.println("==========单元测试开始========");
+		trans = new TransportEffective();
+		page = new Page();
+		String effectiveCode=redisIdsWorker.nextId(IdsPrefix.SX,IdsConstants.YY_MM_DD,5);
+		trans.setEffectiveCode(effectiveCode);
+		trans.setStartSite("shenzhen");
+		trans.setEndSite("hefei");
+		trans.setStartSiteCode("UC051006");
+		trans.setEndSiteCode("UC017660");
+		
+		trans2=new TransportEffectiveVo();
+		String effectiveCode2=redisIdsWorker.nextId(IdsPrefix.SX,IdsConstants.YY_MM_DD,5);
+		trans2.setEffectiveCode(effectiveCode2);
+		trans2.setStartSite("shenzhen2");
+		trans2.setEndSite("hefei2");
+		trans2.setStartSiteCode("UC054513");
+		trans2.setEndSiteCode("UC017660");
+	}
+	/**
+	 * 
+	 * @Description: 方法执行后
+	 * @author yanglei
+	 * @date 2017年11月21日 下午10:15:47
+	 */
+	@After
+	public void excuteEnd() {
+		System.out.println("==========单元测试结束========");
+	}
+	/**
+	 * 
+	 * @Description: 测试方法
+	 * @author zhangqiang
+	 * @date 2017年11月6日 下午10:16:01
+	 */
+	@Test
+	public void test(){
+		TransportEffectiveVo vo= ObjectConvertUtil.convertObject(trans, TransportEffectiveVo.class);
+		transportEffectiveBiz.addTransportEffective(vo);
+		
+		TransportEffectiveVo vo2= ObjectConvertUtil.convertObject(trans2, TransportEffectiveVo.class);
+		transportEffectiveBiz.addTransportEffective(vo2);
+		Pagination<TransportEffectiveVo> vos=transportEffectiveBiz.findByPagination(vo, page);
+		int count=transportEffectiveBiz.countByVo(vo);
+		transportEffectiveBiz.deleteTransportEffective(vo2.getId());
+		transportEffectiveBiz.deleteTransportEffective(vo.getId());
+		trans.setCreateEmp("test");
+		transportEffectiveBiz.updateTransportEffective(trans);
+	}
+
+}

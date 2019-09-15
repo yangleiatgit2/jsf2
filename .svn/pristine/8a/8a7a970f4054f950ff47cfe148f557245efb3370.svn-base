@@ -1,0 +1,117 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.IExceptionManagerBiz;
+import cn.uce.suc.bkg.biz.datamain.IExceptionTraceBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.datamain.ExceptionTrace;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.vo.datamain.ExceptionManagerVo;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * 
+ * @Description: 异常单元测试类
+ * @author yanglei
+ * @date 2017年11月21日 下午7:42:23
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class ExceptionManagerBizTest {
+	/**
+	 * 注入biz
+	 */
+
+	@Resource
+	private IDirvingPlanBiz dirvingPlanBiz;
+	@Resource
+	private IExceptionManagerBiz exceptionBiz;
+	@Resource
+	private IExceptionTraceBiz exceptionTraceBiz;
+
+	
+	private ExceptionManager ex;
+	private ExceptionManager ex2;
+	private ExceptionManagerVo vo;
+	private ExceptionManagerVo vo2;
+
+	/**
+	 * 页码类
+	 */
+	private Page page;
+	/**
+	 * 
+	 * @Description: 初始化方法
+	 * @author yanglei
+	 * @date 2017年11月21日 下午10:15:33
+	 */
+	@Before
+	public void init() {
+		System.out.println("==========单元测试开始========");
+		page = new Page();
+		ex=new ExceptionManager();
+		ex.setAddvice("ad");
+		ex.setBlowVolume(11.0);
+		ex.setAppSrage("1");
+		ex.setStartTrunkCode("fache");
+		ex.setExceptionCode("cdoe");
+		ex.setExcepType("02");
+		
+		ex2=new ExceptionManager();
+		ex2.setAddvice("ad");
+		ex2.setBlowVolume(11.0);
+		ex2.setAppSrage("1");
+		ex2.setStartTrunkCode("fache2");
+		ex2.setExceptionCode("cdoe2");
+		ex2.setExcepType("02");
+	}
+	/**
+	 * 
+	 * @Description: 方法执行后
+	 * @author yanglei
+	 * @date 2017年11月21日 下午10:15:47
+	 */
+	@After
+	public void excuteEnd() {
+		System.out.println("==========单元测试结束========");
+	}
+	/**
+	 * 
+	 * @Description: 测试方法
+	 * @author yanglei
+	 * @date 2017年11月6日 下午10:16:01
+	 */
+	@Test
+	public void test(){
+		exceptionBiz.addException(ex);
+		exceptionBiz.addException(ex2);
+		String startTrunkCode=ex.getStartTrunkCode();
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+		List<ExceptionTrace> traceList=exceptionTraceBiz.findByExceptionCode(ex.getExceptionCode());
+		vo= ObjectConvertUtil.convertObject(ex, ExceptionManagerVo.class);
+		vo2= ObjectConvertUtil.convertObject(ex2, ExceptionManagerVo.class);
+		Pagination<ExceptionManagerVo> vos=exceptionBiz.findByPagination(vo, page);
+		exceptionBiz.findById(ex.getId());
+		//exceptionBiz.findByVo(vo2, page);
+		Long id1=ex.getId();
+		Long id2=ex2.getId();
+		exceptionBiz.deleteException(id1);
+		exceptionBiz.deleteException(id2);
+	}
+
+}

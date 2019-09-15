@@ -1,0 +1,120 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.io.InputStream;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
+
+import cn.uce.suc.common.biz.IFileUpBiz;
+import cn.uce.web.file.entity.FileInfoList;
+import cn.uce.web.file.service.FastdfsService;
+import cn.uce.web.file.vo.FileInfoVO;
+import cn.uce.web.file.vo.ResultVO;
+/**
+ * 
+ * @Description: 附件上传 
+ * @author liwei
+ * @date 2017年10月12日 下午9:04:41
+ */
+@Repository("fileUpBiz")
+public class FileUpBiz implements IFileUpBiz {
+	/*附件上传相关service*/
+    @Resource(name = "fileService")
+    private FastdfsService fastdfsService;
+    
+  
+
+    /**
+     * 上传
+    * <p>Title: uploadFile</p> 
+    * <p>Description: </p> 
+    * @param files
+    * @param info
+    * @return 
+    * @see cn.uce.suc.common.biz.IFileUpBiz#uploadFile(org.springframework.web.multipart.MultipartFile[], cn.uce.web.file.vo.FileInfoVO)
+     */
+    @Override
+    public List<String> uploadFile(MultipartFile[] files, FileInfoVO info) {
+        return fastdfsService.uploadFile(files, info);
+    }
+    /**
+     * (上传
+    * <p>Title: uploadFile</p> 
+    * <p>Description: </p> 
+    * @param fileBytes
+    * @param info
+    * @return 
+    * @see cn.uce.suc.common.biz.IFileUpBiz#uploadFile(byte[], cn.uce.web.file.vo.FileInfoVO)
+     */
+    @Override
+    public String uploadFile(byte[] fileBytes, FileInfoVO info) {
+        return fastdfsService.uploadFile(fileBytes, info);
+    }
+    /**
+     * 上传
+    * <p>Title: uploadFile</p> 
+    * <p>Description: </p> 
+    * @param input
+    * @param info
+    * @return 
+    * @see cn.uce.suc.common.biz.IFileUpBiz#uploadFile(java.io.InputStream, cn.uce.web.file.vo.FileInfoVO)
+     */
+    @Override
+    public String uploadFile(InputStream input, FileInfoVO info) {
+        return fastdfsService.uploadFile(input, info);
+    }
+    /**
+     * 下载
+    * <p>Title: downLoadFile</p> 
+    * <p>Description: </p> 
+    * @param info
+    * @return 
+    * @see cn.uce.suc.common.biz.IFileUpBiz#downLoadFile(cn.uce.web.file.vo.FileInfoVO)
+     */
+    @Override
+    public byte[] downLoadFile(FileInfoVO info) {
+        return fastdfsService.downLoadFile(info);
+    }
+    /**
+     * 删除
+    * <p>Title: deleteFile</p> 
+    * <p>Description: </p> 
+    * @param info
+    * @param type
+    * @return 
+    * @see cn.uce.suc.common.biz.IFileUpBiz#deleteFile(cn.uce.web.file.vo.FileInfoVO, java.lang.String)
+     */
+    @Override
+    public boolean deleteFile(FileInfoVO info, String type) {
+        return fastdfsService.deleteFile(info, type);
+    }
+    /**
+     * 查询
+    * <p>Title: selectFileInfo</p> 
+    * <p>Description: </p> 
+    * @param info
+    * @param start
+    * @param end
+    * @return 
+    * @see cn.uce.suc.common.biz.IFileUpBiz#selectFileInfo(cn.uce.web.file.vo.FileInfoVO, int, int)
+     */
+    @Override
+    public FileInfoList selectFileInfo(FileInfoVO info,int start,int end) {
+        return fastdfsService.selectFileInfo(info,start,end);
+    }
+    /**
+     * 修改
+    * <p>Title: updateFileInfo</p> 
+    * <p>Description: </p> 
+    * @param info
+    * @return 
+    * @see cn.uce.suc.common.biz.IFileUpBiz#updateFileInfo(cn.uce.web.file.vo.FileInfoVO)
+     */
+    @Override
+    public ResultVO updateFileInfo(FileInfoVO info) {
+        return fastdfsService.updateFileInfo(info);
+    }
+}

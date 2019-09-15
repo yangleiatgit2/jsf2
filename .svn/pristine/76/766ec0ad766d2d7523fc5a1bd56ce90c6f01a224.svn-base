@@ -1,0 +1,352 @@
+package cn.uce.suc.bkg.vo.datastatis;
+
+import cn.uce.base.vo.BaseVo;
+import cn.uce.core.excel.annotation.Excel;
+
+/**
+ *
+ * @Description: 满载率统计Vo
+ * @author xiesonglin
+ * @date 2017年12月3日 下午1:13:56
+ */
+public class LoadRatioReportVo extends BaseVo {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 发车计划编号
+	 */
+	@Excel(name = "发车计划编号")
+	private String drivingPlanCode;
+
+	/**
+	 * 开始时间
+	 */
+	@Excel(name = "开始时间从", format = "yyyy-MM-dd HH:mm:ss")
+	private String departTime;
+
+	/**
+	 * 到达时间
+	 */
+	@Excel(name = "开始时间到", format = "yyyy-MM-dd HH:mm:ss")
+	private String arrivalTime;
+
+	private String workCenterCode;
+
+	@Excel(name = "分拨中心")
+	private String workCenterName;
+
+	private String siteCode;
+
+	@Excel(name = "网点")
+	private String siteName;
+
+	/**
+	 * 车牌号码
+	 */
+	@Excel(name = "车牌号码")
+	private String plateNumber;
+
+	/**
+	 * 司机姓名
+	 */
+	@Excel(name = "司机姓名")
+	private String driverName;
+
+	/**
+	 * 业务模式
+	 */
+	private Integer businessMode;
+
+	@Excel(name = "业务模式")
+	private String businessModeName;
+	/**
+	 * 车辆类型
+	 */
+	private Integer carType;
+
+	@Excel(name = "车辆类型")
+	private String carTypeName;
+	/**
+	 * 车辆荷载(T)
+	 */
+	@Excel(name = "车辆最大载重量(T)")
+	private Double carLoad;
+
+	/**
+	 * 实际载重(T)
+	 */
+	@Excel(name = "实际载重((T)")
+	private Double actualWeight;
+
+	/**
+	 * 满载率
+	 */
+	@Excel(name = "满载率", suffix = "%")
+	private Double loadRatio;
+
+	/**
+	 * 查询条件 开始时间起止
+	 */
+	private String startTimeByBegin;
+
+	/**
+	 * 查询条件 开始时间 结尾
+	 */
+	private String startTimeByEnd;
+
+	/**
+	 * 获得 查询条件 开始时间起
+	 */
+	public String getStartTimeByBegin() {
+		return startTimeByBegin;
+	}
+
+	/**
+	 * 设置 查询条件 开始时间起
+	 */
+	public void setStartTimeByBegin(String startTimeByBegin) {
+		this.startTimeByBegin = startTimeByBegin;
+	}
+
+	/**
+	 * 获得 查询条件 开始时间止
+	 */
+	public String getStartTimeByEnd() {
+		return startTimeByEnd;
+	}
+
+	/**
+	 * 设置 查询条件 开始时间止
+	 */
+	public void setStartTimeByEnd(String startTimeByEnd) {
+		this.startTimeByEnd = startTimeByEnd;
+	}
+
+	/**
+	 * 获得 发车计划编号
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+
+	/**
+	 * 设置 发车计划编号
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+
+	/**
+	 * 获得 离开时间
+	 */
+	public String getDepartTime() {
+		return departTime;
+	}
+
+	/**
+	 * 设置 离开时间
+	 */
+	public void setDepartTime(String departTime) {
+		this.departTime = departTime;
+	}
+
+	/**
+	 * 获得 到达时间
+	 */
+	public String getArrivalTime() {
+		return arrivalTime;
+	}
+
+	/**
+	 * 设置 到达时间
+	 */
+	public void setArrivalTime(String arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+	/**
+	 * 获得 分拨中心名称
+	 */
+	public String getWorkCenterName() {
+		return workCenterName;
+	}
+
+	/**
+	 * 设置 分拨中心名称
+	 */
+	public void setWorkCenterName(String workCenterName) {
+		this.workCenterName = workCenterName;
+	}
+
+	/**
+	 * 获得 网点名称
+	 */
+	public String getSiteName() {
+		return siteName;
+	}
+
+	/**
+	 * 设置 网点名称
+	 */
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
+	}
+
+	/**
+	 * 获得 车牌号
+	 */
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+
+	/**
+	 * 设置 车牌号
+	 */
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+
+	/**
+	 * 获得 司机名称
+	 */
+	public String getDriverName() {
+		return driverName;
+	}
+
+	/**
+	 * 设置 司机名称
+	 */
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+
+	/**
+	 * 获得 业务模式
+	 */
+	public Integer getBusinessMode() {
+		return businessMode;
+	}
+
+	/**
+	 * 设置 业务模式
+	 */
+	public void setBusinessMode(Integer businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	/**
+	 * 获得 车辆类型
+	 */
+	public Integer getCarType() {
+		return carType;
+	}
+
+	/**
+	 * 设置 车辆类型
+	 */
+	public void setCarType(Integer carType) {
+		this.carType = carType;
+	}
+
+	/**
+	 * 获得 车辆负荷
+	 */
+	public Double getCarLoad() {
+		return carLoad;
+	}
+
+	/**
+	 * 设置 车辆负荷
+	 */
+	public void setCarLoad(Double carLoad) {
+		this.carLoad = carLoad;
+	}
+
+	/**
+	 * 获得 实际重量
+	 */
+	public Double getActualWeight() {
+		return actualWeight;
+	}
+
+	/**
+	 * 设置 实际重量
+	 */
+	public void setActualWeight(Double actualWeight) {
+		this.actualWeight = actualWeight;
+	}
+
+	/**
+	 * 获得 满载率
+	 */
+	public Double getLoadRatio() {
+		return loadRatio;
+	}
+
+	/**
+	 * 设置 满载率
+	 */
+	public void setLoadRatio(Double loadRatio) {
+		this.loadRatio = loadRatio;
+	}
+
+	/**
+	 * 获得 分拨中心code
+	 */
+	public String getWorkCenterCode() {
+		return workCenterCode;
+	}
+
+	/**
+	 * 设置 分拨中心code
+	 */
+	public void setWorkCenterCode(String workCenterCode) {
+		this.workCenterCode = workCenterCode;
+	}
+
+	/**
+	 * 获得 网点code
+	 */
+	public String getSiteCode() {
+		return siteCode;
+	}
+
+	/**
+	 * 设置 网点code
+	 */
+	public void setSiteCode(String siteCode) {
+		this.siteCode = siteCode;
+	}
+
+	/**
+	 * 获得 业务模式名称
+	 */
+	public String getBusinessModeName() {
+		return businessModeName;
+	}
+
+	/**
+	 * 设置 业务模式名称
+	 */
+	public void setBusinessModeName(String businessModeName) {
+		this.businessModeName = businessModeName;
+	}
+
+	/**
+	 * 获得 车辆类型名称
+	 */
+	public String getCarTypeName() {
+		return carTypeName;
+	}
+
+	/**
+	 * 设置 车辆类型名称
+	 */
+	public void setCarTypeName(String carTypeName) {
+		this.carTypeName = carTypeName;
+	}
+
+}

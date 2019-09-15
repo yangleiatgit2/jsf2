@@ -1,0 +1,298 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IIaMonitorBiz;
+import cn.uce.suc.bkg.entity.operation.IaMonitor;
+import cn.uce.suc.bkg.exception.BkgIaMonitorException;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.IaMonitorVo;
+import cn.uce.suc.bkg.service.operation.IaMonitorService;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.utils.StringUtil;
+
+/**
+ * @Description: 智能算法任务监控BIZ实现类
+ * @author laizhendong
+ * @date 2017年11月28日 上午10:45:49
+ */
+@Service("iaMonitorBiz")
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class IaMonitorBiz implements IIaMonitorBiz {
+	
+	/**
+	 * 注入智能算法任务监控Service
+	 */
+	@Resource
+	private IaMonitorService iaMonitorService;
+	
+	/**
+	 * redis流水号生成
+	 */
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	
+	/**
+	 * 机构biz
+	 */
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz;
+	
+	/**日志*/
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass()); 
+	/**
+	 * @Description: 新增智能算法任务监控
+	 * @param iaMonitor
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月28日 上午10:45:49
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int addIaMonitor(IaMonitor iaMonitor) {
+		return iaMonitorService.addIaMonitor(iaMonitor);
+	}
+	
+	/**
+	 * @Description: 修改智能算法任务监控
+	 * @param iaMonitor 智能算法任务监控
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月28日 上午10:45:49
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updateIaMonitor(IaMonitor iaMonitor) {
+		return iaMonitorService.updateById(iaMonitor);
+	}
+	
+	/**
+	 * @Description: 删除智能算法任务监控
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月28日 上午10:45:49
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int deleteIaMonitor(Long id) {
+		return iaMonitorService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询智能算法任务监控
+	 * @param id 主键
+	 * @return 智能算法任务监控
+	 * @author laizhendong
+	 * @date 2017年11月28日 上午10:45:49
+	 */
+	@Override
+	public IaMonitor findById(Long id) {
+		return iaMonitorService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询智能算法任务监控
+	 * @param iaMonitorVo 智能算法任务监控
+	 * @param page 分页参数
+	 * @return 智能算法任务监控
+	 * @author laizhendong
+	 * @date 2017年11月28日 上午10:45:49
+	 */
+	public Pagination<IaMonitor> findByPagination(IaMonitorVo iaMonitorVo, Page page) {
+		Pagination<IaMonitor> pagination = iaMonitorService.findByPagination(iaMonitorVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description: 根据组合编号查询算法任务
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月29日 下午2:28:50
+	 */
+	public IaMonitorVo findByCombineCode(String combineCode){
+		return iaMonitorService.findByCombineCode(combineCode);
+	}
+
+	/**
+	 * 
+	 * @Description: 校验需求组合，不存在保存调用组合任务，存在则修改状态为运行中
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月29日 下午2:28:50
+	 */
+	@Override
+	public int checkIaTaskStatus(FreightDemandCombineVo demandCombineVo) {
+		int count = 0;
+		//组合编号
+		String combineCode = demandCombineVo.getDemandCombineCode();
+		if (StringUtil.isBlank(combineCode)) {
+			if (logger.isErrorEnabled()) {
+				logger.error("需求组合调用算法checkIaTask错误，需求组合编号为空");
+			}
+			return count;
+		}
+		IaMonitorVo dbIaMonitorVo = findByCombineCode(combineCode);
+		//不存在则表示新增任务记录
+		if (null == dbIaMonitorVo) {
+			IaMonitor add = buildAddIaMonitor(demandCombineVo);
+			count += addIaMonitor(add);
+		}else {
+		//存在则把状态改为运行中状态
+			String status = dbIaMonitorVo.getStatus();
+			if (BkgConstants.MONITOR_STATUS_FAIL.equals(status)) {
+				IaMonitor update = new IaMonitor();
+				update.setId(dbIaMonitorVo.getId());
+				update.setStatus(BkgConstants.MONITOR_STATUS_RUNNING);
+				//错误信息置空
+				update.setErrorMsg("");
+				update.setExecuteTime(new Date());
+				update.setUpdateEmp(demandCombineVo.getUpdateEmp());
+				update.setUpdateOrg(demandCombineVo.getUpdateOrg());
+				update.setUpdateTime(new Date());
+				count += updateIaMonitor(update);
+				if (count < 1) {
+					throw new BkgIaMonitorException("数据已被更改，请刷新后重新！");
+				}
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据需求组合编号构建任务实体 
+	 * @param demandCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月29日 下午7:40:14
+	 */
+	private IaMonitor buildAddIaMonitor(FreightDemandCombineVo demandCombineVo){
+		IaMonitor iaMonitor = new IaMonitor();
+		//组合编号
+		iaMonitor.setCombineCode(demandCombineVo.getDemandCombineCode());
+		//组合类型
+		iaMonitor.setCombineType(BkgConstants.COMBINE_SOURCE_TYPE_DEMAND);
+		//需求类型 临时或长期
+		iaMonitor.setDemandType(demandCombineVo.getDemandCombineType());
+		iaMonitor.setExecuteTime(new Date());
+		//获取任务编号
+		String taskCode = redisIdsWorker.nextId(IdsPrefix.ZN);
+		iaMonitor.setTaskCode(taskCode);
+		//业务模式
+		iaMonitor.setBusinessMode(demandCombineVo.getBusinessMode());
+		//设置中心编号、中心名称
+		String orgCode = demandCombineVo.getStationCode();
+		if (StringUtil.isNotBlank(orgCode)) {
+			iaMonitor.setOrgCode(orgCode);
+			OmgCmsOrgVo org = omgCmsOrgBiz.findByBaseOrgCode(orgCode);
+			if (null != org) {
+				iaMonitor.setOrgName(org.getOrgName());
+			}
+		}
+		//状态设为执行中
+		iaMonitor.setStatus(BkgConstants.MONITOR_STATUS_RUNNING);
+		//设置默认值
+		iaMonitor.setDeleteFlag(false);
+		iaMonitor.setVersion(BkgConstants.DEFALUT_VERSION);
+		//设置创建人、创建机构、创建时间
+		iaMonitor.setCreateEmp(BkgConstants.ZN_CREATE_EMP);
+		iaMonitor.setCreateOrg(BkgConstants.ZN_CREATE_ORG);
+		iaMonitor.setCreateTime(new Date());
+		return iaMonitor;
+	}
+
+
+	@Override
+	public int checkIaTaskStatus(FreightOrderCombineVo orderCombineVo) {
+		int count = 0;
+		//组合编号
+		String combineCode = orderCombineVo.getOrderCombineCode();
+		if (StringUtil.isBlank(combineCode)) {
+			if (logger.isErrorEnabled()) {
+				logger.error("需求组合调用算法checkIaTask错误，需求组合编号为空");
+			}
+			return count;
+		}
+		IaMonitorVo dbIaMonitorVo = findByCombineCode(combineCode);
+		//不存在则表示新增任务记录
+		if (null == dbIaMonitorVo) {
+			IaMonitor add = buildAddIaMonitor(orderCombineVo);
+			count += addIaMonitor(add);
+		}else {
+		//存在则把状态改为运行中状态
+			String status = dbIaMonitorVo.getStatus();
+			if (BkgConstants.MONITOR_STATUS_FAIL.equals(status)) {
+				IaMonitor update = new IaMonitor();
+				update.setId(dbIaMonitorVo.getId());
+				update.setStatus(BkgConstants.MONITOR_STATUS_RUNNING);
+				update.setErrorMsg("");
+				update.setExecuteTime(new Date());
+				update.setUpdateEmp(orderCombineVo.getUpdateEmp());
+				update.setUpdateOrg(orderCombineVo.getUpdateOrg());
+				update.setUpdateTime(new Date());
+				count += updateIaMonitor(update);
+				if (count < 1) {
+					throw new BkgIaMonitorException("数据已被更改，请刷新后重新！");
+				}
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据需求组合编号构建任务实体 
+	 * @param demandCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月29日 下午7:40:14
+	 */
+	private IaMonitor buildAddIaMonitor(FreightOrderCombineVo orderCombineVo){
+		IaMonitor iaMonitor = new IaMonitor();
+		//组合编号
+		iaMonitor.setCombineCode(orderCombineVo.getOrderCombineCode());
+		//组合类型
+		iaMonitor.setCombineType(BkgConstants.COMBINE_SOURCE_TYPE_ORDER);
+		//需求类型 临时或长期
+		iaMonitor.setDemandType(orderCombineVo.getOrderCombineType());
+		iaMonitor.setExecuteTime(new Date());
+		//获取任务编号
+		String taskCode = redisIdsWorker.nextId(IdsPrefix.ZN);
+		iaMonitor.setTaskCode(taskCode);
+		//业务模式
+		iaMonitor.setBusinessMode(orderCombineVo.getBusinessMode());
+		//设置中心编号、中心名称
+		String orgCode = orderCombineVo.getOperStationCode();
+		if (StringUtil.isNotBlank(orgCode)) {
+			iaMonitor.setOrgCode(orgCode);
+			OmgCmsOrgVo org = omgCmsOrgBiz.findByBaseOrgCode(orgCode);
+			if (null != org) {
+				iaMonitor.setOrgName(org.getOrgName());
+			}
+		}
+		//状态设为执行中
+		iaMonitor.setStatus(BkgConstants.MONITOR_STATUS_RUNNING);
+		//设置默认值
+		iaMonitor.setDeleteFlag(false);
+		iaMonitor.setVersion(BkgConstants.DEFALUT_VERSION);
+		//设置创建人、创建机构、创建时间
+		iaMonitor.setCreateEmp(BkgConstants.ZN_CREATE_EMP);
+		iaMonitor.setCreateOrg(BkgConstants.ZN_CREATE_ORG);
+		iaMonitor.setCreateTime(new Date());
+		return iaMonitor;
+	}
+}

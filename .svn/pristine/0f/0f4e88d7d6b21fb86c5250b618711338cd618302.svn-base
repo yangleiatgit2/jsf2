@@ -1,0 +1,38 @@
+package cn.uce.suc.bkg.dao.datamain;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.vo.datamain.ExceptionManagerVo;
+
+/**
+ * @Description: 运输异常管理DAO接口类
+ * @author yanglei
+ * @date 2017年10月31日 下午03:48:43
+ */
+@Repository("exceptionDao")
+public interface IExceptionManagerDao extends IBaseDao<ExceptionManager, Long> {
+	
+	/**
+	 * @Description: 分页查询运输异常管理
+	 * @param exceptionVo 运输异常管理
+	 * @param page 分页参数
+	 * @return 运输异常管理
+	 * @author yanglei
+	 * @date 2017年10月31日 下午03:48:43
+	 */
+	public Pagination<ExceptionManagerVo> findByPagination(ExceptionManagerVo exceptionVo, Page page);
+	/**
+	 * @Description: 修改运输异常管理
+	 * @param exception 运输异常管理
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年10月31日 下午03:48:43
+	 */
+	public List<ExceptionManager> findByVo(ExceptionManagerVo exceptionVo, Page page);
+}

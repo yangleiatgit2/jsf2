@@ -1,0 +1,39 @@
+package cn.uce.suc.bkg.biz.datastatis;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.vo.datastatis.FreightContrastReportVo;
+
+/**
+ * 
+ * @Description:  货量差异统计报表Biz接口
+ * @author xiesonglin
+ * @date 2017年12月1日 下午12:18:23
+ */
+public interface IFreightContrastReportBiz {
+	/**
+	 * 
+	 * @Description:  根据分页查询货量差异数据报表
+	 * @param driverEvaluateReportVo
+	 * @param page
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月1日 下午12:18:38
+	 */
+	public Pagination<FreightContrastReportVo> findFreightContrastReportByPage(
+			FreightContrastReportVo freightContrastReportVo, Page page);
+	
+	
+	/**
+	 * 
+	 * @Description:  货量差异数据 报表 数据导出 
+	 * @param freightContrastReportVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月5日 下午4:25:19
+	 */
+	public List<FreightContrastReportVo> findByExport(FreightContrastReportVo freightContrastReportVo);
+	
+}

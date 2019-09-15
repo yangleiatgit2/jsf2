@@ -1,0 +1,255 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+/**
+ * @Description: 车辆轨迹信息Entity类
+ * @author liwei
+ * @date 2017年10月31日 上午10:46:42
+ */
+@Table("t_suc_bkg_car_trace")
+public class CarTrace extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 发车计划编号 
+	 */
+	private String drivingPlanCode;
+    /** 
+	 * 车牌号 
+	 */
+	private String plateNumbers;
+    /** 
+	 * 纬度值 
+	 */
+	private String lat;
+    /** 
+	 * 经度值 
+	 */
+	private String lng;
+    /** 
+	 * 司机姓名 
+	 */
+	private String dirverName;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+	
+	
+	/**
+	 * 获取 发车计划编号
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	
+	/**
+	 * 设置 发车计划编号
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+	
+	/**
+	 * 获取 车牌号
+	 */
+	public String getPlateNumbers() {
+		return plateNumbers;
+	}
+	
+	/**
+	 * 设置 车牌号
+	 */
+	public void setPlateNumbers(String plateNumbers) {
+		this.plateNumbers = plateNumbers;
+	}
+	
+	/**
+	 * 获取 纬度值
+	 */
+	public String getLat() {
+		return lat;
+	}
+	
+	/**
+	 * 设置 纬度值
+	 */
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+	
+	/**
+	 * 获取 经度值
+	 */
+	public String getLng() {
+		return lng;
+	}
+	
+	/**
+	 * 设置 经度值
+	 */
+	public void setLng(String lng) {
+		this.lng = lng;
+	}
+	
+	/**
+	 * 获取 司机姓名
+	 */
+	public String getDirverName() {
+		return dirverName;
+	}
+	
+	/**
+	 * 设置 司机姓名
+	 */
+	public void setDirverName(String dirverName) {
+		this.dirverName = dirverName;
+	}
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+	
+	
+}

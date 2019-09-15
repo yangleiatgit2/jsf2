@@ -1,0 +1,111 @@
+package cn.uce.suc.bkg.biz.operation;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.vo.operation.FreightDemandVo;
+
+/**
+ * @Description: 货运需求表BIZ接口类
+ * @author yanglei
+ * @date 2017年10月19日 下午12:12:42
+ */
+public interface IFreightDemandBiz {
+	
+	
+	/**
+	 * @Description: 新增货运需求表
+	 * @param freightDemand
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月18日 上午09:57:44
+	 */
+	public int addFreightDemand(FreightDemandVo freightDemandVo);
+	/**
+	 * @Description:  网点端 提交货运需求事需要向 PC端发送消息提醒待报价
+	 * @param freightDemand
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月18日 上午09:57:44
+	 */
+	public int appAddFreightDemand(FreightDemandVo freightDemandVo);
+	
+	/**
+	 * @Description: 修改货运需求表
+	 * @param freightDemand 货运需求表
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月18日 上午09:57:44
+	 */
+	public int updateFreightDemand(FreightDemandVo freightDemandVo);
+	/**
+	 * @Description: 网点端 取消与确认 货运需求表
+	 * @param freightDemand 货运需求表
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月18日 上午09:57:44
+	 */
+	public int appUpdateFreightDemand(FreightDemandVo freightDemandVo);
+	
+	/**
+	 * @Description: 分页查询货运需求表
+	 * @param freightDemandVo 货运需求表
+	 * @param page 分页参数
+	 * @return 货运需求表
+	 * @author yanglei
+	 * @date 2017年10月19日 下午12:12:42
+	 */
+	public Pagination<FreightDemandVo> findByPagination(FreightDemandVo freightDemandVo, Page page);
+	
+	/**
+	 * 
+	 * @Description: 查询货运需求表
+	 * @param freightDemandVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月24日 下午5:01:15
+	 */
+	public List<FreightDemandVo>  findByCondition(FreightDemandVo freightDemandVo);
+	
+	/**
+	 * 
+	 * @Description: 批量更新货运需求的需求组合编码
+	 * @param freightDemandVos
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月24日 下午5:26:09
+	 */
+	public String  updateBatchDemandStatus(List<FreightDemandVo> freightDemandVos);
+	
+	/**
+	 * 
+	 * @Description: 发送报价 网点审核
+	 * @param freightDemandVos
+	 * @param demandStatus
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月2日 上午11:01:05
+	 */
+	public String  sendQuotation(List<FreightDemandVo> freightDemandVos,List<String> sitecodes);
+	
+	/**
+	 * 
+	 * @Description: 根据组合需求查询需求 
+	 * @param freightDemandVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月26日 下午11:50:58
+	 */
+	public List<FreightDemandVo> findByCombine(FreightDemandVo freightDemandVo);
+	
+	/**
+	 * 
+	 * @Description: 根据需求编号更新执行时间
+	 * @param freightDemandVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月16日 下午7:30:43
+	 */
+	public int updateByDemandCode(List<FreightDemandVo> freightDemandVos);
+}

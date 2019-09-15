@@ -1,0 +1,108 @@
+package cn.uce.suc.bkg.vo.operation;
+
+/**
+ * 
+ * @Description: TODO(可视化运输信息实体类) 
+ * @author liuhai
+ * @date 2017年10月30日 下午9:10:23
+ */
+public class VisibleTransportInfoVo {
+	//发车计划号
+	private String drivingPlanCode;
+	//分拨中心
+	private String groupCenterCode;
+	//站点名称
+	private String dotNameCode;
+	//省简码，如：安徽省-皖
+	private String carSimple;
+	//车牌号
+	private String carName;
+	//车辆所属
+	private String carBelongType;
+	/**   
+	 * 获取drivingPlanCode   
+	 * @return drivingPlanCode drivingPlanCode   
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	/**   
+	 * 设置drivingPlanCode   
+	 * @param drivingPlanCode drivingPlanCode   
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+	/**   
+	 * 获取groupCenterCode   
+	 * @return groupCenterCode groupCenterCode   
+	 */
+	public String getGroupCenterCode() {
+		return groupCenterCode;
+	}
+	/**   
+	 * 设置groupCenterCode   
+	 * @param groupCenterCode groupCenterCode   
+	 */
+	public void setGroupCenterCode(String groupCenterCode) {
+		this.groupCenterCode = groupCenterCode;
+	}
+	/**   
+	 * 获取dotNameCode   
+	 * @return dotNameCode dotNameCode   
+	 */
+	public String getDotNameCode() {
+		return dotNameCode;
+	}
+	/**   
+	 * 设置dotNameCode   
+	 * @param dotNameCode dotNameCode   
+	 */
+	public void setDotNameCode(String dotNameCode) {
+		this.dotNameCode = dotNameCode;
+	}
+	/**   
+	 * 获取carSimple   
+	 * @return carSimple carSimple   
+	 */
+	public String getCarSimple() {
+		return carSimple;
+	}
+	/**   
+	 * 设置carSimple   
+	 * @param carSimple carSimple   
+	 */
+	public void setCarSimple(String carSimple) {
+		this.carSimple = carSimple;
+	}
+	/**   
+	 * 获取carName   
+	 * @return carName carName   
+	 */
+	public String getCarName() {
+		return carName;
+	}
+	/**   
+	 * 设置carName   
+	 * @param carName carName   
+	 */
+	public void setCarName(String carName) {
+		this.carName = carName;
+	}
+	/**   
+	 * 获取carBelongType   
+	 * @return carBelongType carBelongType   
+	 */
+	public String getCarBelongType() {
+		return carBelongType;
+	}
+	/**   
+	 * 设置carBelongType   
+	 * @param carBelongType carBelongType   
+	 */
+	public void setCarBelongType(String carBelongType) {
+		this.carBelongType = carBelongType;
+	}
+
+	
+}

@@ -1,0 +1,56 @@
+package cn.uce.suc.bkg.vo.ia;
+
+import cn.uce.base.vo.BaseVo;
+
+/**
+ * 
+ * @Description: 车辆信息(车型和容积)
+ * @author laizhendong
+ * @date 2017年10月26日 下午3:38:58
+ */
+public class WsCarVo extends BaseVo{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 车辆类型
+	 */
+	private String truckType;
+	
+	/**
+	 * 车辆容积
+	 */
+	private double truckVolume;
+
+	/** 
+	 * @return truckType 
+	 */
+	public String getTruckType() {
+		return truckType;
+	}
+
+	/**
+	 * @param truckType the truckType to set
+	 */
+	public void setTruckType(String truckType) {
+		this.truckType = truckType;
+	}
+
+	/** 
+	 * @return truckVolume 
+	 */
+	public double getTruckVolume() {
+		return truckVolume;
+	}
+
+	/**
+	 * @param truckVolume the truckVolume to set
+	 */
+	public void setTruckVolume(double truckVolume) {
+		this.truckVolume = truckVolume;
+	}
+
+}

@@ -1,0 +1,281 @@
+package cn.uce.suc.common.util;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestHeader;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.base.exception.DataIntegrityViolationException;
+import cn.uce.base.exception.DuplicateKeyException;
+import cn.uce.base.exception.MissingParameterException;
+import cn.uce.base.exception.TypeMismatchException;
+import cn.uce.base.exception.UnknownException;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.web.common.convert.DateConvertEditor;
+import cn.uce.web.common.i18n.Resources;
+
+import com.alibaba.fastjson.JSONObject;
+/**
+ * 
+ * @Description: app接口基类
+ * @author liwei
+ * @date 2017年11月24日 上午9:02:14
+ */
+public abstract class BaseAppController {
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+	/** 默认的日期格式化格式*/
+	private String dateFormatPattern = "yyyy-MM-dd hh:mm:ss";
+	/**
+	 * 返回成功不带msg
+	 * @return
+	 */
+	protected Map<String, Object> returnSuccess() {
+		Map<String, Object> map = new HashMap<String, Object>();
+        map.put("resultFlag", SucAppConstants.OK.value());
+        map.put("failureReason", "提交成功");
+        return map;
+	}
+	/**
+	 * 返回成功,可带msg
+	 * @return
+	 */
+	protected Map<String, Object> returnSuccess(String msg) {
+		//成功标示-200
+		Map<String, Object> map = new HashMap<String, Object>();
+        map.put("resultFlag", SucAppConstants.OK.value());
+        msg = Resources.getMessage(msg);
+        map.put("failureReason", msg);
+        return map;
+    }
+	
+	/**
+	 * 返回成功,带返回参数
+	 * @return
+	 */
+	protected Map<String, Object> returnSuccess(Object data) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 创建返回对象
+		if (data != null) {
+			if (data instanceof Pagination<?>) {
+				Pagination<?> pageResult = (Pagination<?>) data;
+				Map<String, Object> mapPage = new HashMap<String, Object>();
+				//数据
+				mapPage.put("data", pageResult.getData());
+				//总数
+				mapPage.put("total", pageResult.getPage().getTotal());
+				//当前页
+				mapPage.put("currentPage", pageResult.getPage().getCurrentPage());
+				//页面总数
+				mapPage.put("pageSize", pageResult.getPage().getPageSize());
+				map.put("result", mapPage);
+			} else if (data instanceof List<?>) {
+				map.put("result", data);
+			} else {
+				map.put("result", data);
+			}
+		}
+		// 成功标示-200
+		map.put("resultFlag", SucAppConstants.OK.value());
+		map.put("failureReason", SucAppConstants.OK.msg());
+		return map;
+	}
+
+	/**
+	 * 返回成功,带返回参数
+	 * @return
+	 */
+	protected Map<String, Object> returnSuccess(Object data,String message) {
+		Map<String, Object> map = returnSuccess(data);
+		message = Resources.getMessage(message);
+        map.put("message",message);
+        return map;
+	}/*
+	*/
+	/**
+	 * 返回失败msg
+	 * @return
+	 */
+	protected Map<String, Object> returnError(String code,String msg) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		msg = Resources.getMessage(msg);
+		map.put("resultFlag", code);
+		map.put("failureReason", msg);
+     
+        return map;
+    }
+
+	/**
+	 * 返回失败msg
+	 * @return
+	 */
+	protected Map<String, Object> returnError(String msg) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		msg = Resources.getMessage(msg);
+		//失败标示-100
+		map.put("resultFlag", SucAppConstants.FAIL.value());
+		map.put("failureReason", msg);
+     
+        return map;
+    }
+	/**
+	 * 返回失败msg
+	 * @return
+	 */
+	protected Map<String, Object> returnError() {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resultFlag", SucAppConstants.FAIL.value());
+		map.put("failureReason", "请求失败");
+		return map;
+	}
+	
+	/**
+	 * 通过传入业务异常，从异常中得到异常类型，得到异常类的国际化信息，并返回"error"
+	 * @param BusinessException 业务异常
+	 * @return String ERROR
+	 */
+	protected Map<String, Object> returnError(BusinessException e) {
+		 Map<String, Object> map = new HashMap<String, Object>();
+		 map.put("success", false);
+	     map.put("message", e.getMessage());
+	     return map;
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param ex
+	 * @param buffer
+	 * @author liwei
+	 * @date 2017年11月24日 上午9:04:18
+	 */
+	protected void printStackTraceAsCause(Exception ex,StringBuffer buffer) {
+		if(ex == null) {
+			return ;
+		}
+		String cause =ex.getCause()!=null ? ex.getCause().getMessage() : ex.getMessage();
+		if(StringUtils.isNotBlank(cause)) {
+			if(cause.length() > 500) {
+				buffer.append(cause.substring(0, 500));
+			}else {
+				buffer.append(cause);
+			}
+		}
+	}
+	
+	/**
+	 * 前提 String 日期 转换为 javaBean 对应 Date 
+	 * @author zhangd
+	 * @date 2015-02-07
+	 * @param binder
+	 */
+	@InitBinder
+	private void dateBinder(WebDataBinder binder) {
+	    // 转换日期表达式
+	   /* SimpleDateFormat dateFormat = new SimpleDateFormat(dateFormatPattern);
+	    //创建  CustomDateEditor 对象
+	    CustomDateEditor editor = new CustomDateEditor(dateFormat, true);
+	    //注册为日期类型的自定义编辑器
+	    binder.registerCustomEditor(Date.class, editor);*/
+		binder.registerCustomEditor(Date.class, new DateConvertEditor());
+	}
+	
+	/**
+	 * 
+	 * @Description:统一异常处理
+	 * @param request
+	 * @param response
+	 * @param ex
+	 * @throws Exception
+	 */
+	@ExceptionHandler(Exception.class)
+	public void exceptionHandler(HttpServletRequest request, HttpServletResponse response, Exception ex) {
+		logger.error("框架捕获到异常",ex);
+		Map<String, Object> map = new HashMap<String, Object>();
+		String message = null;
+		StringBuffer stackTrace = null;
+		String errorCode=null;
+		try {
+			if(ex instanceof HttpMediaTypeNotSupportedException){
+				errorCode="003";
+				message = "字符集错误";
+			}else if(ex instanceof UnauthorizedException) {
+				errorCode=SucAppConstants.SYSEM_ERROR.value();
+				message = "后台异常";
+			}else if (ex instanceof BusinessException) {
+				errorCode=((BusinessException) ex).getCode();
+				message = Resources.getMessage(errorCode);
+			}else if (ex instanceof DataIntegrityViolationException) {
+				errorCode = DataIntegrityViolationException.ERROR_CODE;
+				message = Resources.getMessage(errorCode);
+			} else if (ex instanceof DuplicateKeyException) {
+				errorCode = DuplicateKeyException.ERROR_CODE;
+				message = Resources.getMessage(errorCode);
+			} else if (ex instanceof MissingParameterException) {
+				errorCode = MissingParameterException.ERROR_CODE;
+				message = Resources.getMessage(errorCode);
+			} else if (ex instanceof TypeMismatchException) {
+				errorCode = TypeMismatchException.ERROR_CODE;
+				message = Resources.getMessage(errorCode);
+			} else if (ex instanceof UnknownException) {
+				errorCode = SucAppConstants.SYSEM_ERROR.value();
+				message = "后台异常";
+			} else {
+				//未定义的异常类型，增加输出异常堆栈信息
+				stackTrace = new StringBuffer(2000);
+				errorCode = UnknownException.ERROR_CODE;
+				printStackTraceAsCause(ex, stackTrace);
+				message = Resources.getMessage(errorCode);
+			}
+		}catch(Exception e) {
+			//执行到这则属于未拿到国际化信息，提示message信息原样输出
+			logger.info("接口异常"+e);
+			message = ex.getMessage() != null ? ex.getMessage() : errorCode;
+		}
+		map = returnError(errorCode,message);
+		/*if(stackTrace != null) {
+			map.put("stackTrace", stackTrace.toString());
+		}*/
+		String str = JSONObject.toJSONString(map);
+		try {
+			response.getWriter().write(str);
+		} catch (IOException e) {
+			logger.error("返回值；流输出异常",e);
+		}
+	}
+	/**
+	 * 
+	 * @Description: 
+	 * @param dateFormatPattern
+	 * @author liwei
+	 * @date 2017年11月24日 上午9:02:36
+	 */
+	public void setDateFormatPattern(String dateFormatPattern) {
+		this.dateFormatPattern = dateFormatPattern;
+	}
+	
+	 @ModelAttribute("accountnumber")
+	  protected String getAccountnumber(@RequestHeader(value="account-number", required=false) String accountnumber){
+	    return accountnumber;
+	  }
+	  
+	  @ModelAttribute("loginUser")
+	  protected MobileuserVo getLoginUser(HttpServletRequest request){
+	    return (MobileuserVo)request.getAttribute("loginUser");
+	  }
+}

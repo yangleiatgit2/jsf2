@@ -1,0 +1,51 @@
+#\u8ba4\u8bc1\u7cfb\u7edf\u5730\u5740http://10.201.1.224:9021/omg-sso-main/toLogin.action
+omg.sso.casUrl=http://sso.uce.cn:9021/omg-sso-main/toLogin.action
+#\u8ba4\u8bc1\u7cfb\u7edf\u5bc6\u94a5
+omg.sso.systemKey=5ccb75c60e7d6134a6626ca874eb05ab
+#\u5355\u70b9\u767b\u9646\u542f\u7528
+omg.sso.casFlag=TRUE
+#\u8ba4\u8bc1\u7cfb\u7edf\u7f16\u53f7
+omg.sso.systemCode=SUC
+#\u8ba4\u8bc1\u7cfb\u7edfzookeeper\u914d\u7f6e
+sso.dubbo.registry.protocol=zookeeper
+#10.202.1.111:2181  10.201.2.215:2181
+sso.dubbo.registry.address=10.201.1.222:2181
+
+opm.dubbo.registry.protocol=zookeeper
+opm.dubbo.registry.address=10.201.1.222:2181
+
+#dubbo\u914d\u7f6e
+opm.dubbo.application.name=nos-opm-provider
+opm.dubbo.application.owner=dev
+opm.dubbo.protocol.port=20880
+opm.dubbo.protocol.name=dubbo
+
+
+#mycat Configuration
+#db.url=jdbc:mysql://10.201.1.245:8066/nos?useUnicode=true&amp;characterEncoding=utf-8&SSL=false
+#db.username=nos
+#db.password=Mycat#1234
+db.url=jdbc:mysql://10.201.1.80:3306/sucdata?useUnicode=true&amp;characterEncoding=utf-8&SSL=false
+db.username=sucadmin
+db.password=2017#unoPp*
+
+
+
+db.driver=com.mysql.jdbc.Driver
+db.initialSize=5
+db.minIdle=5
+db.maxActive=10
+#\u914d\u7f6e\u83b7\u53d6\u8fde\u63a5\u7b49\u5f85\u8d85\u65f6\u7684\u65f6\u95f4
+db.maxWait=30000
+#\u914d\u7f6e\u95f4\u9694\u591a\u4e45\u624d\u8fdb\u884c\u4e00\u6b21\u68c0\u6d4b\uff0c\u68c0\u6d4b\u9700\u8981\u5173\u95ed\u7684\u7a7a\u95f2\u8fde\u63a5\uff0c\u5355\u4f4d\u662f\u6beb\u79d2
+db.timeBetweenEvictionRunsMillis=60000
+#\u914d\u7f6e\u4e00\u4e2a\u8fde\u63a5\u5728\u6c60\u4e2d\u6700\u5c0f\u751f\u5b58\u7684\u65f6\u95f4\uff0c\u5355\u4f4d\u662f\u6beb\u79d2
+db.minEvictableIdleTimeMillis=300000
+
+#\u89d2\u8272\u540c\u6b65\u65b9\u6848 remote\u8fdc\u7a0b local\u672c\u5730
+role.mode= remote
+#\u6587\u4ef6\u4e0a\u4f20\u8def\u5f84
+filePath=/uc/nos/filePath
+
+#webService\u5730\u5740
+webServiceUrl=http://10.201.1.85:8010/BLSWebService.asmx?wsdl

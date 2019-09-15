@@ -1,0 +1,365 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import java.util.Date;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+/**
+ * @Description: 订单组合信息Entity类
+ * @author liwei
+ * @date 2017年10月21日 下午05:28:57
+ */
+@Table("t_suc_bkg_freight_order_combine")
+public class FreightOrderCombine extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 订单组合编号 
+	 */
+	private String orderCombineCode;
+    /** 
+	 * 订单组合名称 
+	 */
+	private String orderCombineName;
+    /** 
+	 * 订单组合类型  1长期需求组合、2临时需求组合 
+	 */
+	private String orderCombineType;
+    /** 
+	 * 订单组合状态 1未排班、2已排班、3未报价、4已报价、5排班异常 
+	 */
+	private String orderCombineStatus;
+    /** 
+	 * 自动排班规则 
+	 */
+	private String autoGenerateRule;
+    /** 
+	 * 智能排班编号 
+	 */
+	private String integenceScheduleCode;
+    /** 
+	 * 对应班次编号 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 发车计划编号组合 
+	 */
+	private String carDeparturePlanCode;
+    /** 
+	 * 订单编号集合 
+	 */
+	private String orderCodes;
+    /** 
+	 * 需求编号集合 
+	 */
+	private String demandCodes;
+    /** 
+	 * 业务模式 
+	 */
+	private String businessMode;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+	/**
+	 * 分拨中心编码  进港为始发站点，出港为目的站点
+	 */
+	private String operStationCode;
+	
+	/**
+	 * 执行调度时间
+	 */
+	private Date executeTime;
+	
+	/**
+	 * 兄弟组合编号，长期对应业务模式组合编号，用于后期计算报价方便
+	 */
+	private String brotherOrderCombineCode;
+	
+	/** 
+	 * @return operStationCode 
+	 */
+	public String getOperStationCode() {
+		return operStationCode;
+	}
+
+	/**
+	 * @param operStationCode the operStationCode to set
+	 */
+	public void setOperStationCode(String operStationCode) {
+		this.operStationCode = operStationCode;
+	}
+
+	/**
+	 * 获取 订单组合编号
+	 */
+	public String getOrderCombineCode() {
+		return orderCombineCode;
+	}
+	
+	/**
+	 * 设置 订单组合编号
+	 */
+	public void setOrderCombineCode(String orderCombineCode) {
+		this.orderCombineCode = orderCombineCode;
+	}
+	
+	/**
+	 * 获取 订单组合名称
+	 */
+	public String getOrderCombineName() {
+		return orderCombineName;
+	}
+	
+	/**
+	 * 设置 订单组合名称
+	 */
+	public void setOrderCombineName(String orderCombineName) {
+		this.orderCombineName = orderCombineName;
+	}
+	
+	/**
+	 * 获取 订单组合类型  1长期需求组合、2临时需求组合
+	 */
+	public String getOrderCombineType() {
+		return orderCombineType;
+	}
+	
+	/**
+	 * 设置 订单组合类型  1长期需求组合、2临时需求组合
+	 */
+	public void setOrderCombineType(String orderCombineType) {
+		this.orderCombineType = orderCombineType;
+	}
+	
+	/**
+	 * 获取 订单组合状态 1未排班、2已排班、3未报价、4已报价、5排班异常
+	 */
+	public String getOrderCombineStatus() {
+		return orderCombineStatus;
+	}
+	
+	/**
+	 * 设置 订单组合状态 1未排班、2已排班、3未报价、4已报价、5排班异常
+	 */
+	public void setOrderCombineStatus(String orderCombineStatus) {
+		this.orderCombineStatus = orderCombineStatus;
+	}
+	
+	/**
+	 * 获取 自动排班规则
+	 */
+	public String getAutoGenerateRule() {
+		return autoGenerateRule;
+	}
+	
+	/**
+	 * 设置 自动排班规则
+	 */
+	public void setAutoGenerateRule(String autoGenerateRule) {
+		this.autoGenerateRule = autoGenerateRule;
+	}
+	
+	/**
+	 * 获取 智能排班编号
+	 */
+	public String getIntegenceScheduleCode() {
+		return integenceScheduleCode;
+	}
+	
+	/**
+	 * 设置 智能排班编号
+	 */
+	public void setIntegenceScheduleCode(String integenceScheduleCode) {
+		this.integenceScheduleCode = integenceScheduleCode;
+	}
+	
+	/**
+	 * 获取 对应班次编号
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 对应班次编号
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+	
+	/**
+	 * 获取 发车计划编号组合
+	 */
+	public String getCarDeparturePlanCode() {
+		return carDeparturePlanCode;
+	}
+	
+	/**
+	 * 设置 发车计划编号组合
+	 */
+	public void setCarDeparturePlanCode(String carDeparturePlanCode) {
+		this.carDeparturePlanCode = carDeparturePlanCode;
+	}
+	
+	/**
+	 * 获取 订单编号集合
+	 */
+	public String getOrderCodes() {
+		return orderCodes;
+	}
+	
+	/**
+	 * 设置 订单编号集合
+	 */
+	public void setOrderCodes(String orderCodes) {
+		this.orderCodes = orderCodes;
+	}
+	
+	/**
+	 * 获取 需求编号集合
+	 */
+	public String getDemandCodes() {
+		return demandCodes;
+	}
+	
+	/**
+	 * 设置 需求编号集合
+	 */
+	public void setDemandCodes(String demandCodes) {
+		this.demandCodes = demandCodes;
+	}
+	
+	/**
+	 * 获取 业务模式
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	
+	/**
+	 * 设置 业务模式
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	/** 
+	 * 获得执行调度时间 
+	 */
+	public Date getExecuteTime() {
+		return executeTime;
+	}
+
+	/**
+	 * 设置执行调度时间 
+	 */
+	public void setExecuteTime(Date executeTime) {
+		this.executeTime = executeTime;
+	}
+
+	/** 
+	 * @return brotherOrderCombineCode 
+	 */
+	public String getBrotherOrderCombineCode() {
+		return brotherOrderCombineCode;
+	}
+
+	/**
+	 * @param brotherOrderCombineCode the brotherOrderCombineCode to set
+	 */
+	public void setBrotherOrderCombineCode(String brotherOrderCombineCode) {
+		this.brotherOrderCombineCode = brotherOrderCombineCode;
+	}
+	
+}

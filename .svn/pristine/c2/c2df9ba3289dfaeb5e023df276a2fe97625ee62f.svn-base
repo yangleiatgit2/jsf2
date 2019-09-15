@@ -1,0 +1,379 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.impl.datamain.ExceptionManagerBiz;
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanBiz;
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanDetailBiz;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.service.operation.DirvingPlanDetailService;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.common.biz.imp.NoticeDetailBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.entity.NoticeDetail;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.ObjectConvertUtil;
+import cn.uce.web.common.util.WebUtil;
+
+/**
+ * 发车计划管理
+ * @author litia
+ *
+ */
+
+@Controller
+@RequestMapping("/departurePlan")
+public class DeparturePlanController extends BaseController {
+		/**
+		 * 发车加护
+		 */
+		@Resource
+		DirvingPlanBiz dirvingPlanBiz;
+		/**
+		 * 发车计划明细
+		 */
+		@Resource
+		DirvingPlanDetailBiz dirvingPlanDetailBiz;
+		/**
+		 * 发车计划明细service
+		 */
+		@Resource
+		private DirvingPlanDetailService dirvingPlanDetailService;
+		/**
+		 * app用户表Service类
+		 */
+		@Resource
+		private MobileuserService mobileuserService;
+		/**
+		 * 异常管理
+		 */
+		@Resource
+		ExceptionManagerBiz exceptionManagerBiz;
+		
+		@Resource
+		private IIdsWorker  redisIdsWorker;
+		/**
+		 * 消息
+		 */
+		@Resource
+		NoticeDetailBiz noticeDetailBiz;
+		//需求
+		private String requiCombinCode="";
+		//订单
+		private String orderCombinCode="";
+		private int timer=0;
+		
+		/**
+		 * 进入发车计划页面
+		 * @param request
+		 * @param response
+		 * @return
+		 */
+		@RequestMapping(value = "/forward")
+		public String forward(HttpServletRequest request, HttpServletResponse response) {
+			//需求编号
+			requiCombinCode=request.getParameter("requiCombinCode");
+			//订单编号
+			orderCombinCode=request.getParameter("orderCombinCode");
+			return "bkg/departurePlan";
+		}
+		
+		
+		/**
+		 * 分页查询发车计划
+		 * @param dirvingPlanvo
+		 * @param page
+		 * @return
+		 */
+		@RequestMapping(value = "/finddeparturePlanByPage")
+		@ResponseBody
+		public Map<String, Object> finddeparturePlanByPage(DirvingPlanVo dirvingPlanvo,Page page) {
+			//从发车计划管理页面初始化过来的默认不查询
+			if(StringUtils.isBlank(requiCombinCode) && StringUtils.isBlank(orderCombinCode) && StringUtils.isBlank(dirvingPlanvo.getPageQuery())){
+				return returnSuccess("");
+			}
+			//校验前台跳转
+			if(StringUtils.isNoneBlank(requiCombinCode)){
+				//设置需求编号
+				dirvingPlanvo.setDemandCombinCode(requiCombinCode);
+			}
+			//校验前台跳转
+			if(StringUtils.isNoneBlank(orderCombinCode)){
+				//设置订单编号
+				dirvingPlanvo.setOrderCombinCode(orderCombinCode);
+			}
+			Pagination<DirvingPlan> pagination = dirvingPlanBiz.findByPagination(dirvingPlanvo, page);
+			//后续按钮查询
+			if(timer>0 && (StringUtils.isNoneBlank(requiCombinCode)||StringUtils.isNoneBlank(orderCombinCode))){
+				requiCombinCode=null;
+				orderCombinCode=null;
+				timer=0;
+			}
+			//后续按钮查询
+			if(timer==0 && (StringUtils.isNoneBlank(requiCombinCode)||StringUtils.isNoneBlank(orderCombinCode))){
+				timer++;
+			}
+			return  returnSuccess(pagination);
+			 
+		}
+		
+		/**
+		 * 分页查询发车计划详情
+		 * @param drivingPlanCode
+		 * @param page
+		 * @return
+		 */
+		@RequestMapping(value = "/finddeparturePlanDetailByPage")
+		@ResponseBody
+		public Map<String,Object> finddeparturePlanDetailByPage(String drivingPlanCode,Page page){
+			DirvingPlanDetailVo dirvingPlanDetailVo = new DirvingPlanDetailVo();
+			dirvingPlanDetailVo.setDrivingPlanCode(drivingPlanCode);
+			Pagination<DirvingPlanDetail> pagination=	dirvingPlanDetailBiz.findByPagination(dirvingPlanDetailVo, page);
+			
+			return returnSuccess(pagination);
+		}
+		
+		/**
+		 * 修改发车计划
+		 * @param dirvingPlan
+		 * @return
+		 */
+		@RequestMapping(value = "/updateDeparturePlan")
+		@ResponseBody
+		public Map<String,Object>  updateDeparturePlan(DirvingPlan dirvingPlan){
+			SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+			dirvingPlan.setUpdateTime(new Date());
+			dirvingPlan.setUpdateEmp(userInfo.getEmpName());
+			dirvingPlan.setUpdateOrg(userInfo.getCmsOrgName());
+			dirvingPlanBiz.updateDirvingPlan(dirvingPlan);
+			if(	dirvingPlanBiz.updateDirvingPlan(dirvingPlan)>0){
+				return returnSuccess("修改成功！");
+			}else{
+				return returnSuccess("修改失败！");
+			}
+			
+		}
+		
+		
+		/**
+		 * 修改发车计划状态
+		 * @param id
+		 * @param status
+		 * @return
+		 */
+		@RequestMapping(value = "/departurePlanStatus")
+		@ResponseBody
+	public Map<String, Object> departurePlanStatus(long id, String status, String drivingPlanCode,String driverPhone) {
+		DirvingPlan dirvingPlan = new DirvingPlan();
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		// 执行发车计划
+		if ("startDeparturePlan".equals(status)) {
+			dirvingPlan.setId(id);
+			dirvingPlan.setStatus(BkgConstants.PLAN_CODE_UNCONFIRMED);
+
+			// 消息模板实体
+			NoticeDetail noticeDetail = new NoticeDetail();
+			noticeDetail.setContents("【待办事项】您好，您的发车计划"+drivingPlanCode+"待确认，请尽快在“任务列表-未确定”中确认发车计划！");
+			noticeDetail.setJpushAlia("dpt" + driverPhone);
+			noticeDetail.setUserPhone(driverPhone);
+			noticeDetail.setTitle("发车计划"+drivingPlanCode+"待确认 ");
+			noticeDetail.setPlatform(BkgConstants.NEWS_PLATFORM_DRIVER);
+			noticeDetail.setNewsType(BkgConstants.NEWS_TYPE_TODO);
+			noticeDetail.setJpushFlag("0");
+			noticeDetail.setReadFlag(false);
+			
+			noticeDetail.setDeleteFlag(false);
+			noticeDetail.setDisplayWays(BkgConstants.DISPLAY_WAYS_HOME+","+BkgConstants.DISPLAY_WAYS_NEWS);
+			noticeDetail.setCreateTime(new Date());
+			noticeDetail.setCreateOrg(userInfo.getCmsOrgName());
+			noticeDetail.setCreateEmp(userInfo.getEmpName());
+			noticeDetail.setBusinessType(BkgConstants.APP_DRIVER_TASK);
+			noticeDetail.setBusinessId(id);
+			noticeDetailBiz.addNoticeDetail(noticeDetail);
+		}
+		// 终止发车计划
+		if ("stopDeparturePlan".equals(status)) {
+			dirvingPlan.setId(id);
+			dirvingPlan.setStatus(BkgConstants.PLAN_CODE_FINISH);
+			dirvingPlanBiz.stopDirverDlanPushMessage(dirvingPlan);
+
+		}
+		// 更新返回值
+		int i = dirvingPlanBiz.updateDirvingPlan(dirvingPlan);
+		if (i > 0) {
+			return returnSuccess();
+		} else {
+			return returnSuccess("发车计划状态修改失败！");
+		}
+	}
+		
+		
+		/**
+		 * 异常上报
+		 */
+		@RequestMapping(value = "/saveDepartureException")
+		@ResponseBody
+		public Map<String, Object> saveDepartureException(ExceptionManager exceptionManager){
+			SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+			exceptionManager.setCreateTime(new Date());
+			exceptionManager.setCreateOrg(userInfo.getCmsOrgName());
+			exceptionManager.setCreateEmp(userInfo.getEmpName());
+			exceptionManager.setVersion(0);
+			exceptionManager.setDeleteFlag(false);
+			exceptionManager.setExceptionStatus(BkgConstants.EXCEPTION_WAIT_CONFIRM);//待确认
+			exceptionManager.setAppSrage("3");
+			exceptionManager.setExceptionCode(redisIdsWorker.nextId(IdsPrefix.YC));
+			try {
+				//插入异常上报问题
+				exceptionManagerBiz.addException(exceptionManager);
+			} catch (Exception e) {
+				returnError("异常上报失败！"+e);
+			}
+		
+			//异常上报将发车计划中是否有异常置为有
+//			DirvingPlan dirvingPlan = new DirvingPlan();
+//			dirvingPlan.setDrivingPlanCode(exceptionManager.getStartTrunkCode());
+	
+			DirvingPlan dirvingPlan=dirvingPlanBiz.findById(Long.valueOf(exceptionManager.getUtf1()));
+			if(dirvingPlan ==null){
+				return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+			}
+			dirvingPlan.setDrivingPlanCode(exceptionManager.getStartTrunkCode());
+			dirvingPlan.setAbnormalState("00");
+			dirvingPlan.setUpdateTime(new Date());
+			//dirvingPlan.setId(Long.valueOf(exceptionManager.getUtf1()));
+			dirvingPlan.setUpdateEmp(userInfo.getEmpName());
+			dirvingPlan.setUpdateOrg(userInfo.getCmsOrgName());
+			try {
+				//修改发车计划异常状态
+				dirvingPlanBiz.updateDirvingPlan(dirvingPlan);
+			} catch (Exception e) {
+				returnError("异常上报失败！"+e);
+			}
+			
+			//发送消息到      PC、司机、该发车计划未执行的网点
+			//List<DirvingPlanDetail> list=dirvingPlanDetailBiz.findByCode(exceptionManager.getStartTrunkCode());
+			DirvingPlanVo planVo =ObjectConvertUtil.convertObject(dirvingPlan, DirvingPlanVo.class);
+			planVo.setExceptonType(getExTypeName(exceptionManager.getExcepType()));
+			/**获得发车计划计划 所有的站点 order by sort desc */
+			String nextStationCode=dirvingPlan.getNextStationCode();
+			DirvingPlanDetailVo dirvingPlanDetailVo = new DirvingPlanDetailVo(); 
+			dirvingPlanDetailVo.setDrivingPlanCode(exceptionManager.getStartTrunkCode());
+			//dirvingPlanDetailVo.setWayPointCode(nextStationCode);
+			//根据发车计划编号找到他所有的 详情列表
+			List<DirvingPlanDetailVo> list = dirvingPlanDetailService.findByCodeAsc(dirvingPlanDetailVo);
+			/*
+			 * 构建需要发送消息的 接下来的网点编号
+			 * 判断为接下来的网点的标识为:sort  1 2 3 4
+			 * 
+			 */
+			//添加启动标识
+			boolean enableFlag=false;
+			List<String> siteCodes=new ArrayList<String>();
+			if(CollectionUtils.isNotEmpty(list)){
+				for(DirvingPlanDetailVo detailVo:list){
+					//此处应确保sort 已按照升序排序
+					if(StringUtil.isNotBlank(detailVo.getWayPointCode())){
+						if(detailVo.getWayPointCode().equals(nextStationCode))
+							enableFlag=true;
+					}
+					if(enableFlag){
+						//发车计划下一站已经匹配上详情中的网点,下一步则是将网点添加至 siteCodes 待发送消息的网点集合
+						String pointCode=detailVo.getWayPointCode();
+						if(StringUtils.isNoneBlank(pointCode)){
+							siteCodes.add(pointCode);
+						}
+					}
+				}
+			}
+			if(CollectionUtils.isNotEmpty(siteCodes)){
+				//发送消息到    该发车计划未执行的网点
+				List<Mobileuser> userList= mobileuserService.findUserByBaseOrgCode(siteCodes);
+				
+				//给网点老板发送信息
+				if(CollectionUtils.isNotEmpty(userList)){
+					//循环需要发送短信的手机号
+					  for (Mobileuser mobileuser : userList) {
+						  if(Boolean.TRUE==mobileuser.getDotType()){
+				            planVo.setDriverPhone(mobileuser.getMobilephone());
+				            String bossStationCode=mobileuser.getBaseOrgCode();
+				            for (DirvingPlanDetailVo detail : list) {
+				              String wayPoinCode=detail.getWayPointCode();
+				              if(StringUtils.isNoneBlank(bossStationCode) && StringUtils.isNoneBlank(wayPoinCode) && wayPoinCode.equals(bossStationCode)){
+				                //给受到影响的网点老板发送关于该发车计划消息
+				                sendNotice("EXCEPTION_REPORT_CONFIRM_DOT", planVo, detail.getId(), BkgConstants.APP_DRIVING_PLAN_DETAIL);
+				              }
+				            }
+				          }
+					  }
+				}
+			}
+			//发送消息到      PC、司机
+			if(StringUtils.isNotBlank(dirvingPlan.getDriverPhone())){
+				planVo.setDriverPhone(dirvingPlan.getDriverPhone());
+				sendNotice("EXCEPTION_REPORT_CONFIRM_DPT",planVo,dirvingPlan.getId(),BkgConstants.APP_DRIVER_TASK);
+				sendNotice("EXCEPTION_REPORT_CONFIRM_BKG",planVo,dirvingPlan.getId(),BkgConstants.APP_DRIVER_TASK);
+			}
+			
+			return returnSuccess();
+		}
+		/**
+		 * @Description: 发送消息
+		 * @param DirvingPlan plan
+		 * @return
+		 * @author yanglei
+		 * @date 2017年12月13日 下午9:58:07
+		 */
+		private int sendNotice(String noticeRuleCode,DirvingPlanVo planVo,Long businessId,String businessType) {
+			NoticeDetailVo noticeDetailVo=new NoticeDetailVo();
+			noticeDetailVo.setNoticeRuleCode(noticeRuleCode);
+			noticeDetailVo.setCreateEmp(planVo.getUpdateEmp());
+			noticeDetailVo.setCreateOrg(planVo.getUpdateOrg());
+			noticeDetailVo.setCreateTime(planVo.getUpdateTime());
+			noticeDetailVo.setUserPhone(planVo.getDriverPhone());
+			noticeDetailVo.setBusinessId(businessId);
+			noticeDetailVo.setBusinessType(businessType);
+			noticeDetailVo.setDisplayWays(BkgConstants.DISPLAY_WAYS_HOME+","+BkgConstants.DISPLAY_WAYS_NOTICE+","+BkgConstants.DISPLAY_WAYS_NEWS);
+			int noticeDetailRes =noticeDetailBiz.generateMessage(planVo, noticeDetailVo);
+			return noticeDetailRes;
+		}
+		private String getExTypeName(String exTypeCode){
+			if("00".equals(exTypeCode)){
+				return "车辆故障";
+			}if("01".equals(exTypeCode)){
+				return "爆仓";
+			}if("02".equals(exTypeCode)){
+				return "司机原因";
+			}if("03".equals(exTypeCode)){
+				return "其他";
+			}
+			return "其他";
+		}
+}

@@ -1,0 +1,11 @@
+package cn.uce.suc.bkg.vo.ia;
+
+/**
+ * 
+ * @Description: 时效vo 
+ * @author laizhendong
+ * @date 2017年10月26日 下午3:41:35
+ */
+public class WsTransportEffectiveVo {
+
+}

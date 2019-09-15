@@ -1,0 +1,516 @@
+package cn.uce.suc.common.vo;
+
+import cn.uce.base.vo.BaseVo;
+
+import java.util.Date;
+
+import org.springframework.web.multipart.MultipartFile;
+
+/**
+ * @Description: 移动端软件更新记录Vo类
+ * @author liwei
+ * @date 2017年11月12日 上午09:15:11
+ */
+public class VersionVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 强制更新标示 
+	 */
+	private Boolean froceFlag;
+    /** 
+	 * 标题 
+	 */
+	private String title;
+    /** 
+	 * 更新内容 
+	 */
+	private String contents;
+    /** 
+	 * 版本更新下载地址 
+	 */
+	private String url;
+	
+	/**
+	 * 上传APP源文件
+	 */
+	private MultipartFile uploadFile;
+
+	/**
+	 * 替换url地址段
+	 */
+	private Boolean replaceTag;
+    /** 
+	 * 备注字段3 
+	 */
+	private String utf3;
+    /** 
+	 * app--dot网点dpt司机 
+	 */
+	private String appType;
+    /** 
+	 * 更新范围 
+	 */
+	private String updateScope;
+    /** 
+	 * 更新类型 
+	 */
+	private String updateType;
+    /** 
+	 * IOS,android 
+	 */
+	private String platfrom;
+    /** 
+	 * 修改时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 修改部门 
+	 */
+	private String updateOrg;
+    /** 
+	 * 备注字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备注字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 版本号 
+	 */
+	private String version;
+    /** 
+	 * 逻辑状态 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新部门 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+	
+	/**
+	 * 生效时间
+	 */
+	private Date effectTime;
+	/**
+	 * 状态
+	 */
+	private String status;
+	/**
+	 * 移动手机号
+	 */
+	private String mobilePhone;
+	
+	
+	
+	/** 
+	 * @return mobilePhone 
+	 */
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	/**
+	 * @param mobilePhone the mobilePhone to set
+	 */
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	/** 
+	 * @return status 
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	
+	/** 
+	 * @return effectTime 
+	 */
+	public Date getEffectTime() {
+		return effectTime;
+	}
+
+	/**
+	 * @param effectTime the effectTime to set
+	 */
+	public void setEffectTime(Date effectTime) {
+		this.effectTime = effectTime;
+	}
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 强制更新标示
+	 */
+	public Boolean getFroceFlag() {
+		return froceFlag;
+	}
+	
+	/**
+	 * 设置 强制更新标示
+	 */
+	public void setFroceFlag(Boolean froceFlag) {
+		this.froceFlag = froceFlag;
+	}
+
+	
+	/**
+	 * 获取 标题
+	 */
+	public String getTitle() {
+		return title;
+	}
+	
+	/**
+	 * 设置 标题
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	
+	/**
+	 * 获取 更新内容
+	 */
+	public String getContents() {
+		return contents;
+	}
+	
+	/**
+	 * 设置 更新内容
+	 */
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
+	
+	/**
+	 * 获取 版本更新下载地址
+	 */
+	public String getUrl() {
+		return url;
+	}
+	
+	/**
+	 * 设置 版本更新下载地址
+	 */
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+	
+	/**
+	 * 获取 备注字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备注字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 app--dot网点dpt司机
+	 */
+	public String getAppType() {
+		return appType;
+	}
+	
+	/**
+	 * 设置 app--dot网点dpt司机
+	 */
+	public void setAppType(String appType) {
+		this.appType = appType;
+	}
+
+	
+	/**
+	 * 获取 更新范围
+	 */
+	public String getUpdateScope() {
+		return updateScope;
+	}
+	
+	/**
+	 * 设置 更新范围
+	 */
+	public void setUpdateScope(String updateScope) {
+		this.updateScope = updateScope;
+	}
+
+	
+	/**
+	 * 获取 更新类型
+	 */
+	public String getUpdateType() {
+		return updateType;
+	}
+	
+	/**
+	 * 设置 更新类型
+	 */
+	public void setUpdateType(String updateType) {
+		this.updateType = updateType;
+	}
+
+	
+	/**
+	 * 获取 IOS,android
+	 */
+	public String getPlatfrom() {
+		return platfrom;
+	}
+	
+	/**
+	 * 设置 IOS,android
+	 */
+	public void setPlatfrom(String platfrom) {
+		this.platfrom = platfrom;
+	}
+
+	
+	/**
+	 * 获取 修改时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 修改时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 修改部门
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 修改部门
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 备注字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备注字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备注字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备注字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public String getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 逻辑状态
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 逻辑状态
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新部门
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 更新部门
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	/** 
+	 * @return uploadFile 
+	 */
+	public MultipartFile getUploadFile() {
+		return uploadFile;
+	}
+
+	/**
+	 * @param uploadFile the uploadFile to set
+	 */
+	public void setUploadFile(MultipartFile uploadFile) {
+		this.uploadFile = uploadFile;
+	}
+
+	/** 
+	 * @return replaceTag 
+	 */
+	public Boolean isReplaceTag() {
+		return replaceTag;
+	}
+
+	/**
+	 * @param replaceTag the replaceTag to set
+	 */
+	public void setReplaceTag(Boolean replaceTag) {
+		this.replaceTag = replaceTag;
+	}
+
+	
+}

@@ -1,0 +1,50 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.vo.OmgAreaVo;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author liwei
+ * @date 2017年12月1日 下午3:36:22
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class OmgAreaBizTest extends AbstractJUnit4SpringContextTests {
+private OmgAreaVo omgAreaVo;
+/**
+ * 地区
+ */
+@Resource
+private IOmgAreaBiz omgAreaBiz;
+@Before
+public void bofore(){
+	omgAreaVo=new OmgAreaVo();
+	omgAreaVo.setAreaCode("TEST");
+}
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个方法的作用) 
+ * @author liwei
+ * @date 2017年12月1日 下午3:45:10
+ */
+@Test
+public void testPro(){
+	omgAreaBiz.findBycondition(omgAreaVo);
+	Page page=new Page();
+	omgAreaBiz.findByPagination(omgAreaVo, page);
+	omgAreaBiz.findBycondition(omgAreaVo);
+	omgAreaBiz.queryAreaByRegion(omgAreaVo);
+}
+}

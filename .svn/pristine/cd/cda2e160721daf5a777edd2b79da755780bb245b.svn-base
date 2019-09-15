@@ -1,0 +1,134 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.datamain.CarrierInfo;
+import cn.uce.suc.bkg.vo.datamain.CarrierInfoVo;
+
+
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class CarrierInfoTest  extends AbstractJUnit4SpringContextTests{
+
+	@Resource
+	CarrierInfoBiz carrierInfoBiz;
+	
+	@Before
+	public void addCarrier(){
+		CarrierInfo carrierInfo =new CarrierInfo();
+		//获取一个code
+		carrierInfo.setCompanySimpleName(carrierInfoBiz.getCompanySimpleName());
+		carrierInfo.setCompanyFullName("测试承运商99");
+		carrierInfo.setCompanyNature("02");
+		carrierInfo.setCompanyValidity(new Date());
+		carrierInfo.setTaxNo("121212121212");
+		carrierInfo.setOrgCode("UC000004");
+		carrierInfo.setCompanyPhone("13237629856");
+		carrierInfo.setFax("5625607");
+		carrierInfo.setCarrierType("01");
+		carrierInfo.setSelfCar("01");
+		carrierInfo.setCreateTime(new Date());
+		carrierInfo.setLegalPersonNumber("360430198607150055");
+		carrierInfo.setLegalPersonName("haizhouhu");
+		carrierInfo.setLegalPersonMobile("0792-5625607");
+		carrierInfo.setContactsName("张三");
+		carrierInfo.setContactsMobile("0792-5625607");
+		int val=carrierInfoBiz.addCarrierInfo(carrierInfo);
+		if(val>0){
+			System.out.println("新增"+val+"承运商");
+		}
+		CarrierInfo info=carrierInfoBiz.findById(carrierInfo.getId());
+		System.out.println("承运商 id="+info.getId()+" , name="+info.getCompanyFullName());
+		info.setCompanyFullName("修改后的测试承运商66");
+		//修改身份证号码
+		 val = carrierInfoBiz.updateCarrierInfo(info);
+		if(val==1){
+			System.out.println("身份证修改OK");
+		}
+	}
+	@Test
+	public void getBywhere(){
+		CarrierInfoVo carrierInfoVo = new CarrierInfoVo();
+		carrierInfoVo.setCompanyFullName("修改后的测试承运商66");
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		Pagination<CarrierInfo> pagination = carrierInfoBiz.findByPagination(carrierInfoVo, page);
+		if(pagination.getData().size()>0){
+			CarrierInfo carrierInfo = pagination.getData().get(0);
+			//carrierInfo.setLegalPersonNumber("360430198607150088");
+			carrierInfo.setCompanyFullName("修改后的测试承运商77");
+			//修改身份证号码
+			int val = carrierInfoBiz.updateCarrierInfo(carrierInfo);
+			if(val==1){
+				System.out.println("身份证修改OK");
+			}
+			//修改状态
+		//	String [] ids = new 
+		/*	String[]  ids = new  String[]{} ;*/
+			/*ids[0]=carrierInfo.getId().toString();*/
+			/*val=carrierInfoBiz.startDetails(ids,"1");
+				if(val==1){
+					System.out.println("状态修改成功");
+				}*/
+			
+			
+		}else{
+			System.out.println("通过身份证查询，查询到多条信息！");
+		}
+		
+		
+	}
+	@After
+	public void end(){
+		CarrierInfoVo carrierInfoVo=  new  CarrierInfoVo();
+		carrierInfoVo.setCompanyFullName("修改后的测试承运商77");
+		List<CarrierInfo> list=carrierInfoBiz.findByCompanyFullName("修改后的测试承运商77");
+//		if(CollectionUtils.isNotEmpty(list)){
+//			CarrierInfo info=list.get(0);
+//		
+//		}
+		List<CarrierInfoVo>  list2=carrierInfoBiz.checkExistsByCompanyFullName(carrierInfoVo);
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		Pagination<CarrierInfo> pagination1=carrierInfoBiz.findCarrierByCmb(carrierInfoVo, page);
+		if(pagination1.getData().size()!=-1){
+			Pagination<CarrierInfo> pagination  =carrierInfoBiz.findByPagination(carrierInfoVo, page);
+			if(pagination.getData().size()>0){
+				int val=carrierInfoBiz.deleteCarrierInfo(pagination.getData().get(0).getId());
+				if(val>0){
+					System.out.println("删除成功");
+				}
+			}else{
+				System.out.println("通过承运商名字查询到多条信息,未做删除处理");
+			}
+		}
+		List<CarrierInfo> list3=carrierInfoBiz.findByCompanyFullName("测试承运商99");
+		if(CollectionUtils.isNotEmpty(list3)){
+			for(CarrierInfo info2:list3){
+				int val=carrierInfoBiz.deleteCarrierInfo(info2.getId());
+				if(val>0){
+					System.out.println("测试承运商99被删除成功");
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,118 @@
+
+ package cn.uce.suc.dot.control;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.entity.operation.FreightOrder;
+import cn.uce.suc.bkg.service.operation.FreightOrderService;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.web.common.util.DateUtil;
+/**
+ * 
+ * @Description: 货运需求控制器
+ * @author zds
+ * @date 2017年10月18日 上午10:09:27
+ */
+@RestController
+@RequestMapping("/app/freightOrder")
+public class DotFreightOrderController extends BaseAppController{
+	
+	/**
+	 * 注入IFreightDemandBiz对象
+	 */
+	@Resource
+	private IFreightOrderBiz freightOrderBiz;
+	/**
+	 * 注入IFreightDemandBiz对象
+	 */
+	@Resource
+	private FreightOrderService freightOrderService;
+	
+	/**
+	 * 注入mobileUserService
+	 */
+	@Resource
+	private MobileuserService mobileUserService;
+
+	/**
+	 * 
+	 * @Description: 分页 查询 网点 的 货运订单
+	 * @param mobilePhone  网点手机号
+	 * @param businessMode 进出港类型
+	 * @param page 分页
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月7日 下午1:24:58
+	 */
+	@GetMapping(value = "findByPagination")
+	@ResponseBody
+	public  Map<String, Object> findByPagination(@RequestParam(value="demandSiteCode", required=true) String demandSiteCode, 
+			//@RequestParam(value="businessMode", required=false) String businessMode ,
+			@RequestParam(value="departTime", required=false) String departTime ,
+			int currentPage,int pageSize){
+//		MobileuserVo mobileuserVo = new MobileuserVo();
+//		mobileuserVo.setMobilephone(mobilePhone);
+//		List<MobileuserVo> mobileuserVos = mobileUserService.findByUserMobilephone(mobileuserVo );
+//		if(null != businessMode&&!businessMode.isEmpty()){
+//			vo.setBusinessMode(businessMode);
+//		}
+		/**查询条件赋值*/
+		FreightOrderVo  vo = new FreightOrderVo();
+		vo.setDemandSiteCode(demandSiteCode);
+		vo.setOrderStatus(BkgConstants.ORDER_STATUS_TERING);
+		/**根据月份 生成月份的第一天和最后一天*/
+		Calendar cal = Calendar.getInstance();
+		if(StringUtils.isNotBlank(departTime)){
+			Date parseDate = DateUtil.stringToDate(departTime);
+			cal.setTime(parseDate);
+			cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+			Date beginTime = cal.getTime();
+			cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+			Date endTime = cal.getTime();
+			vo.setBeginTime(beginTime);
+			vo.setEndTime(endTime);
+		}
+		/**分页赋值*/
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		/**查询*/
+		Pagination<FreightOrderVo> pagination = freightOrderService.findByDemandSiteCodePagination(vo, page);
+		return returnSuccess(pagination);
+		
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 根据ID查询 货运订单
+	 * @param id
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月7日 下午1:28:13
+	 */
+	@GetMapping(value = "findById")
+	@ResponseBody
+	public  Map<String, Object> findById(@RequestParam(value="id", required=true) String id){
+		FreightOrder freightOrder = freightOrderService.findById( Long.valueOf(id));
+		return returnSuccess(freightOrder);
+	}
+	
+	
+}

@@ -1,0 +1,1014 @@
+package cn.uce.suc.bkg.vo.operation;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 发车计划明细Vo类
+ * @author liwei
+ * @date 2017年10月26日 下午05:05:52
+ */
+public class DirvingPlanDetailVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+	/**
+	 * 发车计划的状态
+	 */
+	private String Status;
+    /** 
+	 * 发车计划编号 
+	 */
+	private String drivingPlanCode;
+    /** 
+	 * 途径站点编号 
+	 */
+	private String wayPointCode;
+    /** 
+	 * 途径站点名称 
+	 */
+	private String wayPointName;
+    /** 
+	 * 预报方数 
+	 */
+	private Double forecastVolume;
+    /** 
+	 * 预报重量 
+	 */
+	private Double forecastWeight;
+    /** 
+	 * 实际方数 
+	 */
+	private Double actualVolume;
+    /** 
+	 * 实际重量 
+	 */
+	private Double actualWeight;
+	/**
+	 * 
+	 * 实际件数
+	 */
+	private Integer actualNumber;
+	/** 
+	 * 司机端-实际方数 
+	 */
+	private Double driverActualVolume;
+	/** 
+	 * 司机端-实际重量 
+	 */
+	private Double driverActualWeight;
+	/**
+	 * 
+	 * 司机端-实际件数
+	 */
+	private Integer driverActualNumber;
+	
+    /** 
+	 * 网点件数 
+	 */
+	private Integer siteNumber;
+    /** 
+	 * 中心件数 
+	 */
+	private Integer operNumber;
+    /** 
+	 * 预计到达时间 
+	 */
+	private Date forecastEndTime;
+    /** 
+	 * 实际到达时间 
+	 */
+	private Date actualEndTime;
+    /** 
+	 * 计划运行时间 
+	 */
+	private Integer forecastRuningTime;
+    /** 
+	 * 实际运行时间 
+	 */
+	private Integer actualRunningTime;
+    /** 
+	 * 离开站点时间 
+	 */
+	private String leaveStationTime;
+    /** 
+	 * 预计装卸货时长 
+	 */
+	private Integer forecastLoadUnloadTine;
+    /** 
+	 * 计划里程 
+	 */
+	private Double forecastDistance;
+	
+	/**
+	 * 序号
+	 */
+	private int sort;
+    /** 
+	 * 实际里程 
+	 */
+	private Double actualDistance;
+    /** 
+	 * 站点评价标签 
+	 */
+	private String stationEvalJudge;
+    /** 
+	 * 站点评价星级 
+	 */
+	private String stationEvalLever;
+	/**
+	 * 评价时间
+	 */
+	private Date appraiseTime;
+    /** 
+	 * 运输节点状态 
+	 */
+	private String wayPointStatus;
+	/**
+	 * 发车计划明细-司机状态
+	 */
+	private String planDriverStatus;
+	
+	/**
+	 * 发车计划明细-网点状态
+	 */
+	private String planSiteStatus;
+	/**
+	 * 司机端 提示语
+	 */
+	private String planDriverPrompt;
+	/**
+	 * 网点端 提示语
+	 */
+	private String planSitePrompt;
+	/**
+	 * 业务模式
+	 */
+	private String businessMode;	
+
+	/**
+	 * 下一站的名称
+	 */
+	private String nextPointName;
+	/**
+	 * 下一站的编码
+	 */
+	private String nextPointCode;
+    /** 
+	 * 延迟时间 
+	 */
+	private Integer delayTime;
+  	/** 
+	 * 上报人 
+	 */
+	private String uploadEmp;
+    /** 
+	 * 爆仓方数 
+	 */
+	private Double blowVolume;
+    /** 
+	 * 上报时间 
+	 */
+	private Date uploadTime;
+    /** 
+	 * 是否爆仓 
+	 */
+	private Boolean blowFlag;
+    /** 
+	 * 站点评价 
+	 */
+	private String stationAppraise;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	
+	
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 发车计划编号
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	
+	/**
+	 * 设置 发车计划编号
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+
+	
+	/**
+	 * 获取 途径站点编号
+	 */
+	public String getWayPointCode() {
+		return wayPointCode;
+	}
+	
+	/**
+	 * 设置 途径站点编号
+	 */
+	public void setWayPointCode(String wayPointCode) {
+		this.wayPointCode = wayPointCode;
+	}
+
+	
+	/**
+	 * 获取 途径站点名称
+	 */
+	public String getWayPointName() {
+		return wayPointName;
+	}
+	
+	/**
+	 * 设置 途径站点名称
+	 */
+	public void setWayPointName(String wayPointName) {
+		this.wayPointName = wayPointName;
+	}
+
+	
+	/**
+	 * 获取 预报方数
+	 */
+	public Double getForecastVolume() {
+		return forecastVolume;
+	}
+	
+	/**
+	 * 设置 预报方数
+	 */
+	public void setForecastVolume(Double forecastVolume) {
+		this.forecastVolume = forecastVolume;
+	}
+
+	
+	/**
+	 * 获取 预报重量
+	 */
+	public Double getForecastWeight() {
+		return forecastWeight;
+	}
+	
+	/**
+	 * 设置 预报重量
+	 */
+	public void setForecastWeight(Double forecastWeight) {
+		this.forecastWeight = forecastWeight;
+	}
+
+	
+	/**
+	 * 获取 实际方数
+	 */
+	public Double getActualVolume() {
+		return actualVolume;
+	}
+	
+	/**
+	 * 设置 实际方数
+	 */
+	public void setActualVolume(Double actualVolume) {
+		this.actualVolume = actualVolume;
+	}
+
+	
+	/**
+	 * 获取 实际重量
+	 */
+	public Double getActualWeight() {
+		return actualWeight;
+	}
+	
+	/**
+	 * 设置 实际重量
+	 */
+	public void setActualWeight(Double actualWeight) {
+		this.actualWeight = actualWeight;
+	}
+
+	
+	/**
+	 * 获取 网点件数
+	 */
+	public Integer getSiteNumber() {
+		return siteNumber;
+	}
+	
+	/**
+	 * 设置 网点件数
+	 */
+	public void setSiteNumber(Integer siteNumber) {
+		this.siteNumber = siteNumber;
+	}
+
+	
+	/**
+	 * 获取 中心件数
+	 */
+	public Integer getOperNumber() {
+		return operNumber;
+	}
+	
+	/**
+	 * 设置 中心件数
+	 */
+	public void setOperNumber(Integer operNumber) {
+		this.operNumber = operNumber;
+	}
+
+	
+	/**
+	 * 获取 预计到达时间
+	 */
+	public Date getForecastEndTime() {
+		return forecastEndTime;
+	}
+	
+	/**
+	 * 设置 预计到达时间
+	 */
+	public void setForecastEndTime(Date forecastEndTime) {
+		this.forecastEndTime = forecastEndTime;
+	}
+
+	
+	/**
+	 * 获取 实际到达时间
+	 */
+	public Date getActualEndTime() {
+		return actualEndTime;
+	}
+	
+	/**
+	 * 设置 实际到达时间
+	 */
+	public void setActualEndTime(Date actualEndTime) {
+		this.actualEndTime = actualEndTime;
+	}
+
+	
+	/**
+	 * 获取 计划运行时间
+	 */
+	public Integer getForecastRuningTime() {
+		return forecastRuningTime;
+	}
+	
+	/**
+	 * 设置 计划运行时间
+	 */
+	public void setForecastRuningTime(Integer forecastRuningTime) {
+		this.forecastRuningTime = forecastRuningTime;
+	}
+
+	
+	/**
+	 * 获取 实际运行时间
+	 */
+	public Integer getActualRunningTime() {
+		return actualRunningTime;
+	}
+	
+	/**
+	 * 设置 实际运行时间
+	 */
+	public void setActualRunningTime(Integer actualRunningTime) {
+		this.actualRunningTime = actualRunningTime;
+	}
+
+	
+	/**
+	 * 获取 离开站点时间
+	 */
+	public String getLeaveStationTime() {
+		return leaveStationTime;
+	}
+	
+	/**
+	 * 设置 离开站点时间
+	 */
+	public void setLeaveStationTime(String leaveStationTime) {
+		this.leaveStationTime = leaveStationTime;
+	}
+
+	
+	/**
+	 * 获取 预计装卸货时长
+	 */
+	public Integer getForecastLoadUnloadTine() {
+		return forecastLoadUnloadTine;
+	}
+	
+	/**
+	 * 设置 预计装卸货时长
+	 */
+	public void setForecastLoadUnloadTine(Integer forecastLoadUnloadTine) {
+		this.forecastLoadUnloadTine = forecastLoadUnloadTine;
+	}
+
+	
+	/**
+	 * 获取 计划里程
+	 */
+	public Double getForecastDistance() {
+		return forecastDistance;
+	}
+	
+	/**
+	 * 设置 计划里程
+	 */
+	public void setForecastDistance(Double forecastDistance) {
+		this.forecastDistance = forecastDistance;
+	}
+
+	
+	/**
+	 * 获取 实际里程
+	 */
+	public Double getActualDistance() {
+		return actualDistance;
+	}
+	
+	/**
+	 * 设置 实际里程
+	 */
+	public void setActualDistance(Double actualDistance) {
+		this.actualDistance = actualDistance;
+	}
+
+	
+	/**
+	 * 获取 站点评价标签
+	 */
+	public String getStationEvalJudge() {
+		return stationEvalJudge;
+	}
+	
+	/**
+	 * 设置 站点评价标签
+	 */
+	public void setStationEvalJudge(String stationEvalJudge) {
+		this.stationEvalJudge = stationEvalJudge;
+	}
+
+	
+	/**
+	 * 获取 站点评价星级
+	 */
+	public String getStationEvalLever() {
+		return stationEvalLever;
+	}
+	
+	/**
+	 * 设置 站点评价星级
+	 */
+	public void setStationEvalLever(String stationEvalLever) {
+		this.stationEvalLever = stationEvalLever;
+	}
+
+	
+	/**
+	 * 获取 运输节点状态
+	 */
+	public String getWayPointStatus() {
+		return wayPointStatus;
+	}
+	
+	/**
+	 * 设置 运输节点状态
+	 */
+	public void setWayPointStatus(String wayPointStatus) {
+		this.wayPointStatus = wayPointStatus;
+	}
+
+	
+	/**
+	 * 获取 延迟时间
+	 */
+	public Integer getDelayTime() {
+		return delayTime;
+	}
+	
+	/**
+	 * 设置 延迟时间
+	 */
+	public void setDelayTime(Integer delayTime) {
+		this.delayTime = delayTime;
+	}
+
+	
+	/**
+	 * 获取 上报人
+	 */
+	public String getUploadEmp() {
+		return uploadEmp;
+	}
+	
+	/**
+	 * 设置 上报人
+	 */
+	public void setUploadEmp(String uploadEmp) {
+		this.uploadEmp = uploadEmp;
+	}
+
+	
+	/**
+	 * 获取 爆仓方数
+	 */
+	public Double getBlowVolume() {
+		return blowVolume;
+	}
+	
+	/**
+	 * 设置 爆仓方数
+	 */
+	public void setBlowVolume(Double blowVolume) {
+		this.blowVolume = blowVolume;
+	}
+
+	
+	/**
+	 * 获取 上报时间
+	 */
+	public Date getUploadTime() {
+		return uploadTime;
+	}
+	
+	/**
+	 * 设置 上报时间
+	 */
+	public void setUploadTime(Date uploadTime) {
+		this.uploadTime = uploadTime;
+	}
+
+	
+	/**
+	 * 获取 是否爆仓
+	 */
+	public Boolean getBlowFlag() {
+		return blowFlag;
+	}
+	
+	/**
+	 * 设置 是否爆仓
+	 */
+	public void setBlowFlag(Boolean blowFlag) {
+		this.blowFlag = blowFlag;
+	}
+
+	
+	/**
+	 * 获取 站点评价
+	 */
+	public String getStationAppraise() {
+		return stationAppraise;
+	}
+	
+	/**
+	 * 设置 站点评价
+	 */
+	public void setStationAppraise(String stationAppraise) {
+		this.stationAppraise = stationAppraise;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/** 
+	* @return status 
+	*/
+	public String getStatus() {
+		return Status;
+	}
+
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		Status = status;
+	}
+
+	/** 
+	* @return actualNumber 
+	*/
+	public Integer getActualNumber() {
+		return actualNumber;
+	}
+
+	/**
+	 * @param actualNumber the actualNumber to set
+	 */
+	public void setActualNumber(Integer actualNumber) {
+		this.actualNumber = actualNumber;
+	}
+
+	/** 
+	* @return businessMode 
+	*/
+	public String getBusinessMode() {
+		return businessMode;
+	}
+
+	/**
+	 * @param businessMode the businessMode to set
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	/** 
+	 * @return appraiseTime 
+	 */
+	public Date getAppraiseTime() {
+		return appraiseTime;
+	}
+
+	/**
+	 * @param appraiseTime the appraiseTime to set
+	 */
+	public void setAppraiseTime(Date appraiseTime) {
+		this.appraiseTime = appraiseTime;
+	}
+
+	/** 
+	 * @return planDriverStatus 
+	 */
+	public String getPlanDriverStatus() {
+		return planDriverStatus;
+	}
+
+	/**
+	 * @param planDriverStatus the planDriverStatus to set
+	 */
+	public void setPlanDriverStatus(String planDriverStatus) {
+		this.planDriverStatus = planDriverStatus;
+	}
+
+	/** 
+	 * @return planSiteStatus 
+	 */
+	public String getPlanSiteStatus() {
+		return planSiteStatus;
+	}
+
+	/**
+	 * @param planSiteStatus the planSiteStatus to set
+	 */
+	public void setPlanSiteStatus(String planSiteStatus) {
+		this.planSiteStatus = planSiteStatus;
+	}
+
+	/** 
+	 * @return planDriverPrompt 
+	 */
+	public String getPlanDriverPrompt() {
+		return planDriverPrompt;
+	}
+
+	/**
+	 * @param planDriverPrompt the planDriverPrompt to set
+	 */
+	public void setPlanDriverPrompt(String planDriverPrompt) {
+		this.planDriverPrompt = planDriverPrompt;
+	}
+
+	/** 
+	 * @return planSitePrompt 
+	 */
+	public String getPlanSitePrompt() {
+		return planSitePrompt;
+	}
+
+	/**
+	 * @param planSitePrompt the planSitePrompt to set
+	 */
+	public void setPlanSitePrompt(String planSitePrompt) {
+		this.planSitePrompt = planSitePrompt;
+	}
+
+	/** 
+	 * @return nextPointName 
+	 */
+	public String getNextPointName() {
+		return nextPointName;
+	}
+
+	/**
+	 * @param nextPointName the nextPointName to set
+	 */
+	public void setNextPointName(String nextPointName) {
+		this.nextPointName = nextPointName;
+	}
+
+	/** 
+	 * @return nextPointCode 
+	 */
+	public String getNextPointCode() {
+		return nextPointCode;
+	}
+
+	/**
+	 * @param nextPointCode the nextPointCode to set
+	 */
+	public void setNextPointCode(String nextPointCode) {
+		this.nextPointCode = nextPointCode;
+	}
+
+	/** 
+	 * @return driverActualVolume 
+	 */
+	public Double getDriverActualVolume() {
+		return driverActualVolume;
+	}
+
+	/**
+	 * @param driverActualVolume the driverActualVolume to set
+	 */
+	public void setDriverActualVolume(Double driverActualVolume) {
+		this.driverActualVolume = driverActualVolume;
+	}
+
+	/** 
+	 * @return driverActualWeight 
+	 */
+	public Double getDriverActualWeight() {
+		return driverActualWeight;
+	}
+
+	/**
+	 * @param driverActualWeight the driverActualWeight to set
+	 */
+	public void setDriverActualWeight(Double driverActualWeight) {
+		this.driverActualWeight = driverActualWeight;
+	}
+
+	/** 
+	 * @return driverActualNumber 
+	 */
+	public Integer getDriverActualNumber() {
+		return driverActualNumber;
+	}
+
+	/**
+	 * @param driverActualNumber the driverActualNumber to set
+	 */
+	public void setDriverActualNumber(Integer driverActualNumber) {
+		this.driverActualNumber = driverActualNumber;
+	}
+
+	
+}

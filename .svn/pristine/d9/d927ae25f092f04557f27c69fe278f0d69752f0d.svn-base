@@ -1,0 +1,168 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.entity.operation.LineGroup;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+
+/**
+ * @Description: 班次单元测试
+ * @author liuhai
+ * @date 2017年12月7日 下午12:32:08
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class LineGroupBizTest extends AbstractJUnit4SpringContextTests{
+	@Resource
+	private LineGroupBiz lineGroupBiz;
+	private LineGroup lineGroup;
+	private LineGroupVo lineGroupVo;
+
+	/**
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @throws java.lang.Exception
+	 * @author liuhai
+	 * @date 2017年12月7日 下午12:32:08
+	 */
+	@Before
+	public void setUp() throws Exception {
+		 lineGroup=new LineGroup();
+		 lineGroup.setId(1L);
+		 lineGroup.setLineGroupCode("BC201712070001");
+		 lineGroupVo=new LineGroupVo();
+		 lineGroupVo.setId(1L);
+		 lineGroupVo.setLineGroupCode("BC201712070001");
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#addLineGroup(cn.uce.suc.bkg.entity.operation.LineGroup)}.
+	 */
+	@Test
+	public void testAddLineGroupLineGroup() {
+		lineGroupBiz.addLineGroup(lineGroup);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#updateLineGroup(cn.uce.suc.bkg.entity.operation.LineGroup)}.
+	 */
+	@Test
+	public void testUpdateLineGroup() {
+		lineGroupBiz.updateLineGroup(lineGroup);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#deleteLineGroup(java.lang.Long)}.
+	 */
+	@Test
+	public void testDeleteLineGroup() {
+		lineGroupBiz.deleteLineGroup(1L);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#findById(java.lang.Long)}.
+	 */
+	@Test
+	public void testFindById() {
+		lineGroupBiz.findById(1L);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#findByPagination(cn.uce.suc.bkg.vo.operation.LineGroupVo, cn.uce.base.page.Page)}.
+	 */
+	@Test
+	public void testFindByPagination() {
+		LineGroupVo lineGroupVo=new LineGroupVo();
+		Page page=new Page();
+		page.setTotal(100);
+		page.setPageSize(10);
+		page.setCurrentPage(0);
+		lineGroupBiz.findByPagination(lineGroupVo, page);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#queryById(java.lang.String)}.
+	 */
+	@Test
+	public void testQueryById() {
+		lineGroupBiz.queryById("BC201712070001");
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#findByLineGroupVo(cn.uce.suc.bkg.vo.operation.LineGroupVo)}.
+	 */
+	@Test
+	public void testFindByLineGroupVo() {
+		lineGroupBiz.findByLineGroupVo(lineGroupVo);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#countByLineGroupVo(cn.uce.suc.bkg.vo.operation.LineGroupVo)}.
+	 */
+	@Test
+	public void testCountByLineGroupVo() {
+		lineGroupBiz.countByLineGroupVo(lineGroupVo);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#findByLineGroupCode(java.lang.String)}.
+	 */
+	@Test
+	public void testFindByLineGroupCode() {
+		lineGroupBiz.findByLineGroupCode("BC2017120700001");
+	}
+
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#findLineGroupAndDetail(cn.uce.suc.bkg.vo.operation.LineGroupVo)}.
+	 */
+	@Test
+	public void testFindLineGroupAndDetail() {
+		lineGroupBiz.findLineGroupAndDetail(lineGroupVo);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#findByCombineOrder(cn.uce.suc.bkg.vo.operation.LineGroupVo)}.
+	 */
+	@Test
+	public void testFindByCombineOrder() {
+		lineGroupBiz.findByCombineOrder(lineGroupVo);
+	}
+
+	/**
+	 * Test method for {@link cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz#findComplexByCombineOrder(cn.uce.suc.bkg.vo.operation.LineGroupVo)}.
+	 */
+	@Test
+	public void testFindComplexByCombineOrder() {
+		lineGroupBiz.findComplexByCombineOrder(lineGroupVo);
+	}
+
+	@Test
+	public void testaddLineGroup(){
+		List<LineGroupVo> lineGroupVos= new ArrayList<LineGroupVo>();
+		List<LineGroupDetailVo> lineGroupDetailVos=new ArrayList<LineGroupDetailVo>();
+		LineGroupDetailVo lineGroupDetailVo=new LineGroupDetailVo();
+		lineGroupDetailVo.setLineGroupCode("LG555555555");
+		lineGroupDetailVo.setCreateTime(new Date());
+		LineGroupVo lineGroupVo =new LineGroupVo();
+		lineGroupVo.setLineGroupCode("LG55555555");
+		lineGroupVo.setLineGroupDetailVos(lineGroupDetailVos);
+		lineGroupVos.add(lineGroupVo);
+		lineGroupBiz.addLineGroup(lineGroupVos);
+	}
+}

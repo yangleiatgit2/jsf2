@@ -1,0 +1,1593 @@
+package cn.uce.suc.bkg.biz.impl.price;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.impl.operation.FreightOrderCombineBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandCombineBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleDetailBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleDetailRelBiz;
+import cn.uce.suc.bkg.entity.price.PricingRule;
+import cn.uce.suc.bkg.entity.price.PricingRuleDetail;
+import cn.uce.suc.bkg.entity.price.PricingRuleDetailRel;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.exception.BkgPriceRuleException;
+import cn.uce.suc.bkg.service.datamain.TransportEffectiveService;
+import cn.uce.suc.bkg.service.price.PricingRuleDetailRelService;
+import cn.uce.suc.bkg.service.price.PricingRuleDetailService;
+import cn.uce.suc.bkg.service.price.PricingRuleService;
+import cn.uce.suc.bkg.service.price.PricingRuleTypeService;
+import cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo;
+import cn.uce.suc.bkg.vo.ia.FreigtCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailRelVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+import cn.uce.suc.bkg.vo.price.SitePriceVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.service.TruckCostManagementService;
+import cn.uce.suc.common.util.ArithUtil;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.TruckCostManagementVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * @Description: 定价规则BIZ实现类
+ * @author laizhendong
+ * @date 2017年11月01日 下午09:05:18
+ */
+@Service("pricingRuleBiz")
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class PricingRuleBiz implements IPricingRuleBiz {
+	
+	/**
+	 * 注入定价规则Service
+	 */
+	@Resource
+	private PricingRuleService pricingRuleService;
+	
+	/**
+	 * 定价规则详情biz
+	 */
+	@Resource
+	private IPricingRuleDetailBiz pricingRuleDetailBiz;
+	
+	/**
+	 * 定价规则详情service
+	 */
+	@Resource
+	private PricingRuleDetailService pricingRuleDetailService;
+	
+	/**
+	 * 定价规则详情网点关系biz
+	 */
+	@Resource
+	private IPricingRuleDetailRelBiz pricingRuleDetailRelBiz;
+	
+	/**
+	 * 定价规则详情关系service
+	 */
+	@Resource
+	private PricingRuleDetailRelService pricingRuleDetailRelService;
+	
+	/**
+	 * 班次biz
+	 */
+	@Resource
+	private ILineGroupBiz lineGroupBiz;
+	
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz;
+	
+	/**
+	 * 需求组合service
+	 */
+	@Resource
+	private IFreightDemandCombineBiz freightDemandCombineBiz;
+	
+	/**
+	 * 订单组合biz
+	 */
+	@Resource
+	private FreightOrderCombineBiz freightOrderCombineBiz;
+	
+	
+	/**
+	 * redis流水号生成
+	 */
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	
+	/**
+	 * 车型成本service
+	 */
+	@Resource
+	private TruckCostManagementService truckCostManagementService;
+	
+	/**
+	 * 定价规则分类service
+	 */
+	@Resource
+	private PricingRuleTypeService pricingRuleTypeService;
+	
+	/**
+	 * 时效service
+	 */
+	@Resource
+	private TransportEffectiveService transportEffectiveService;
+	
+	/**日志*/
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+	
+	
+	/**
+	 * @Description: 新增定价规则
+	 * @param pricingRule
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int addPricingRule(PricingRule pricingRule) {
+		return pricingRuleService.addPricingRule(pricingRule);
+	}
+	
+	/**
+	 * @Description: 修改定价规则
+	 * @param pricingRule 定价规则
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updatePricingRule(PricingRuleVo pricingRuleVo) {
+		if (null == pricingRuleVo || null == pricingRuleVo.getId()) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("updatePricingRule错误，参数错误！");
+			}
+			return 0;
+		}
+		//转换成entity
+		PricingRule pricingRule = ObjectConvertUtil.convertObject(pricingRuleVo, PricingRule.class);
+		int count = pricingRuleService.updateById(pricingRule);
+		if (count < 1) {
+			throw new BkgModuleException("error.bkg.biz.PricingRuleBiz.DataChanged");
+		}
+		return count;
+	}
+	
+	/**
+	 * @Description: 删除定价规则
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int deletePricingRule(Long id) {
+		return pricingRuleService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询定价规则
+	 * @param id 主键
+	 * @return 定价规则
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	@Override
+	public PricingRule findById(Long id) {
+		return pricingRuleService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询定价规则
+	 * @param pricingRuleVo 定价规则
+	 * @param page 分页参数
+	 * @return 定价规则
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public Pagination<PricingRuleVo> findByPagination(PricingRuleVo pricingRuleVo, Page page) {
+		Pagination<PricingRuleVo> pagination = pricingRuleService.findByPagination(pricingRuleVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description: 批量添加定价分类规则 
+	 * @param pricingRuleVos
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 上午2:04:02
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int addPricingRule(List<PricingRuleVo> pricingRuleVos) {
+		if (pricingRuleVos == null || pricingRuleVos.isEmpty()) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("addPricingRule错误，非法参数！");
+			}
+			return 0;
+		}
+		int count = 0;
+		for (PricingRuleVo pricingRuleVo : pricingRuleVos) {
+			//自动生成定价规则编号
+			String priceRuleCode = pricingRuleVo.getPriceRuleCode();
+			if (StringUtil.isBlank(priceRuleCode)) {
+				//获取自增定价规则编号
+				priceRuleCode = redisIdsWorker.nextId(IdsPrefix.DJ);
+			}
+			//一起保存的创建时间设为一致
+			Date createTime = new Date();
+			PricingRule pricingRule = ObjectConvertUtil.convertObject(pricingRuleVo, PricingRule.class);
+			//设置自动生成的定价规则号
+			pricingRule.setPriceRuleCode(priceRuleCode);
+			pricingRule.setCreateTime(createTime);
+			count += addPricingRule(pricingRule);
+			//添加详情及关系
+			List<PricingRuleDetailVo> pricingRuleDetailVos = pricingRuleVo.getPricingRuleDetailVos();
+			if (null != pricingRuleDetailVos && !pricingRuleDetailVos.isEmpty()) {
+				for (PricingRuleDetailVo pricingRuleDetailVo : pricingRuleDetailVos) {
+					PricingRuleDetail pricingRuleDetail = ObjectConvertUtil.convertObject(pricingRuleDetailVo, PricingRuleDetail.class);
+					if (StringUtil.isBlank(pricingRuleDetail.getPriceRuleCode())) {
+						pricingRuleDetail.setPriceRuleCode(priceRuleCode);
+					}
+					pricingRuleDetail.setCreateTime(createTime);
+					pricingRuleDetail.setPriceRuleId(pricingRule.getId());
+					//添加详情
+					int result = pricingRuleDetailBiz.addPricingRuleDetail(pricingRuleDetail);
+					count += result;
+					if (result > 0) {
+						//添加分类与网点关系
+						List<PricingRuleDetailRelVo> pricingRuleDetailRelVos = pricingRuleDetailVo.getPricingRuleDetailRelVos();
+						if (null != pricingRuleDetailRelVos && !pricingRuleDetailRelVos.isEmpty() ) {
+							for (PricingRuleDetailRelVo pricingRuleDetailRelVo : pricingRuleDetailRelVos) {
+								PricingRuleDetailRel pricingRuleDetailRel = ObjectConvertUtil.convertObject(pricingRuleDetailRelVo, PricingRuleDetailRel.class);
+								pricingRuleDetailRel.setDetailId(pricingRuleDetail.getId());
+								//添加分类与网点关系
+								count += pricingRuleDetailRelBiz.addPricingRuleDetailRel(pricingRuleDetailRel);
+							}
+						}
+					}
+				}
+			}
+			
+		}
+		return count;
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 更新详情
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午6:22:54
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int batchUpdateDetail(PricingRuleVo pricingRuleVo){
+		String detailsStr = pricingRuleVo.getPricingRuleDetailVosStr();
+		int count = 0;
+		if (StringUtil.isNotBlank(detailsStr)) {
+			List<PricingRuleDetailVo> pricingRuleDetailVos = JSON.parseArray(detailsStr, PricingRuleDetailVo.class); 
+			//遍历更新定价规则详情
+			for (PricingRuleDetailVo pricingRuleDetailVo : pricingRuleDetailVos) {
+				//设置更新人
+				pricingRuleDetailVo.setUpdateEmp(pricingRuleVo.getUpdateEmp());
+				//设置更新机构
+				pricingRuleDetailVo.setUpdateOrg(pricingRuleVo.getUpdateOrg());
+				//设置更新时间
+				pricingRuleDetailVo.setUpdateTime(pricingRuleVo.getUpdateTime());
+				//更新
+				count += pricingRuleDetailBiz.updatePricingRuleDetail(pricingRuleDetailVo);
+			}
+		}
+		return count;
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 批量审核
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月5日 下午3:32:48
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int auditPricingRule(List<PricingRuleVo> pricingRuleVos){
+		int count = 0;
+		for (PricingRuleVo pricingRuleVo : pricingRuleVos) {
+			count += updatePricingRule(pricingRuleVo);
+		}
+		return count;
+	}
+	
+	/**
+	 * 
+	 * @Description: 版本升级 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午9:26:09
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int upgrade(PricingRuleVo pricingRuleVo){
+		if (null == pricingRuleVo || null == pricingRuleVo.getId()) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("updatePricingRule错误，参数错误！");
+			}
+			return 0;
+		}
+		Long ruleId = pricingRuleVo.getId();
+		PricingRule oldPricingRule = pricingRuleService.findById(ruleId);
+		//把原来的删除，然后新增一条，并把版本号+1
+		PricingRule delete = new PricingRule();
+		delete.setId(ruleId);
+		delete.setVersion(pricingRuleVo.getVersion());
+		delete.setDeleteFlag(true);
+		int count = pricingRuleService.updateById(delete);
+		if (count < 1) {
+			throw new BkgModuleException("error.bkg.biz.PricingRuleBiz.DataChanged");
+		}
+		//新增一条
+		PricingRule newRule = buildNewPricingRule(pricingRuleVo,oldPricingRule);
+		count += pricingRuleService.addPricingRule(newRule);
+		
+		//删除详情
+		String detailVosStr = pricingRuleVo.getPricingRuleDetailVosStr();
+		if (StringUtil.isNotBlank(detailVosStr)) {
+			Long newRuleId = newRule.getId();
+			//删除详情
+			PricingRuleDetail delRuleDetail = new PricingRuleDetail();
+			delRuleDetail.setPriceRuleId(ruleId);
+			delRuleDetail.setDeleteFlag(true);
+			count += pricingRuleDetailService.batchUpdateByRuleId(delRuleDetail);
+			
+			PricingRuleDetailRel delDetailRel = null;
+			PricingRuleDetailRelVo searchDetailRelVo = null;
+			
+			//新增详情
+			List<PricingRuleDetailVo> newRuleDetailVos = JSON.parseArray(detailVosStr, PricingRuleDetailVo.class);
+			for (PricingRuleDetailVo newRuleDetailVo : newRuleDetailVos) {
+				Long oldDetailId = newRuleDetailVo.getId();
+				PricingRuleDetail newRuleDetail = ObjectConvertUtil.convertObject(newRuleDetailVo, PricingRuleDetail.class);
+				newRuleDetail.setId(null);
+				newRuleDetail.setPriceRuleId(newRuleId);
+				//升级把更新人、更新机构、更新时间置空
+				newRuleDetail.setUpdateEmp(null);
+				newRuleDetail.setUpdateOrg(null);
+				newRuleDetail.setUpdateTime(null);
+				//设置创建人、创建时间、创建机构
+				newRuleDetail.setCreateEmp(pricingRuleVo.getUpdateEmp());
+				newRuleDetail.setCreateOrg(pricingRuleVo.getUpdateOrg());
+				newRuleDetail.setUpdateTime(new Date());
+				//添加定价规则详情
+				count += pricingRuleDetailService.addPricingRuleDetail(newRuleDetail);
+				
+				Long newDetailId = newRuleDetail.getId();
+				//新增详情关系
+				searchDetailRelVo = new PricingRuleDetailRelVo();
+				searchDetailRelVo.setDetailId(oldDetailId);
+				List<PricingRuleDetailRelVo> oldDetailRels = pricingRuleDetailRelService.findByCondition(searchDetailRelVo);
+				if (null != oldDetailRels && !oldDetailRels.isEmpty()) {
+					//删除详情关系
+					delDetailRel = new PricingRuleDetailRel();
+					delDetailRel.setDetailId(oldDetailId);
+					delDetailRel.setDeleteFlag(true);
+					//删除旧的详情关系
+					pricingRuleDetailRelService.batchUpdateByDetailId(delDetailRel);
+					//新增详情关系
+					for (PricingRuleDetailRelVo oldRuleDetailRelVo : oldDetailRels) {
+						PricingRuleDetailRel addDetailRel = ObjectConvertUtil.convertObject(oldRuleDetailRelVo, PricingRuleDetailRel.class);
+						//id设空
+						addDetailRel.setId(null);
+						addDetailRel.setDetailId(newDetailId);
+						//设置创建人
+						addDetailRel.setCreateEmp(pricingRuleVo.getUpdateEmp());
+						addDetailRel.setCreateOrg(pricingRuleVo.getUpdateOrg());
+						addDetailRel.setUpdateTime(new Date());
+						addDetailRel.setVersion(BkgConstants.DEFALUT_VERSION);
+						//新增网点与分类关系
+						count += pricingRuleDetailRelService.addPricingRuleDetailRel(addDetailRel);
+					}
+				}
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据旧定价规则复制新的定价规则 
+	 * @param pricingRuleVo
+	 * @param oldPricingRule
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月14日 上午12:10:42
+	 */
+	private PricingRule buildNewPricingRule(PricingRuleVo pricingRuleVo,PricingRule oldPricingRule){
+		//新增一条
+		PricingRule add = new PricingRule();
+		add.setOrgCode(oldPricingRule.getOrgCode());
+		add.setOrgName(oldPricingRule.getOrgName());
+		//升级类型
+		add.setUpgradeType(getUpgradeType(BkgConstants.UPGRADE_TYPE_RULE));
+		add.setCombineCode(oldPricingRule.getCombineCode());
+		add.setCombineName(oldPricingRule.getCombineName());
+		add.setCombineType(oldPricingRule.getCombineType());
+		add.setDemandType(oldPricingRule.getDemandType());
+		//升级 官方版本号 +1
+		add.setOfficialVersion(oldPricingRule.getOfficialVersion() + 1);
+		add.setUpgradeType(pricingRuleVo.getUpgradeType());
+		add.setPriceRuleCode(oldPricingRule.getPriceRuleCode());
+		add.setRuleTypeCode(oldPricingRule.getRuleTypeCode());
+		add.setPriceTypeNum(oldPricingRule.getPriceTypeNum());
+		add.setRemark(oldPricingRule.getRemark());
+		//设置默认值
+		add.setUseFlag(false);
+		add.setGeneralFlag(false);
+		add.setVersion(BkgConstants.DEFALUT_VERSION);
+		add.setStatus(BkgConstants.PRICING_RULE_STATUS_OFFICIAL);
+		add.setBusinessMode(oldPricingRule.getBusinessMode());
+		add.setDeleteFlag(false);
+		//设置创建人创建时间
+		add.setCreateEmp(oldPricingRule.getCreateEmp());
+		add.setCreateOrg(oldPricingRule.getCreateOrg());
+		add.setCreateTime(oldPricingRule.getCreateTime());
+		add.setUpdateEmp(pricingRuleVo.getUpdateEmp());
+		add.setUpdateOrg(pricingRuleVo.getUpdateOrg());
+		add.setUpdateTime(pricingRuleVo.getUpdateTime());
+		return add;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询报价 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午1:47:22
+	 */
+	public List<PricingRuleVo> findPriceByCondtion(PricingRuleVo pricingRuleVo){
+		return pricingRuleService.findPriceByCondtion(pricingRuleVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 查询选择报价 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午4:36:06
+	 */
+	public List<PricingRuleVo> findSelectPrice(PricingRuleVo pricingRuleVo){
+		if (null == pricingRuleVo || StringUtil.isBlank(pricingRuleVo.getDemandType()) 
+				|| StringUtil.isBlank(pricingRuleVo.getBusinessMode()) || StringUtil.isBlank(pricingRuleVo.getCombineCode())
+				|| StringUtil.isBlank(pricingRuleVo.getCombineType()) || StringUtil.isBlank(pricingRuleVo.getOrgCode())) {
+			logger.warn("findSelectPrice 错误，参数为空");
+			return new ArrayList<PricingRuleVo>();
+		}
+		List<PricingRuleVo> selectPricingRuleVos = pricingRuleService.findSelectPrice(pricingRuleVo);
+		boolean existFlag = false;
+		//判断查询出来的定价规则是不是该组合号的
+		if (null != selectPricingRuleVos && !selectPricingRuleVos.isEmpty()) {
+			String combineCode = pricingRuleVo.getCombineCode();
+			for (PricingRuleVo selectPricingRule : selectPricingRuleVos) {
+				if (selectPricingRule.getCombineCode().equals(combineCode)) {
+					existFlag = true;
+				}
+			}
+		}
+		//查出的定价规则没有该组合号，重新执行一遍计算报价
+		if (!existFlag) {
+			//重新计算报价保存报价规则
+			reCalcPrice(pricingRuleVo);
+			//重新根据组合号查询报价
+			selectPricingRuleVos = pricingRuleService.findSelectPrice(pricingRuleVo);
+		}
+		return selectPricingRuleVos;
+	}
+	
+	/**
+	 * 
+	 * @Description: 设置通用规则 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午5:01:58
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int setGeneralRule(PricingRuleVo pricingRuleVo){
+		String utf1 = pricingRuleVo.getUtf1();
+		int count = 0;
+		//存在utf1说明以前有通用规则，先把它设为false
+		if (StringUtil.isNotBlank(utf1)) {
+			//页面utf1
+			Long oldGeneralRuleId = Long.parseLong(utf1);
+			PricingRule update = new PricingRule();
+			update.setId(oldGeneralRuleId);
+			update.setCreateTime(null);
+			//设置通用标识
+			update.setGeneralFlag(false);
+			count += pricingRuleService.updateById(update);
+		}
+		//把该条设置为通用规则
+		PricingRule updGeneralRule = new PricingRule();
+		updGeneralRule.setId(pricingRuleVo.getId());
+		updGeneralRule.setVersion(pricingRuleVo.getVersion());
+		updGeneralRule.setGeneralFlag(true);
+		//设置更新人
+		updGeneralRule.setUpdateEmp(pricingRuleVo.getUpdateEmp());
+		//设置更新机构
+		updGeneralRule.setUpdateOrg(pricingRuleVo.getUpdateOrg());
+		//设置更时间
+		updGeneralRule.setUpdateTime(pricingRuleVo.getUpdateTime());
+		//新建对象时自动会生成创建时间，导致更新时把创建时间也更更新，这里设空
+		updGeneralRule.setCreateTime(null);
+		//根据id更新定价规则
+		count += pricingRuleService.updateById(updGeneralRule);
+		return count;
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午7:42:58
+	 */
+	public List<PricingRuleVo> findByCondition(PricingRuleVo pricingRuleVo){
+		return pricingRuleService.findByCondition(pricingRuleVo);
+	}
+
+	
+	/**
+	 * 
+	 * @Description: 根据长期需求查询进出港 班次
+	 * @param pricingRuleVo
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月21日 下午4:29:08
+	 */
+	private List<LineGroupVo> findDemandCombineVo(PricingRuleVo pricingRuleVo,FreigtCombineVo freigtCombineVo){
+		//组合编号
+		String combineCode = pricingRuleVo.getCombineCode();
+		String businessMode = pricingRuleVo.getBusinessMode();
+		String demandType = pricingRuleVo.getDemandType();
+		FreightDemandCombineVo search = new FreightDemandCombineVo();
+		search.setDemandCombineCode(combineCode);
+		search.setBusinessMode(businessMode);
+		search.setDemandCombineType(demandType);
+		//查询需求组合
+		List<FreightDemandCombineVo> demandCombines = freightDemandCombineBiz.findByCondition(search);
+		if (null != demandCombines && !demandCombines.isEmpty()) {
+			FreightDemandCombineVo demandCombineVo = demandCombines.get(0);
+			freigtCombineVo.setBrotherCombineCode(demandCombineVo.getBrotherDemandCombineCode());
+			//获取进港班次
+			LineGroupVo searchLineGroupVo = new LineGroupVo();
+			searchLineGroupVo.setRequiCombinCode(demandCombineVo.getDemandCombineCode());
+			searchLineGroupVo.setRequiType(Integer.parseInt(demandType));
+			List<LineGroupVo> inLineGroupVos = lineGroupBiz.findLineGroupAndDetail(searchLineGroupVo);
+			//获取出港班次
+			searchLineGroupVo = new LineGroupVo();
+			searchLineGroupVo.setRequiCombinCode(demandCombineVo.getBrotherDemandCombineCode());
+			searchLineGroupVo.setRequiType(Integer.parseInt(demandType));
+			List<LineGroupVo> brotherLineGroupVos = lineGroupBiz.findLineGroupAndDetail(searchLineGroupVo);
+			List<LineGroupVo> lineGroupVos = new ArrayList<LineGroupVo>();
+			if (null != inLineGroupVos && !inLineGroupVos.isEmpty()) {
+				lineGroupVos.addAll(inLineGroupVos);
+			}else {
+				throw new BkgPriceRuleException("需求组合编号【"+combineCode+"】未排班！");
+			}
+			if (null != brotherLineGroupVos && !brotherLineGroupVos.isEmpty()) {
+				lineGroupVos.addAll(brotherLineGroupVos);
+			}else {
+				throw new BkgPriceRuleException("需求组合编号【"+demandCombineVo.getBrotherDemandCombineCode()+"】未排班！");
+			}
+			//返回班次
+			return lineGroupVos;
+		}
+		return null;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据长期订单查询进出港 班次
+	 * @param pricingRuleVo
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月21日 下午4:29:08
+	 */
+	private List<LineGroupVo> findOrderCombineVo(PricingRuleVo pricingRuleVo,FreigtCombineVo freigtCombineVo){
+		//组合编号
+		String combineCode = pricingRuleVo.getCombineCode();
+		String businessMode = pricingRuleVo.getBusinessMode();
+		String demandType = pricingRuleVo.getDemandType();
+		FreightOrderCombineVo search = new FreightOrderCombineVo();
+		search.setOrderCombineCode(combineCode);
+		search.setBusinessMode(businessMode);
+		search.setOrderCombineType(demandType);
+		//查询组合
+		List<FreightOrderCombineVo> orderCombines = freightOrderCombineBiz.findByCondition(search);
+		if (null != orderCombines && !orderCombines.isEmpty()) {
+			FreightOrderCombineVo orderCombineVo = orderCombines.get(0);
+			freigtCombineVo.setBrotherCombineCode(orderCombineVo.getBrotherOrderCombineCode());
+			//获取进港班次
+			LineGroupVo searchLineGroupVo = new LineGroupVo();
+			searchLineGroupVo.setOrderCombinCode(orderCombineVo.getOrderCombineCode());
+			searchLineGroupVo.setRequiType(Integer.parseInt(demandType));
+			List<LineGroupVo> inLineGroupVos = lineGroupBiz.findLineGroupAndDetail(searchLineGroupVo);
+			//获取出港班次
+			searchLineGroupVo = new LineGroupVo();
+			searchLineGroupVo.setOrderCombinCode(orderCombineVo.getBrotherOrderCombineCode());
+			searchLineGroupVo.setRequiType(Integer.parseInt(demandType));
+			List<LineGroupVo> outLineGroupVos = lineGroupBiz.findLineGroupAndDetail(searchLineGroupVo);
+			List<LineGroupVo> lineGroupVos = new ArrayList<LineGroupVo>();
+			if (null != inLineGroupVos && !inLineGroupVos.isEmpty()) {
+				lineGroupVos.addAll(inLineGroupVos);
+			}else {
+				throw new BkgPriceRuleException("订单组合编号【"+combineCode+"】未排班！");
+			}
+			if (null != outLineGroupVos && !outLineGroupVos.isEmpty()) {
+				lineGroupVos.addAll(outLineGroupVos);
+			}else {
+				throw new BkgPriceRuleException("订单组合编号【"+orderCombineVo.getBrotherOrderCombineCode()+"】未排班！");
+			}
+			//返回进出港班次
+			return lineGroupVos;
+		}
+		return null;
+	}
+	/**
+	 * 
+	 * @Description: 如果由于用户未维护定价分类，这里重新根据组合编号计算报价 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月18日 下午8:46:21
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int reCalcPrice(PricingRuleVo pricingRuleVo){
+		int count  = 0;
+		//组合类型
+		String combineType = pricingRuleVo.getCombineType();
+		//组合编号
+		String combineCode = pricingRuleVo.getCombineCode();
+		List<LineGroupVo> lineGroupVos = null;
+		//根据班次重新计算报价
+		FreigtCombineVo freigtCombineVo = new FreigtCombineVo();
+		String demandType = pricingRuleVo.getDemandType();
+		String businessMode = pricingRuleVo.getBusinessMode();
+		if (BkgConstants.DEMAND_TYPE_LONG.equals(demandType)) {
+			//需求班次
+			if (BkgConstants.COMBINE_SOURCE_TYPE_DEMAND.equals(combineType)) {
+				lineGroupVos = findDemandCombineVo(pricingRuleVo,freigtCombineVo);
+			}else {
+				//订单班次
+				lineGroupVos = findOrderCombineVo(pricingRuleVo,freigtCombineVo);
+			}
+		}else {
+		//临时需求或订单，查询对应生成班次
+			LineGroupVo searchLineGroupVo = new LineGroupVo();
+			if (BkgConstants.COMBINE_SOURCE_TYPE_DEMAND.equals(combineType)) {
+				searchLineGroupVo.setRequiCombinCode(combineCode);
+			}else {
+				searchLineGroupVo.setOrderCombinCode(combineCode);
+			}
+			searchLineGroupVo.setRequiType(Integer.parseInt(demandType));
+			lineGroupVos = lineGroupBiz.findLineGroupAndDetail(searchLineGroupVo);
+			//设置进出港组合编号
+			if (BkgConstants.BUSINESS_MODE_IN.equals(businessMode)) {
+				freigtCombineVo.setCombineInCode(combineCode);
+			}
+			if (BkgConstants.BUSINESS_MODE_OUT.equals(businessMode)) {
+				freigtCombineVo.setCombineOutCode(combineCode);
+			}
+		}
+		if (null == lineGroupVos || lineGroupVos.isEmpty()) {
+			throw new BkgPriceRuleException("组合编号：" + combineCode + "的班次不存在！");
+		}
+		//根据查询出班次构建班次map
+		Map<Date, Map<String, List<LineGroupVo>>> dateMap = buildLineGroupMap(lineGroupVos);
+		if (null != dateMap && !dateMap.isEmpty() ) {
+			freigtCombineVo.setCombineCode(combineCode);
+			freigtCombineVo.setBusinessMode(businessMode);
+			String orgCode = pricingRuleVo.getOrgCode();
+			freigtCombineVo.setCombineOrgCode(orgCode);
+			//中心名称为空，重新获取
+			if (null == pricingRuleVo.getOrgName()) {
+				OmgCmsOrgVo	orgVo= omgCmsOrgBiz.findByBaseOrgCode(orgCode);
+				if (null != orgVo) {
+					freigtCombineVo.setCombineOrgName(orgVo.getOrgName());
+				}
+			}
+			freigtCombineVo.setCombineSourceType(combineType);
+			freigtCombineVo.setDemandType(demandType);
+			//重新计算定价规则
+			List<PricingRuleVo> newPricingRuleVos = calcPriceByLineGroups(dateMap, freigtCombineVo);
+			if (null != newPricingRuleVos && !newPricingRuleVos.isEmpty()) {
+				//添加定价规则
+				count += addPricingRule(newPricingRuleVos);
+			}
+		}
+		return count;
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @Description: 当修改车型成本或者定价分类时重新计算报价
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 下午3:58:18
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int reCalcPrice(PricingRuleVo pricingRuleVo,int type) {
+		int count = 0;
+		//1根据条件查询所有需要重新计算报价的定价规则
+		PricingRuleVo search = new PricingRuleVo();
+		search.setOrgCode(pricingRuleVo.getOrgCode());
+		search.setDemandType(pricingRuleVo.getDemandType());
+		search.setBusinessMode(pricingRuleVo.getBusinessMode());
+		search.setDeleteFlag(false);
+		search.setUseFlag(false);
+		List<PricingRuleVo> updPricingRuleVos = pricingRuleService.findByCondition(search);
+		//根据对应规则获取对应班次
+		if (null != updPricingRuleVos && !updPricingRuleVos.isEmpty()) {
+			LineGroupVo searchLineGroupVo = null;
+			for (PricingRuleVo updPricingRuleVo : updPricingRuleVos) {
+				searchLineGroupVo = new LineGroupVo();
+				String businessMode = updPricingRuleVo.getBusinessMode();
+				String combineType = updPricingRuleVo.getCombineType();
+				String combineCode = updPricingRuleVo.getCombineCode();
+				if (BkgConstants.COMBINE_SOURCE_TYPE_DEMAND.equals(combineType)) {
+					searchLineGroupVo.setRequiCombinCode(combineCode);
+				}else {
+					searchLineGroupVo.setOrderCombinCode(combineCode);
+				}
+				searchLineGroupVo.setRequiType(Integer.parseInt(updPricingRuleVo.getDemandType()));
+				List<LineGroupVo> lineGroupVos = lineGroupBiz.findLineGroupAndDetail(searchLineGroupVo);
+				Map<Date, Map<String, List<LineGroupVo>>> dateMap = buildLineGroupMap(lineGroupVos);
+				//根据班次重新计算报价
+				FreigtCombineVo freigtCombineVo = new FreigtCombineVo();
+				freigtCombineVo.setCombineCode(combineCode);
+				freigtCombineVo.setBusinessMode(businessMode);
+				if (BkgConstants.BUSINESS_MODE_IN.equals(businessMode)) {
+					freigtCombineVo.setCombineInCode(combineCode);
+				}else {
+					freigtCombineVo.setCombineOutCode(combineCode);
+				}
+				freigtCombineVo.setCombineOrgCode(updPricingRuleVo.getOrgCode());
+				freigtCombineVo.setCombineOrgName(updPricingRuleVo.getOrgName());
+				freigtCombineVo.setCombineSourceType(updPricingRuleVo.getCombineType());
+				freigtCombineVo.setDemandType(updPricingRuleVo.getDemandType());
+				
+				List<PricingRuleVo> newPricingRuleVos = calcPriceByLineGroups(dateMap, freigtCombineVo);
+				//删除原来的定价规则、详情、及详情关系
+				count += deletePriceRuleAndDetail(updPricingRuleVo);
+				if (null != newPricingRuleVos && !newPricingRuleVos.isEmpty()) {
+					//赋值定价规则号，定价规则号不变，只是升级
+					for (PricingRuleVo newPricingRuleVo : newPricingRuleVos) {
+						newPricingRuleVo.setPriceRuleCode(updPricingRuleVo.getPriceRuleCode());
+						String upgradeType = getUpgradeType(type);
+						newPricingRuleVo.setUpgradeType(upgradeType);
+					}
+					//重新保存定价规则
+					count += addPricingRule(newPricingRuleVos);
+				}
+			}
+		}
+		return count;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据升级类型返回升级类型描述
+	 * @param type
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月14日 上午12:08:00
+	 */
+	private String getUpgradeType(int type){
+		String upgradeType = "";
+		switch (type) {
+		case BkgConstants.UPGRADE_TYPE_RULE:
+			upgradeType = "手动升级";
+			break;
+		case BkgConstants.UPGRADE_TYPE_CAR:
+			upgradeType = "车型成本升级";
+			break;
+		case BkgConstants.UPGRADE_TYPE_RULE_TYPE:
+			upgradeType = "定价分类升级";
+			break;
+		default:
+			break;
+		}
+		return upgradeType;
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 根据定价规则删除定价规则、规则详情、规则详情关系 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 下午6:11:54
+	 */
+	private int deletePriceRuleAndDetail(PricingRuleVo pricingRuleVo){
+		int count = 0;
+		Long ruleId = pricingRuleVo.getId();
+		//删除定价规则
+		PricingRule delete = new PricingRule();
+		delete.setId(ruleId);
+		delete.setVersion(pricingRuleVo.getVersion());
+		delete.setDeleteFlag(true);
+		count += pricingRuleService.updateById(delete);
+		//查询定价规则详情
+		PricingRuleDetailVo searchRuleDetailVo = new PricingRuleDetailVo();
+		searchRuleDetailVo.setPriceRuleId(ruleId);
+		searchRuleDetailVo.setDeleteFlag(false);
+		List<PricingRuleDetailVo>  pricingRuleDetailVos= pricingRuleDetailService.findByCondition(searchRuleDetailVo);
+		if (null != pricingRuleDetailVos && !pricingRuleDetailVos.isEmpty()) {
+			for (PricingRuleDetailVo pricingRuleDetailVo : pricingRuleDetailVos) {
+				//删除详情关系
+				PricingRuleDetailRel delDetailRel = new PricingRuleDetailRel();
+				delDetailRel.setDetailId(pricingRuleDetailVo.getId());
+				delDetailRel.setDeleteFlag(true);
+				count += pricingRuleDetailRelService.batchUpdateByDetailId(delDetailRel);
+			}
+		}
+		//删除定价规则详情
+		PricingRuleDetail delRuleDetail = new PricingRuleDetail();
+		delRuleDetail.setPriceRuleId(ruleId);
+		delRuleDetail.setDeleteFlag(true);
+		//批量更新
+		count += pricingRuleDetailService.batchUpdateByRuleId(delRuleDetail);	
+		return count;
+	}
+	
+	/**
+	 * 
+	 * @Description: 构建班次map 
+	 * @param lineGroupVos
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 下午5:13:18
+	 */
+	private Map<Date, Map<String, List<LineGroupVo>>> buildLineGroupMap(List<LineGroupVo> lineGroupVos){
+		Map<Date, Map<String, List<LineGroupVo>>> dateMap = null;
+		if (null != lineGroupVos && !lineGroupVos.isEmpty()) {
+			//根据日期构建日期-业务模式-班次集合List
+			dateMap = new HashMap<Date, Map<String,List<LineGroupVo>>>();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+			for (LineGroupVo lineGroupVo : lineGroupVos) {
+				//取得日期
+				Date executeDate = null;
+				try {
+					executeDate = sdf.parse(sdf1.format(lineGroupVo.getDepartTime()) + " 00:00:00");
+				} catch (ParseException e) {
+					logger.error("buildLineGroupMap日期转换错误:" + e);
+				}
+				Map<String, List<LineGroupVo>> lineGroupMap = dateMap.get(executeDate);
+				if (null == lineGroupMap || lineGroupMap.isEmpty()) {
+					lineGroupMap = new HashMap<String, List<LineGroupVo>>();
+				}
+				//需求类型
+				String businessMode = lineGroupVo.getBusinessMode();
+				List<LineGroupVo> lineGroups = lineGroupMap.get(businessMode);
+				if (null == lineGroups || lineGroups.isEmpty()) {
+					lineGroups = new ArrayList<LineGroupVo>();
+				}
+				lineGroups.add(lineGroupVo);
+				lineGroupMap.put(businessMode, lineGroups);
+				//根据日期-业务模式-班次list
+				dateMap.put(executeDate, lineGroupMap);
+			}
+		}
+		return dateMap;
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 计算报价
+	 * @param datelineGroupVosMap
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 下午5:10:03
+	 */
+	public List<PricingRuleVo> calcPriceByLineGroups(Map<Date, Map<String, List<LineGroupVo>>> datelineGroupVosMap,FreigtCombineVo freigtCombineVo){
+		//需求类型，1长期 2短期
+		String demandType = freigtCombineVo.getDemandType();
+		//获得分拨中心
+		String centerCode = freigtCombineVo.getCombineOrgCode();
+		//获取该分拨该需求类型的的所有审核通过的车型成本
+		TruckCostManagementVo searchTruckCostVo = new TruckCostManagementVo();
+		searchTruckCostVo.setBelongSiteCode(centerCode);
+		searchTruckCostVo.setTruckType(demandType);
+		searchTruckCostVo.setDetailsStatus(BkgConstants.TRUCK_START);
+		List<TruckCostManagementVo> auditTruckCostVos = truckCostManagementService.findByCombine(searchTruckCostVo);
+		//把车型成本以 分拨_需求类型_车型 - TruckCostManagementVo 放到map里
+		Map<String/**车型*/, TruckCostManagementVo> auditTruckCostMap = new HashMap<String, TruckCostManagementVo>();
+		if (null != auditTruckCostVos && !auditTruckCostVos.isEmpty()) {
+			for (TruckCostManagementVo truckCostManagementVo : auditTruckCostVos) {
+				String key = truckCostManagementVo.getTruckConcrete().toString();
+				auditTruckCostMap.put(key, truckCostManagementVo);
+			}
+		}
+		//车型-固本(长期：车型的需求数量*车型的固定成本/该车型的实际使用班次 ，临时就是该车型的固本
+		Map<String, Double> fixedCostMap = calcUnitLineGroupCost(datelineGroupVosMap,auditTruckCostMap,demandType);
+		/**
+		 * 每个班次的固定成本 = 车型的需求数量*车型的固定成本/该车型的实际使用班次 + 装卸费（装卸费系数*班次的体积）
+		 */
+		
+		//进港各网点的每个班次对应的固本和可变成本
+		Map<String,List<SitePriceVo>> sitePriceInMap = calcSumSiteCostUnitGroup(datelineGroupVosMap,auditTruckCostMap,fixedCostMap,freigtCombineVo,BkgConstants.BUSINESS_MODE_IN);
+		//出港各网点的每个班次对应的固本和可变成本
+		Map<String,List<SitePriceVo>> sitePriceOutMap = calcSumSiteCostUnitGroup(datelineGroupVosMap,auditTruckCostMap,fixedCostMap,freigtCombineVo,BkgConstants.BUSINESS_MODE_OUT);
+		
+		/**
+		 * 查询定价分类，分摊费用
+		 */
+		PricingRuleTypeVo searchPricingRuleTypeVo = new PricingRuleTypeVo();
+		searchPricingRuleTypeVo.setWorkCenterCode(centerCode);
+		searchPricingRuleTypeVo.setGroupType(demandType);
+		searchPricingRuleTypeVo.setStatus(BkgConstants.PRICING_RULE_STATUS_OFFICIAL);
+		List<PricingRuleTypeVo> pricingRuleTypeVos = pricingRuleTypeService.findDetailByCondition(searchPricingRuleTypeVo);
+		//该中心没有对应的需求分类数据，则无法计算报价，返回空
+		if (null == pricingRuleTypeVos || pricingRuleTypeVos.isEmpty()) {
+			logger.error("无对应定价规则分类，生成报价为空");
+			return null;
+		}
+		Map<String/**进港车型*/, List<PricingRuleTypeVo>> pricingRuleTypeVoInMap = new HashMap<String, List<PricingRuleTypeVo>>();
+		Map<String/**出港车型*/, List<PricingRuleTypeVo>> pricingRuleTypeVoOutMap = new HashMap<String, List<PricingRuleTypeVo>>();
+		
+		//进出港定价规则分类号
+		String inRuleTypeCode = "";
+		String outRuleTypeCode = "";
+		for (PricingRuleTypeVo pricingRuleTypeVo : pricingRuleTypeVos) {
+			String businessType = pricingRuleTypeVo.getBusinessType();
+			String pricingType = pricingRuleTypeVo.getPricingType();
+			if (StringUtil.isBlank(pricingType)) {
+				if (logger.isWarnEnabled()) {
+					logger.warn("定价分类没有车型，定价规则号：" + pricingRuleTypeVo.getRuleTypeCode());
+				}
+				continue;
+			}
+			//进港
+			if (BkgConstants.BUSINESS_MODE_IN.equals(businessType)) {
+				//获得进港定价规则分类号
+				if (StringUtil.isBlank(inRuleTypeCode)) {
+					inRuleTypeCode = pricingRuleTypeVo.getRuleTypeCode();
+				}
+				List<PricingRuleTypeVo> pricingRuleTypes = pricingRuleTypeVoInMap.get(pricingType);
+				if (null == pricingRuleTypes) {
+					pricingRuleTypes = new ArrayList<PricingRuleTypeVo>();
+				}
+				pricingRuleTypes.add(pricingRuleTypeVo);
+				pricingRuleTypeVoInMap.put(pricingType, pricingRuleTypes);
+			}else if (BkgConstants.BUSINESS_MODE_OUT.equals(businessType)) {
+			//出港
+				//获得出港定价规则分类号
+				if (StringUtil.isBlank(outRuleTypeCode)) {
+					outRuleTypeCode = pricingRuleTypeVo.getRuleTypeCode();
+				}
+				List<PricingRuleTypeVo> pricingRuleTypes = pricingRuleTypeVoOutMap.get(pricingType);
+				if (null == pricingRuleTypes) {
+					pricingRuleTypes = new ArrayList<PricingRuleTypeVo>();
+				}
+				pricingRuleTypes.add(pricingRuleTypeVo);
+				pricingRuleTypeVoOutMap.put(pricingType, pricingRuleTypes);
+			}
+		}
+		PricingRuleVo inPricingRuleVo = null;
+		PricingRuleVo outPricingRuleVo = null;
+		if (null != pricingRuleTypeVoInMap && !pricingRuleTypeVoInMap.isEmpty()) {
+			//计算进港各车型单位费用
+			List<PricingRuleDetailVo> inPricingRuleDetailVo = calcCarUnitCost(pricingRuleTypeVoInMap,sitePriceInMap);
+			if (!sitePriceInMap.isEmpty()) {
+				//如果上报货量的网点有一个没有定价分类，则该组合不生成定价规则
+				inPricingRuleVo = null;
+				String siteNames = "";
+				for (String siteCode : sitePriceInMap.keySet()) {
+					OmgCmsOrgVo orgVo = omgCmsOrgBiz.findByBaseOrgCode(siteCode);
+					if (null != orgVo) {
+						if (StringUtil.isBlank(siteNames)) {
+							siteNames += orgVo.getOrgName();
+						}else {
+							siteNames +=  "、" + orgVo.getOrgName();
+						}
+					}
+				}
+				if (logger.isWarnEnabled()) {
+					logger.warn("定价规则分类号【"+ inRuleTypeCode +"】下没网点【" + siteNames + "】的定价分类！");
+				}
+				throw new BkgPriceRuleException("定价规则分类号【"+ inRuleTypeCode +"】下没网点【" + siteNames + "】的定价分类！");
+			}
+			if (null != inPricingRuleDetailVo && !inPricingRuleDetailVo.isEmpty()) {
+				inPricingRuleVo = buildPricingRuleVo(freigtCombineVo,inRuleTypeCode,BkgConstants.BUSINESS_MODE_IN);
+				inPricingRuleVo.setPricingRuleDetailVos(inPricingRuleDetailVo);
+				inPricingRuleVo.setPriceTypeNum(inPricingRuleDetailVo.size());
+			}
+		}
+		if (null != pricingRuleTypeVoOutMap && !pricingRuleTypeVoOutMap.isEmpty()) {
+			//计算出港各车型单位费用
+			List<PricingRuleDetailVo> outPricingRuleDetailVo = calcCarUnitCost(pricingRuleTypeVoOutMap,sitePriceOutMap);
+			if (!sitePriceOutMap.isEmpty()) {
+				//如果上报货量的网点有一个没有定价分类，则该组合不生成定价规则
+				outPricingRuleVo = null;
+				String siteNames = "";
+				for (String siteCode : sitePriceOutMap.keySet()) {
+					OmgCmsOrgVo orgVo = omgCmsOrgBiz.findByBaseOrgCode(siteCode);
+					if (null != orgVo) {
+						if (StringUtil.isBlank(siteNames)) {
+							siteNames += orgVo.getOrgName();
+						}else {
+							siteNames +=  "、" + orgVo.getOrgName();
+						}
+					}
+				}
+				if (logger.isWarnEnabled()) {
+					logger.warn("定价规则分类号【"+ outRuleTypeCode +"】下没网点【" + siteNames + "】的定价分类！");
+				}
+				throw new BkgPriceRuleException("定价规则分类号【"+ outRuleTypeCode +"】下没网点【" + siteNames + "】的定价分类！");
+			}
+			if (null != outPricingRuleDetailVo && !outPricingRuleDetailVo.isEmpty()) {
+				outPricingRuleVo = buildPricingRuleVo(freigtCombineVo,outRuleTypeCode,BkgConstants.BUSINESS_MODE_OUT);
+				outPricingRuleVo.setPricingRuleDetailVos(outPricingRuleDetailVo);
+				outPricingRuleVo.setPriceTypeNum(outPricingRuleDetailVo.size());			
+			}
+		}
+		//把进港和出港定价规则返回
+		List<PricingRuleVo> pricingRuleVos = new ArrayList<PricingRuleVo>();
+		if (null != inPricingRuleVo) {
+			pricingRuleVos.add(inPricingRuleVo);
+		}
+		if (null != outPricingRuleVo) {
+			pricingRuleVos.add(outPricingRuleVo);
+		}
+		return pricingRuleVos;
+	}
+	
+	/**
+	 * 
+	 * @Description: 当是长期需求或长期订单时，要根据进出港班次计算每个班次的固本，不包含装卸费 
+	 * @param datelineGroupVosMap
+	 * @param auditTruckCostMap
+	 * @author laizhendong
+	 * @date 2017年11月4日 上午11:58:53
+	 */
+	private Map<String, Double> calcUnitLineGroupCost(Map<Date, Map<String, List<LineGroupVo>>> datelineGroupVosMap,Map<String/**车型*/, TruckCostManagementVo> auditTruckCostMap,
+			String demandType){
+		Map<String, Double> fixedCostMap = new HashMap<String, Double>();
+		if (BkgConstants.DEMAND_COMBINE_TYPE_LONG.equals(demandType)) {
+			//合并计算各车型需要最大值
+			Map<String, Integer> maxCarTrunkNumMap = new HashMap<String, Integer>();
+			//合并计算各车型使用次数
+			Map<String, Integer> sumCarTrunkUsedMap = new HashMap<String, Integer>();
+			//获取各车型需要最大值和各车型使用次数
+			getCarTypeTimesAndLineGroupNum(datelineGroupVosMap,maxCarTrunkNumMap,sumCarTrunkUsedMap);
+			//这里计算不包含装卸费
+			for (String key : sumCarTrunkUsedMap.keySet()) { 
+				TruckCostManagementVo truckCostManagementVo = auditTruckCostMap.get(key);
+				Integer maxCarTrunkNum = maxCarTrunkNumMap.get(key);
+				Integer sumCarTrunkUsed = sumCarTrunkUsedMap.get(key);
+				double fixedCharges = 0;
+				if (null != truckCostManagementVo && null != truckCostManagementVo.getFixedCharges()) {
+					fixedCharges = truckCostManagementVo.getFixedCharges();
+				}else {
+				//如果该分类里没有需要的车型，那么就把它的固本设为0
+					fixedCharges = 0;
+					if (logger.isInfoEnabled()) {
+						logger.info("车型【"+ key +"】不存在该中心长期里");
+					}
+				}
+				Double fixedCost = ArithUtil.div(fixedCharges * maxCarTrunkNum, sumCarTrunkUsed, 2);
+				fixedCostMap.put(key, fixedCost);
+			}
+		}else if (BkgConstants.DEMAND_COMBINE_TYPE_TEMP.equals(demandType)) {
+		//临时需求，固定成本就是该车型班次的费用
+			if (null != auditTruckCostMap && !auditTruckCostMap.isEmpty()) {
+				for (String key : auditTruckCostMap.keySet()) {
+					double fiexdCost = auditTruckCostMap.get(key).getFixedCharges();
+					fixedCostMap.put(key, fiexdCost);
+				}
+			}
+		}
+		return fixedCostMap;
+	}
+	
+	/**
+	 * 
+	 * @Description: 获取每个车型的最大次数和每个车型的班次数 
+	 * @param lineGroupVosMap
+	 * @param maxCarTrunkNumMap
+	 * @param sumCarTrunkUsedMap
+	 * @author laizhendong
+	 * @date 2017年11月2日 下午11:00:19
+	 */
+	public void getCarTypeTimesAndLineGroupNum(Map<Date, Map<String, List<LineGroupVo>>> datelineGroupVosMap,
+			Map<String, Integer> maxCarTrunkNumMap,
+			Map<String, Integer> sumCarTrunkUsedMap){
+		
+		//需求类型，1长期 2短期
+		//String demandType = freigtCombineVo.getDemandType();
+		String carType = "";
+		List<LineGroupVo> lineGroupInVos= null;
+		List<LineGroupVo> lineGroupOutVos= null;
+		for (Date date : datelineGroupVosMap.keySet()) {
+			Map<String, Integer> carTrunkInMap = new HashMap<String, Integer>();
+			Map<String, Integer> carTrunkOutMap = new HashMap<String, Integer>();
+			//获得当天进港班次
+			lineGroupInVos = datelineGroupVosMap.get(date).get(BkgConstants.BUSINESS_MODE_IN);
+			//获得当天出港班次
+			lineGroupOutVos = datelineGroupVosMap.get(date).get(BkgConstants.BUSINESS_MODE_OUT);
+			int carCount = 0;
+			int useNumber = 0;
+			if (lineGroupInVos != null && !lineGroupInVos.isEmpty()) {
+				//遍历进港班次，获取各车型最大次数
+				for (LineGroupVo lineGroupVo : lineGroupInVos) {
+					carCount = 0;
+					useNumber = 0;
+					//车型
+					carType = lineGroupVo.getCarType();
+					if (null != carTrunkInMap.get(carType)) {
+						carCount = carTrunkInMap.get(carType);
+					}
+					carCount ++;
+					carTrunkInMap.put(carType, carCount);
+					if (null != sumCarTrunkUsedMap.get(carType)) {
+						useNumber = sumCarTrunkUsedMap.get(carType);
+					}
+					useNumber ++;
+					sumCarTrunkUsedMap.put(carType, useNumber);
+				}
+			}
+			if (lineGroupOutVos != null && !lineGroupOutVos.isEmpty()) {
+				//遍历出港班次，获取各车型最大次数
+				for (LineGroupVo lineGroupVo : lineGroupOutVos) {
+					carCount = 0;
+					useNumber = 0;
+					//车型
+					carType = lineGroupVo.getCarType();
+					if (null != carTrunkOutMap.get(carType)) {
+						carCount = carTrunkOutMap.get(carType);
+					}
+					carCount ++;
+					carTrunkOutMap.put(carType, carCount);
+					
+					//车型使用次数
+					if (null != sumCarTrunkUsedMap.get(carType)) {
+						useNumber = sumCarTrunkUsedMap.get(carType);
+					}
+					useNumber ++;
+					sumCarTrunkUsedMap.put(carType, useNumber);
+				}
+			}
+			Map<String, Integer> carTrunkMap = new HashMap<String, Integer>();
+			//获取当天车型所需数量，取进港或出港的车型最大值,并放到carTrunkMap里
+			for (String carTrunkType : carTrunkInMap.keySet()) {
+				int maxCarTrunkNum = carTrunkInMap.get(carTrunkType).intValue();
+				if (null != carTrunkOutMap.get(carTrunkType)) {
+					int carTrunkOutNum = carTrunkOutMap.get(carTrunkType).intValue();
+					if (carTrunkOutNum > maxCarTrunkNum) {
+						maxCarTrunkNum = carTrunkOutNum;
+					}
+					//移除出港
+					carTrunkOutMap.remove(carTrunkType);
+				}
+				carTrunkMap.put(carTrunkType, maxCarTrunkNum);
+			}
+			//再把出港剩下的放进去得到当天各车型所需最大数
+			carTrunkMap.putAll(carTrunkOutMap);
+			
+			//遍历当天的车型所需数,取最大
+			for (String key: carTrunkMap.keySet()) {
+				int maxCarTrunkNum = carTrunkMap.get(key);
+				if (null != maxCarTrunkNumMap.get(key)) {
+					if (maxCarTrunkNumMap.get(key).intValue() > maxCarTrunkNum) {
+						maxCarTrunkNum = maxCarTrunkNumMap.get(key).intValue();
+					}
+				}
+				maxCarTrunkNumMap.put(key, maxCarTrunkNum);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 构建 PricingRuleVo对象
+	 * @param freigtCombineVo
+	 * @param ruleTypeCode 定价规则类型编号
+	 * @param businessType 业务类型，进/出港
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 上午1:32:18
+	 */
+	private PricingRuleVo buildPricingRuleVo(FreigtCombineVo freigtCombineVo,String ruleTypeCode,String businessType){
+		PricingRuleVo pricingRuleVo = new PricingRuleVo();
+		pricingRuleVo.setRuleTypeCode(ruleTypeCode);
+		pricingRuleVo.setOrgCode(freigtCombineVo.getCombineOrgCode());
+		pricingRuleVo.setOrgName(freigtCombineVo.getCombineOrgName());
+		pricingRuleVo.setCombineType(freigtCombineVo.getCombineSourceType());
+		String demandType = freigtCombineVo.getDemandType();
+		String businessMode = freigtCombineVo.getBusinessMode();
+		pricingRuleVo.setBusinessMode(businessType);
+		pricingRuleVo.setDemandType(demandType);
+		//长期需求或订单且业务模式与传过来的业务模式参数不一致，那么组合编号为他的兄弟编号
+		if (BkgConstants.DEMAND_TYPE_LONG.equals(demandType) && !businessType.equals(businessMode)) {
+			pricingRuleVo.setCombineCode(freigtCombineVo.getBrotherCombineCode());
+		}else {
+			pricingRuleVo.setCombineCode(freigtCombineVo.getCombineCode());
+		}
+		/*//设置组合编号和名称
+		if (BkgConstants.BUSINESS_MODE_IN.equals(businessType)) {
+			pricingRuleVo.setCombineCode(freigtCombineVo.getCombineInCode());
+			pricingRuleVo.setCombineName(freigtCombineVo.getCombineInName());
+		}else if (BkgConstants.BUSINESS_MODE_OUT.equals(businessType)) {
+			pricingRuleVo.setCombineCode(freigtCombineVo.getCombineOutCode());
+			pricingRuleVo.setCombineName(freigtCombineVo.getCombineOutName());
+		}*/
+		//设置默认值
+		pricingRuleVo.setDeleteFlag(false);
+		pricingRuleVo.setGeneralFlag(false);
+		pricingRuleVo.setUseFlag(false);
+		pricingRuleVo.setStatus(BkgConstants.PRICING_RULE_STATUS_GENERATE);
+		pricingRuleVo.setVersion(BkgConstants.DEFALUT_VERSION);
+		pricingRuleVo.setCreateEmp(BkgConstants.SYSTEM_CREATE_ORG);
+		pricingRuleVo.setCreateOrg(BkgConstants.SYSTEM_CREATE_ORG);
+		return pricingRuleVo;
+	}
+	
+	/**
+	 * 
+	 * @Description: 计算单位固本和单位可变成本费用
+	 * @param pricingRuleTypeVoMap
+	 * @param sitePriceMap
+	 * @author laizhendong
+	 * @date 2017年11月4日 上午1:04:14
+	 */
+	private List<PricingRuleDetailVo> calcCarUnitCost(Map<String,List<PricingRuleTypeVo>> pricingRuleTypeVoMap,Map<String,List<SitePriceVo>> sitePriceMap){		
+		List<PricingRuleDetailVo> pricingRuleDetailVos = new ArrayList<PricingRuleDetailVo>();
+		for (String key : pricingRuleTypeVoMap.keySet()) {
+			// 计算 长期-业务模式-车型 的所有网点的均值
+			List<PricingRuleTypeVo> pricingRuleTypes = pricingRuleTypeVoMap.get(key);
+			double fiexdCostTotal = 0;
+			double volumeTotal = 0;
+			double changeCostTotal = 0;
+			double distanceTotal = 0;
+			String ruleTypeCode = "";
+			//存放该定价分类里包含本次报价的网点
+			Set<PricingRuleTypeVo> containSiteSet = new HashSet<PricingRuleTypeVo>();
+			//创建对应的顶尖规则详情标识 ,因为可能该定价分类里的网点都没有本次组合班次
+			boolean newPricingRuleDetailFlag = false;
+			for (PricingRuleTypeVo pricingRuleTypeVo : pricingRuleTypes) {
+				if (StringUtil.isBlank(ruleTypeCode)) {
+					ruleTypeCode = pricingRuleTypeVo.getRuleTypeCode();
+				}
+				//网点编号
+				String siteCode = pricingRuleTypeVo.getSiteCode();
+				List<SitePriceVo> siteAllInPriceVos = sitePriceMap.get(siteCode);
+				//如果在该分类里的网点没有本次组合对应模式的排班，则忽略
+				if (null == siteAllInPriceVos || siteAllInPriceVos.isEmpty()) {
+					continue;
+				}
+				containSiteSet.add(pricingRuleTypeVo);
+				newPricingRuleDetailFlag = true;
+				for (SitePriceVo sitePriceVo : siteAllInPriceVos) {
+					fiexdCostTotal += sitePriceVo.getFiexdCost();
+					volumeTotal += sitePriceVo.getVolume();
+					changeCostTotal += sitePriceVo.getChangeCost();
+					distanceTotal += sitePriceVo.getDistance();
+				}
+				sitePriceMap.remove(siteCode);
+			}
+			if (newPricingRuleDetailFlag) {
+				//求单位固本和单位可变成本，保留两位小数
+				double unitFixedCost = ArithUtil.div(fiexdCostTotal, volumeTotal, 2);
+				double unitChangeCost = ArithUtil.div(changeCostTotal, distanceTotal, 2);
+				/**构建定价规则详情*/
+				PricingRuleDetailVo pricingRuleDetailVo = null;
+				pricingRuleDetailVo = new PricingRuleDetailVo();
+				pricingRuleDetailVo.setRuleTypeCode(ruleTypeCode);
+				pricingRuleDetailVo.setPriceType(key);
+				//设置单位固本和单位可变成本
+				pricingRuleDetailVo.setUnitFixedCost(unitFixedCost);
+				pricingRuleDetailVo.setUnitChangeCost(unitChangeCost);
+				//设置默认值
+				pricingRuleDetailVo.setDeleteFlag(false);
+				pricingRuleDetailVo.setVersion(BkgConstants.DEFALUT_VERSION);
+				pricingRuleDetailVo.setCreateEmp(BkgConstants.SYSTEM_CREATE_ORG);
+				pricingRuleDetailVo.setCreateOrg(BkgConstants.SYSTEM_CREATE_ORG);
+				
+				//存放detail_rel是网点--车型-报价
+				List<PricingRuleDetailRelVo> pricingRuleDetailRelVos = new ArrayList<PricingRuleDetailRelVo>(); 
+				if (null != containSiteSet && !containSiteSet.isEmpty()) {
+					for (PricingRuleTypeVo site : containSiteSet) {
+						PricingRuleDetailRelVo pricingRuleDetailRelVo= new PricingRuleDetailRelVo();
+						pricingRuleDetailRelVo.setOrgCode(site.getSiteCode());
+						pricingRuleDetailRelVo.setOrgName(site.getSiteName());
+						//设置默认值
+						pricingRuleDetailRelVo.setDeleteFlag(false);
+						pricingRuleDetailRelVo.setVersion(BkgConstants.DEFALUT_VERSION);
+						pricingRuleDetailRelVo.setCreateEmp(BkgConstants.SYSTEM_CREATE_ORG);
+						pricingRuleDetailRelVo.setCreateOrg(BkgConstants.SYSTEM_CREATE_ORG);
+						pricingRuleDetailRelVos.add(pricingRuleDetailRelVo);
+					}
+					//关联网点数量
+					pricingRuleDetailVo.setRelatedSiteNum(containSiteSet.size());
+				}
+				pricingRuleDetailVo.setPricingRuleDetailRelVos(pricingRuleDetailRelVos);
+				pricingRuleDetailVos.add(pricingRuleDetailVo);
+			}
+		}
+		return pricingRuleDetailVos;
+	}
+	
+	/**
+	 * 
+	 * @Description: 计算每个网点进港或出港的固本或可变成本的集合
+	 * @param dateLineGroupVosMap
+	 * @param auditTruckCostMap
+	 * @param fixedCostMap
+	 * @param freigtCombineVo
+	 * @param businessType
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 下午12:14:45
+	 */
+	public Map<String,List<SitePriceVo>> calcSumSiteCostUnitGroup(Map<Date, Map<String, List<LineGroupVo>>> dateLineGroupVosMap,
+			Map<String, TruckCostManagementVo> auditTruckCostMap,Map<String, Double> fixedCostMap,
+			FreigtCombineVo freigtCombineVo,String businessType){
+		Map<String,List<SitePriceVo>> sitePriceUnitLineGroupMap = new HashMap<String, List<SitePriceVo>>();
+		List<LineGroupVo> lineGroupVos= null;
+		List<SitePriceVo> sitePriceVos = null;
+		String centerCode = freigtCombineVo.getCombineOrgCode();
+		String carType = "";
+		//单个班次成本
+		double linGroupFixedCost = 0;
+		double lineGroupChangeCost = 0;
+		for (Date date : dateLineGroupVosMap.keySet()) {
+			Map<String, List<LineGroupVo>> dateGroupMap = dateLineGroupVosMap.get(date);
+			if (null != dateGroupMap && null != dateGroupMap.get(businessType)) {
+				lineGroupVos = dateGroupMap.get(businessType);
+				if (null == lineGroupVos || lineGroupVos.isEmpty()) {
+					continue;
+				}
+				for (LineGroupVo lineGroupVo : lineGroupVos) {
+					//车型
+					carType = lineGroupVo.getCarType();
+					//
+					TruckCostManagementVo truckCostManagementVo = auditTruckCostMap.get(carType);
+					//该中心车型成本里没有该班次需要的车型成本，则不计算
+					if (null == truckCostManagementVo) {
+						if (logger.isInfoEnabled()) {
+							logger.info("车型成本没有【"+ carType +"】的车型，无法计算对应报价");
+						}
+						continue;
+					}
+					//班次距离
+					Double lineGroupDistance = lineGroupVo.getLineGroupDistance();
+					//班次总体积
+					Double totalVolume = lineGroupVo.getTotalVolume();
+					//获得该班次的固定本,固本+装卸车费系数*班次体积
+					linGroupFixedCost = fixedCostMap.get(carType) + truckCostManagementVo.getHandlingCharges() * totalVolume;
+					//该班次的可变成本 = 可变系数 * 班次距离
+					lineGroupChangeCost = truckCostManagementVo.getCostCoefficient() * lineGroupDistance;
+					String lineGroupCode = lineGroupVo.getLineGroupCode();
+					//始发和目的站
+					String startOrgCode = lineGroupVo.getStartOrgCode();
+					String endOrgCode = lineGroupVo.getEndOrgCode();
+					String orgCode = "";
+					if (BkgConstants.BUSINESS_MODE_IN.equals(businessType)) {
+						orgCode = startOrgCode;
+					}else if(BkgConstants.BUSINESS_MODE_OUT.equals(businessType)){
+						orgCode = endOrgCode;
+					}
+					//线路对应网点平分
+					List<LineGroupDetailVo> lineGroupDetailVos = lineGroupVo.getLineGroupDetailVos();
+					//该班次所有网点到中心的距离总和
+					double siteTotalDistance = 0;
+					//网点-距离（网点到中心或中心到网点的距离）
+					Map<String, Double> transportEffectiveVoMap = new HashMap<String, Double>();
+					//遍历节点，获得该班次的所有班次详情的网点的总距离
+					for (LineGroupDetailVo lineGroupDetailVo : lineGroupDetailVos) {
+						//途径点编号
+						String wayPointCode = lineGroupDetailVo.getWayPointCode();
+						//因为lineGroupDetailVos包含了中心点，所以要忽略中心，进港忽略始发站，出港忽略目的站
+						
+						if (orgCode.equals(wayPointCode)){
+							continue;
+						}
+						double siteDistance = 0;
+						TransportEffectiveVo searchEffectiveVo = new TransportEffectiveVo();
+						if (BkgConstants.BUSINESS_MODE_IN.equals(businessType)) {
+							searchEffectiveVo.setStartSiteCode(centerCode);
+							searchEffectiveVo.setEndSiteCode(wayPointCode);
+						}else if(BkgConstants.BUSINESS_MODE_OUT.equals(businessType)){
+							searchEffectiveVo.setStartSiteCode(wayPointCode);
+							searchEffectiveVo.setEndSiteCode(centerCode);
+						}
+						List<TransportEffectiveVo> transportEffectiveVos = transportEffectiveService.findByCondition(searchEffectiveVo);
+						if (null != transportEffectiveVos && !transportEffectiveVos.isEmpty()) {
+							TransportEffectiveVo transportEffectiveVo = transportEffectiveVos.get(0);
+							siteDistance = transportEffectiveVo.getDistance();
+							siteTotalDistance += transportEffectiveVo.getDistance();
+						}else {
+							if(logger.isErrorEnabled()){
+								logger.error("未维护站点【"+ wayPointCode + "_" + lineGroupDetailVo.getWayPointName() +"】到分拨【"+ orgCode +"】的时效。");
+							}
+						}
+						transportEffectiveVoMap.put(wayPointCode, siteDistance);
+					}
+					
+					for (LineGroupDetailVo lineGroupDetailVo : lineGroupDetailVos) {
+						//途径点编号
+						String wayPointCode = lineGroupDetailVo.getWayPointCode();
+						//因为lineGroupDetailVos包含了中心点，所以要忽略中心，进港忽略始发站，出港忽略目的站
+						
+						if (orgCode.equals(wayPointCode)){
+							continue;
+						}
+						//每个网点的货量
+						Double volume = lineGroupDetailVo.getVolume();
+						//每个网点到中心的距离
+						double distance = transportEffectiveVoMap.get(wayPointCode) == null ? 0 : transportEffectiveVoMap.get(wayPointCode);
+						/*TransportEffectiveVo searchEffectiveVo = new TransportEffectiveVo();
+						if (BkgConstants.BUSINESS_MODE_IN.equals(businessType)) {
+							searchEffectiveVo.setStartSiteCode(centerCode);
+							searchEffectiveVo.setEndSiteCode(wayPointCode);
+						}else if(BkgConstants.BUSINESS_MODE_OUT.equals(businessType)){
+							searchEffectiveVo.setStartSiteCode(wayPointCode);
+							searchEffectiveVo.setEndSiteCode(centerCode);
+						}
+						List<TransportEffectiveVo> transportEffectiveVos = transportEffectiveService.findByCombine(searchEffectiveVo);
+						if (null != transportEffectiveVos && !transportEffectiveVos.isEmpty()) {
+							TransportEffectiveVo transportEffectiveVo = transportEffectiveVos.get(0);
+							distance = transportEffectiveVo.getDistance();
+						}else {
+							if(logger.isErrorEnabled()){
+								logger.error("未维护站点【"+ wayPointCode + "_" + lineGroupDetailVo.getWayPointName() +"】到分拨【"+ orgCode +"】的时效。");
+							}
+						}*/
+						//构造sitePriceVo对象,获得该班次该网点的固本和可变本
+						SitePriceVo sitePriceVo = new SitePriceVo();
+						sitePriceVo.setOrgCode(wayPointCode);
+						sitePriceVo.setDistance(distance);
+						sitePriceVo.setVolume(volume);
+						sitePriceVo.setLineGroupCode(lineGroupCode);
+						sitePriceVo.setFiexdCost(volume/totalVolume*linGroupFixedCost);
+						sitePriceVo.setChangeCost(siteTotalDistance > 0 ? (ArithUtil.div(distance*lineGroupChangeCost,siteTotalDistance,2)) : 0);
+						if (null == sitePriceUnitLineGroupMap.get(wayPointCode)){
+							sitePriceVos = new ArrayList<SitePriceVo>();
+						}else {
+							sitePriceVos = sitePriceUnitLineGroupMap.get(wayPointCode);
+						}
+						sitePriceVos.add(sitePriceVo);
+						//重新保存至sitePriceUnitLineGroupMap里
+						sitePriceUnitLineGroupMap.put(wayPointCode, sitePriceVos);
+					}
+				}
+			}
+		}
+		return sitePriceUnitLineGroupMap;
+	}
+
+
+	/**
+	 * 这里因为计算报价可能会抛异常，如果是报价异常捕获，不往上抛不然调用算法那边调用计算报价会导致Transaction rolled back because it has been marked as rollback-only 事务回滚
+	 * @Description: 计算报价
+	 * @param lineGroupVos 班次
+	 * @param freigtCombineVo 参数
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 下午12:14:45
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int calcPrice(List<LineGroupVo> lineGroupVos, FreigtCombineVo freigtCombineVo) {
+		int count = 0 ;
+		try {
+			//需求类型
+			String demandType = freigtCombineVo.getDemandType();
+			//String orgCode = freigtCombineVo.getCombineOrgCode();
+			List<LineGroupVo> brotherLineGroupVos = null;
+			if (BkgConstants.DEMAND_TYPE_LONG.equals(demandType)) {
+				//组合类型
+				String combineType = freigtCombineVo.getCombineSourceType();
+				String brotherCombineCode = freigtCombineVo.getBrotherCombineCode();
+				//获取进港班次
+				LineGroupVo searchLineGroupVo = new LineGroupVo();
+				if (BkgConstants.COMBINE_SOURCE_TYPE_DEMAND.equals(combineType)) {
+					//查看对应组合是否排班
+					FreightDemandCombineVo search = new FreightDemandCombineVo();
+					search.setBrotherDemandCombineCode(freigtCombineVo.getCombineCode());
+					search.setDemandCombineStatus(BkgConstants.DEMAND_COMBINE_STATUS_SHIFT_YES);
+					search.setDemandCombineType(demandType);
+					search.setDemandCombineCode(brotherCombineCode);
+					List<FreightDemandCombineVo> demandCombineVos = freightDemandCombineBiz.findByCondition(search);
+					if (null == demandCombineVos || demandCombineVos.isEmpty()) {
+						logger.error("组合编号【"+freigtCombineVo.getCombineCode()+"】的对应模式组合【"+brotherCombineCode+"】未排班");
+						throw new BkgPriceRuleException("需求组合编号【"+freigtCombineVo.getCombineCode()+"】的对应组合【"+brotherCombineCode+"】未排班");
+					}
+					searchLineGroupVo.setRequiCombinCode(brotherCombineCode);
+				}else if(BkgConstants.COMBINE_SOURCE_TYPE_ORDER.equals(combineType)) {
+					//查看对应组合是否排班
+					FreightOrderCombineVo search = new FreightOrderCombineVo();
+					search.setBrotherOrderCombineCode(freigtCombineVo.getCombineCode());
+					search.setOrderCombineStatus(BkgConstants.ORDER_COMBINE_STATUS_SHIFT_YES);
+					search.setOrderCombineType(demandType);
+					search.setOrderCombineCode(brotherCombineCode);
+					List<FreightOrderCombineVo> orderCombineVos = freightOrderCombineBiz.findByCondition(search);
+					if (null == orderCombineVos || orderCombineVos.isEmpty()) {
+						logger.error("组合编号【"+freigtCombineVo.getCombineCode()+"】的对应模式组合【"+brotherCombineCode+"】未排班");
+						throw new BkgPriceRuleException("订单编号【"+freigtCombineVo.getCombineCode()+"】的对应模式组合【"+brotherCombineCode+"】未排班");
+					}
+					searchLineGroupVo.setOrderCombinCode(brotherCombineCode);
+				}
+				searchLineGroupVo.setRequiType(Integer.parseInt(demandType));
+				brotherLineGroupVos = lineGroupBiz.findLineGroupAndDetail(searchLineGroupVo);
+				if (null == brotherLineGroupVos || brotherLineGroupVos.isEmpty()) {
+					logger.error("订单编号【"+brotherCombineCode+"】的班次为空！");
+					throw new BkgPriceRuleException("订单编号【"+brotherCombineCode+"】的班次为空！");
+				}
+				lineGroupVos.addAll(brotherLineGroupVos);
+			}
+			//根据查询出班次构建班次map
+			Map<Date, Map<String, List<LineGroupVo>>> dateMap = buildLineGroupMap(lineGroupVos);
+			//重新计算定价规则
+			List<PricingRuleVo> newPricingRuleVos = calcPriceByLineGroups(dateMap, freigtCombineVo);
+			if (null != newPricingRuleVos && !newPricingRuleVos.isEmpty()) {
+				//添加定价规则
+				count += addPricingRule(newPricingRuleVos);
+			}
+		//捕获计算报价异常
+		} catch (BkgPriceRuleException e) {
+			logger.error("订单编号【"+freigtCombineVo.getCombineCode()+"】计算报价错误！" + e);
+		}
+		return count;
+	}
+	
+	
+	
+}

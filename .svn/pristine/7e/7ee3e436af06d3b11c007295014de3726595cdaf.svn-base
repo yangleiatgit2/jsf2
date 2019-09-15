@@ -1,0 +1,283 @@
+package cn.uce.suc.bkg.vo.ia;
+
+
+import java.util.Date;
+import java.util.Map;
+
+import cn.uce.base.vo.BaseVo;
+import cn.uce.suc.bkg.vo.operation.FreightDemandVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+
+public class FreigtCombineVo extends BaseVo {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 组合编号
+	 */
+	private String combineCode;
+	
+	/**
+	 * 进港组合编号
+	 */
+	private String combineInCode;
+	
+	/**
+	 * 进港组合名称
+	 */
+	private String combineInName;
+	/**
+	 * 出港组合编号
+	 */
+	private String combineOutCode;
+	/**
+	 * 出港组合名称
+	 */
+	private String combineOutName;
+	
+	/**
+	 * 组合来源，需求/订单
+	 */
+	private String combineSourceType;
+	
+	/**
+	 * 业务模式
+	 */
+	private String businessMode;
+	
+	/**
+	 * 组合使用时间
+	 */
+	private Date useTime;
+	
+	/**
+	 * 组合机构 即：组合的分拨
+	 */
+	private String combineOrgCode;
+	
+	/**
+	 * 组合机构名称 即：组合的分拨名称
+	 */
+	private String combineOrgName;
+	
+	/**
+	 * 需求类型，1长期、2临时
+	 */
+	private String demandType;
+	
+	/**
+	 * 需求map
+	 */
+	private Map<String, FreightDemandVo> demandMap;
+	
+	/**
+	 * 订单map
+	 */
+	private Map<String, FreightOrderVo> orderMap;
+	
+	/**
+	 * 兄弟组合编号，用于长期需求对应模式的组合编号
+	 */
+	private String brotherCombineCode;
+	
+
+	/** 
+	 * @return combineCode 
+	 */
+	public String getCombineCode() {
+		return combineCode;
+	}
+
+	/**
+	 * @param combineCode the combineCode to set
+	 */
+	public void setCombineCode(String combineCode) {
+		this.combineCode = combineCode;
+	}
+
+	/** 
+	 * @return combineSourceType 
+	 */
+	public String getCombineSourceType() {
+		return combineSourceType;
+	}
+
+	/**
+	 * @param combineSourceType the combineSourceType to set
+	 */
+	public void setCombineSourceType(String combineSourceType) {
+		this.combineSourceType = combineSourceType;
+	}
+
+	/** 
+	 * @return businessMode 
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+
+	/**
+	 * @param businessMode the businessMode to set
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	/** 
+	 * @return useTime 
+	 */
+	public Date getUseTime() {
+		return useTime;
+	}
+
+	/**
+	 * @param useTime the useTime to set
+	 */
+	public void setUseTime(Date useTime) {
+		this.useTime = useTime;
+	}
+
+	/** 
+	 * @return combineOrgCode 
+	 */
+	public String getCombineOrgCode() {
+		return combineOrgCode;
+	}
+
+	/**
+	 * @param combineOrgCode the combineOrgCode to set
+	 */
+	public void setCombineOrgCode(String combineOrgCode) {
+		this.combineOrgCode = combineOrgCode;
+	}
+
+	/** 
+	 * @return demandType 
+	 */
+	public String getDemandType() {
+		return demandType;
+	}
+
+	/**
+	 * @param demandType the demandType to set
+	 */
+	public void setDemandType(String demandType) {
+		this.demandType = demandType;
+	}
+
+	/** 
+	 * @return combineInCode 
+	 */
+	public String getCombineInCode() {
+		return combineInCode;
+	}
+
+	/**
+	 * @param combineInCode the combineInCode to set
+	 */
+	public void setCombineInCode(String combineInCode) {
+		this.combineInCode = combineInCode;
+	}
+
+	/** 
+	 * @return combineOutCode 
+	 */
+	public String getCombineOutCode() {
+		return combineOutCode;
+	}
+
+	/**
+	 * @param combineOutCode the combineOutCode to set
+	 */
+	public void setCombineOutCode(String combineOutCode) {
+		this.combineOutCode = combineOutCode;
+	}
+
+	/** 
+	 * @return combineOrgName 
+	 */
+	public String getCombineOrgName() {
+		return combineOrgName;
+	}
+
+	/**
+	 * @param combineOrgName the combineOrgName to set
+	 */
+	public void setCombineOrgName(String combineOrgName) {
+		this.combineOrgName = combineOrgName;
+	}
+
+	/** 
+	 * @return combineInName 
+	 */
+	public String getCombineInName() {
+		return combineInName;
+	}
+
+	/**
+	 * @param combineInName the combineInName to set
+	 */
+	public void setCombineInName(String combineInName) {
+		this.combineInName = combineInName;
+	}
+
+	/** 
+	 * @return combineOutName 
+	 */
+	public String getCombineOutName() {
+		return combineOutName;
+	}
+
+	/**
+	 * @param combineOutName the combineOutName to set
+	 */
+	public void setCombineOutName(String combineOutName) {
+		this.combineOutName = combineOutName;
+	}
+
+	/** 
+	 * @return demandMap 
+	 */
+	public Map<String, FreightDemandVo> getDemandMap() {
+		return demandMap;
+	}
+
+	/**
+	 * @param demandMap the demandMap to set
+	 */
+	public void setDemandMap(Map<String, FreightDemandVo> demandMap) {
+		this.demandMap = demandMap;
+	}
+
+	/** 
+	 * @return orderMap 
+	 */
+	public Map<String, FreightOrderVo> getOrderMap() {
+		return orderMap;
+	}
+
+	/**
+	 * @param orderMap the orderMap to set
+	 */
+	public void setOrderMap(Map<String, FreightOrderVo> orderMap) {
+		this.orderMap = orderMap;
+	}
+
+	/** 
+	 * @return brotherCombineCode 
+	 */
+	public String getBrotherCombineCode() {
+		return brotherCombineCode;
+	}
+
+	/**
+	 * @param brotherCombineCode the brotherCombineCode to set
+	 */
+	public void setBrotherCombineCode(String brotherCombineCode) {
+		this.brotherCombineCode = brotherCombineCode;
+	}
+
+}

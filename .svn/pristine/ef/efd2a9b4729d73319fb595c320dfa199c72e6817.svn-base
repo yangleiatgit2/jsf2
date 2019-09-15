@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.price.IPricingRuleDetailDao">
+	
+	<sql id="Base_Column_List">
+			id,price_rule_id,price_rule_code,rule_type_code,price_type,related_site_num,
+			unit_fixed_cost,unit_change_cost,delete_flag,
+			utf1,utf2,utf3,
+			version,remark,create_org,
+			create_emp,create_time,update_org,
+			update_emp,update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+		 <if test="priceRuleId != null">
+		and price_rule_id = #{priceRuleId}
+		</if>
+	    <if test="priceRuleCode != null">
+		and price_rule_code = #{priceRuleCode}
+		</if>
+	    <if test="ruleTypeCode != null">
+		and rule_type_code = #{ruleTypeCode}
+		</if>
+		<if test="priceType != null">
+		and price_type = #{priceType}
+		</if>
+		<if test="relatedSiteNum != null">
+		and related_site_num = #{relatedSiteNum}
+		</if>
+	    <if test="unitFixedCost != null">
+		and unit_fixed_cost = #{unitFixedCost}
+		</if>
+	    <if test="unitChangeCost != null">
+		and unit_change_cost = #{unitChangeCost}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.price.PricingRuleDetail">
+	UPDATE t_suc_bkg_pricing_rule_detail
+	<set>
+		<if test="priceRuleId != null">
+		price_rule_id = #{priceRuleId},
+		</if>
+		<if test="priceRuleCode != null">
+		price_rule_code = #{priceRuleCode},
+		</if>
+		<if test="ruleTypeCode != null">
+		rule_type_code = #{ruleTypeCode},
+		</if>
+		<if test="priceType != null">
+		price_type = #{priceType},
+		</if>
+		<if test="relatedSiteNum != null">
+		related_site_num = #{relatedSiteNum},
+		</if>
+		<if test="unitFixedCost != null">
+		unit_fixed_cost = #{unitFixedCost},
+		</if>
+		<if test="unitChangeCost != null">
+		unit_change_cost = #{unitChangeCost},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = ifnull(version,0) + 1,
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+		<if test="version != null">
+			AND version = #{version}
+		</if>
+	</update>
+	
+	<select id="findByCondition" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleDetailVo" resultType="cn.uce.suc.bkg.vo.price.PricingRuleDetailVo">
+		select <include refid="Base_Column_List" /> 
+		from t_suc_bkg_pricing_rule_detail
+		<where>
+			<if test="deleteFlag != null">
+				AND delete_flag = #{deleteFlag}
+			</if>
+			<if test="orgCode != null and orgCode != ''">
+				AND org_code = #{orgCode}
+			</if>
+			 <if test="orgName != null and orgCode != ''">
+				AND org_name = #{orgName}
+			</if>
+			<if test="ruleTypeCode != null and ruleTypeCode != ''">
+				AND rule_type_code = #{ruleTypeCode}
+			</if>
+			<if test="priceType != null and priceType != ''">
+				AND price_type = #{priceType}
+			</if>
+			<if test="priceRuleCode != null and priceRuleCode != ''">
+				AND price_rule_code = #{priceRuleCode}
+			</if>
+			<if test="priceRuleId != null">
+				AND price_rule_id = #{priceRuleId}
+			</if>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleDetailVo" resultType="cn.uce.suc.bkg.vo.price.PricingRuleDetailVo">
+		select <include refid="Base_Column_List" /> 
+		from t_suc_bkg_pricing_rule_detail
+		<where>
+			<if test="orgCode != null and orgCode != ''">
+				AND org_code = #{orgCode}
+			</if>
+			 <if test="orgName != null and orgCode != ''">
+				AND org_name = #{orgName}
+			</if>
+			<if test="ruleTypeCode != null and ruleTypeCode != ''">
+				AND rule_type_code = #{ruleTypeCode}
+			</if>
+			<if test="priceType != null and priceType != ''">
+				AND price_type = #{priceType}
+			</if>
+			<if test="priceRuleCode != null and priceRuleCode != ''">
+				AND price_rule_code = #{priceRuleCode}
+			</if>
+			<if test="priceRuleId != null">
+				AND price_rule_id = #{priceRuleId}
+			</if>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据价格分类来分组，同一个车型下的网点为一类 -->
+	<select id="findByPriceTypeGroup" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleDetailVo" resultType="cn.uce.suc.bkg.vo.price.PricingRuleDetailVo">
+		SELECT <include refid="Base_Column_List" />,COUNT(price_type) AS relatedSiteNum 
+		FROM t_suc_bkg_pricing_rule_detail
+		<where>
+			<if test="orgCode != null and orgCode != ''">
+				AND org_code = #{orgCode}
+			</if>
+			 <if test="orgName != null and orgCode != ''">
+				AND org_name = #{orgName}
+			</if>
+			<if test="ruleTypeCode != null and ruleTypeCode != ''">
+				AND rule_type_code = #{ruleTypeCode}
+			</if>
+			<if test="priceType != null and priceType != ''">
+				AND price_type = #{priceType}
+			</if>
+			<if test="priceRuleCode != null and priceRuleCode != ''">
+				AND price_rule_code = #{priceRuleCode}
+			</if>
+			<if test="priceRuleId != null">
+				AND price_rule_id = #{priceRuleId}
+			</if>
+			<if test="id != null">
+				AND id = #{id}
+			</if>
+		</where>
+		GROUP BY price_rule_code,price_type
+	</select>
+	
+	<!-- 根据定价规则id更新 -->
+	<update id="batchUpdateByRuleId" parameterType="cn.uce.suc.bkg.entity.price.PricingRuleDetail">
+		UPDATE t_suc_bkg_pricing_rule_detail
+		<set>
+			<if test="deleteFlag != null">
+			delete_flag = #{deleteFlag}
+			</if>
+		</set>
+		WHERE price_rule_id = #{priceRuleId}
+	</update>
+</mapper>

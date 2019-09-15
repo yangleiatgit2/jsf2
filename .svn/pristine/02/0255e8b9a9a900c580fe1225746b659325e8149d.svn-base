@@ -1,0 +1,28 @@
+package cn.uce.suc.common.cache;
+
+import cn.uce.core.cache.CacheManager;
+import cn.uce.core.cache.base.ICache;
+import cn.uce.suc.common.entity.SystemConfig;
+
+/**
+ * 
+ * @Description: 参数缓存调用方法
+ * @author wangzhijun
+ * @date 2017年11月2日 下午3:40:43
+ */
+public class SystemConfigProcessor {
+
+	/**
+	 * 
+	 * @Description: 根据参数编码获取对象
+	 * @param configCode
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 下午3:41:49
+	 */
+	public static SystemConfig getByCode(String configCode) {
+		ICache<String, SystemConfig> cache = CacheManager.getInstance().getCache("SystemConfigCache");
+		SystemConfig systemConfig = cache.get(configCode);
+		return systemConfig;
+	}
+}

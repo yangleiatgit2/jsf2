@@ -1,0 +1,184 @@
+package cn.uce.suc.bkg.service.infomon;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.suc.bkg.dao.infomon.VisibleTransportDao;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.operation.CarTraceVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.common.entity.OmgCmsOrg;
+import cn.uce.suc.common.entity.OmgCmsOrgDetail;
+import cn.uce.suc.common.vo.OrgExtendVo;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.operation.CarTrace;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+
+@Service("visibleTransportService")
+public class VisibleTransportService {
+
+	@Resource
+	public VisibleTransportDao visibleTransportDao;
+	
+	/**
+	 * 
+	 * @Description: TODO(查询发车计划) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月26日 下午5:53:42
+	 */
+	public List<DirvingPlanVo> queryDirvingPlan(DirvingPlanVo dirvingPlanVo){
+		return visibleTransportDao.queryDirvingPlan(dirvingPlanVo);
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(插入发车计划车辆运输轨迹) 
+	 * @param visibleTransportVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月26日 下午4:58:02
+	 */
+	public int updateTransportTrail(DirvingPlanVo dirvingPlanVo){
+		return visibleTransportDao.updateTransportTrail(dirvingPlanVo);
+	}
+	/**
+	 * 
+	 * @Description: TODO(通过可视化运输条件查询车辆信息) 
+	 * @param visibleTransportInfoVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月30日 下午8:59:19
+	 */
+	public List<CarManage> searchCarInfo(CarManageVo carManageVo){
+		return visibleTransportDao.searchCarInfo(carManageVo);
+	}
+	/**
+	 * 
+	 * @Description: TODO(实时更新车辆轨迹经纬度) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月31日 上午9:53:15
+	 */
+	public int updateCarTrace(CarTrace carTrace){
+		return visibleTransportDao.updateCarTrace(carTrace);
+	}
+	/**
+	 * 
+	 * @Description: TODO(查询分拨中心信息) 
+	 * @param carManageVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月31日 下午12:45:33
+	 */
+	public List<OrgExtendVo> searchGroupCenterInfo(CarManageVo carManageVo){
+		return visibleTransportDao.searchGroupCenterInfo(carManageVo);
+	}
+	/**
+	 * 
+	 * @Description: TODO(查询异常信息) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月31日 下午5:17:19
+	 */
+	public List<ExceptionManager> queryExceptionInfo(DirvingPlanVo dirvingPlanVo){
+		return visibleTransportDao.queryExceptionInfo(dirvingPlanVo);
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(查询车辆信息且带有经纬度) 
+	 * @param carManageVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月3日 下午3:40:32
+	 */
+	public List<CarManage> queryCarInfo(CarManageVo carManageVo){
+		return visibleTransportDao.queryCarInfo(carManageVo);
+	}
+	/**
+	 * 
+	 * @Description: TODO(查询所有异常车辆) 
+	 * @param omgCmsOrg
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月3日 下午6:47:42
+	 */
+	public List<CarManage> queryExceptionCar(OmgCmsOrg omgCmsOrg){
+		return visibleTransportDao.queryExceptionCar(omgCmsOrg);
+	}
+	/**
+	 * 
+	 * @Description: TODO(根据发车计划单号查询是否有异常) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午1:58:20
+	 */
+	public List<ExceptionManager> queryExceptionByDrivingPlanCode(DirvingPlanVo dirvingPlanVo){
+		return visibleTransportDao.queryExceptionByDrivingPlanCode(dirvingPlanVo);
+	}
+	/**
+	 * 
+	 * @Description: TODO(根据发车计划单号保存异常) 
+	 * @param exceptionManager
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午4:52:38
+	 */
+	public int insertExceptionReport(ExceptionManager exceptionManager){
+		return visibleTransportDao.insertExceptionReport(exceptionManager);
+	}
+	/**
+	 * 
+	 * @Description: TODO(根据发车计划查询发车计划详情) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月6日 下午7:26:36
+	 */
+	public List<DirvingPlanDetail> queryDirvingPlanDetail(DirvingPlanVo dirvingPlanVo){
+		return visibleTransportDao.queryDirvingPlanDetail(dirvingPlanVo);
+	}
+	/**
+	 * 
+	 * @Description: TODO(查询发车计划车辆起途终点经纬度及司机信息) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月13日 下午3:21:25
+	 */
+	public List<DirvingPlanVo> queryDriverStatus(DirvingPlanVo dirvingPlanVo){
+		return visibleTransportDao.queryDriverStatus(dirvingPlanVo);
+	}
+	/**
+	 * 
+	 * @Description: TODO(查询途经点经纬度) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月13日 下午4:14:18
+	 */
+	public List<DirvingPlanDetail> queryThroughLngLat(DirvingPlanVo dirvingPlanVo){
+		return visibleTransportDao.queryThroughLngLat(dirvingPlanVo);
+	}
+	/**
+	 * 通过组织编码查询在执行中的发车计划号
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param orgCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月28日 下午3:44:39
+	 */
+	public List<DirvingPlanVo> queryDirvingPlanByOrgCode(DirvingPlanDetailVo pvd){
+		return visibleTransportDao.queryDirvingPlanByOrgCode(pvd);
+	}
+}

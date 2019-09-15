@@ -1,0 +1,37 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.CarTrace;
+import cn.uce.suc.bkg.vo.operation.CarTraceVo;
+
+/**
+ * @Description: 车辆轨迹信息DAO接口类
+ * @author liwei
+ * @date 2017年10月31日 上午10:46:42
+ */
+@Repository("carTraceDao")
+public interface ICarTraceDao extends IBaseDao<CarTrace, Long> {
+	
+	/**
+	 * @Description: 分页查询车辆轨迹信息
+	 * @param carTraceVo 车辆轨迹信息
+	 * @param page 分页参数
+	 * @return 车辆轨迹信息
+	 * @author liwei
+	 * @date 2017年10月31日 上午10:46:42
+	 */
+	public Pagination<CarTrace> findByPagination(CarTraceVo carTraceVo, Page page);
+	/**
+	 * 根据VO查询车辆轨迹信息
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param carTraceVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月12日 下午8:46:47
+	 */
+	public CarTraceVo queryCarTraceByVo(CarTrace carTrace);
+}

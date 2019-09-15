@@ -1,0 +1,834 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import java.util.Date;
+
+/**
+ * @Description: 发车计划Entity类
+ * @author liwei
+ * @date 2017年10月26日 下午05:05:42
+ */
+@Table("t_suc_bkg_dirving_plan")
+public class DirvingPlan extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 发车计划编号 
+	 */
+	private String drivingPlanCode;
+    /** 
+	 * 发车计划名称 
+	 */
+	private String drivingPlanName;
+    /** 
+	 * 司机名称 
+	 */
+	private String dirverName;
+    /** 
+	 * 始发时间 
+	 */
+	private Date departTime;
+    /** 
+	 * 达发时间 
+	 */
+	private Date arrivalTime;
+    /** 
+	 * 车牌号 
+	 */
+	private String plateNumber;
+    /** 
+	 * 车辆编码 
+	 */
+	private String carCode;
+    /** 
+	 * 司机手机号码 
+	 */
+	private String driverPhone;
+    /** 
+	 * 驾驶时间 
+	 */
+	private Integer drivingTime;
+    /** 
+	 * 行驶j距离 
+	 */
+	private Double dirverDistance;
+    /** 
+	 * 始发站点编号 
+	 */
+	private String startOrgCode;
+    /** 
+	 * 始发站点名称 
+	 */
+	private String startOrgName;
+    /** 
+	 * 始发经纬度 
+	 */
+	private String startLatLng;
+    /** 
+	 * 目的经纬度 
+	 */
+	private String endLatLng;
+    /** 
+	 * 目的站点code 
+	 */
+	private String endOrgCode;
+    /** 
+	 * 目的站点名称 
+	 */
+	private String endOrgName;
+    /** 
+	 * 车辆类型 
+	 */
+	private String carType;
+    /** 
+	 * 装载率 
+	 */
+	private Double loadingRate;
+    /** 
+	 * 需求类型 
+	 */
+	private String demandType;
+    /** 
+	 * 发车计划状态 
+	 */
+	private String status;
+    /** 
+	 * 班次编号 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 需求组合编号 
+	 */
+	private String demandCombinCode;
+    /** 
+	 * 订单组合编号 
+	 */
+	private String orderCombinCode;
+
+	/**
+	 * 是否有异常
+	 */
+	private String abnormalState;
+    /** 
+	 * 业务模式 
+	 */
+	private String businessMode;
+    /** 
+	 * 报价-班次的订单价格 
+	 */
+	private Double quotePrice;
+    /** 
+	 * 成本价 
+	 */
+	private Double costPrice;
+    /** 
+	 * 爆仓网点名称 
+	 */
+	private String blowSiteName;
+    /** 
+	 * 班次货物总体积 
+	 */
+	private Double lineGroupTotalVolume;
+    /** 
+	 * 班次货物总重量 
+	 */
+	private Double lineGroupTotalWeight;
+    /** 
+	 * 班次总里程 
+	 */
+	private Double lineGroupDistance;
+    /** 
+	 * 调整类型 
+	 */
+	private String adjustType;
+    /** 
+	 * 是否爆仓 
+	 */
+	private Boolean blowFlag;
+    /** 
+	 * 爆仓网点 
+	 */
+	private String blowSiteCode;
+    /** 
+	 * 爆仓方数 
+	 */
+	private Double blowVolume;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFalg;
+    /** 
+	 * 更新组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 经纬度集合 
+	 */
+	private String lngLatColleation;
+	
+	/**
+	 * 下一站
+	 */
+	private String nextStation;
+	
+	/**
+	 * 下一站编码
+	 */
+	private String nextStationCode;
+	
+	
+	
+	
+	public String getNextStation() {
+		return nextStation;
+	}
+
+	public void setNextStation(String nextStation) {
+		this.nextStation = nextStation;
+	}
+
+	public String getNextStationCode() {
+		return nextStationCode;
+	}
+
+	public void setNextStationCode(String nextStationCode) {
+		this.nextStationCode = nextStationCode;
+	}
+
+	/**
+	 * 获取 发车计划编号
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	
+	/**
+	 * 设置 发车计划编号
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+	
+	/**
+	 * 获取 发车计划名称
+	 */
+	public String getDrivingPlanName() {
+		return drivingPlanName;
+	}
+	
+	/**
+	 * 设置 发车计划名称
+	 */
+	public void setDrivingPlanName(String drivingPlanName) {
+		this.drivingPlanName = drivingPlanName;
+	}
+	
+	/**
+	 * 获取 司机名称
+	 */
+	public String getDirverName() {
+		return dirverName;
+	}
+	
+	/**
+	 * 设置 司机名称
+	 */
+	public void setDirverName(String dirverName) {
+		this.dirverName = dirverName;
+	}
+	
+	/**
+	 * 获取 始发时间
+	 */
+	public Date getDepartTime() {
+		return departTime;
+	}
+	
+	/**
+	 * 设置 始发时间
+	 */
+	public void setDepartTime(Date departTime) {
+		this.departTime = departTime;
+	}
+	
+	/**
+	 * 获取 达发时间
+	 */
+	public Date getArrivalTime() {
+		return arrivalTime;
+	}
+	
+	/**
+	 * 设置 达发时间
+	 */
+	public void setArrivalTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+	
+	/**
+	 * 获取 车牌号
+	 */
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+	
+	/**
+	 * 设置 车牌号
+	 */
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+	
+	/**
+	 * 获取 车辆编码
+	 */
+	public String getCarCode() {
+		return carCode;
+	}
+	
+	/**
+	 * 设置 车辆编码
+	 */
+	public void setCarCode(String carCode) {
+		this.carCode = carCode;
+	}
+	
+	/**
+	 * 获取 司机手机号码
+	 */
+	public String getDriverPhone() {
+		return driverPhone;
+	}
+	
+	/**
+	 * 设置 司机手机号码
+	 */
+	public void setDriverPhone(String driverPhone) {
+		this.driverPhone = driverPhone;
+	}
+	
+	/**
+	 * 获取 驾驶时间
+	 */
+	public Integer getDrivingTime() {
+		return drivingTime;
+	}
+	
+	/**
+	 * 设置 驾驶时间
+	 */
+	public void setDrivingTime(Integer drivingTime) {
+		this.drivingTime = drivingTime;
+	}
+	
+	/**
+	 * 获取 行驶j距离
+	 */
+	public Double getDirverDistance() {
+		return dirverDistance;
+	}
+	
+	/**
+	 * 设置 行驶j距离
+	 */
+	public void setDirverDistance(Double dirverDistance) {
+		this.dirverDistance = dirverDistance;
+	}
+	
+	/**
+	 * 获取 始发站点编号
+	 */
+	public String getStartOrgCode() {
+		return startOrgCode;
+	}
+	
+	/**
+	 * 设置 始发站点编号
+	 */
+	public void setStartOrgCode(String startOrgCode) {
+		this.startOrgCode = startOrgCode;
+	}
+	
+	/**
+	 * 获取 始发站点名称
+	 */
+	public String getStartOrgName() {
+		return startOrgName;
+	}
+	
+	/**
+	 * 设置 始发站点名称
+	 */
+	public void setStartOrgName(String startOrgName) {
+		this.startOrgName = startOrgName;
+	}
+	
+	/**
+	 * 获取 始发经纬度
+	 */
+	public String getStartLatLng() {
+		return startLatLng;
+	}
+	
+	/**
+	 * 设置 始发经纬度
+	 */
+	public void setStartLatLng(String startLatLng) {
+		this.startLatLng = startLatLng;
+	}
+	
+	/**
+	 * 获取 目的经纬度
+	 */
+	public String getEndLatLng() {
+		return endLatLng;
+	}
+	
+	/**
+	 * 设置 目的经纬度
+	 */
+	public void setEndLatLng(String endLatLng) {
+		this.endLatLng = endLatLng;
+	}
+	
+	/**
+	 * 获取 目的站点code
+	 */
+	public String getEndOrgCode() {
+		return endOrgCode;
+	}
+	
+	/**
+	 * 设置 目的站点code
+	 */
+	public void setEndOrgCode(String endOrgCode) {
+		this.endOrgCode = endOrgCode;
+	}
+	
+	/**
+	 * 获取 目的站点名称
+	 */
+	public String getEndOrgName() {
+		return endOrgName;
+	}
+	
+	/**
+	 * 设置 目的站点名称
+	 */
+	public void setEndOrgName(String endOrgName) {
+		this.endOrgName = endOrgName;
+	}
+	
+	/**
+	 * 获取 车辆类型
+	 */
+	public String getCarType() {
+		return carType;
+	}
+	
+	/**
+	 * 设置 车辆类型
+	 */
+	public void setCarType(String carType) {
+		this.carType = carType;
+	}
+	
+	/**
+	 * 获取 装载率
+	 */
+	public Double getLoadingRate() {
+		return loadingRate;
+	}
+	
+	/**
+	 * 设置 装载率
+	 */
+	public void setLoadingRate(Double loadingRate) {
+		this.loadingRate = loadingRate;
+	}
+	
+	/**
+	 * 获取 需求类型
+	 */
+	public String getDemandType() {
+		return demandType;
+	}
+	
+	/**
+	 * 设置 需求类型
+	 */
+	public void setDemandType(String demandType) {
+		this.demandType = demandType;
+	}
+	
+	/**
+	 * 获取 发车计划状态
+	 */
+	public String getStatus() {
+		return status;
+	}
+	
+	/**
+	 * 设置 发车计划状态
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	/**
+	 * 获取 班次编号
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 班次编号
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+	
+	/**
+	 * 获取 需求组合编号
+	 */
+	public String getDemandCombinCode() {
+		return demandCombinCode;
+	}
+	
+	/**
+	 * 设置 需求组合编号
+	 */
+	public void setDemandCombinCode(String demandCombinCode) {
+		this.demandCombinCode = demandCombinCode;
+	}
+	
+	/**
+	 * 获取 订单组合编号
+	 */
+	public String getOrderCombinCode() {
+		return orderCombinCode;
+	}
+	
+	/**
+	 * 设置 订单组合编号
+	 */
+	public void setOrderCombinCode(String orderCombinCode) {
+		this.orderCombinCode = orderCombinCode;
+	}
+	
+	
+	
+	public String getAbnormalState() {
+		return abnormalState;
+	}
+
+	public void setAbnormalState(String abnormalState) {
+		this.abnormalState = abnormalState;
+	}
+
+	/**
+	 * 获取 业务模式
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	
+	/**
+	 * 设置 业务模式
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+	
+	/**
+	 * 获取 报价-班次的订单价格
+	 */
+	public Double getQuotePrice() {
+		return quotePrice;
+	}
+	
+	/**
+	 * 设置 报价-班次的订单价格
+	 */
+	public void setQuotePrice(Double quotePrice) {
+		this.quotePrice = quotePrice;
+	}
+	
+	/**
+	 * 获取 成本价
+	 */
+	public Double getCostPrice() {
+		return costPrice;
+	}
+	
+	/**
+	 * 设置 成本价
+	 */
+	public void setCostPrice(Double costPrice) {
+		this.costPrice = costPrice;
+	}
+	
+	/**
+	 * 获取 爆仓网点名称
+	 */
+	public String getBlowSiteName() {
+		return blowSiteName;
+	}
+	
+	/**
+	 * 设置 爆仓网点名称
+	 */
+	public void setBlowSiteName(String blowSiteName) {
+		this.blowSiteName = blowSiteName;
+	}
+	
+	/**
+	 * 获取 班次货物总体积
+	 */
+	public Double getLineGroupTotalVolume() {
+		return lineGroupTotalVolume;
+	}
+	
+	/**
+	 * 设置 班次货物总体积
+	 */
+	public void setLineGroupTotalVolume(Double lineGroupTotalVolume) {
+		this.lineGroupTotalVolume = lineGroupTotalVolume;
+	}
+	
+	/**
+	 * 获取 班次货物总重量
+	 */
+	public Double getLineGroupTotalWeight() {
+		return lineGroupTotalWeight;
+	}
+	
+	/**
+	 * 设置 班次货物总重量
+	 */
+	public void setLineGroupTotalWeight(Double lineGroupTotalWeight) {
+		this.lineGroupTotalWeight = lineGroupTotalWeight;
+	}
+	
+	/**
+	 * 获取 班次总里程
+	 */
+	public Double getLineGroupDistance() {
+		return lineGroupDistance;
+	}
+	
+	/**
+	 * 设置 班次总里程
+	 */
+	public void setLineGroupDistance(Double lineGroupDistance) {
+		this.lineGroupDistance = lineGroupDistance;
+	}
+	
+	/**
+	 * 获取 调整类型
+	 */
+	public String getAdjustType() {
+		return adjustType;
+	}
+	
+	/**
+	 * 设置 调整类型
+	 */
+	public void setAdjustType(String adjustType) {
+		this.adjustType = adjustType;
+	}
+	
+	/**
+	 * 获取 是否爆仓
+	 */
+	public Boolean getBlowFlag() {
+		return blowFlag;
+	}
+	
+	/**
+	 * 设置 是否爆仓
+	 */
+	public void setBlowFlag(Boolean blowFlag) {
+		this.blowFlag = blowFlag;
+	}
+	
+	/**
+	 * 获取 爆仓网点
+	 */
+	public String getBlowSiteCode() {
+		return blowSiteCode;
+	}
+	
+	/**
+	 * 设置 爆仓网点
+	 */
+	public void setBlowSiteCode(String blowSiteCode) {
+		this.blowSiteCode = blowSiteCode;
+	}
+	
+	/**
+	 * 获取 爆仓方数
+	 */
+	public Double getBlowVolume() {
+		return blowVolume;
+	}
+	
+	/**
+	 * 设置 爆仓方数
+	 */
+	public void setBlowVolume(Double blowVolume) {
+		this.blowVolume = blowVolume;
+	}
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFalg() {
+		return deleteFalg;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFalg(Boolean deleteFalg) {
+		this.deleteFalg = deleteFalg;
+	}
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	public String getLngLatColleation() {
+		return lngLatColleation;
+	}
+
+	public void setLngLatColleation(String lngLatColleation) {
+		this.lngLatColleation = lngLatColleation;
+	}
+	
+
+	
+}

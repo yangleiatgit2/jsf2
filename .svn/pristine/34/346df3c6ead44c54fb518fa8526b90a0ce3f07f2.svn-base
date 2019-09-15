@@ -1,0 +1,193 @@
+package cn.uce.suc.common.interceptor;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.shiro.web.util.WebUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.biz.imp.MobileuserBiz;
+import cn.uce.suc.common.cache.AppLoginToKenCache;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.util.SucAppConstants;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.utils.StringUtil;
+
+import com.alibaba.fastjson.JSONObject;
+
+/**
+ * 
+ * @Description: 拦截器
+ * @author liwei
+ * @date 2017年12月11日 下午2:06:26
+ */
+@Service("interfaceInterceptor")
+public class InterfaceInterceptor extends HandlerInterceptorAdapter {
+	private final Logger log = LoggerFactory.getLogger(InterfaceInterceptor.class);
+	/**
+	 * token缓存
+	 */
+	@Resource(name = "appLoginToKenCache")
+	private AppLoginToKenCache appLoginToKenCache;
+	/**
+	 * 用户
+	 */
+	@Resource
+	private MobileuserBiz mobileuserBiz;
+	/**
+	 * 系统配置表
+	 */
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+
+	/**
+	 * (非 Javadoc)
+	 * <p>
+	 * Title: preHandle
+	 * </p>
+	 * <p>
+	 * Description:
+	 * </p>
+	 * 
+	 * @param request
+	 * @param response
+	 * @param handler
+	 * @return
+	 * @throws Exception
+	 * @see org.springframework.web.servlet.handler.HandlerInterceptorAdapter#preHandle(javax.servlet.http.HttpServletRequest,
+	 *      javax.servlet.http.HttpServletResponse, java.lang.Object)
+	 */
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		// 打印当前请求url
+		String url = WebUtils.getPathWithinApplication(request);
+		log.info("请求地址" + url);
+		/** 账号 */
+		String accountnuber = request.getHeader("account-number");
+		/** tokenid--缓存中的 */
+		String tokenid = request.getHeader("tokenid");
+		/** 账号类型 */
+		String accountType = request.getHeader("account-type");
+		/** 平台 */
+		String platform = request.getHeader("platform");
+		/** 手机型号 */
+		String phoneModels = request.getHeader("phone-models");
+
+		/** 失败标示 */
+		// 非空校验
+		/*if (StringUtil.isBlank(accountnuber) || StringUtil.isBlank(accountType)) {
+			accountnuber = request.getHeader("accountnumber");
+			accountType = request.getHeader("accounttype");
+		}*/
+		log.info("请求账号" + accountnuber + "用户类型" + accountType + platform + phoneModels);
+		/**
+		 * 调用方法
+		 */
+		Map<String, String> map = tokenCkeck(request,accountnuber, accountType, tokenid,url);
+		if (map != null) {
+			// 构建返回字符串
+			String str = JSONObject.toJSONString(map);
+			// 回写数字流
+			response.getWriter().write(str);
+			return false;
+		}
+		// sesson
+
+		// 校验通过
+		return true;
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param accountnuber
+	 * @param accountType
+	 * @param tokenid
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月7日 下午5:35:26
+	 */
+	public Map<String, String> tokenCkeck(HttpServletRequest request,String accountnuber, String accountType, String tokenid, String url) {
+		Map<String, String> map = new HashMap<String, String>();
+		/** 失败标示 */
+		map.put("resultFlag", SucAppConstants.TOKENEXCEPTION.value());
+		// 非空校验
+		if (StringUtil.isBlank(accountnuber) || StringUtil.isBlank(accountType)) {
+			map.put("failureReason", "未登陆");
+			return map;
+		}
+		// 从缓存中湖区token
+		LoginEntity loginEntity = appLoginToKenCache.getToken(accountnuber, accountType);
+		// 非空
+		if (null == loginEntity || StringUtil.isBlank(loginEntity.getTokenId())) {
+			map.put("failureReason", "登陆超时，请重新登录");
+			return map;
+		}
+		// 等值校验
+		if (!loginEntity.getTokenId().equals(tokenid)) {
+			map.put("failureReason", "已经在另一台机器上登陆，请重新登录");
+			return map;
+		}
+		if (url == null || getFilterURL(url)) {
+			// 获取用户登陆信息
+			MobileuserVo mobileuserVo = loginEntity.getMobileuserVo();
+			if (null == mobileuserVo || null == mobileuserVo.getCertifiFlag() || !mobileuserVo.getCertifiFlag()) {
+				/** 失败标示 */
+				map.put("resultFlag", SucAppConstants.NOT_CERTIFI.value());
+				map.put("failureReason", "用户未认证，请认证后再进行操作");
+				return map;
+			}else{
+				request.setAttribute("loginUser", mobileuserVo);
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 
+	 * @Description:校验是否需要认证 
+	 * @param url
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月13日 下午2:26:57
+	 */
+	public boolean getFilterURL(String url) {
+		//从配置表中获取配置信息
+		SystemConfig systemConfig=systemConfigBiz.findCacheByCode("Filter_URL");
+		//非空校验
+		if(null == systemConfig){
+			return true;
+		}
+		//获取value
+		String filterUrl=systemConfig.getConfigValue();
+		//非空校验
+		if(null == filterUrl){
+			return true;
+		}
+		//配置分割
+		String[] filterUrls=filterUrl.split(",");
+		//非空校验
+		if(null == filterUrls|| filterUrls.length==0){
+			return true;
+		}
+		//遍历处理
+		for (String string : filterUrls) {
+			//满足时跳出，不认证
+			if(url.contains(string)){
+				return false;
+			}
+		}
+		//需要认证
+		return true;
+	}
+
+}

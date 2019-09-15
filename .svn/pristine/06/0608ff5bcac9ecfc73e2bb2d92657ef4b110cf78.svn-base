@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IOrgExtendDao">
+	
+	<sql id="Base_Column_List">
+			id,base_org_code,org_name,lat,
+			lng,belong_area_code,belong_area_name,
+			distance_oper,processing_capacity,depart_limit,
+			port_limit,depart_site_lever,port_site_limit,
+			site_charge_name,site_charge_phine,site_charge_main,
+			delete_flag,utf1,utf2,electronic_rail,
+			utf3,version,remark,site_type,site_adress,
+			create_org,create_emp,create_time,
+			update_org,update_emp,update_time,
+			remark2,operate_center,org_status,operate_center_name
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="baseOrgCode != null">
+		and base_org_code = #{baseOrgCode}
+		</if>
+	    <if test="lat != null">
+		and lat = #{lat}
+		</if>
+	    <if test="lng != null">
+		and lng = #{lng}
+		</if>
+	    <if test="belongAreaCode != null">
+		and belong_area_code = #{belongAreaCode}
+		</if>
+	    <if test="belongAreaName != null">
+		and belong_area_name = #{belongAreaName}
+		</if>
+	    <if test="distanceOper != null">
+		and distance_oper = #{distanceOper}
+		</if>
+	    <if test="processingCapacity != null">
+		and processing_capacity = #{processingCapacity}
+		</if>
+	    <if test="departLimit != null">
+		and depart_limit = #{departLimit}
+		</if>
+	    <if test="portLimit != null">
+		and port_limit = #{portLimit}
+		</if>
+	    <if test="departSiteLever != null">
+		and depart_site_lever = #{departSiteLever}
+		</if>
+	    <if test="portSiteLimit != null">
+		and port_site_limit = #{portSiteLimit}
+		</if>
+	    <if test="siteChargeName != null">
+		and site_charge_name = #{siteChargeName}
+		</if>
+	    <if test="siteChargePhine != null">
+		and site_charge_phine = #{siteChargePhine}
+		</if>
+	    <if test="siteChargeMain != null">
+		and site_charge_main = #{siteChargeMain}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="remark2 != null">
+		and remark2 = #{remark2}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.OrgExtend">
+	UPDATE t_suc_comm_org_extend
+	<set>
+		<if test="baseOrgCode != null">
+		base_org_code = #{baseOrgCode},
+		</if>
+		<if test="orgName != null">
+		org_name = #{orgName},
+		</if>
+		<if test="lat != null">
+		lat = #{lat},
+		</if>
+		<if test="lng != null">
+		lng = #{lng},
+		</if>
+		<if test="belongAreaCode != null">
+		belong_area_code = #{belongAreaCode},
+		</if>
+		<if test="belongAreaName != null">
+		belong_area_name = #{belongAreaName},
+		</if>
+		<if test="distanceOper != null">
+		distance_oper = #{distanceOper},
+		</if>
+		<if test="processingCapacity != null">
+		processing_capacity = #{processingCapacity},
+		</if>
+		<if test="departLimit != null">
+		depart_limit = #{departLimit},
+		</if>
+		<if test="portLimit != null">
+		port_limit = #{portLimit},
+		</if>
+		<if test="departSiteLever != null">
+		depart_site_lever = #{departSiteLever},
+		</if>
+		<if test="portSiteLimit != null">
+		port_site_limit = #{portSiteLimit},
+		</if>
+		<if test="siteChargeName != null">
+		site_charge_name = #{siteChargeName},
+		</if>
+		<if test="siteChargePhine != null">
+		site_charge_phine = #{siteChargePhine},
+		</if>
+		<if test="siteChargeMain != null">
+		site_charge_main = #{siteChargeMain},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="remark2 != null">
+		remark2 = #{remark2},
+		</if>
+		<if test="siteType != null">
+		site_type = #{siteType},
+		</if>
+		<if test="siteAdress != null">
+		site_adress = #{siteAdress},
+		</if>
+		<if test="electronicRail != null">
+		electronic_rail = #{electronicRail},
+		</if>
+		<if test="orgStatus != null">
+		org_status = #{orgStatus},
+		</if>
+		<if test="operateCenterName != null">
+		operate_center_name = #{operateCenterName},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.OrgExtendVo" resultType="cn.uce.suc.common.entity.OrgExtend">
+	SELECT
+	  t.*,
+	  COUNT(base_org_code)
+	FROM(SELECT
+        id,
+        base_org_code,
+        org_name,
+        lat,
+        lng,
+        belong_area_code,
+        belong_area_name,
+        distance_oper,
+        processing_capacity,
+        depart_limit,
+        port_limit,
+        depart_site_lever,
+        port_site_limit,
+        site_charge_name,
+        site_charge_phine,
+        site_charge_main,
+        electronic_rail,
+        site_type,
+        site_adress,
+        operate_center,
+        org_status,
+        operate_center_name
+      FROM t_suc_comm_org_extend coe
+      	<where> 
+			(coe.delete_flag != '1' or coe.delete_flag is null)
+	 		 <if test="baseOrgCode != null and baseOrgCode != ''">
+				AND coe.base_org_code like CONCAT('%', #{baseOrgCode}, '%')  
+			 </if>
+			  <if test="operateCenter != null and operateCenter != ''">
+				AND coe.operate_center = #{operateCenter}
+			 </if>
+			  <if test="orgName != null and orgName != ''">
+				AND coe.org_name like CONCAT('%', #{orgName}, '%')   
+			 </if>
+			  <if test="orgStatus != null and orgStatus != ''">
+				AND coe.org_status = #{orgStatus}
+			 </if>
+	 	</where>
+	 	UNION
+	 	SELECT
+             org_id               AS id,
+             base_org_code,
+             org_name,
+             ''                   AS lat,
+             ''                   AS lng,
+             ''                   AS belong_area_code,
+             ''                   AS belong_area_name,
+             ''                   AS distance_oper,
+             ''                   AS processing_capacity,
+             ''                   AS depart_limit,
+             ''                   AS port_limit,
+             ''                   AS depart_site_lever,
+             ''                   AS port_site_limit,
+             ''                   AS site_charge_name,
+             ''                   AS site_charge_phine,
+             ''                   AS site_charge_main,
+             ''                   AS electronic_rail,
+             org_type             AS site_type,
+             ''                   AS site_adress,
+             operate_center_code  AS operate_center,
+             ''                   AS org_status,
+             ''                   AS operate_center_name
+           FROM omg_cms_org oco
+		<where> 
+			(oco.delete_flag != '1' or oco.delete_flag is null)
+	 		 <if test="baseOrgCode != null and baseOrgCode != ''">
+				AND oco.base_org_code like CONCAT('%', #{baseOrgCode}, '%')  
+			 </if>
+			  <if test="operateCenter != null and operateCenter != ''">
+				AND oco.PARENT_ORG_CODE = #{operateCenter}
+			 </if>
+			  <if test="orgName != null and orgName != ''">
+				AND oco.org_name like CONCAT('%', #{orgName}, '%')   
+			 </if>
+	    </where>) t GROUP BY base_org_code
+	</select>
+	
+	<!-- 查询集合点及集货点的父级信息 -->
+	<select id="findByCombine" parameterType="cn.uce.suc.common.vo.OrgExtendVo" resultType="cn.uce.suc.common.vo.OrgExtendVo">
+		SELECT jhd.* 
+		FROM(
+			<!-- 新增的集货点   新增的集货点这期不考虑，需求没给定，下期再说 -->
+			<!-- SELECT oe.org_name,oe.base_org_code,oe.site_type,oe.processing_capacity,oe.depart_limit,oe.port_limit,oe.operate_center AS parent_org_code
+			FROM t_suc_comm_org_extend oe
+			WHERE site_type = '03'
+			UNION  -->
+			<!-- 网点是集货点 -->
+			SELECT oe.org_name,oe.base_org_code,oe.site_type,oe.processing_capacity,oe.depart_limit,oe.port_limit,dr.workcenter_code AS parent_org_code 
+			FROM t_suc_comm_org_extend oe
+			LEFT JOIN t_suc_bkg_delivery_relation dr ON oe.base_org_code = dr.site_code 
+			<if test='siteType == "03"'>
+				WHERE oe.processing_capacity > 0
+			</if>
+			
+		) jhd
+		<where>
+			<if test="parentOrgCode != null and parentOrgCode != ''">
+				AND jhd.parent_org_code  = #{parentOrgCode}
+			</if>
+			<if test="baseOrgCode != null and baseOrgCode != ''">
+				AND jhd.base_org_code  = #{baseOrgCode}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据条件查询 -->
+	<select id="findByCondition" parameterType="cn.uce.suc.common.vo.OrgExtendVo" resultType="cn.uce.suc.common.vo.OrgExtendVo">
+		SELECT <include refid="Base_Column_List" />
+		FROM t_suc_comm_org_extend
+		<where>
+			(delete_flag != '1' or delete_flag is null)
+	 		 <if test="baseOrgCode != null">
+				AND base_org_code = #{baseOrgCode}
+			</if>
+	 	</where>
+	</select>
+		<!-- 根据机构编码查询 -->
+	<select id="findByBaseOrgCode" parameterType="java.lang.String" resultType="cn.uce.suc.common.vo.OrgExtendVo">
+		SELECT <include refid="Base_Column_List" />
+		FROM t_suc_comm_org_extend
+		where
+				 base_org_code = #{baseOrgCode}
+		
+	</select>
+</mapper>

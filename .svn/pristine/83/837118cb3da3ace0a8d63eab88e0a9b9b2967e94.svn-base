@@ -1,0 +1,393 @@
+package cn.uce.suc.app.vo;
+
+import cn.uce.base.vo.BaseVo;
+
+import java.util.Date;
+
+/**
+ * @Description: Vo类
+ * @author litianjian
+ * @date 2017年11月28日 上午11:26:53
+ */
+public class ServiceevaluationVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * id 
+	 */
+	private Long id;
+    /** 
+	 * 司机手机号 
+	 */
+	private String mobilePhone;
+    /** 
+	 * 司机姓名 
+	 */
+	private String driverName;
+    /** 
+	 * 服务评分 
+	 */
+	private Double score;
+    /** 
+	 * 评价 
+	 */
+	private String evaluate;
+    /** 
+	 * 评价网点 
+	 */
+	private String evaluationDot;
+    /** 
+	 * 评价网点Code 
+	 */
+	private String evaluationDotcode;
+    /** 
+	 * 备注字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备注字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备注字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 逻辑状态 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 创建部门 
+	 */
+	private String createOrg;
+    /** 
+	 * 修改人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 修改时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 修改部门 
+	 */
+	private String updateOrg;
+	
+	
+	/**
+	 * 发车计划号
+	 */
+	private String drivingPlanCode;
+	
+	/**
+	 * 发车计划开始时间
+	 */
+	private  Date departureTime;
+	
+	
+	
+
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+
+	public Date getDepartureTime() {
+		return departureTime;
+	}
+
+	public void setDepartureTime(Date departureTime) {
+		this.departureTime = departureTime;
+	}
+
+	
+	
+	/**
+	 * 获取 id
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 id
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 司机手机号
+	 */
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+	
+	/**
+	 * 设置 司机手机号
+	 */
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	
+	/**
+	 * 获取 司机姓名
+	 */
+	public String getDriverName() {
+		return driverName;
+	}
+	
+	/**
+	 * 设置 司机姓名
+	 */
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+
+	
+	/**
+	 * 获取 服务评分
+	 */
+	public Double getScore() {
+		return score;
+	}
+	
+	/**
+	 * 设置 服务评分
+	 */
+	public void setScore(Double score) {
+		this.score = score;
+	}
+
+	
+	/**
+	 * 获取 评价
+	 */
+	public String getEvaluate() {
+		return evaluate;
+	}
+	
+	/**
+	 * 设置 评价
+	 */
+	public void setEvaluate(String evaluate) {
+		this.evaluate = evaluate;
+	}
+
+	
+	/**
+	 * 获取 评价网点
+	 */
+	public String getEvaluationDot() {
+		return evaluationDot;
+	}
+	
+	/**
+	 * 设置 评价网点
+	 */
+	public void setEvaluationDot(String evaluationDot) {
+		this.evaluationDot = evaluationDot;
+	}
+
+	
+	/**
+	 * 获取 评价网点Code
+	 */
+	public String getEvaluationDotcode() {
+		return evaluationDotcode;
+	}
+	
+	/**
+	 * 设置 评价网点Code
+	 */
+	public void setEvaluationDotcode(String evaluationDotcode) {
+		this.evaluationDotcode = evaluationDotcode;
+	}
+
+	
+	/**
+	 * 获取 备注字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备注字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备注字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备注字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备注字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备注字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 逻辑状态
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 逻辑状态
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 创建部门
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建部门
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 修改人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 修改人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 修改时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 修改时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 修改部门
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 修改部门
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+}

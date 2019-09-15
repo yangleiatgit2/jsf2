@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.IFreightDemandCombineDao">
+	
+	<sql id="Base_Column_List">
+			id,demand_combine_code,demand_combine_name,
+			demand_combine_type,business_mode,demand_codes,demand_combine_status,station_code,station_name,
+			integence_schedule_code,integence_schedule_flag,integence_schedule_time,
+			auto_generate_rule,line_group_code,car_departure_plan_code,
+			remark,del_flag,version,
+			create_emp,create_time,create_org,
+			update_emp,update_time,update_org,execute_time,brother_demand_combine_code
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="demandCombineCode != null">
+		and demand_combine_code = #{demandCombineCode}
+		</if>
+	    <if test="demandCombineName != null">
+		and demand_combine_name = #{demandCombineName}
+		</if>
+	    <if test="demandCombineType != null">
+		and demand_combine_type = #{demandCombineType}
+		</if>
+		<if test="businessMode != null">
+		and business_mode = #{businessMode}
+		</if>
+	    <if test="demandCombineStatus != null">
+		and demand_combine_status = #{demandCombineStatus}
+		</if>
+	    <if test="stationCode != null">
+		and station_code = #{stationCode}
+		</if>
+	    <if test="stationName != null">
+		and station_name, = #{stationName}
+		</if>
+	    <if test="integenceScheduleCode != null">
+		and integence_schedule_code = #{integenceScheduleCode}
+		</if>
+	    <if test="integenceScheduleFlag != null">
+		and integence_schedule_flag= #{integenceScheduleFlag}
+		</if>
+	    <if test="integenceScheduleTime != null">
+		and integence_schedule_time = #{integenceScheduleTime}
+		</if>
+	    <if test="autoGenerateRule != null">
+		and auto_generate_rule = #{autoGenerateRule}
+		</if>
+	    <if test="lineGroupCode != null">
+		and line_group_code = #{lineGroupCode}
+		</if>
+	    <if test="carDeparturePlanCode != null">
+		and car_departure_plan_code = #{carDeparturePlanCode}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.operation.FreightDemandCombine">
+	UPDATE t_suc_bkg_freight_demand_combine
+	<set>
+		<if test="executeTime != null">
+		execute_time = #{executeTime},
+		</if>
+		 <if test="stationCode != null">
+		station_code = #{stationCode},
+		</if>
+	    <if test="stationName != null">
+		station_name, = #{stationName},
+	    </if>
+		<if test="demandCombineCode != null">
+		demand_combine_code = #{demandCombineCode},
+		</if>
+		<if test="demandCombineName != null">
+		demand_combine_name = #{demandCombineName},
+		</if>
+		<if test="demandCombineType != null">
+		demand_combine_type = #{demandCombineType},
+		</if>
+		<if test="businessMode != null">
+		business_mode = #{businessMode},
+		</if>
+		<if test="demandCombineStatus != null">
+		demand_combine_status = #{demandCombineStatus},
+		</if>
+		<if test="integenceScheduleCode != null">
+		integence_schedule_code = #{integenceScheduleCode},
+		</if>
+		<if test="integenceScheduleFlag != null">
+		integence_schedule_code = #{integenceScheduleFlag},
+		</if>
+		<if test="integenceScheduleTime!= null">
+		integence_schedule_time = #{integenceScheduleTime},
+		</if>
+		<if test="autoGenerateRule != null">
+		auto_generate_rule = #{autoGenerateRule},
+		</if>
+		<if test="lineGroupCode != null">
+		line_group_code = #{lineGroupCode},
+		</if>
+		<if test="carDeparturePlanCode != null">
+		car_departure_plan_code = #{carDeparturePlanCode},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="version != null">
+		version = #{version}+1,
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="brotherDemandCombineCode != null">
+		brother_demand_combine_code = #{brotherDemandCombineCode},
+		</if>
+	</set>
+	WHERE id = #{id}
+		<if test="version != null">
+		 		AND VERSION = #{version}
+		  </if>
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo" resultType="cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_freight_demand_combine
+	 	<where>
+		 	<if test="demandCombineType != null and demandCombineType !='' ">
+				and demand_combine_type = #{demandCombineType}
+			</if>
+			<if test="demandCombineStatus != null and demandCombineStatus !='' ">
+				and demand_combine_status = #{demandCombineStatus}
+			</if>
+		 	<if test="demandCombineCode != null and demandCombineCode !='' ">
+				and demand_combine_code = #{demandCombineCode}
+			</if>
+			<if test="businessMode != null and businessMode!='' ">
+			and business_mode = #{businessMode}
+			</if>
+		 	 <if test="lineGroupCode != null and lineGroupCode !='' ">
+			and line_group_code = #{lineGroupCode}
+			</if>
+		    <if test="carDeparturePlanCode != null and carDeparturePlanCode !='' ">
+			and car_departure_plan_code = #{carDeparturePlanCode}
+			</if>
+		 	<if test="createBeginTime != null and createEndTime!= null ">
+				and create_time between #{createBeginTime} and #{createEndTime}
+			</if>
+		 </where>
+			order by create_time desc
+	</select>
+	
+	<!-- 批量 更新需求组合状态 根据需求编码-->
+	<update id="batchUpdateCombineStatus" parameterType="java.util.List"  >
+ 		UPDATE t_suc_bkg_freight_demand_combine 
+ 		<set>
+	  		<if test="demandCombineStatus != null and demandCombineStatus !='' ">
+	   		 demand_combine_status = #{demandCombineStatus},
+			</if>
+	  		<if test="updateEmp != null and updateEmp !='' ">
+			update_emp = #{updateEmp},
+			</if>
+			<if test="updateTime != null ">
+			update_time = #{updateTime},
+			</if>
+			<if test="updateOrg != null and updateOrg !='' ">
+			update_org = #{updateOrg},
+			</if>
+		</set>
+ 		where demand_combine_code in
+ 			<foreach collection="combineCodes" index="index" item="obj" separator="," open="(" close=")">
+	     	 #{obj}
+	  		</foreach>
+	</update>
+	
+	<!-- 根据条件查询需求组合 -->
+	<select id="findByCondition" parameterType="cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo" resultType="cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo">
+		SELECT <include refid="Base_Column_List" /> 
+		FROM t_suc_bkg_freight_demand_combine
+		<where>
+			<if test="executeTime != null">
+				AND execute_time = #{executeTime}
+			</if>
+			<if test="demandCombineType != null and demandCombineType !='' ">
+				AND demand_combine_type = #{demandCombineType}
+			</if>
+			<if test="demandCombineStatus != null and demandCombineStatus !='' ">
+				AND demand_combine_status = #{demandCombineStatus}
+			</if>
+			<if test="stationCode != null and stationCode !='' ">
+				AND station_code = #{stationCode}
+			</if>
+		 	<if test="demandCombineCode != null and demandCombineCode !='' ">
+				AND demand_combine_code = #{demandCombineCode}
+			</if>
+			<if test="brotherDemandCombineCode != null and brotherDemandCombineCode !='' ">
+				AND brother_demand_combine_code = #{brotherDemandCombineCode}
+			</if>
+			<if test="businessMode != null and businessMode!='' ">
+				AND business_mode = #{businessMode}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

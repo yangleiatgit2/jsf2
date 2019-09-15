@@ -1,0 +1,172 @@
+package cn.uce.suc.app.service;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.dao.ICaptchaDao;
+import cn.uce.suc.app.dao.IappCaptchaDao;
+import cn.uce.suc.app.entity.Captcha;
+import cn.uce.suc.app.entity.CaptchaEntity;
+import cn.uce.suc.app.vo.CaptchaVo;
+import cn.uce.suc.common.util.RandomStringUtil;
+
+/**
+ * @Description: 验证码Service类
+ * @author liwei
+ * @date 2017年11月05日 下午08:45:38
+ */
+@Service("captchaService")
+public class CaptchaService {
+	
+	/**
+	 * 注入验证码Dao
+	 */
+	@Resource
+	private ICaptchaDao captchaDao;
+	@Resource
+	private IappCaptchaDao appCaptchaDao;
+	
+	/**
+	 * @Description: 新增验证码
+	 * @param captcha 验证码
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public int addCaptcha(Captcha captcha) {
+		return captchaDao.insert(captcha);
+	}
+	
+	/**
+	 * @Description: 修改验证码
+	 * @param captcha 验证码
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public int updateById(Captcha captcha) {
+		return captchaDao.updateById(captcha);
+	}
+	
+	/**
+	 * @Description: 删除验证码
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public int deleteById(Long id) {
+		return captchaDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询验证码
+	 * @param id 主键
+	 * @return 验证码
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public Captcha findById(Long id) {
+		return captchaDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询验证码
+	 * @param captchaVo 验证码
+	 * @param page 分页参数
+	 * @return 验证码
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public Pagination<Captcha> findByPagination(CaptchaVo captchaVo, Page page) {
+		Pagination<Captcha> paginationCaptcha = captchaDao.findByPagination(captchaVo, page);
+		return paginationCaptcha;
+	}
+	/**
+	 * @author uce-wh03
+	 * @param telephone
+	 *            电话
+	 * @param 验证码
+	 * 
+	 * @return CaptchaEntity 验证码实体类
+	 * 
+	 *         初始化验证码实体类
+	 * */
+	public Captcha initCaptchaEntity(String mobilePhone, String userType) {
+		// 生成验证码
+		String Captcha = RandomStringUtil.getCaptcha(6);
+
+		// 初始化验证码实体类
+		Captcha captchaEntity = new Captcha();
+
+		captchaEntity.setContent(Captcha);
+		captchaEntity.setCount(0);
+
+		captchaEntity.setCreateEmp("telephone");
+		captchaEntity.setCreateOrg("app");
+		// 设置创建时间
+		Date createTime = new Date();
+		captchaEntity.setCreateTime(createTime);
+
+		// 设置过期时间：创建时间+5分钟
+		captchaEntity.setDeadTime(new Date(createTime.getTime() + 5 * 60 * 1000));
+
+		captchaEntity.setUpdateEmp(mobilePhone);
+		captchaEntity.setUpdateOrg("app");
+		captchaEntity.setUpdateTime(createTime);
+
+		captchaEntity.setUserType(userType);
+		captchaEntity.setMobilePhone(mobilePhone);
+
+		// 删除标志：1已删除，0未删除
+		captchaEntity.setDeleteFlag(false);
+
+		captchaEntity.setVersion(0);
+
+		System.out.println("captchaEntity:" + captchaEntity.toString());
+
+		return captchaEntity;
+	}
+
+	/**
+	 * @Description: 查询验证码
+	 * @param phoneNumber
+	 * @param userType
+	 * @param passWord
+	 * @param captcha
+	 * @return
+	 * @author renxus
+	 * @date 2017年10月15日 下午3:10:15
+	 */
+	public CaptchaEntity queryCaptcha(CaptchaEntity entity) {
+		return appCaptchaDao.queryCaptcha(entity);
+	}
+
+	/**
+	 * @Description: 更具id更新验证码
+	 * @param captchaEntity
+	 * @author renxu
+	 * @date 2017年10月16日 下午5:18:22
+	 */
+	public int updateById(CaptchaEntity captchaEntity) {
+		return appCaptchaDao.updateById(captchaEntity);
+
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param captchaVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月5日 下午9:46:18
+	 */
+	public Captcha findByCondition(CaptchaVo captchaVo){
+		return captchaDao.findByCondtion(captchaVo);
+	}
+	
+}

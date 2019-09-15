@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.IDirvingPlanTraceDao">
+	
+	<sql id="Base_Column_List">
+			id,driving_plan_code,status,
+			status_describe,delete_flag,utf1,
+			utf2,utf3,version,
+			remark,create_org,create_emp,
+			create_time,update_org,update_emp,
+			update_time,scan_station_code,scan_station_name
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="drivingPlanCode != null">
+		and driving_plan_code = #{drivingPlanCode}
+		</if>
+	    <if test="status != null">
+		and status = #{status}
+		</if>
+	    <if test="statusDescribe != null">
+		and status_describe = #{statusDescribe}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+		<if test="scanStationCode != null">
+		and scan_station_code = #{scanStationCode}
+		</if>
+	    <if test="scanStationName != null">
+		and scan_station_name = #{scanStationName}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.operation.DirvingPlanTrace">
+	UPDATE t_suc_bkg_dirving_plan_trace
+	<set>
+		<if test="drivingPlanCode != null">
+		driving_plan_code = #{drivingPlanCode},
+		</if>
+		<if test="status != null">
+		status = #{status},
+		</if>
+		<if test="statusDescribe != null">
+		status_describe = #{statusDescribe},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="scanStationCode != null">
+		scan_station_code = #{scanStationCode},
+		</if>
+	    <if test="scanStationName != null">
+		scan_station_name = #{scanStationName},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanTraceVo" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlanTrace">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan_trace
+	<include refid="Base_Column_Where" /> order by create_time
+	</select>
+	
+</mapper>

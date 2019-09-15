@@ -1,0 +1,48 @@
+package cn.uce.suc.app.entity;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月3日 下午9:46:23
+ */
+public class UserEntity {
+	/**
+	 * 姓名
+	 */
+		private  String name;
+		/**
+		 * 密码
+		 */
+		
+		private String password;
+		/** 
+		 * @return name 
+		 */
+		public String getName() {
+			return name;
+		}
+		/**
+		 * @param name the name to set
+		 */
+		public void setName(String name) {
+			this.name = name;
+		}
+		/** 
+		 * @return password 
+		 */
+		public String getPassword() {
+			return password;
+		}
+		/**
+		 * @param password the password to set
+		 */
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
+
+		
+		
+		
+		
+}

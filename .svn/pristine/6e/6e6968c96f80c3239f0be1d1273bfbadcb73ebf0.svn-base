@@ -1,0 +1,50 @@
+package cn.uce.suc.bkg.dao.price;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.price.PricingRuleDetailRel;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailRelVo;
+
+/**
+ * @Description: 定价规则详情与网点关系表DAO接口类
+ * @author laizhendong
+ * @date 2017年11月05日 下午01:41:44
+ */
+@Repository("pricingRuleDetailRelDao")
+public interface IPricingRuleDetailRelDao extends IBaseDao<PricingRuleDetailRel, Long> {
+	
+	/**
+	 * @Description: 分页查询定价规则详情与网点关系表
+	 * @param pricingRuleDetailRelVo 定价规则详情与网点关系表
+	 * @param page 分页参数
+	 * @return 定价规则详情与网点关系表
+	 * @author laizhendong
+	 * @date 2017年11月05日 下午01:41:44
+	 */
+	public Pagination<PricingRuleDetailRelVo> findByPagination(PricingRuleDetailRelVo pricingRuleDetailRelVo, Page page);
+	
+	/**
+	 * 
+	 * @Description: 根据详情id批量删除
+	 * @param pricingRuleDetailRel
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 上午10:36:11
+	 */
+	public int batchUpdateByDetailId(PricingRuleDetailRel pricingRuleDetailRel);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询详情关系
+	 * @param pricingRuleDetailRelVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 上午10:57:32
+	 */
+	public List<PricingRuleDetailRelVo> findByCondition(PricingRuleDetailRelVo pricingRuleDetailRelVo);
+}

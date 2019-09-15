@@ -1,0 +1,482 @@
+package cn.uce.suc.bkg.vo.datamain;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 运力缺口管理Vo类
+ * @author yanglei
+ * @date 2017年10月25日 下午03:24:55
+ */
+public class CapacityGapManagementVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 表数据的ID 
+	 */
+	private Long id;
+    /** 
+	 * 需求组合编号 
+	 */
+	private String combinaationCode;
+    /** 
+	 * 车辆需要的时间 
+	 */
+	private Date workDate;
+    /** 
+	 * 预计需求车辆数量 
+	 */
+	private Integer expectNeed;
+    /** 
+	 * 实际应有的车辆数量 
+	 */
+	private Integer actualNeed;
+    /** 
+	 * 车辆信息(根据车辆的长度来分类的) 
+	 */
+	private String truckType;
+
+    /** 
+	 * 4.2 车型 预计需求车辆数量 
+	 */
+	private Integer fourDotTwoExpectNeed;
+    /** 
+	 * 4.2 车型 实际车辆数量 
+	 */
+	private Integer fourDotTwoActualNeed;
+	/** 
+	 * 4.2 车型 缺口
+	 */
+	private Integer fourDotTwoGap;
+	
+	
+	/** 
+	 * 6.5 车型
+	 */
+	
+	private Integer sixDotFiveExpectNeed;
+	
+	private Integer sixDotFiveActualNeed;
+	
+	private Integer sixDotFiveGap;
+	
+	/** 
+	 * 7.6 车型
+	 */
+	
+    private Integer sevenDotSixExpectNeed;
+	
+	private Integer sevenDotSixActualNeed;
+	
+	private Integer sevenDotSixGap;
+	
+	/** 
+	 * 9.6 车型
+	 */
+	private Integer nineDotSixExpectNeed;
+	
+	private Integer nineDotSixActualNeed;
+	
+	private Integer nineDotSixGap;
+	
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 删除标识.1表示已删除，默认为0 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	/** 
+	 * 需求网点编号 
+	 */
+	private String demandSiteCode;
+    /** 
+	 * 需求开始时间 
+	 */
+	private Date demandBeginTime;
+    /** 
+	 * 需求结束时间 
+	 */
+	private Date demandEndTime;
+	
+	
+	
+	public Integer getFourDotTwoExpectNeed() {
+		return fourDotTwoExpectNeed;
+	}
+
+	public void setFourDotTwoExpectNeed(Integer fourDotTwoExpectNeed) {
+		this.fourDotTwoExpectNeed = fourDotTwoExpectNeed;
+	}
+
+	public Integer getFourDotTwoActualNeed() {
+		return fourDotTwoActualNeed;
+	}
+
+	public void setFourDotTwoActualNeed(Integer fourDotTwoActualNeed) {
+		this.fourDotTwoActualNeed = fourDotTwoActualNeed;
+	}
+
+	public Integer getFourDotTwoGap() {
+		return fourDotTwoGap;
+	}
+
+	public void setFourDotTwoGap(Integer fourDotTwoGap) {
+		this.fourDotTwoGap = fourDotTwoGap;
+	}
+
+	public Integer getSixDotFiveExpectNeed() {
+		return sixDotFiveExpectNeed;
+	}
+
+	public void setSixDotFiveExpectNeed(Integer sixDotFiveExpectNeed) {
+		this.sixDotFiveExpectNeed = sixDotFiveExpectNeed;
+	}
+
+	public Integer getSixDotFiveActualNeed() {
+		return sixDotFiveActualNeed;
+	}
+
+	public void setSixDotFiveActualNeed(Integer sixDotFiveActualNeed) {
+		this.sixDotFiveActualNeed = sixDotFiveActualNeed;
+	}
+
+	public Integer getSixDotFiveGap() {
+		return sixDotFiveGap;
+	}
+
+	public void setSixDotFiveGap(Integer sixDotFiveGap) {
+		this.sixDotFiveGap = sixDotFiveGap;
+	}
+
+	public Integer getSevenDotSixExpectNeed() {
+		return sevenDotSixExpectNeed;
+	}
+
+	public void setSevenDotSixExpectNeed(Integer sevenDotSixExpectNeed) {
+		this.sevenDotSixExpectNeed = sevenDotSixExpectNeed;
+	}
+
+	public Integer getSevenDotSixActualNeed() {
+		return sevenDotSixActualNeed;
+	}
+
+	public void setSevenDotSixActualNeed(Integer sevenDotSixActualNeed) {
+		this.sevenDotSixActualNeed = sevenDotSixActualNeed;
+	}
+
+	public Integer getSevenDotSixGap() {
+		return sevenDotSixGap;
+	}
+
+	public void setSevenDotSixGap(Integer sevenDotSixGap) {
+		this.sevenDotSixGap = sevenDotSixGap;
+	}
+
+	public Integer getNineDotSixExpectNeed() {
+		return nineDotSixExpectNeed;
+	}
+
+	public void setNineDotSixExpectNeed(Integer nineDotSixExpectNeed) {
+		this.nineDotSixExpectNeed = nineDotSixExpectNeed;
+	}
+
+	public Integer getNineDotSixActualNeed() {
+		return nineDotSixActualNeed;
+	}
+
+	public void setNineDotSixActualNeed(Integer nineDotSixActualNeed) {
+		this.nineDotSixActualNeed = nineDotSixActualNeed;
+	}
+
+	public Integer getNineDotSixGap() {
+		return nineDotSixGap;
+	}
+
+	public void setNineDotSixGap(Integer nineDotSixGap) {
+		this.nineDotSixGap = nineDotSixGap;
+	}
+
+	public String getDemandSiteCode() {
+		return demandSiteCode;
+	}
+
+	public void setDemandSiteCode(String demandSiteCode) {
+		this.demandSiteCode = demandSiteCode;
+	}
+
+	public Date getDemandBeginTime() {
+		return demandBeginTime;
+	}
+
+	public void setDemandBeginTime(Date demandBeginTime) {
+		this.demandBeginTime = demandBeginTime;
+	}
+
+	public Date getDemandEndTime() {
+		return demandEndTime;
+	}
+
+	public void setDemandEndTime(Date demandEndTime) {
+		this.demandEndTime = demandEndTime;
+	}
+
+
+	/**
+	 * 获取 表数据的ID
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 表数据的ID
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 需求组合编号
+	 */
+	public String getCombinaationCode() {
+		return combinaationCode;
+	}
+	
+	/**
+	 * 设置 需求组合编号
+	 */
+	public void setCombinaationCode(String combinaationCode) {
+		this.combinaationCode = combinaationCode;
+	}
+
+	
+	/**
+	 * 获取 车辆需要的时间
+	 */
+	public Date getWorkDate() {
+		return workDate;
+	}
+	
+	/**
+	 * 设置 车辆需要的时间
+	 */
+	public void setWorkDate(Date workDate) {
+		this.workDate = workDate;
+	}
+
+	
+	/**
+	 * 获取 预计需求车辆数量
+	 */
+	public Integer getExpectNeed() {
+		return expectNeed;
+	}
+	
+	/**
+	 * 设置 预计需求车辆数量
+	 */
+	public void setExpectNeed(Integer expectNeed) {
+		this.expectNeed = expectNeed;
+	}
+
+	
+	/**
+	 * 获取 实际应有的车辆数量
+	 */
+	public Integer getActualNeed() {
+		return actualNeed;
+	}
+	
+	/**
+	 * 设置 实际应有的车辆数量
+	 */
+	public void setActualNeed(Integer actualNeed) {
+		this.actualNeed = actualNeed;
+	}
+
+	
+	/**
+	 * 获取 车辆信息(根据车辆的长度来分类的)
+	 */
+	public String getTruckType() {
+		return truckType;
+	}
+	
+	/**
+	 * 设置 车辆信息(根据车辆的长度来分类的)
+	 */
+	public void setTruckType(String truckType) {
+		this.truckType = truckType;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 删除标识.1表示已删除，默认为0
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标识.1表示已删除，默认为0
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+}

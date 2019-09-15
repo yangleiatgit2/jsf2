@@ -1,0 +1,81 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.vo.SystemConfigVo;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author wangzhijun
+ * @date 2017年11月6日 下午2:46:31
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class SystemConfigBizTest extends AbstractJUnit4SpringContextTests {
+
+	/**
+	 * 注入biz对象
+	 */
+	@Resource
+	ISystemConfigBiz systemConfigBiz;
+
+	/**
+	 * 声明变量
+	 */
+	private SystemConfig systemConfig;
+	private SystemConfigVo systemConfigVo;
+	private Page page;
+	/**
+	 * 
+	 * @Description: 初始化对象 
+	 * @author wangzhijun
+	 * @date 2017年11月8日 下午3:59:11
+	 */
+	@Before
+	public void initVo(){
+		systemConfig = new SystemConfig();
+		systemConfig.setConfigCode("test");
+		systemConfig.setConfigValue("测试配置");
+		systemConfigVo = new SystemConfigVo();
+		systemConfigVo = ObjectConvertUtil.convertObject(systemConfig, systemConfigVo.getClass());
+		page = new Page();
+		page.setCurrentPage(1);
+	}
+	
+	/**
+	 * 
+	 * @Description: 单元测试执行 
+	 * @author wangzhijun
+	 * @date 2017年11月8日 下午4:01:27
+	 */
+	@Test
+	public void test() {
+		systemConfigBiz.addSystemConfig(systemConfig);
+		try {
+			systemConfigBiz.addSystemConfig(systemConfig);
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+		}
+		systemConfigBiz.findByPagination(systemConfigVo, page);
+		systemConfigBiz.findByCondition(systemConfigVo);
+		systemConfigBiz.findByConfigCode("test");
+		systemConfigBiz.findCacheByCode("test");
+		systemConfigBiz.findSysConfigBycode("test");
+		systemConfigBiz.findById(systemConfig.getId());
+		systemConfigBiz.updateSystemConfig(systemConfig);
+		systemConfigBiz.deleteSystemConfig(systemConfig.getId());
+	}
+}

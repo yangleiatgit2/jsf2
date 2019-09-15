@@ -1,0 +1,45 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.vo.OmgCmsOrgDetailVo;
+
+
+
+
+/**
+ * 
+ * @Description: 组织机构详情
+ * @author liwei
+ * @date 2017年11月29日 下午7:46:14
+ */
+ @WebAppConfiguration
+ @RunWith(SpringJUnit4ClassRunner.class)
+ @ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class OmgCmsOrgDetailBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 机构详情
+	 */
+	 @Resource
+	 IOmgCmsOrgDetailBiz omgCmsOrgDetailBiz;
+/**
+ * 
+ * @Description:单元测试
+ * @author liwei
+ * @date 2017年11月29日 下午7:50:11
+ */
+	 @Test
+	 public void findByPagination(){
+		 OmgCmsOrgDetailVo omgCmsOrgDetailVo=new OmgCmsOrgDetailVo();
+		 Page page = new Page();
+		 omgCmsOrgDetailBiz.findByPagination(omgCmsOrgDetailVo, page);
+	 }
+}

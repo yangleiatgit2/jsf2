@@ -1,0 +1,364 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+import java.util.Date;
+
+/**
+ * @Description: 班次管理明细Entity类
+ * @author litianjian
+ * @date 2017年10月21日 下午05:40:59
+ */
+@Table("t_suc_bkg_line_group_detail")
+public class LineGroupDetail extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 班次编号 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 途径站点编号 
+	 */
+	private String wayPointCode;
+    /** 
+	 * 途径站点名称 
+	 */
+	private String wayPointName;
+    /** 
+	 * 所属区域code 
+	 */
+	private String wayPointZoneCode;
+    /** 
+	 * 所属区域名称 
+	 */
+	private String wayPointZoneName;
+    /** 
+	 * 方数 
+	 */
+	private Double volume;
+    /** 
+	 * 重量 
+	 */
+	private Double weight;
+    /** 
+	 * 到达时间 
+	 */
+	private Date endTime;
+    /** 
+	 * 装卸车耗时 
+	 */
+	private Integer loadUnloadTime;
+    /** 
+	 * 距离 
+	 */
+	private Double distance;
+    /** 
+	 * 运行时长 
+	 */
+	private Integer runingTime;
+    /** 
+	 * 下一站距离 
+	 */
+	private Double nextWayDistance;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+	
+	/**
+	 * 排序
+	 */
+	private Integer sort;
+
+	/**
+	 * 需求组合编号
+	 */
+	private String requiCombinCode;
+	/**
+	 * 订单组合编号
+	 */
+	private String orderCombinCode;
+	
+
+	/** 
+	 * @return requiCombinCode 
+	 */
+	public String getRequiCombinCode() {
+		return requiCombinCode;
+	}
+
+	/**
+	 * @param requiCombinCode the requiCombinCode to set
+	 */
+	public void setRequiCombinCode(String requiCombinCode) {
+		this.requiCombinCode = requiCombinCode;
+	}
+
+	/** 
+	 * @return orderCombinCode 
+	 */
+	public String getOrderCombinCode() {
+		return orderCombinCode;
+	}
+
+	/**
+	 * @param orderCombinCode the orderCombinCode to set
+	 */
+	public void setOrderCombinCode(String orderCombinCode) {
+		this.orderCombinCode = orderCombinCode;
+	}
+
+	/**
+	 * 获取 班次编号
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 班次编号
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+	
+	/**
+	 * 获取 途径站点编号
+	 */
+	public String getWayPointCode() {
+		return wayPointCode;
+	}
+	
+	/**
+	 * 设置 途径站点编号
+	 */
+	public void setWayPointCode(String wayPointCode) {
+		this.wayPointCode = wayPointCode;
+	}
+	
+	/**
+	 * 获取 途径站点名称
+	 */
+	public String getWayPointName() {
+		return wayPointName;
+	}
+	
+	/**
+	 * 设置 途径站点名称
+	 */
+	public void setWayPointName(String wayPointName) {
+		this.wayPointName = wayPointName;
+	}
+	
+	/**
+	 * 获取 所属区域code
+	 */
+	public String getWayPointZoneCode() {
+		return wayPointZoneCode;
+	}
+	
+	/**
+	 * 设置 所属区域code
+	 */
+	public void setWayPointZoneCode(String wayPointZoneCode) {
+		this.wayPointZoneCode = wayPointZoneCode;
+	}
+	
+	/**
+	 * 获取 所属区域名称
+	 */
+	public String getWayPointZoneName() {
+		return wayPointZoneName;
+	}
+	
+	/**
+	 * 设置 所属区域名称
+	 */
+	public void setWayPointZoneName(String wayPointZoneName) {
+		this.wayPointZoneName = wayPointZoneName;
+	}
+	
+	/**
+	 * 获取 方数
+	 */
+	public Double getVolume() {
+		return volume;
+	}
+	
+	/**
+	 * 设置 方数
+	 */
+	public void setVolume(Double volume) {
+		this.volume = volume;
+	}
+	
+	/**
+	 * 获取 重量
+	 */
+	public Double getWeight() {
+		return weight;
+	}
+	
+	/**
+	 * 设置 重量
+	 */
+	public void setWeight(Double weight) {
+		this.weight = weight;
+	}
+	
+	/**
+	 * 获取 到达时间
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+	
+	/**
+	 * 设置 到达时间
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+	
+	/**
+	 * 获取 装卸车耗时
+	 */
+	public Integer getLoadUnloadTime() {
+		return loadUnloadTime;
+	}
+	
+	/**
+	 * 设置 装卸车耗时
+	 */
+	public void setLoadUnloadTime(Integer loadUnloadTime) {
+		this.loadUnloadTime = loadUnloadTime;
+	}
+	
+	/**
+	 * 获取 距离
+	 */
+	public Double getDistance() {
+		return distance;
+	}
+	
+	/**
+	 * 设置 距离
+	 */
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+	
+	/**
+	 * 获取 运行时长
+	 */
+	public Integer getRuningTime() {
+		return runingTime;
+	}
+	
+	/**
+	 * 设置 运行时长
+	 */
+	public void setRuningTime(Integer runingTime) {
+		this.runingTime = runingTime;
+	}
+	
+	/**
+	 * 获取 下一站距离
+	 */
+	public Double getNextWayDistance() {
+		return nextWayDistance;
+	}
+	
+	/**
+	 * 设置 下一站距离
+	 */
+	public void setNextWayDistance(Double nextWayDistance) {
+		this.nextWayDistance = nextWayDistance;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	/** 
+	 * @return sort 
+	 */
+	public Integer getSort() {
+		return sort;
+	}
+
+	/**
+	 * @param sort the sort to set
+	 */
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	
+}

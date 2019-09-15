@@ -1,0 +1,84 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DrivingPlanExecutedVo;
+
+/**
+ * @Description: 发车计划明细DAO接口类
+ * @author liwei
+ * @date 2017年10月26日 下午05:05:52
+ */
+@Repository("dirvingPlanDetailDao")
+public interface IDirvingPlanDetailDao extends IBaseDao<DirvingPlanDetail, Long> {
+	
+	/**
+	 * @Description: 分页查询发车计划明细
+	 * @param dirvingPlanDetailVo 发车计划明细
+	 * @param page 分页参数
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public Pagination<DirvingPlanDetail> findByPagination(DirvingPlanDetailVo dirvingPlanDetailVo, Page page);
+	/**
+	 * @Description:发车计划号详情状态
+	 * @param DirvingPlanDetail 发车计划明细
+	 * @return 变更的条数
+	 * @author haizhou
+	 * @date 2017年11月7日 下午05:05:52
+	 */
+	public int updatePlanDriverStatusByWhere(DirvingPlanDetail dirvingPlanDetail);
+	
+	public int updateByApp(DirvingPlanDetail dirvingPlanDetail);
+	
+	public DirvingPlanDetail findByCriteria(DirvingPlanDetailVo dirvingPlanDetailVo);
+	/**
+	 * 
+	 * @Description: 查询网点端有几个没有评价的 发车计划明细 
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月13日 上午11:34:52
+	 */
+	public DirvingPlanDetailVo findLastStationByPlanCodeAndMode(DirvingPlanDetailVo dirvingPlanDetailVo);
+	/**
+	 * 
+	 * @Description: 网点端 历史执行 查询/查询详情
+	 * 								 查询已评价/未评价
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午12:31:43
+	 */
+	public List<DrivingPlanExecutedVo> findSiteDepartPlan(DrivingPlanExecutedVo dirvingPlanDetailVo);
+
+	public List<DirvingPlanDetail> findByDrivePlanCode(String  drivePlanCode);
+
+	/**
+	 * 
+	 * @Description: 网点端 根据网点编码或者司机编码查询发车计划
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午12:31:43
+	 */
+	public List<DirvingPlanDetailVo> findByCode(DirvingPlanDetailVo dirvingPlanDetailVo);
+	
+	/**
+	 * @Description: 根据网点编码或者发车计划编码查询发车计划中的 所有的发车计划详情Vo 并按照升序排序
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月19日 下午8:52:45
+	 */
+	public List<DirvingPlanDetailVo> findByCodeAsc(DirvingPlanDetailVo dirvingPlanDetailVo);
+
+}

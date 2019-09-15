@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.app.dao.IServiceevaluationDao">
+	
+	<sql id="Base_Column_List">
+			id,mobile_phone,driver_name,
+			score,evaluate,evaluation_dot,
+			evaluation_dotCode,utf_1,utf_2,
+			utf_3,version,del_flag,
+			create_emp,create_time,create_org,
+			update_emp,update_time,update_org,
+			driving_plan_code,departure_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="mobilePhone != null">
+		and mobile_phone = #{mobilePhone}
+		</if>
+	    <if test="driverName != null">
+		and driver_name = #{driverName}
+		</if>
+	    <if test="score != null">
+		and score = #{score}
+		</if>
+	    <if test="evaluate != null">
+		and evaluate = #{evaluate}
+		</if>
+	    <if test="evaluationDot != null">
+		and evaluation_dot = #{evaluationDot}
+		</if>
+	    <if test="evaluationDotcode != null">
+		and evaluation_dotCode = #{evaluationDotcode}
+		</if>
+	    <if test="utf1 != null">
+		and utf_1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf_2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf_3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.app.entity.Serviceevaluation">
+	UPDATE t_suc_app_serviceevaluation
+	<set>
+		<if test="mobilePhone != null">
+		mobile_phone = #{mobilePhone},
+		</if>
+		<if test="driverName != null">
+		driver_name = #{driverName},
+		</if>
+		<if test="score != null">
+		score = #{score},
+		</if>
+		<if test="evaluate != null">
+		evaluate = #{evaluate},
+		</if>
+		<if test="evaluationDot != null">
+		evaluation_dot = #{evaluationDot},
+		</if>
+		<if test="evaluationDotcode != null">
+		evaluation_dotCode = #{evaluationDotcode},
+		</if>
+		<if test="utf1 != null">
+		utf_1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf_2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf_3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.app.vo.ServiceevaluationVo" resultType="cn.uce.suc.app.entity.Serviceevaluation">
+	select <include refid="Base_Column_List" /> from t_suc_app_serviceevaluation
+	</select>
+	
+	
+	<select id="findScoreforDriver" parameterType="java.lang.String" resultType="cn.uce.suc.app.entity.Serviceevaluation">
+				SELECT
+				round(AVG(s.score),1) as score
+			FROM
+				t_suc_app_serviceevaluation s
+			WHERE
+				s.mobile_phone = #{mobilePhone}
+				and 
+				date_format(create_time,'%Y-%m-%d') > date_format(
+			date_sub(
+				date_sub(
+					now(),
+					INTERVAL WEEKDAY(NOW()) DAY
+				),
+				INTERVAL 2 MONTH
+			),
+			'%Y-%m-%d')
+	</select>
+	
+</mapper>

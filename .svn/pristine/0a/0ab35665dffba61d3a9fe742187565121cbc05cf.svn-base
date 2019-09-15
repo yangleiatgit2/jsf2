@@ -1,0 +1,55 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.ILineGroupOperLogBiz;
+import cn.uce.suc.bkg.entity.operation.LineGroupOperLog;
+import cn.uce.suc.bkg.vo.operation.LineGroupOperLogVo;
+
+/**
+ * @Description: 班次单元测试
+ * @author liuhai
+ * @date 2017年12月7日 下午12:32:08
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class LineGroupOperLogBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 注入
+	 */
+	@Resource
+	private ILineGroupOperLogBiz lineGroupOperLogBiz;
+	/**
+	 * 
+	 * @Description: 单元测试
+	 * @author liwei
+	 * @date 2017年12月7日 下午3:00:21
+	 */
+	@Test
+	public void testpro(){
+		/***创建对象*/
+		LineGroupOperLog lineGroupOperLog=new LineGroupOperLog();
+		/**新增*/
+		lineGroupOperLogBiz.addLineGroupOperLog(lineGroupOperLog);
+		/**id查询*/
+		lineGroupOperLogBiz.findById(lineGroupOperLog.getId());
+		/**更新*/
+		lineGroupOperLogBiz.updateLineGroupOperLog(lineGroupOperLog);
+		/**删除*/
+		lineGroupOperLogBiz.deleteLineGroupOperLog(lineGroupOperLog.getId());
+		/**构建查询对象*/
+		LineGroupOperLogVo lineGroupOperLogVo=new LineGroupOperLogVo();
+		Page page=new Page();
+		/**分页查询*/
+		lineGroupOperLogBiz.findByPagination(lineGroupOperLogVo, page);
+	}
+}

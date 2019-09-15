@@ -1,0 +1,208 @@
+package cn.uce.suc.common.interceptor;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+import redis.clients.jedis.Jedis;
+import cn.uce.core.cache.redis.RedisClient;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.cache.AppLoginToKenCache;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.util.SucAppConstants;
+import cn.uce.utils.StringUtil;
+
+import com.alibaba.fastjson.JSONObject;
+
+/**
+ * 
+ * @Description: 请求限制拦截器，用于防止用户恶意请求
+ * @author laizhendong
+ * @date 2017年12月17日 下午6:09:43
+ */
+public class RequestLimitInterceptor extends HandlerInterceptorAdapter{
+	
+	/**
+	 * token缓存
+	 */
+	@Resource(name = "appLoginToKenCache")
+	private AppLoginToKenCache appLoginToKenCache;
+	
+	// 缓存
+	@Resource
+	private RedisClient uceClient;
+	
+	/**
+	 * 系统配置表
+	 */
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+	
+	/**
+	 * 限制次数
+	 */
+	private static final String LIMIT_TIMES = "LIMIT_TIMES";
+	
+	/**
+	 * 限制时间
+	 */
+	private static final String LIMIT_TIME = "LIMIT_TIME";
+	
+	/**
+	 * 日志
+	 */
+	protected static Logger logger = LoggerFactory.getLogger(RequestLimitInterceptor.class);
+ 
+	/**
+	 * 
+	 * @Description: 调用请求前做处理
+	 * @param request
+	 * @param response
+	 * @param arg2
+	 * @return
+	 * @throws Exception
+	 * @author laizhendong
+	 * @date 2017年12月17日 下午6:11:07
+	 */
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		//获得限制时间
+		int limitTime = getLimitTime();
+		//如果限制时间小于等于0，那么不拦截
+		if (limitTime <= 0) {
+			return true;
+		}
+		//获得限制次数
+		int limitTimes = getLimitTimes();
+		//如果限制次数小于等于0，那么不拦截
+		if (limitTimes <= 0 ) {
+			return true;
+		}
+		/** 账号 */
+		String accountnuber = request.getHeader("account-number");
+		/** 账号类型 */
+		String accountType = request.getHeader("account-type");
+		Map<String, String> resultMap = null;
+		// 非空校验
+		if (StringUtil.isBlank(accountnuber) || StringUtil.isBlank(accountType)) {
+			return false;
+		}
+		// 从缓存中获取区token
+		LoginEntity loginEntity = appLoginToKenCache.getToken(accountnuber, accountType);
+		if (null != loginEntity && StringUtil.isNotBlank(loginEntity.getTokenId())) {
+			//tokenId
+			String tokenId = loginEntity.getTokenId();
+			//请求服务方法
+			HandlerMethod handlerMethod = (HandlerMethod) handler;  
+			String className = handlerMethod.getBean().getClass().getName();
+			String invokeMethod = handlerMethod.getMethod().getName();;
+			//jedis
+			Jedis jedis = null;
+			try {
+				//获取redis连接
+				jedis = uceClient.getResource();
+				//缓存key
+				String key = tokenId + BkgConstants.UNDER_LINE + className + "." + invokeMethod;
+				long count = jedis.incrBy(key, 1);
+				//第一次自增，设置失效时间
+				if (count == 1) {
+					jedis.expire(key, limitTime);
+		        }else if (count > limitTimes) {
+	            //如果大于限制次数返回错误
+		        	resultMap = getMutiStatusMap();
+	            }
+			} finally {
+				if (jedis != null) {
+					//返回资源
+					uceClient.returnResource(jedis);
+				}
+			}
+		}else {
+			resultMap = new HashMap<String, String>();
+			/** 失败标示 */
+			resultMap.put("resultFlag", SucAppConstants.TOKENEXCEPTION.value());
+			resultMap.put("failureReason", "登陆超时，请重新登录");
+		}
+		//返回map不为空，返回前端
+		if (resultMap != null) {
+			// 构建返回字符串
+			String str = JSONObject.toJSONString(resultMap);
+			// 回写数字流
+			response.getWriter().write(str);
+			return false;
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 构建操作频繁错误map 
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月17日 下午7:12:33
+	 */
+	private Map<String, String> getMutiStatusMap(){
+		Map<String, String> map = new HashMap<String, String>();
+		/** 失败标示 */
+		map.put("resultFlag", SucAppConstants.MULTI_STATUS.value());
+		map.put("failureReason", "操作过于频繁");
+		return map;
+	}
+
+
+	/**
+	 * 
+	 * @Description: 获取限制时间 
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月18日 下午3:06:10
+	 */
+	private int getLimitTime(){
+		//获取系统配置
+		SystemConfig systemConfig = systemConfigBiz.findByConfigCode(LIMIT_TIME);
+		int limitTime = 0;
+		if (systemConfig != null ) {
+			String limitTimeStr = systemConfig.getConfigValue();
+			//转化
+			try {
+				limitTime = Integer.parseInt(limitTimeStr);
+			} catch (NumberFormatException e) {
+				logger.error("系统参数LIMIT_TIME格式化为int错误，请输入正确的限制时间");
+			}
+		}
+		return limitTime;
+	}
+	
+	/**
+	 * 
+	 * @Description: 获取限制次数
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月18日 下午3:06:47
+	 */
+	private int getLimitTimes(){
+		//获取系统配置
+		SystemConfig systemConfig = systemConfigBiz.findByConfigCode(LIMIT_TIMES);
+		int limitTimes = 0;
+		if (systemConfig != null ) {
+			String limitTimesStr = systemConfig.getConfigValue();
+			//转化
+			try {
+				limitTimes = Integer.parseInt(limitTimesStr);
+			} catch (NumberFormatException e) {
+				logger.error("系统参数LIMIT_TIMES格式化为int错误，请输入正确的限制次数");
+			}
+		}
+		return limitTimes;
+	}
+}

@@ -1,0 +1,401 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import java.util.Date;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+/**
+ * @Description: 货运需求组合表Entity类
+ * @author UCE-lixueyuan
+ * @date 2017年10月19日 下午05:15:20
+ */
+@Table("t_suc_bkg_freight_demand_combine")
+public class FreightDemandCombine extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 需求组合编号 
+	 */
+	private String demandCombineCode;
+    /** 
+	 * 需求组合名称 
+	 */
+	private String demandCombineName;
+    /** 
+	 * 需求组合类型  1长期需求组合、2临时需求组合 
+	 */
+	private String demandCombineType;
+	/**
+	 * 业务模式 1进港、2出港
+	 */
+	private String businessMode;
+	
+	/**
+	 * 纳入的需求范围
+	 */
+	private String demandCodes;
+    /** 
+	 * 需求组合状态 1未排班、2已排班、3未报价、4已报价、5排班异常 
+	 */
+	private String demandCombineStatus;
+	/**
+	 * 分拨中心编码
+	 */
+	private String stationCode;
+	/**
+	 * 分拨名称
+	 */
+	private String stationName;
+    /** 
+	 * 智能排班编号 
+	 */
+	private String integenceScheduleCode;
+	/** 
+	 * 智能排班标识
+	 */
+	private Boolean integenceScheduleFlag;
+	/** 
+	 * 智能排班编号 
+	 */
+	private Date integenceScheduleTime;
+	/**
+	 * 需求组合 执行日期
+	 */
+	private Date executeTime;
+    /** 
+	 * 自动生成规则 
+	 */
+	private String autoGenerateRule;
+    /** 
+	 * 对应班次编号 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 发车计划编号 
+	 */
+	private String carDeparturePlanCode;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 删除标识(删除:1,默认0) 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+	
+	/**
+	 * 兄弟组合编号，长期对应业务模式组合编号，用于后期计算报价方便
+	 */
+	private String brotherDemandCombineCode;
+	
+	/**
+	 * 获取 需求组合编号
+	 */
+	public String getDemandCombineCode() {
+		return demandCombineCode;
+	}
+
+	/** 
+	 * @return stationCode 
+	 */
+	public String getStationCode() {
+		return stationCode;
+	}
+
+	/**
+	 * @param stationCode the stationCode to set
+	 */
+	public void setStationCode(String stationCode) {
+		this.stationCode = stationCode;
+	}
+
+	/**
+	 * 设置 需求组合编号
+	 */
+	public void setDemandCombineCode(String demandCombineCode) {
+		this.demandCombineCode = demandCombineCode;
+	}
+	
+	/**
+	 * 获取 需求组合名称
+	 */
+	public String getDemandCombineName() {
+		return demandCombineName;
+	}
+	
+	/**
+	 * 设置 需求组合名称
+	 */
+	public void setDemandCombineName(String demandCombineName) {
+		this.demandCombineName = demandCombineName;
+	}
+	
+	/**
+	 * 获取 需求组合类型  1长期需求组合、2临时需求组合
+	 */
+	public String getDemandCombineType() {
+		return demandCombineType;
+	}
+	
+	/**
+	 * 设置 需求组合类型  1长期需求组合、2临时需求组合
+	 */
+	public void setDemandCombineType(String demandCombineType) {
+		this.demandCombineType = demandCombineType;
+	}
+	
+	/** 
+	* @return businessMode 
+	*/
+	public String getBusinessMode() {
+		return businessMode;
+	}
+
+	/**
+	 * @param businessMode the businessMode to set
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	/**
+	 * 获取 需求组合状态 1未排班、2已排班、3未报价、4已报价、5排班异常
+	 */
+	public String getDemandCombineStatus() {
+		return demandCombineStatus;
+	}
+	
+	/**
+	 * 设置 需求组合状态 1未排班、2已排班、3未报价、4已报价、5排班异常
+	 */
+	public void setDemandCombineStatus(String demandCombineStatus) {
+		this.demandCombineStatus = demandCombineStatus;
+	}
+	
+	/**
+	 * 获取 智能排班编号
+	 */
+	public String getIntegenceScheduleCode() {
+		return integenceScheduleCode;
+	}
+	
+	/**
+	 * 设置 智能排班编号
+	 */
+	public void setIntegenceScheduleCode(String integenceScheduleCode) {
+		this.integenceScheduleCode = integenceScheduleCode;
+	}
+	
+	/**
+	 * 获取 自动生成规则
+	 */
+	public String getAutoGenerateRule() {
+		return autoGenerateRule;
+	}
+	
+	/**
+	 * 设置 自动生成规则
+	 */
+	public void setAutoGenerateRule(String autoGenerateRule) {
+		this.autoGenerateRule = autoGenerateRule;
+	}
+	
+	/**
+	 * 获取 对应班次编号
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 对应班次编号
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+	
+	/**
+	 * 获取 发车计划编号
+	 */
+	public String getCarDeparturePlanCode() {
+		return carDeparturePlanCode;
+	}
+	
+	/**
+	 * 设置 发车计划编号
+	 */
+	public void setCarDeparturePlanCode(String carDeparturePlanCode) {
+		this.carDeparturePlanCode = carDeparturePlanCode;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 删除标识(删除:1,默认0)
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 删除标识(删除:1,默认0)
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	/** 
+	* @return demandCodes 
+	*/
+	public String getDemandCodes() {
+		return demandCodes;
+	}
+
+	/**
+	 * @param demandCodes the demandCodes to set
+	 */
+	public void setDemandCodes(String demandCodes) {
+		this.demandCodes = demandCodes;
+	}
+
+	/** 
+	* @return integenceScheduleFlag 
+	*/
+	public Boolean getIntegenceScheduleFlag() {
+		return integenceScheduleFlag;
+	}
+
+	/**
+	 * @param integenceScheduleFlag the integenceScheduleFlag to set
+	 */
+	public void setIntegenceScheduleFlag(Boolean integenceScheduleFlag) {
+		this.integenceScheduleFlag = integenceScheduleFlag;
+	}
+
+	/** 
+	* @return integenceScheduleTime 
+	*/
+	public Date getIntegenceScheduleTime() {
+		return integenceScheduleTime;
+	}
+
+	/**
+	 * @param integenceScheduleTime the integenceScheduleTime to set
+	 */
+	public void setIntegenceScheduleTime(Date integenceScheduleTime) {
+		this.integenceScheduleTime = integenceScheduleTime;
+	}
+
+	/** 
+	* @return executeTime 
+	*/
+	public Date getExecuteTime() {
+		return executeTime;
+	}
+
+	/**
+	 * @param executeTime the executeTime to set
+	 */
+	public void setExecuteTime(Date executeTime) {
+		this.executeTime = executeTime;
+	}
+
+	/** 
+	* @return stationName 
+	*/
+	public String getStationName() {
+		return stationName;
+	}
+
+	/**
+	 * @param stationName the stationName to set
+	 */
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
+	/** 
+	 * @return brotherDemandCombineCode 
+	 */
+	public String getBrotherDemandCombineCode() {
+		return brotherDemandCombineCode;
+	}
+
+	/**
+	 * @param brotherDemandCombineCode the brotherDemandCombineCode to set
+	 */
+	public void setBrotherDemandCombineCode(String brotherDemandCombineCode) {
+		this.brotherDemandCombineCode = brotherDemandCombineCode;
+	}
+
+	
+}

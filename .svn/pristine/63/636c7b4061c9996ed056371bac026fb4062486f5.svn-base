@@ -1,0 +1,28 @@
+package cn.uce.suc.common.cache;
+
+import cn.uce.core.cache.CacheManager;
+import cn.uce.core.cache.base.ICache;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+/**
+ * 
+ * @Description: 根据机构编码 查询机构信息
+ * @author lixueyuan
+ * @date 2017年11月11日 上午10:43:00
+ */
+public class OmgCmsOrgprocessor {
+	/**
+	 * 
+	 * @Description:根据机构编码 查询机构信息
+	 * @param baseOrgCode
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月11日 上午10:43:43
+	 */
+	public static OmgCmsOrgVo findByBaseOrgCode(String baseOrgCode){
+		ICache<String,OmgCmsOrgVo> cache = CacheManager.getInstance().getCache("OmgCmsOrgCache");
+		OmgCmsOrgVo omgCmsOrgVo = cache.get(baseOrgCode);
+		return omgCmsOrgVo;
+	}
+
+}
+ 

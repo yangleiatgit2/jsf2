@@ -1,0 +1,40 @@
+package cn.uce.suc.app.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.entity.SucDictData;
+import cn.uce.suc.app.vo.SucDictDataVo;
+import cn.uce.suc.app.dao.ISucDictDataDao;
+
+/**
+ * @Description: 系统类型Service类
+ * @author liwei
+ * @date 2017年10月26日 下午10:38:52
+ */
+@Service("sucDictDataService")
+public class SucDictDataService {
+	
+	/**
+	 * 注入系统类型Dao
+	 */
+	@Resource
+	private ISucDictDataDao sucDictDataDao;
+	
+	/**
+	 * 
+	 * @Description: 根据typeClassCode查询数据字典
+	 * @param typeClassCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月26日 下午10:48:08
+	 */
+	public List<SucDictDataVo> findListByTypeClassCode(String typeClassCode){
+		return sucDictDataDao.findListByTypeClassCode(typeClassCode);
+	}
+}

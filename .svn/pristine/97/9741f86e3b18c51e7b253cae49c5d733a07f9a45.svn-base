@@ -1,0 +1,552 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import redis.clients.jedis.Jedis;
+import cn.uce.base.page.Page;
+import cn.uce.core.cache.redis.RedisClient;
+import cn.uce.suc.bkg.biz.datamain.ITransportEffectiveBiz;
+import cn.uce.suc.bkg.biz.ia.IIaSyncBiz;
+import cn.uce.suc.bkg.biz.impl.ia.IaSyncBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandCombineBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.biz.operation.IIaConfBiz;
+import cn.uce.suc.bkg.biz.operation.IIaMonitorBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleBiz;
+import cn.uce.suc.bkg.dao.datamain.IOperationTimeDao;
+import cn.uce.suc.bkg.dao.datamain.ITransportEffectiveDao;
+import cn.uce.suc.bkg.entity.operation.FreightDemand;
+import cn.uce.suc.bkg.entity.operation.FreightDemandCombine;
+import cn.uce.suc.bkg.entity.operation.FreightOrder;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.entity.operation.IaConf;
+import cn.uce.suc.bkg.entity.operation.IaMonitor;
+import cn.uce.suc.bkg.service.datamain.TransportEffectiveService;
+import cn.uce.suc.bkg.service.operation.FreightDemandCombineService;
+import cn.uce.suc.bkg.service.operation.FreightDemandService;
+import cn.uce.suc.bkg.service.operation.FreightOrderCombineService;
+import cn.uce.suc.bkg.service.operation.FreightOrderService;
+import cn.uce.suc.bkg.vo.ia.FreigtCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+import cn.uce.suc.bkg.vo.operation.IaConfVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+import cn.uce.suc.common.biz.imp.OmgCmsOrgBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+import com.alibaba.fastjson.JSON;
+
+
+/**
+ * 
+ * @Description: 算法参数
+ * @author laizhendong
+ * @date 2017年10月21日 下午2:50:04
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class IaConfBizTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	private IIaConfBiz iaConfBiz;
+	@Resource
+	private IIaSyncBiz iaSyncBiz;
+	
+	@Resource
+	private IFreightOrderBiz freightOrderBiz;
+	@Resource
+	private FreightOrderService freightOrderService;
+	@Resource
+	private FreightOrderCombineService freightOrderCombineService;
+	
+	@Resource
+	private FreightDemandService freightDemandService;
+	
+	@Resource
+	private FreightDemandCombineService freightDemandCombineService;
+	
+	@Resource
+	private IPricingRuleBiz pricingRuleBiz;
+	
+	@Resource
+	private ITransportEffectiveBiz transportEffectiveBiz;
+	
+	@Resource
+	private TransportEffectiveService transportEffectiveService;
+	
+	@Resource
+	private ITransportEffectiveDao transportEffectiveDao;
+	
+	@Resource
+	private IOperationTimeDao operationTimeDao;
+	
+	@Resource
+	private OmgCmsOrgBiz omgCmsOrgBiz;
+	
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	
+	@Resource
+	private IIaMonitorBiz iaMonitorBiz;
+	//缓存
+	@Resource
+	private RedisClient uceClient; 
+	/**
+	 * 注入 freightDemandCombineBiz
+	 */
+	@Resource
+	private IFreightDemandCombineBiz freightDemandCombineBiz;
+	
+	Page page;
+	IaConfVo iaConfVo;
+	@Before
+	public void before(){
+		page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		iaConfVo = new IaConfVo();
+		iaConfVo.setOrgCode("TEST");
+		iaConfVo.setOrgName("单元测试");
+		iaConfVo.setDeleteFlag(false);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件分页查询算法参数
+	 * @author laizhendong
+	 * @date 2017年10月21日 下午5:21:25
+	 */
+	@Test
+	public void testFindByPagination(){
+		iaConfBiz.findByPagination(null, page);
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 添加算法参数 
+	 * @author laizhendong
+	 * @date 2017年10月21日 下午5:24:27
+	 */
+	@Test
+	public void testAddIAConf(){
+		iaConfBiz.addIaConf(iaConfVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 更新算法参数 
+	 * @author laizhendong
+	 * @date 2017年10月21日 下午5:30:52
+	 */
+	@Test
+	public void testUpdateIAConf(){
+		IaConfVo searchConfVo = new IaConfVo();
+		searchConfVo.setOrgCode("TEST");
+		List<IaConfVo> iaConfVos = iaConfBiz.findByCondition(searchConfVo);
+		if (null != iaConfVos && !iaConfVos.isEmpty() ) {
+			IaConfVo updateIAConfVo = iaConfVos.get(0);
+			iaConfBiz.updateIaConf(updateIAConfVo);
+		}else {
+			testAddIAConf();
+		}
+		iaConfVos = iaConfBiz.findByCondition(searchConfVo);
+		IaConfVo updateIAConfVo = iaConfVos.get(0);
+		iaConfBiz.updateIaConf(updateIAConfVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 删除算法参数
+	 * @author laizhendong
+	 * @date 2017年10月21日 下午5:32:15
+	 */
+	@Test
+	public void testDeleteIaConf(){
+		IaConfVo searchConfVo = new IaConfVo();
+		searchConfVo.setOrgCode("TEST");
+		List<IaConfVo> iaConfVos = iaConfBiz.findByCondition(searchConfVo);
+		if (null != iaConfVos && !iaConfVos.isEmpty() ) {
+			IaConfVo updateIAConfVo = iaConfVos.get(0);
+			iaConfBiz.updateIaConf(updateIAConfVo);
+		}else {
+			testAddIAConf();
+		}
+		iaConfVos = iaConfBiz.findByCondition(searchConfVo);
+		IaConfVo updateIAConfVo = iaConfVos.get(0);
+		IaConf iaConf = iaConfBiz.findById(updateIAConfVo.getId());
+		iaConfBiz.deleteIaConf(iaConf.getId());
+	}
+	
+/*	@Test
+	public void test(){
+		DynamicClientFactory factory = DynamicClientFactory.newInstance();
+        Client client = factory.createClient("http://localhost:53292/BLSWebService.asmx?wsdl");
+        Object[] results = null;
+		try {
+			results = client.invoke("ExecutIA", "aaa",1);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        System.out.println(results[0]);
+	}*/
+	
+	@Test
+	public void testSetWsSiteFreightInfo(){
+		FreigtCombineVo freigtCombineVo = new FreigtCombineVo();
+		freigtCombineVo.setBusinessMode(BkgConstants.BUSINESS_MODE_OUT);
+		freigtCombineVo.setCombineCode("CZ2017103000003");
+		freigtCombineVo.setCombineOrgCode("UC010140");
+		freigtCombineVo.setCombineSourceType(BkgConstants.COMBINE_SOURCE_TYPE_DEMAND);
+		freigtCombineVo.setUseTime(new Date());
+		//iaConfBiz.executeIAByCombine(freigtCombineVo);
+	}
+	
+	
+	@Test
+	public void testLongDemanJob(){
+		FreigtCombineVo freigtCombineVo = new FreigtCombineVo();
+		freigtCombineVo.setCombineSourceType(BkgConstants.COMBINE_SOURCE_TYPE_DEMAND);
+		freigtCombineVo.setCombineCode("XZ17111300001");
+		
+		//iaConfBiz.smartSchedule(freigtCombineVo); //页面调用算法生成班次
+		
+		//iaConfBiz.autoInvokeIaByShortTermDemandCombine(); //自动根据临时需求生成班次定时任务
+		//iaConfBiz.autoInvokeIaByLongTermOrderCombine(); //自动根据长期订单生成班次定时任务
+		//iaConfBiz.autoInvokeIaByShortTermOrderCombine();
+		
+		//iaConfBiz.autoInvokeIaByLongTermDemandCombine();
+		
+		//freightOrderBiz.processtempTerm(); //临时订单组合定时任务
+		//freightOrderBiz.processLongTerm(); //长期订单组合定时任务
+		
+		//freightDemandCombineBiz.autoCombineLongTermDemands();  //长期需求组合定时任务
+		//freightDemandCombineBiz.autoCombineShortTermDemands(); //临时需求组合定时任务
+		
+		
+	}
+	
+	@Test
+	public void testDemandIa(){
+		String freightDemandJson = "{\"demandCombineCode\":\"XZ18112300001\",\"arrivalTime\":50400000,\"beginStation\":\"上海分拨中心\",\"beginStationCode\":\"UC010140\",\"businessMode\":\"1\",\"carpoolSites\":\"\",\"createEmp\":\"聂风\",\"createOrg\":\"虎门\",\"createTime\":1511405285548,\"dayVolume\":40.0,\"dayWeight\":40.0,\"demandBeginTime\":1511452800000,\"demandCode\":\"LS18112300001\",\"demandEndTime\":1511452800000,\"demandName\":\"嘉定六部11006\",\"demandSite\":\"嘉定六部\",\"demandSiteCode\":\"UC048604\",\"demandStatus\":\"1\",\"demandType\":\"2\",\"departureTime\":-3600000,\"endStation\":\"嘉定六部\",\"endStationCode\":\"UC048604\",\"isCarpool\":true,\"layTime\":40,\"lineGroupCode\":\"\",\"price\":400.0,\"version\":1}";
+		String demandCombineJson = "{\"businessMode\":\"1\",\"createEmp\":\"调度系统\",\"createOrg\":\"调度系统\",\"createTime\":1511405751451,\"demandCombineCode\":\"XZ18112300001\",\"demandCombineName\":\"UC01014011008\",\"demandCombineStatus\":\"1\",\"demandCombineType\":\"2\",\"executeTime\":1511452800000,\"stationCode\":\"UC010140\"}";
+		String iaMonitorJson = "{\"businessMode\":\"1\",\"combineCode\":\"XZ18112300001\",\"combineType\":\"1\",\"createEmp\":\"智能排班\",\"createOrg\":\"智能排班\",\"createTime\":1512391371000,\"deleteFlag\":false,\"demandType\":\"2\",\"errorMsg\":\"\",\"executeTime\":1512391371000,\"orgCode\":\"UC010140\",\"orgName\":\"上海分拨中心\",\"status\":\"20\",\"taskCode\":\"ZN17120400000\",\"version\":1}";
+		FreightDemand freightDemand = JSON.parseObject(freightDemandJson, FreightDemand.class);
+		FreightDemandCombine freightDemandCombine = JSON.parseObject(demandCombineJson, FreightDemandCombine.class);
+		IaMonitor iaMonitor = JSON.parseObject(iaMonitorJson,IaMonitor.class);
+		freightDemandService.addFreightDemand(freightDemand);
+		freightDemandCombineService.addFreightDemandCombine(freightDemandCombine);
+		iaMonitorBiz.addIaMonitor(iaMonitor);
+		FreigtCombineVo freigtCombineVo = new FreigtCombineVo();
+		freigtCombineVo.setCombineSourceType(BkgConstants.COMBINE_SOURCE_TYPE_DEMAND);
+		freigtCombineVo.setCombineCode("XZ18112300001");
+		try {
+			setCache();
+			iaSyncBiz.smartSchedule(freigtCombineVo);
+			Thread.sleep(20*1000);
+			PricingRuleVo pricingRuleVo = new PricingRuleVo();
+			pricingRuleVo.setCombineCode("XZ18112300001");
+			pricingRuleVo.setOrgCode("UC010140");
+			pricingRuleVo.setBusinessMode("1");
+			pricingRuleVo.setDemandType("2");
+			List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findSelectPrice(pricingRuleVo);
+			System.out.println(pricingRuleVos.size());
+		} catch (Exception e) {
+			System.out.println(e); 
+		}finally{
+			freightDemandService.deleteById(freightDemand.getId());
+			freightDemandCombineService.deleteById(freightDemandCombine.getId());
+			iaMonitorBiz.deleteIaMonitor(iaMonitor.getId()); 
+		}
+		try {
+			freightDemandService.addFreightDemand(freightDemand);
+			freightDemandCombineService.addFreightDemandCombine(freightDemandCombine);
+			iaMonitorBiz.addIaMonitor(iaMonitor);
+			FreightDemandCombineVo freightDemandCombineVo = ObjectConvertUtil.convertObject(freightDemandCombine, FreightDemandCombineVo.class);
+			iaConfBiz.runDemandCombineCatchException(freightDemandCombineVo);
+			PricingRuleVo pricingRuleVo = new PricingRuleVo();
+			pricingRuleVo.setCombineCode("XZ18112300001");
+			pricingRuleVo.setOrgCode("UC010140");
+			pricingRuleVo.setBusinessMode("1");
+			pricingRuleVo.setDemandType("2");
+			List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findSelectPrice(pricingRuleVo);
+			System.out.println(pricingRuleVos.size());
+		} catch (Exception e) {
+			System.out.println(e); 
+		}finally{
+			freightDemandService.deleteById(freightDemand.getId());
+			freightDemandCombineService.deleteById(freightDemandCombine.getId());
+			iaMonitorBiz.deleteIaMonitor(iaMonitor.getId()); 
+		}
+	}
+	
+	@Test
+	public void testOrderIa(){
+		String freightOrderJson = "{\"arrivalTime\":50400000,\"beginStation\":\"上海分拨中心\",\"beginStationCode\":\"UC010140\",\"businessMode\":\"1\",\"carpoolSitesName\":\"\",\"createEmp\":\"聂风\",\"createOrg\":\"虎门\",\"createTime\":1511405286000,\"dayVolume\":40.0,\"dayWeight\":40.0,\"deleteFlag\":false,\"demandCombineCode\":\"XZ18112300001\",\"demandSite\":\"嘉定六部\",\"demandSiteCode\":\"UC048604\",\"demandType\":\"2\",\"departureTime\":-3600000,\"endStation\":\"嘉定六部\",\"endStationCode\":\"UC048604\",\"executeEndTime\":1511478480000,\"executeStartTime\":1511474400000,\"isCarpool\":true,\"layTime\":40,\"lineGroupCode\":\"\",\"orderCode\":\"OR18112300000\",\"orderCombinCode\":\"OZ18112300000\",\"orderEndTime\":1511452800000,\"orderName\":\"嘉定六部11009\",\"orderStartTime\":1511452800000,\"orderStatus\":\"00\",\"price\":400.0,\"version\":2}";
+		String orderCombineJson = "{\"businessMode\":\"1\",\"createEmp\":\"系统\",\"createTime\":1511416271000,\"executeTime\":1511452800000,\"operStationCode\":\"UC010140\",\"orderCombineCode\":\"OZ18112300000\",\"orderCombineName\":\"上海分拨中心11008\",\"orderCombineStatus\":\"00\",\"orderCombineType\":\"2\",\"version\":1}";
+		String iaMonitorJson = "{\"businessMode\":\"1\",\"combineCode\":\"OZ18112300000\",\"combineType\":\"2\",\"createEmp\":\"智能排班\",\"createOrg\":\"智能排班\",\"createTime\":1512392006000,\"deleteFlag\":false,\"demandType\":\"2\",\"errorMsg\":\"\",\"executeTime\":1512392006000,\"orgCode\":\"UC010140\",\"orgName\":\"上海分拨中心\",\"status\":\"20\",\"taskCode\":\"ZN17120400002\",\"version\":1}";
+		
+		FreightOrder freightOrder = JSON.parseObject(freightOrderJson, FreightOrder.class);
+		FreightOrderCombine orderCombine = JSON.parseObject(orderCombineJson, FreightOrderCombine.class);
+		IaMonitor iaMonitor = JSON.parseObject(iaMonitorJson,IaMonitor.class);
+		try {
+			setCache();
+			freightOrderService.addFreightOrder(freightOrder);
+			freightOrderCombineService.addFreightOrderCombine(orderCombine);
+			iaMonitorBiz.addIaMonitor(iaMonitor);
+			FreigtCombineVo freigtCombineVo = new FreigtCombineVo();
+			freigtCombineVo.setCombineSourceType(BkgConstants.COMBINE_SOURCE_TYPE_ORDER);
+			freigtCombineVo.setCombineCode("OZ18112300000");
+			iaSyncBiz.smartSchedule(freigtCombineVo);
+			Thread.sleep(15*1000);
+			PricingRuleVo pricingRuleVo = new PricingRuleVo();
+			pricingRuleVo.setCombineCode("OZ18112300000");
+			pricingRuleVo.setOrgCode("UC010140");
+			pricingRuleVo.setBusinessMode("1");
+			pricingRuleVo.setDemandType("2");
+			List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findSelectPrice(pricingRuleVo);
+			System.out.println(pricingRuleVos.size());
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			freightOrderBiz.deleteFreightOrder(freightOrder.getId());
+			freightOrderCombineService.deleteById(orderCombine.getId());
+			iaMonitorBiz.deleteIaMonitor(iaMonitor.getId());
+		}
+		try {
+			freightOrderService.addFreightOrder(freightOrder);
+			freightOrderCombineService.addFreightOrderCombine(orderCombine);
+			iaMonitorBiz.addIaMonitor(iaMonitor);
+			FreightOrderCombineVo orderCombineVo = ObjectConvertUtil.convertObject(orderCombine, FreightOrderCombineVo.class);
+			iaConfBiz.runOrderCombineCatchException(orderCombineVo);
+			PricingRuleVo pricingRuleVo = new PricingRuleVo();
+			pricingRuleVo.setCombineCode("XZ18112300001");
+			pricingRuleVo.setOrgCode("UC010140");
+			pricingRuleVo.setBusinessMode("1");
+			pricingRuleVo.setDemandType("2");
+			List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findSelectPrice(pricingRuleVo);
+			System.out.println(pricingRuleVos.size());
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			freightOrderBiz.deleteFreightOrder(freightOrder.getId());
+			freightOrderCombineService.deleteById(orderCombine.getId());
+			iaMonitorBiz.deleteIaMonitor(iaMonitor.getId());
+		}
+	}
+	
+	public void setCache(){
+		Jedis jedis = null;
+		try {
+			//获取redis连接
+			jedis = uceClient.getResource();
+			//算法参数缓存
+			jedis.set("IAConfCache_UC010140", "\"[{\"arrivalTimeThreshold\":10,\"capacitySlack\":1.0,\"createEmp\":\"聂风\",\"createOrg\":\"UC002950\",\"createTime\":1511317196000,\"deleteFlag\":false,\"fullLoadRate\":1.0,\"id\":1,\"maxParallelTimes\":34,\"maxParallelVolume\":15,\"orgCode\":\"UC010140\",\"orgName\":\"上海分拨中心\",\"version\":3}]\"");
+			//车型成本缓存
+			jedis.set("IATruckModelCache_UC010140_1", "\"[{\"bufferVolume\":3.0,\"costCoefficient\":40.0,\"fixedCharges\":10000.0,\"handlingCharges\":35.0,\"truckConcrete\":\"01\",\"truckCostName\":\"UC01014011005\",\"truckManageCode\":\"CXCB17111800005\",\"truckType\":\"1\",\"truckVolume\":45.0},{\"bufferVolume\":2.0,\"costCoefficient\":40.0,\"fixedCharges\":20000.0,\"handlingCharges\":50.0,\"truckConcrete\":\"02\",\"truckCostName\":\"UC01014011006\",\"truckManageCode\":\"CXCB17111800006\",\"truckType\":\"1\",\"truckVolume\":50.0},{\"bufferVolume\":4.0,\"costCoefficient\":760.0,\"fixedCharges\":70000.0,\"handlingCharges\":760.0,\"truckConcrete\":\"04\",\"truckCostName\":\"UC01014011008\",\"truckManageCode\":\"CXCB17111800008\",\"truckType\":\"1\",\"truckVolume\":80.0},{\"bufferVolume\":4.0,\"costCoefficient\":960.0,\"fixedCharges\":80000.0,\"handlingCharges\":960.0,\"truckConcrete\":\"05\",\"truckCostName\":\"UC01014011009\",\"truckManageCode\":\"CXCB17111800009\",\"truckType\":\"1\",\"truckVolume\":100.0}]\"");
+			jedis.set("IATruckModelCache_UC010140_2", "\"[{\"bufferVolume\":2.0,\"costCoefficient\":30.0,\"fixedCharges\":2000.0,\"handlingCharges\":40.0,\"truckConcrete\":\"02\",\"truckCostName\":\"UC01014011001\",\"truckManageCode\":\"CXCB17111800001\",\"truckType\":\"2\",\"truckVolume\":50.0},{\"bufferVolume\":3.0,\"costCoefficient\":30.0,\"fixedCharges\":1000.0,\"handlingCharges\":25.0,\"truckConcrete\":\"01\",\"truckCostName\":\"UC01014011000\",\"truckManageCode\":\"CXCB17111800000\",\"truckType\":\"2\",\"truckVolume\":45.0},{\"bufferVolume\":2.0,\"costCoefficient\":68.0,\"fixedCharges\":4000.0,\"handlingCharges\":68.0,\"truckConcrete\":\"03\",\"truckCostName\":\"UC01014011002\",\"truckManageCode\":\"CXCB17111800002\",\"truckType\":\"2\",\"truckVolume\":70.0},{\"bufferVolume\":4.0,\"costCoefficient\":76.0,\"fixedCharges\":7000.0,\"handlingCharges\":76.0,\"truckConcrete\":\"04\",\"truckCostName\":\"UC01014011003\",\"truckManageCode\":\"CXCB17111800003\",\"truckType\":\"2\",\"truckVolume\":80.0},{\"bufferVolume\":4.0,\"costCoefficient\":96.0,\"fixedCharges\":8000.0,\"handlingCharges\":96.0,\"truckConcrete\":\"05\",\"truckCostName\":\"UC01014011004\",\"truckManageCode\":\"CXCB17111800004\",\"truckType\":\"2\",\"truckVolume\":100.0},{\"bufferVolume\":2.0,\"costCoefficient\":680.0,\"fixedCharges\":40000.0,\"handlingCharges\":680.0,\"truckConcrete\":\"03\",\"truckCostName\":\"UC01014011007\",\"truckManageCode\":\"CXCB17111800007\",\"truckType\":\"2\",\"truckVolume\":70.0}]\"");
+			//分拨中心缓存
+			jedis.set("IAOperaTimeCache_UC010140", "\"[{\"createEmp\":\"系统\",\"createOrg\":\"系统\",\"createTime\":1510981886000,\"deleteFlag\":false,\"earliestDepartureTime\":-7200000,\"id\":145,\"latestArrivalTime\":54000000,\"operationCenterCode\":\"UC010140\",\"operationCenterName\":\"上海分拨中心\",\"siteCode\":\"UC048604\",\"siteName\":\"嘉定六部\",\"version\":1}]\"");
+			//时效缓存
+			jedis.set("IATransportEffectiveCache_UC010140", "\"[{\"distance\":31.05,\"effective\":60,\"effectiveCode\":\"SX17111800226\",\"endSite\":\"上海分拨中心\",\"endSiteCode\":\"UC010140\",\"id\":227,\"parentOrgCode\":\"UC010140\",\"speed\":31.05,\"startSite\":\"嘉定六部\",\"startSiteCode\":\"UC048604\",\"status\":\"1\"},{\"distance\":0.0,\"effective\":0,\"effectiveCode\":\"SX17111800227\",\"endSite\":\"嘉定六部\",\"endSiteCode\":\"UC048604\",\"id\":228,\"parentOrgCode\":\"UC010140\",\"speed\":0.0,\"startSite\":\"上海分拨中心\",\"startSiteCode\":\"UC010140\",\"status\":\"1\"}]\"");
+			//集货点缓存
+			jedis.set("IADcSubOrgCache_UC010140", "");
+		} catch (Exception e) {
+			
+		}finally {
+			//释放redis连接
+			uceClient.returnResource(jedis);
+		}
+	}
+	
+	/*@Test
+	public void test4(){
+		System.out.println(new Date());
+		final AtomicInteger atomicCount = new AtomicInteger(0);  
+        for (int i = 0; i < 10; i++) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for (int j = 0; j < 100; j++) {
+						System.out.println(Thread.currentThread().getName());
+						Long start = System.currentTimeMillis();
+						DynamicClientFactory factory = DynamicClientFactory.newInstance();
+						try {
+							Thread.sleep(50L);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+				        //Client client = factory.createClient("http://10.201.1.85:8010/BLSWebService.asmx?wsdl");
+				        Client client = factory.createClient("http://10.202.2.197/BLSWebService.asmx?wsdl");
+				        
+				        String paramJson = "{\"dcOrgCode\":\"UC010140\",\"nodesFreight\":[{\"businessCode\":\"OR17111600000\",\"ifCarpool\":true,\"loadMinutes\":80,\"longTerm_SendVolume\":80.0,\"nodeToDC_EarliestArriveTime_Str\":\"08:00\",\"orgCode\":\"UC017314\"},{\"businessCode\":\"OR17111600001\",\"ifCarpool\":true,\"loadMinutes\":60,\"longTerm_SendVolume\":60.0,\"nodeToDC_EarliestArriveTime_Str\":\"10:00\",\"orgCode\":\"UC002316\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC032322\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC016141\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC016991\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017151\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC016781\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC018024\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC057790\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC056901\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC016826\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017162\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC018155\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017325\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC043615\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC007036\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC021688\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC018154\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC007014\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC016987\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC051553\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017656\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC054117\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC058294\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC051452\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC016467\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017329\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017310\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC022826\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC027214\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017316\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017313\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC018023\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC024601\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC026136\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017311\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC055225\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC057482\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017160\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC054777\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC055380\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC052861\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC050312\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC058866\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC051019\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017494\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017154\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC017658\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC018151\"},{\"businessCode\":\"OR17111600002\",\"ifCarpool\":true,\"loadMinutes\":40,\"longTerm_SendVolume\":40.0,\"nodeToDC_EarliestArriveTime_Str\":\"03:00\",\"orgCode\":\"UC018158\"}],\"scheduleDate\":\"2017-11-17\"}";
+				        Object[] results = null;
+						try {
+							results = client.invoke("ExecuteBLS", paramJson,2);
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						System.out.println("耗时：" + (System.currentTimeMillis() - start));
+				        System.out.println("结果" + results[0]);
+				        System.out.println(new Date());
+				        atomicCount.addAndGet(1);
+					}
+				}
+			}).start();
+		}
+        try {
+			Thread.sleep(40 * 60 * 1000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+        System.out.println(atomicCount);
+        System.out.println(new Date());
+	}*/
+	
+	/*@Test
+	public void test8(){
+		List<TransportEffective>  transportEffectives = (List<TransportEffective>) transportEffectiveDao.findAll(null);
+		Date date = new Date();
+		if (null != transportEffectives && !transportEffectives.isEmpty()) {
+			for (TransportEffective transportEffective : transportEffectives) {
+				Double distance = transportEffective.getDistance();
+				Double min = (new Double(transportEffective.getEffective())/60);
+				Double speed =  min == 0 ? 0: ArithUtil.div(distance, min, 2);
+				transportEffective.setSpeed(speed);
+				transportEffectiveDao.updateById(transportEffective);
+				System.out.println(transportEffective.getId());
+			}
+		}
+		
+		System.out.println(transportEffectives.size());
+	}*/
+	
+	/*@Test
+	public void test9(){
+		//System.out.println(redisIdsWorker.nextName("班次aa", NamesPrefix.BCNA));
+		List<OperationTime> operationTimes = operationTimeDao.findAll(null);
+		if (null != operationTimes && !operationTimes.isEmpty()) {
+			for (OperationTime operationTime : operationTimes) {
+				String siteCode = operationTime.getSiteCode();
+				String siteName = operationTime.getSiteName();
+				OmgCmsOrgVo omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(siteCode);
+				if (omgCmsOrgVo!=null) {
+					String dbOrgName = omgCmsOrgVo.getOrgName();
+					if (!omgCmsOrgVo.getOrgName().equals(operationTime.getSiteName())) {
+						System.out.println("网点机构：【" + siteCode+ " : " + siteName + "】名称与主机构【"+dbOrgName+"】不同");
+					}
+				}else {
+					System.out.println("机构：" + siteCode + " : " + siteName + "不存在");
+				}
+				siteCode = operationTime.getOperationCenterCode();
+				siteName = operationTime.getOperationCenterName();
+				omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(siteCode);
+				if (omgCmsOrgVo!=null) {
+					String dbOrgName = omgCmsOrgVo.getOrgName();
+					if (!dbOrgName.equals(siteName)) {
+						System.out.println("分拨机构：【" + siteCode+ " : " + siteName + "】名称与主机构【"+dbOrgName+"】不同");
+					}
+				}else {
+					System.out.println("机构：" + siteCode  + " : " + siteName + "不存在");
+				}
+			}
+		}
+	}*/
+	
+	/*@Test
+	public void test10(){
+		List<TransportEffective>  transportEffectives = (List<TransportEffective>) transportEffectiveDao.findAll(null);
+		Set<String> difNameSet = new HashSet<String>();
+		Set<String> notExistSet = new HashSet<String>();
+		if (null != transportEffectives && !transportEffectives.isEmpty()) {
+			for (TransportEffective transportEffective : transportEffectives) {
+				String orgCode = transportEffective.getStartSiteCode();
+				String orgName = transportEffective.getStartSite();
+				OmgCmsOrgVo omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(orgCode);
+				if (omgCmsOrgVo!=null) {
+					String dbOrgName = omgCmsOrgVo.getOrgName();
+					if (!dbOrgName.equals(orgName)) {
+						difNameSet.add(orgCode);
+						//System.out.println("开始站机构：【" + orgCode+ " : " + orgName + "】名称与主机构【"+dbOrgName+"】不同");
+					}
+				}else {
+					notExistSet.add(orgCode);
+					//System.out.println("开始站机构：" + orgCode + " : " + orgName+ "不存在");
+				}
+				
+				orgCode = transportEffective.getEndSiteCode();
+				orgName = transportEffective.getEndSite();
+				omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(orgCode);
+				if (omgCmsOrgVo!=null) {
+					String dbOrgName = omgCmsOrgVo.getOrgName();
+					if (!dbOrgName.equals(orgName)) {
+						difNameSet.add(orgCode);
+						//System.out.println("目的站机构：【" + orgCode+ " : " + orgName + "】名称与主机构【"+dbOrgName+"】不同");
+					}
+					
+				}else {
+					notExistSet.add(orgCode);
+					//System.out.println("目的站站机构：" + orgCode + " : " + orgName+ "不存在");
+				}
+				
+				orgCode = transportEffective.getStartParentCode();
+				orgName = transportEffective.getStartParentName();
+				omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(orgCode);
+				if (omgCmsOrgVo!=null) {
+					String dbOrgName = omgCmsOrgVo.getOrgName();
+					if (!dbOrgName.equals(orgName)) {
+						difNameSet.add(orgCode);
+						//System.out.println("开始站所属机构：【" + orgCode+ " : " + orgName + "】名称与主机构【"+dbOrgName+"】不同");
+					}
+					
+				}else {
+					notExistSet.add(orgCode);
+					//System.out.println("开始站所属机构：" + orgCode + " : " + orgName+ "不存在");
+				}
+				
+				orgCode = transportEffective.getEndParentCode();
+				orgName = transportEffective.getEndParentName();
+				omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(orgCode);
+				if (omgCmsOrgVo!=null) {
+					String dbOrgName = omgCmsOrgVo.getOrgName();
+					if (!dbOrgName.equals(orgName)) {
+						difNameSet.add(orgCode);
+						//System.out.println("目的站所属机构：【" + orgCode+ " : " + orgName + "】名称与主机构【"+dbOrgName+"】不同");
+					}
+					
+				}else {
+					notExistSet.add(orgCode);
+					//System.out.println("目的站所属机构：" + orgCode + " : " + orgName+ "不存在");
+				}
+			}
+			
+			for (String orgCode : difNameSet) {
+				OmgCmsOrgVo omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(orgCode);
+				if (omgCmsOrgVo!=null) {
+					System.out.println("机构：" + orgCode + " 与主机构： " + omgCmsOrgVo.getOrgName()+ "名字不相同！");
+				}
+			}
+			for (String orgCode : notExistSet) {
+				System.out.println("机构：" + orgCode + "不存在！");
+				
+			}
+		}
+	}*/
+}

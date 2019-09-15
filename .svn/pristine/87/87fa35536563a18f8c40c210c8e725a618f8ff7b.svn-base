@@ -1,0 +1,49 @@
+package cn.uce.suc.common.cache;
+
+import javax.annotation.Resource;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.suc.common.service.OmgCmsOrgService;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+
+/**
+ * 
+ * @Description: 组织机构缓存类
+ * @author liwei
+ * @date 2017年10月19日 下午11:17:26
+ */
+public class OmgCmsOrgCache extends CacheSupport<OmgCmsOrgVo> {
+	@Resource
+	OmgCmsOrgService omgCmsOrgService;
+	/**
+	 * 根据baseorgCode获取组织对象
+	* <p>Title: doGet</p> 
+	* <p>Description: </p> 
+	* @param k
+	* @return
+	* @throws BusinessException 
+	* @see cn.uce.core.cache.base.CacheCallBack#doGet(java.lang.Object)
+	 */
+	@Override
+	public OmgCmsOrgVo doGet(String k) throws BusinessException {
+		// TODO Auto-generated method stub
+		return findByBaseOrgCode(k);
+	}
+
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param baseOrgCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午11:23:24
+	 */
+	public OmgCmsOrgVo findByBaseOrgCode(String baseOrgCode) {
+		return omgCmsOrgService.findByBaseOrgCode(baseOrgCode);
+	}
+}

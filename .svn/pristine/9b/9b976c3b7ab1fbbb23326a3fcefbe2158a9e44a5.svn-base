@@ -1,0 +1,40 @@
+package cn.uce.suc.bkg.dao.datastatis;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.vo.datastatis.LoadRatioReportVo;
+
+/**
+ * 
+ * @Description:  满载率报表Dao 
+ * @author xiesonglin
+ * @date 2017年12月4日 下午1:09:10
+ */
+@Repository("loadRatioReportDao")
+public interface ILoadRatioReportDao {
+
+	/**
+	 * 
+	 * @Description:  根据分页查询满载率统计报表
+	 * @param loadRatioReportVo
+	 * @param page
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月4日 下午1:10:54
+	 */
+	public Pagination<LoadRatioReportVo> findLoadRatioReportByPage(LoadRatioReportVo loadRatioReportVo,Page page);
+	
+	/**
+	 * 
+	 * @Description:  根据查询条件 导出数据
+	 * @param loadRatioReportVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月5日 下午10:39:56
+	 */
+	public List<LoadRatioReportVo> findByExport(LoadRatioReportVo loadRatioReportVo);
+}

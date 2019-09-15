@@ -1,0 +1,152 @@
+package cn.uce.suc.bkg.service.operation;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.operation.ILineGroupDao;
+import cn.uce.suc.bkg.entity.operation.LineGroup;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+
+/**
+ * @Description: 班次管理Service类
+ * @author litianjian
+ * @date 2017年10月24日 下午08:12:56
+ */
+@Service("lineGroupService")
+public class LineGroupService {
+	
+	/**
+	 * 注入班次管理Dao
+	 */
+	@Resource
+	private ILineGroupDao lineGroupDao;
+	
+	/**
+	 * @Description: 新增班次管理
+	 * @param lineGroup 班次管理
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int addLineGroup(LineGroup lineGroup) {
+		return lineGroupDao.insert(lineGroup);
+	}
+	
+	/**
+	 * @Description: 修改班次管理
+	 * @param lineGroup 班次管理
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int updateById(LineGroup lineGroup) {
+		return lineGroupDao.updateById(lineGroup);
+	}
+	
+	/**
+	 * @Description: 删除班次管理
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int deleteById(Long id) {
+		return lineGroupDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询班次管理
+	 * @param id 主键
+	 * @return 班次管理
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public LineGroup findById(Long id) {
+		return lineGroupDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询班次管理
+	 * @param lineGroupVo 班次管理
+	 * @param page 分页参数
+	 * @return 班次管理
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public Pagination<LineGroupVo> findByPagination(LineGroupVo lineGroupVo, Page page) {
+		Pagination<LineGroupVo> paginationLineGroup = lineGroupDao.findByPagination(lineGroupVo, page);
+		return paginationLineGroup;
+	}
+	/**
+	 * @Description: 根据组织号和时间区间查询班次
+	 * @param lineGroupVo 班次管理
+	 * @param page 分页参数
+	 * @return 班次管理
+	 * @author yanglei
+	 * @date 2017年10月27日 下午04:27:08
+	 */
+	public List<LineGroup> findByLineGroupVo(LineGroupVo vo) {
+		return lineGroupDao.findByLineGroupVo(vo);
+	}
+	
+	/**
+	 * 根据班次编号查询班次信息
+	 * @param lineGroupCode
+	 * @return
+	 */
+	public LineGroup queryById(String lineGroupCode){
+		LineGroup lineGroup = lineGroupDao.queryById(lineGroupCode);
+		return lineGroup;
+	}
+	
+	/**
+	 * @Description: 根据组织号和时间区间以及车型查询班次数量做统计用
+	 * @param lineGroupVo 班次管理
+	 * @param page 分页参数
+	 * @return 班次管理
+	 * @author yanglei
+	 * @date 2017年10月30日 下午04:27:08
+	 */
+	public int countByLineGroupVo(LineGroupVo vo){
+		return lineGroupDao.countByLineGroupVo(vo);
+	}
+
+	/**
+	 * 
+	 * @Description: 根据条件查询班次及班次详情 
+	 * @param lineGroupVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月9日 下午10:49:07
+	 */
+	public List<LineGroupVo> findLineGroupAndDetail(LineGroupVo lineGroupVo){
+		return lineGroupDao.findLineGroupAndDetail(lineGroupVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据订单查询班次
+	 * @param lineGroupVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月13日 下午17:49:07
+	 */
+	public List<LineGroupVo> findByCombineOrder(LineGroupVo lineGroupVo){
+		return lineGroupDao.findByCombineOrder(lineGroupVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据订单查询班次
+	 * @param lineGroupVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月13日 下午17:49:07
+	 */
+	public List<LineGroupVo> findComplexByCombineOrder(LineGroupVo lineGroupVo){
+		return lineGroupDao.findComplexByCombineOrder(lineGroupVo);
+	}
+}

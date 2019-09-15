@@ -1,0 +1,456 @@
+package cn.uce.suc.bkg.vo.price;
+
+import cn.uce.base.vo.BaseVo;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * @Description: 定价规则详情Vo类
+ * @author laizhendong
+ * @date 2017年11月01日 下午09:07:39
+ */
+public class PricingRuleDetailVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+	/**
+	 * 关联网点编号
+	 */
+	private String orgCode;
+	/**
+	 * 关联网点名称
+	 */
+	private String orgName;
+	
+	/**
+	 * 定价规则
+	 */
+	private Long priceRuleId;
+	
+    /** 
+	 * 定价规则号 
+	 */
+	private String priceRuleCode;
+    /** 
+	 * 定价分类号 
+	 */
+	private String ruleTypeCode;
+	
+	/**
+	 * 定价分类
+	 */
+	private String priceType;
+	
+    /** 
+	 * 单位固定成本 
+	 */
+	private Double unitFixedCost;
+    /** 
+	 * 单位变动成本 
+	 */
+	private Double unitChangeCost;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	
+	/**
+	 * 关联网点数量
+	 */
+	private Integer relatedSiteNum;
+	
+	/**
+	 * 关联网点关系
+	 */
+	private List<PricingRuleDetailRelVo> pricingRuleDetailRelVos;
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 定价规则号
+	 */
+	public String getPriceRuleCode() {
+		return priceRuleCode;
+	}
+	
+	/**
+	 * 设置 定价规则号
+	 */
+	public void setPriceRuleCode(String priceRuleCode) {
+		this.priceRuleCode = priceRuleCode;
+	}
+
+	
+	/**
+	 * 获取 定价分类号
+	 */
+	public String getRuleTypeCode() {
+		return ruleTypeCode;
+	}
+	
+	/**
+	 * 设置 定价分类号
+	 */
+	public void setRuleTypeCode(String ruleTypeCode) {
+		this.ruleTypeCode = ruleTypeCode;
+	}
+
+	
+	/**
+	 * 获取 单位固定成本
+	 */
+	public Double getUnitFixedCost() {
+		return unitFixedCost;
+	}
+	
+	/**
+	 * 设置 单位固定成本
+	 */
+	public void setUnitFixedCost(Double unitFixedCost) {
+		this.unitFixedCost = unitFixedCost;
+	}
+
+	
+	/**
+	 * 获取 单位变动成本
+	 */
+	public Double getUnitChangeCost() {
+		return unitChangeCost;
+	}
+	
+	/**
+	 * 设置 单位变动成本
+	 */
+	public void setUnitChangeCost(Double unitChangeCost) {
+		this.unitChangeCost = unitChangeCost;
+	}
+
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/** 
+	 * @return priceType 
+	 */
+	public String getPriceType() {
+		return priceType;
+	}
+
+	/**
+	 * @param priceType the priceType to set
+	 */
+	public void setPriceType(String priceType) {
+		this.priceType = priceType;
+	}
+
+	/** 
+	 * 获得关联网点编号 
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	/**
+	 * 设置关联网点编号 
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	/** 
+	 * 获得关联网点名称 
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+
+	/**
+	 * 设置关联网点编号 
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	/** 
+	 * 获得关联网点数量
+	 */
+	public Integer getRelatedSiteNum() {
+		return relatedSiteNum;
+	}
+
+	/**
+	 * 返回关联网点数量
+	 */
+	public void setRelatedSiteNum(Integer relatedSiteNum) {
+		this.relatedSiteNum = relatedSiteNum;
+	}
+
+	/** 
+	 * 获得关联网点关系
+	 */
+	public List<PricingRuleDetailRelVo> getPricingRuleDetailRelVos() {
+		return pricingRuleDetailRelVos;
+	}
+
+	/**
+	 * 设置关联网点关系
+	 */
+	public void setPricingRuleDetailRelVos(List<PricingRuleDetailRelVo> pricingRuleDetailRelVos) {
+		this.pricingRuleDetailRelVos = pricingRuleDetailRelVos;
+	}
+
+	/** 
+	 * @return priceRuleId 
+	 */
+	public Long getPriceRuleId() {
+		return priceRuleId;
+	}
+
+	/**
+	 * @param priceRuleId the priceRuleId to set
+	 */
+	public void setPriceRuleId(Long priceRuleId) {
+		this.priceRuleId = priceRuleId;
+	}
+	
+}

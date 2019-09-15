@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.IDirvingPlanDao">
+	
+	<sql id="Base_Column_List">
+			id,driving_plan_code,driving_plan_name,
+			dirver_name,depart_time,arrival_time,
+			plate_number,car_code,driver_phone,
+			driving_time,dirver_distance,start_org_code,
+			start_org_name,start_lat_lng,end_lat_lng,
+			end_org_code,end_org_name,car_type,
+			loading_rate,demand_type,status,
+			line_group_code,demand_combin_code,order_combin_code,
+			abnormal_State,business_mode,quote_price,
+			cost_price,blow_site_name,line_group_total_volume,
+			line_group_total_weight,line_group_distance,adjust_type,
+			blow_flag,blow_site_code,blow_volume,
+			utf1,utf2,utf3,
+			remark,version,delete_falg,
+			create_org,create_emp,update_org,
+			update_emp,create_time,update_time,
+			lng_lat_colleation,next_station,next_station_code
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	1=1
+	    <if test="drivingPlanCode != null and  drivingPlanCode !=''">
+		and driving_plan_code = #{drivingPlanCode}
+		</if>
+	    <if test="drivingPlanName != null and  drivingPlanName !='' ">
+		and driving_plan_name = #{drivingPlanName}
+		</if>
+	    <if test="dirverName != null and  dirverName !='' ">
+		and dirver_name = #{dirverName}
+		</if>
+	    <if test="departTime != null and  departTime !='' ">
+		and depart_time = #{departTime}
+		</if>
+	    <if test="arrivalTime != null and  arrivalTime !='' ">
+		and arrival_time = #{arrivalTime}
+		</if>
+	    <if test="plateNumber != null  and  plateNumber !='' ">
+		and plate_number = #{plateNumber}
+		</if>
+	    <if test="carCode != null  and  carCode !=''">
+		and car_code = #{carCode}
+		</if>
+	    <if test="driverPhone != null and  driverPhone !=''">
+		and driver_phone = #{driverPhone}
+		</if>
+	    <if test="drivingTime != null  and  drivingTime !=''">
+		and driving_time = #{drivingTime}
+		</if>
+	    <if test="dirverDistance != null and  dirverDistance !=''">
+		and dirver_distance = #{dirverDistance}
+		</if>
+	    <if test="startOrgCode != null  and  startOrgCode !=''">
+		and start_org_code = #{startOrgCode}
+		</if>
+	    <if test="startOrgName != null and  startOrgName !=''">
+		and start_org_name = #{startOrgName}
+		</if>
+	    <if test="startLatLng != null and  startLatLng !=''">
+		and start_lat_lng = #{startLatLng}
+		</if>
+	    <if test="endLatLng != null and  endLatLng !=''">
+		and end_lat_lng = #{endLatLng}
+		</if>
+	    <if test="endOrgCode != null and  endOrgCode !=''">
+		and end_org_code = #{endOrgCode}
+		</if>
+	    <if test="endOrgName != null  and  endOrgName !=''">
+		and end_org_name = #{endOrgName}
+		</if>
+	    <if test="carType != null and  carType !=''">
+		and car_type = #{carType}
+		</if>
+	    <if test="loadingRate != null  and  loadingRate !=''">
+		and loading_rate = #{loadingRate}
+		</if>
+	    <if test="demandType != null   and  demandType !=''">
+		and demand_type = #{demandType}
+		</if>
+	    <if test="status != null   and  status !=''">
+		and status = #{status}
+		</if>
+	    <if test="lineGroupCode != null and  lineGroupCode !=''">
+		and line_group_code = #{lineGroupCode}
+		</if>
+	    <if test="demandCombinCode != null and  demandCombinCode !=''">
+		and demand_combin_code = #{demandCombinCode}
+		</if>
+	    <if test="orderCombinCode != null and  orderCombinCode !=''">
+		and order_combin_code = #{orderCombinCode}
+		</if>
+		  <if test="abnormalState != null and  abnormalState !=''">
+		and abnormal_State = #{abnormalState}
+		</if>
+
+	    <if test="businessMode != null and  businessMode !=''">
+		and business_mode = #{businessMode}
+		</if>
+	    <if test="quotePrice != null  and  quotePrice !=''">
+		and quote_price = #{quotePrice}
+		</if>
+	    <if test="costPrice != null and  costPrice !=''">
+		and cost_price = #{costPrice}
+		</if>
+	    <if test="blowSiteName != null and  blowSiteName !=''">
+		and blow_site_name = #{blowSiteName}
+		</if>
+	    <if test="lineGroupTotalVolume != null  and  lineGroupTotalVolume !=''">
+		and line_group_total_volume = #{lineGroupTotalVolume}
+		</if>
+	    <if test="lineGroupTotalWeight != null and  lineGroupTotalWeight !=''">
+		and line_group_total_weight = #{lineGroupTotalWeight}
+		</if>
+	    <if test="lineGroupDistance != null and  lineGroupDistance !=''">
+		and line_group_distance = #{lineGroupDistance}
+		</if>
+	    <if test="adjustType != null and  adjustType !=''">
+		and adjust_type = #{adjustType}
+		</if>
+	    <if test="blowFlag != null and  blowFlag !=''">
+		and blow_flag = #{blowFlag}
+		</if>
+	    <if test="blowSiteCode != null and  blowSiteCode !=''">
+		and blow_site_code = #{blowSiteCode}
+		</if>
+	    <if test="blowVolume != null and  blowVolume !=''">
+		and blow_volume = #{blowVolume}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="deleteFalg != null">
+		and delete_falg = #{deleteFalg}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="lngLatColleation != null">
+		and lng_lat_colleation = #{lngLatColleation}
+		</if>
+	</where>
+	</sql>
+	<update id="updateByCode" parameterType="cn.uce.suc.bkg.entity.operation.DirvingPlan">
+	UPDATE t_suc_bkg_dirving_plan
+	<set>
+	<if test="status != null and status !=''">
+		status =#{status},
+	</if>
+	<if test="abnormalState != null and '' != abnormalState">
+		abnormal_State = #{abnormalState}
+	</if>
+	</set>
+	<where>
+		<if test="drivingPlanCode != null and  drivingPlanCode !=''">
+			and driving_plan_code = #{drivingPlanCode}
+		</if>
+	</where>
+	</update>
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.operation.DirvingPlan">
+	UPDATE t_suc_bkg_dirving_plan
+	<set>
+		<if test="drivingPlanCode != null">
+		driving_plan_code = #{drivingPlanCode},
+		</if>
+		<if test="drivingPlanName != null">
+		driving_plan_name = #{drivingPlanName},
+		</if>
+		<if test="dirverName != null">
+		dirver_name = #{dirverName},
+		</if>
+		<if test="departTime != null">
+		depart_time = #{departTime},
+		</if>
+		<if test="arrivalTime != null">
+		arrival_time = #{arrivalTime},
+		</if>
+		<if test="plateNumber != null">
+		plate_number = #{plateNumber},
+		</if>
+		<if test="carCode != null">
+		car_code = #{carCode},
+		</if>
+		<if test="driverPhone != null">
+		driver_phone = #{driverPhone},
+		</if>
+		<if test="drivingTime != null">
+		driving_time = #{drivingTime},
+		</if>
+		<if test="dirverDistance != null">
+		dirver_distance = #{dirverDistance},
+		</if>
+		<if test="startOrgCode != null">
+		start_org_code = #{startOrgCode},
+		</if>
+		<if test="startOrgName != null">
+		start_org_name = #{startOrgName},
+		</if>
+		<if test="startLatLng != null">
+		start_lat_lng = #{startLatLng},
+		</if>
+		<if test="endLatLng != null">
+		end_lat_lng = #{endLatLng},
+		</if>
+		<if test="endOrgCode != null">
+		end_org_code = #{endOrgCode},
+		</if>
+		<if test="endOrgName != null">
+		end_org_name = #{endOrgName},
+		</if>
+		<if test="carType != null">
+		car_type = #{carType},
+		</if>
+		<if test="loadingRate != null">
+		loading_rate = #{loadingRate},
+		</if>
+		<if test="demandType != null">
+		demand_type = #{demandType},
+		</if>
+		<if test="status != null">
+		status = #{status},
+		</if>
+		<if test="lineGroupCode != null">
+		line_group_code = #{lineGroupCode},
+		</if>
+		<if test="demandCombinCode != null">
+		demand_combin_code = #{demandCombinCode},
+		</if>
+		<if test="orderCombinCode != null">
+		order_combin_code = #{orderCombinCode},
+		</if>
+		<if test="abnormalState != null">
+		abnormal_State = #{abnormalState},
+		</if>
+		<if test="businessMode != null">
+		business_mode = #{businessMode},
+		</if>
+		<if test="quotePrice != null">
+		quote_price = #{quotePrice},
+		</if>
+		<if test="costPrice != null">
+		cost_price = #{costPrice},
+		</if>
+		<if test="blowSiteName != null">
+		blow_site_name = #{blowSiteName},
+		</if>
+		<if test="lineGroupTotalVolume != null">
+		line_group_total_volume = #{lineGroupTotalVolume},
+		</if>
+		<if test="lineGroupTotalWeight != null">
+		line_group_total_weight = #{lineGroupTotalWeight},
+		</if>
+		<if test="lineGroupDistance != null">
+		line_group_distance = #{lineGroupDistance},
+		</if>
+		<if test="adjustType != null">
+		adjust_type = #{adjustType},
+		</if>
+		<if test="blowFlag != null">
+		blow_flag = #{blowFlag},
+		</if>
+		<if test="blowSiteCode != null">
+		blow_site_code = #{blowSiteCode},
+		</if>
+		<if test="blowVolume != null">
+		blow_volume = #{blowVolume},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFalg != null">
+		delete_falg = #{deleteFalg},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="lngLatColleation != null">
+		lng_lat_colleation = #{lngLatColleation},
+		</if>
+		<if test="nextStation != null">
+		next_station = #{nextStation},
+		</if>
+		<if test="nextStationCode != null">
+		next_station_code = #{nextStationCode},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	<select id="findByDepartTimeAndType"  parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlan">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan
+		<where>
+			<if test="drivingPlanCode != null and  drivingPlanCode !=''">
+				and driving_plan_code = #{drivingPlanCode}
+			</if>
+			<if test="dirverName != null and  dirverName !='' ">
+				and dirver_name = #{dirverName}
+			</if>
+			<if test="driverPhone != null and  driverPhone !=''">
+				and driver_phone = #{driverPhone}
+			</if>
+			<if test="status != null   and  utf1 !=null">
+				and status = #{status} or status =#{utf1}
+			</if>
+			<if test="status != null   and  utf1 ==null">
+				and status = #{status} 
+			</if>
+			<if test="departTime != null and arrivalTime != null">
+				and depart_time <![CDATA[   >=  ]]> #{departTime} 
+				and depart_time <![CDATA[   <  ]]> #{arrivalTime}
+			</if>
+			<if test="departTime != null  and arrivalTime ==null">
+				and depart_time <![CDATA[   >=  ]]> #{departTime}
+			</if>
+			<if test="departTime == null  and arrivalTime !=null">
+				and depart_time <![CDATA[   <  ]]> #{arrivalTime}
+			</if>
+		</where>
+		order by create_time desc
+	</select>
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlan">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan
+	<include refid="Base_Column_Where"></include>
+	</select>
+	<select id="findByPlageNumber" parameterType="String" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlan">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan
+	where plate_number = #{plateNumber}
+	</select>
+
+	<select id="findByPlanCode" parameterType="String" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlan">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan
+	where driving_plan_code = #{drivingPlanCode}
+	</select>
+	<select id="findPlaneByTelphone" parameterType="String" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlan">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan
+	where driver_phone = #{driverPhone}
+	</select>
+	<select id="findDepartureForApp" parameterType="java.util.Map" resultType="cn.uce.suc.bkg.entity.operation.DeparPlanForApp">
+				SELECT DISTINCT
+					(t.driving_plan_code),
+					t.driving_plan_code,
+					t.dirver_name,
+					t.depart_time,
+					t.arrival_time,
+					t.plate_number,
+					t.driver_phone,
+					t.`status`,
+					t.business_mode,
+					t.next_station,
+					t.end_org_name,
+					p.forecast_volume,
+					p.forecast_weight,
+					p.actual_volume,
+					p.actual_weight,
+					p.actual_number,
+					p.way_point_code,
+					plan_site_status,
+					p.station_eval_judge,
+					p.station_eval_lever
+				FROM
+					t_suc_bkg_dirving_plan t
+				LEFT JOIN t_suc_bkg_dirving_plan_detail p ON t.driving_plan_code = p.driving_plan_code
+				<where>
+					 <if test="drivingPlanCode != null and  drivingPlanCode !=''  and wayPointCode != null  and wayPointCode !=''">
+						and t.driving_plan_code = #{drivingPlanCode} AND p.way_point_code = #{wayPointCode}
+					</if>
+				</where>
+	</select>
+		<!-- 网点查询 运输动态列表 只查询司机已确认之后的发车计划 -->
+		<select id="findPLanBySiteCode" parameterType="cn.uce.suc.bkg.entity.operation.DeparPlanForApp" resultType="cn.uce.suc.bkg.entity.operation.DeparPlanForApp">
+				SELECT DISTINCT
+					(t.driving_plan_code),
+					p.id as detailId,
+					t.dirver_name,
+					t.depart_time,
+					t.arrival_time,
+					t.plate_number,
+					t.driver_phone,
+					t.`status`,
+					t.business_mode,
+					t.next_station,
+					t.start_org_name,
+					t.end_org_name,
+					p.forecast_volume,
+					p.forecast_weight,
+					p.actual_volume,
+					p.actual_weight,
+					p.actual_number,
+					p.way_point_code,
+					p.way_point_name,
+					plan_site_status,
+					p.station_eval_judge,
+					p.station_eval_lever
+				FROM
+					t_suc_bkg_dirving_plan t
+				LEFT JOIN t_suc_bkg_dirving_plan_detail p ON t.driving_plan_code = p.driving_plan_code
+				<where>
+			 		<if test="generateStatus != null  and generateStatus !='' and unconfirmStaus !='' and unconfirmStaus != null ">
+					AND  t.status != #{generateStatus} and t.status != #{unconfirmStaus}
+					</if>
+					 <if test="departTime != null and wayPointCode != null  and wayPointCode !='' ">
+					AND  STR_TO_DATE(t.depart_time,"%Y-%m-%d")=#{departTime} AND p.way_point_code = #{wayPointCode}
+					</if>
+					 <if test="drivingPlanCode != null and  drivingPlanCode !=''  and wayPointCode != null  and wayPointCode !=''">
+						and t.driving_plan_code = #{drivingPlanCode} AND p.way_point_code = #{wayPointCode}
+					</if>
+					 <if test="detailId != null and  detailId !=''">
+						and p.id= #{detailId}
+					</if>
+				</where>
+				order by t.depart_time desc
+	</select>
+	<!-- 按照手机号查询 -->
+	<select id="findByPhone" parameterType="String"
+		resultType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo">
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_dirving_plan d WHERE
+		(
+		d. STATUS = '02'
+		OR d. STATUS = '04'
+		)
+		AND SYSDATE() BETWEEN d.depart_time
+		AND d.arrival_time
+		AND driver_phone = #{driverPhone} limit 1
+		</select>
+		<select id="findListByPlanCode" parameterType="java.lang.String" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlan">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan
+	where driving_plan_code = #{drivingPlanCode} order by create_time desc
+	</select>
+	<!-- 分页条件查询发车计划号 -->
+	<select id="getUnconfirm" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.vo.operation.AppDriverPlanVo" >
+		select 		id,driving_plan_code,depart_time,arrival_time,
+					start_org_name,start_org_code,end_org_name,
+					end_org_code,business_mode,status,abnormal_State
+		from 		t_suc_bkg_dirving_plan
+		<where>
+			<if test="driverPhone != null and  '' != driverPhone">
+				and driver_phone = #{driverPhone}
+			</if>
+			<if test="generatedStatusFlag !=null and generatedStatusFlag !=''">
+				and status <![CDATA[ <>]]> #{generatedStatusFlag}
+			</if>
+			<if test="status != null  and '' != status">
+				and status = #{status}
+			</if>
+			<if test="departTime != null and arrivalTime != null">
+				and depart_time between #{departTime} and #{arrivalTime}
+			</if>
+			<if test="departTime != null  and arrivalTime ==null">
+				and depart_time <![CDATA[   >=  ]]> #{departTime}
+			</if>
+			<if test="departTime == null  and arrivalTime !=null">
+				and depart_time <![CDATA[   <=  ]]> #{arrivalTime}
+			</if>
+		</where>
+			order by depart_time DESC
+	</select>
+	
+	<select id="getUncomfirmDrivingPlanNum" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="java.lang.Integer">
+		select count(*)  from t_suc_bkg_dirving_plan
+		<where>
+			<if test="driverPhone != null and '' != driverPhone">
+				and driver_phone = #{driverPhone}
+			</if>
+			<if test="status != null and '' != status">
+				and status = #{status}
+			</if>
+			<!-- add by yanglei -->
+			<if test="drivingPlanCode != null and '' != drivingPlanCode">
+				 AND driving_plan_code LIKE CONCAT(CONCAT('%', #{drivingPlanCode}),'%')
+			</if>
+		</where>
+	
+	</select>
+	<!-- 根据班次查询发车加护 -->
+	<select id="findByGroupCpde" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlan"
+		parameterType="java.lang.String">
+	
+		select * from t_suc_bkg_dirving_plan d where
+		d.line_group_code=#{lineGroupCode}
+	</select>
+	<select id="findCarTypeValue" resultType="java.lang.String" parameterType="java.lang.String">
+		select type_name from omg_fsp_dict_data 
+		<where>
+				type_class_code = 'CAR_TYPE'
+				and type_code = #{carType}
+				and delete_flag='0'
+		</where>
+	</select>
+</mapper>

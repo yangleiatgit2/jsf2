@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datastatis.IDriverEvaluateReportDao">
+
+	<sql id="Base_Column_List">
+	plan.driving_plan_code,
+	plan.depart_time,
+	plan.arrival_time,
+	plan.dirver_name as driver_name,
+	plan.driver_phone as driver_phone,
+	driver.dirver_type AS driver_type,
+	yllx.type_name as driver_type_name,
+	driver.dirver_status AS driver_status,
+	sjzt.type_name as driver_status_name,
+	detail.evaluate_total,
+	round(detail.evaluate_total_socre / (appraised * 5) * 100,2) praise_rate,
+	appraised,
+	(detail.evaluate_total - detail.appraised) 'not_appraised'
+	</sql>
+
+	<sql id="Base_Column_Where">
+		<where>
+			<if test="driverName != null and driverName != ''">
+				and driver_name like concat("%",#{driverName},"%")
+			</if>
+			<if test="driverPhone != null">
+				and driver_phone =#{driverPhone}
+			</if>
+			<if test="driverStatus != null">
+				and driver_status =#{driverStatus}
+			</if>
+			<if test="driverType != null and driverType != ''">
+				and driver_type = #{driverType}
+			</if>
+			<if test="departTime != null and departTime !=''">
+				and date_format(depart_time,'%Y-%m-%d') &gt;= #{departTime}
+			</if>
+			<if test="arrivalTime != null and arrivalTime !=''">
+				and date_format(depart_time,'%Y-%m-%d') &lt;= #{arrivalTime}
+			</if>
+			<if test="praiseRateBegin !=null and praiseRateBegin !=''">
+				and praise_rate &gt;=#{praiseRateBegin}
+			</if>
+			<if test="praiseRateEnd != null and praiseRateEnd !=''">
+				and praise_rate &lt;=#{praiseRateEnd}
+			</if>
+		</where>
+	</sql>
+
+	<select id="findDriverEvaluateReportByPage" parameterType="cn.uce.suc.bkg.vo.datastatis.DriverEvaluateReportVo"
+		resultType="cn.uce.suc.bkg.vo.datastatis.DriverEvaluateReportVo">
+		select * from 
+		(select
+		<include refid="Base_Column_List" />
+		from
+		t_suc_bkg_dirving_plan plan
+		left join ( select
+		a.driving_plan_code,count(1) 'evaluate_total'
+		,sum(a.station_eval_lever)
+		'evaluate_total_socre',count(a.station_eval_lever) 'appraised'
+		from
+		t_suc_bkg_dirving_plan_detail a group by a.driving_plan_code ) detail
+		on plan.driving_plan_code=detail.driving_plan_code
+		left join
+		t_suc_bkg_dirver_info driver on driver.mobile_phone=plan.driver_phone
+		left join omg_fsp_dict_data yllx on yllx.type_class_code="DRIVER_OWNER_TYPE" and yllx.type_code=driver.dirver_type
+		left join omg_fsp_dict_data sjzt on sjzt.type_class_code="DRIVERR_STATUS" and sjzt.type_code=driver.dirver_status) driverEvaluateReport
+		<include refid="Base_Column_Where" />
+	</select>
+
+	<select id="findByExport" parameterType="cn.uce.suc.bkg.vo.datastatis.DriverEvaluateReportVo"
+		resultType="cn.uce.suc.bkg.vo.datastatis.DriverEvaluateReportVo">
+		select * from 
+		(select
+		<include refid="Base_Column_List" />
+		from
+		t_suc_bkg_dirving_plan plan
+		left join ( select
+		a.driving_plan_code,count(1) 'evaluate_total'
+		,sum(a.station_eval_lever)
+		'evaluate_total_socre',count(a.station_eval_lever) 'appraised'
+		from
+		t_suc_bkg_dirving_plan_detail a group by a.driving_plan_code ) detail
+		on plan.driving_plan_code=detail.driving_plan_code
+		left join
+		t_suc_bkg_dirver_info driver on driver.mobile_phone=plan.driver_phone
+		left join omg_fsp_dict_data yllx on yllx.type_class_code="DRIVER_OWNER_TYPE" and yllx.type_code=driver.dirver_type
+		left join omg_fsp_dict_data sjzt on sjzt.type_class_code="DRIVERR_STATUS" and sjzt.type_code=driver.dirver_status) driverEvaluateReport
+		<include refid="Base_Column_Where" />
+	</select>
+
+	<!-- <select id="findDetailsByDrivingPlanCode"></select> -->
+
+</mapper>

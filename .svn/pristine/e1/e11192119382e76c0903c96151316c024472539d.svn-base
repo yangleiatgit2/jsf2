@@ -1,0 +1,66 @@
+package cn.uce.suc.job;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.suc.bkg.biz.operation.IFreightDemandCombineBiz;
+import cn.uce.suc.bkg.biz.operation.IIaConfBiz;
+
+import com.dangdang.ddframe.job.api.ShardingContext;
+import com.dangdang.ddframe.job.api.simple.SimpleJob;
+/**
+ * 
+ * @Description: 临时需求货运组合Job
+ * @author liwei
+ * @date 2017年11月3日 下午10:10:16
+ */
+public class FreightDemandstStaticsJob implements SimpleJob {
+	
+	/**
+	 * 注入 freightDemandCombineBiz
+	 */
+	@Resource
+	private IFreightDemandCombineBiz freightDemandCombineBiz;
+	/**
+	 * 注入 iaConfBiz
+	 */
+	@Resource
+	private IIaConfBiz iaConfBiz;
+	/**
+	 * 日志
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(FreightDemandstStaticsJob.class);
+	/**
+	 * 
+	 * @Description: 自动生成临时货运组合 
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月31日 下午8:44:58
+	 */
+	@Override
+	public void execute(ShardingContext shardingContext) {
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("定时任务自动生成临时需求组合=========>>>开始");
+		}
+		/**自动生成临时需求组合*/
+		freightDemandCombineBiz.autoCombineShortTermDemands();
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("定时任务自动生成临时需求组合=========>>>结束");
+		}
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("定时任务自动生成临时需求组合的班次和报价 =========>>>开始");
+		}
+		/**自动根据临时需求组合执行算法计算班次*/
+		iaConfBiz.autoInvokeIaByShortTermDemandCombine();
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("定时任务自动生成临时需求组合的班次和报价=========>>>结束");
+		}
+	}
+
+}

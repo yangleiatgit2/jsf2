@@ -1,0 +1,27 @@
+#findBtn{float: right;}
+    .textbox-label.textbox-label-right{margin-left:-50px}
+    .frontNumber + span {
+    	min-width:48px!important;
+    	width: 48px!important;
+    }
+    .carNumberAfter + span {
+   		min-width:50px!important;
+    	width: 96px!important;
+    }
+    .datagrid-toolbar .multilineTextInput .textbox {
+    	width: 750px!important;
+    	height: 50px!important;
+    }    
+    .datagrid-toolbar .multilineTextInput .textbox-text {
+    	height: 50px!important;
+    }    
+    .list-tabs{
+		width: 130px!important;
+		text-align: center!important;
+		font-size: 16px;
+		cursor: pointer;
+	}
+	.list-tabs-selected{
+		color: #541A86;
+		border-bottom: 2px solid #541A86;
+	}

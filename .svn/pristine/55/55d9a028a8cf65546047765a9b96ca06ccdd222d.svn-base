@@ -1,0 +1,38 @@
+package cn.uce.suc.bkg.biz.impl.ia;
+
+import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.endpoint.dynamic.DynamicClientFactory;
+
+/**
+ * 
+ * @Description: 获取ws client客户端 单例
+ * @author laizhendong
+ * @date 2017年12月1日 下午6:37:07
+ */
+public class WsClientSingleton{
+
+	private static String wsUrl;
+	
+	
+	private static Client singleton = null;
+
+	private WsClientSingleton(String webServiceUrl) {
+	}
+
+	/**
+	 * 
+	 * @Description: 单例获取ws客户端
+	 * @param webServiceUrl
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月1日 下午6:37:46
+	 */
+	public synchronized static Client getInstance(String webServiceUrl) {
+		if (singleton == null || !wsUrl.equals(webServiceUrl)) {
+			DynamicClientFactory factory = DynamicClientFactory.newInstance();
+			wsUrl = webServiceUrl;
+			singleton = factory.createClient(wsUrl);
+		}
+		return singleton;
+	}
+}

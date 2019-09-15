@@ -1,0 +1,64 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+
+/**
+ * 
+ * @Description: 单元测试
+ * @author liwei
+ * @date 2017年12月7日 下午3:07:54
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class LineGroupDetailBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 注入
+	 */
+	@Resource
+	private ILineGroupDetailBiz lineGroupDetailBiz;
+	/**
+	 * 
+	 * @Description: 单元测试
+	 * @author liwei
+	 * @date 2017年12月7日 下午3:09:08
+	 */
+	@Test
+	public void TestPro(){
+		/**创建对象*/
+		LineGroupDetail lineGroupDetail=new LineGroupDetail();
+		/**新增*/
+		lineGroupDetailBiz.addLineGroupDetail(lineGroupDetail);
+		/**删除*/
+		lineGroupDetailBiz.deleteLineGroupDetail(lineGroupDetail.getId());
+		/**删除id*/
+		lineGroupDetailBiz.findById(lineGroupDetail.getId());
+		/**班次编码查询*/
+		lineGroupDetailBiz.findByLineGroupCode("BC170700001");
+		/**创建查询对象*/
+		LineGroupDetailVo lineGroupDetailVo=new LineGroupDetailVo();
+		/**创建分页*/
+		Page page=new Page();
+		/**查询*/
+		lineGroupDetailBiz.findByPagination(lineGroupDetailVo, page);
+		/**查询*/
+		lineGroupDetailVo.setOrderCombinCode("OZ1700200230");
+		lineGroupDetailBiz.findGroupDetailByGroupcodeIsNull(lineGroupDetailVo);
+		//lineGroupDetailBiz.findPageByPagination("BC170700001", page);
+		/**查询*/
+		lineGroupDetailBiz.updateLineGroupDetail(lineGroupDetail);
+	}
+	
+}

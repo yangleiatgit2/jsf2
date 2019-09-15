@@ -1,0 +1,431 @@
+package cn.uce.suc.app.vo;
+
+import cn.uce.base.vo.BaseVo;
+
+import java.util.Date;
+
+/**
+ * @Description: Vo类
+ * @author liwei
+ * @date 2017年10月11日 下午05:55:14
+ */
+public class LogininfoVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * id 
+	 */
+	private Long id;
+    /** 
+	 * 手机号码 
+	 */
+	private String mobilephone;
+    /** 
+	 * 登陆时间 
+	 */
+	private Date logintime;
+    /** 
+	 * 手机品牌 
+	 */
+	private String mobilebrand;
+    /** 
+	 * 手机型号 
+	 */
+	private String phonemodel;
+    /** 
+	 * 设备号码 
+	 */
+	private String devicenumber;
+    /** 
+	 * 屏幕分辨率 
+	 */
+	private String screenresolution;
+    /** 
+	 * 版本 
+	 */
+	private String edition;
+    /** 
+	 * 网络环境 
+	 */
+	private String environment;
+    /** 
+	 * 运营商 
+	 */
+	private String operator;
+    /** 
+	 * 备注字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备注字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备注字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 逻辑状态 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 创建部门 
+	 */
+	private String createOrg;
+    /** 
+	 * 修改人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 修改时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 修改部门 
+	 */
+	private String updateOrg;
+	
+	
+	/**
+	 * 是否在线
+	 */
+	private Integer  IsitOnline; 
+	/**
+	 * 获取 id
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 id
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 手机号码
+	 */
+	public String getMobilephone() {
+		return mobilephone;
+	}
+	
+	/**
+	 * 设置 手机号码
+	 */
+	public void setMobilephone(String mobilephone) {
+		this.mobilephone = mobilephone;
+	}
+
+	
+	/**
+	 * 获取 登陆时间
+	 */
+	public Date getLogintime() {
+		return logintime;
+	}
+	
+	/**
+	 * 设置 登陆时间
+	 */
+	public void setLogintime(Date logintime) {
+		this.logintime = logintime;
+	}
+
+	
+	/**
+	 * 获取 手机品牌
+	 */
+	public String getMobilebrand() {
+		return mobilebrand;
+	}
+	
+	/**
+	 * 设置 手机品牌
+	 */
+	public void setMobilebrand(String mobilebrand) {
+		this.mobilebrand = mobilebrand;
+	}
+
+	
+	/**
+	 * 获取 手机型号
+	 */
+	public String getPhonemodel() {
+		return phonemodel;
+	}
+	
+	/**
+	 * 设置 手机型号
+	 */
+	public void setPhonemodel(String phonemodel) {
+		this.phonemodel = phonemodel;
+	}
+
+	
+	/**
+	 * 获取 设备号码
+	 */
+	public String getDevicenumber() {
+		return devicenumber;
+	}
+	
+	/**
+	 * 设置 设备号码
+	 */
+	public void setDevicenumber(String devicenumber) {
+		this.devicenumber = devicenumber;
+	}
+
+	
+	/**
+	 * 获取 屏幕分辨率
+	 */
+	public String getScreenresolution() {
+		return screenresolution;
+	}
+	
+	/**
+	 * 设置 屏幕分辨率
+	 */
+	public void setScreenresolution(String screenresolution) {
+		this.screenresolution = screenresolution;
+	}
+
+	
+	/**
+	 * 获取 版本
+	 */
+	public String getEdition() {
+		return edition;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setEdition(String edition) {
+		this.edition = edition;
+	}
+
+	
+	/**
+	 * 获取 网络环境
+	 */
+	public String getEnvironment() {
+		return environment;
+	}
+	
+	/**
+	 * 设置 网络环境
+	 */
+	public void setEnvironment(String environment) {
+		this.environment = environment;
+	}
+
+	
+	/**
+	 * 获取 运营商
+	 */
+	public String getOperator() {
+		return operator;
+	}
+	
+	/**
+	 * 设置 运营商
+	 */
+	public void setOperator(String operator) {
+		this.operator = operator;
+	}
+
+	
+	/**
+	 * 获取 备注字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备注字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备注字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备注字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备注字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备注字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 逻辑状态
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 逻辑状态
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 创建部门
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建部门
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 修改人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 修改人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 修改时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 修改时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 修改部门
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 修改部门
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	public Integer getIsitOnline() {
+		return IsitOnline;
+	}
+
+	public void setIsitOnline(Integer isitOnline) {
+		IsitOnline = isitOnline;
+	}
+
+	
+}

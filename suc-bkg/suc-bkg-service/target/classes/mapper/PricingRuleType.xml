@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.price.IPricingRuleTypeDao">
+	
+	<sql id="Base_Column_List">
+			id,work_center_code,work_center_name,
+			rule_type_code,total,group_type,
+			business_type,old_rule_type_code,status,
+			rule_type_desc,delete_flag,utf1,
+			utf2,utf3,version,rule_Type_Vesion,
+			remark,create_org,create_emp,
+			create_time,update_org,update_emp,
+			update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null and id != ''">
+		and id = #{id}
+		</if>
+	    <if test="workCenterCode != null and workCenterCode != ''">
+		and work_center_code = #{workCenterCode}
+		</if>
+	    <if test="workCenterName != null and workCenterName != ''">
+		and work_center_name = #{workCenterName}
+		</if>
+	    <if test="ruleTypeCode != null and ruleTypeCode != ''">
+		<!-- and rule_type_code = #{ruleTypeCode} -->
+		and rule_type_code LIKE CONCAT("%",TRIM(#{ruleTypeCode}),"%")
+		</if>
+	    <if test="total != null and total != ''">
+		and total = #{total}
+		</if>
+	    <if test="groupType != null and groupType != ''">
+		and group_type = #{groupType}
+		</if>
+	    <if test="businessType != null and businessType != ''">
+		and business_type = #{businessType}
+		</if>
+	    <if test="oldRuleTypeCode != null and oldRuleTypeCode != ''">
+		and old_rule_type_code = #{oldRuleTypeCode}
+		</if>
+	    <if test="status != null and status != ''">
+		and status = #{status}
+		</if>
+	    <if test="ruleTypeDesc != null and ruleTypeDesc != ''">
+		and rule_type_desc = #{ruleTypeDesc}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="ruleTypeVesion != null">
+		and rule_Type_Vesion = #{ruleTypeVesion}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleTypeVo">
+	UPDATE t_suc_bkg_pricing_rule_type
+	<set>
+		<if test="ruleTypeCode !=null">
+		rule_type_code = #{ruleTypeCode},
+		</if>
+		<if test="workCenterCode != null">
+		work_center_code = #{workCenterCode},
+		</if>
+		<if test="workCenterName != null">
+		work_center_name = #{workCenterName},
+		</if>
+		<if test="total != null">
+		total = #{total},
+		</if>
+		<if test="groupType != null">
+		group_type = #{groupType},
+		</if>
+		<if test="businessType != null">
+		business_type = #{businessType},
+		</if>
+		<if test="oldRuleTypeCode != null">
+		old_rule_type_code = #{oldRuleTypeCode},
+		</if>
+		<if test="status != null">
+		status = #{status},
+		</if>
+		 <if test="ruleTypeVesion != null">
+		rule_Type_Vesion = #{ruleTypeVesion},
+		</if>
+		<if test="ruleTypeDesc != null">
+		rule_type_desc = #{ruleTypeDesc},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleTypeVo" resultType="cn.uce.suc.bkg.vo.price.PricingRuleTypeVo">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_pricing_rule_type
+		<include refid="Base_Column_Where"/>
+		ORDER BY create_time DESC 
+	</select>
+	
+	<!-- 根据条件查询关联详情网点 -->
+	<select id="findDetailByCondition" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleTypeVo" resultType="cn.uce.suc.bkg.vo.price.PricingRuleTypeVo">
+		SELECT 
+			prt.work_center_code,prt.work_center_name,prt.rule_type_code,prt.group_type,
+			prt.business_type,prt.status,
+			prtd.pricing_type,prtd.site_code,prtd.site_name
+		FROM t_suc_bkg_pricing_rule_type prt
+		LEFT JOIN t_suc_bkg_pricing_rule_type_detail prtd ON prt.rule_type_code = prtd.rule_type_code AND prtd.delete_flag != '1'
+		<where>
+			prt.delete_flag != '1'
+			<if test="pricingType != null and pricingType != ''">
+				AND prtd.pricing_type = #{pricingType}
+			</if>
+			<if test="status != null and status != ''">
+				AND prt.status = #{status}
+			</if>
+			<if test="businessType != null and businessType != ''">
+				AND prt.business_type = #{businessType}
+			</if>
+			<if test="groupType != null and groupType != ''">
+				AND prt.group_type = #{groupType}
+			</if>
+			<if test="workCenterCode != null and workCenterCode != ''">
+				AND prt.work_center_code = #{workCenterCode}
+			</if>
+			<if test="ruleTypeCode != null and ruleTypeCode != ''">
+				AND prt.rule_type_code = #{ruleTypeCode}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 根据条件查询  注意：utf1扩展字段被我使用了用来存rule_type_code -->
+	<select id="findByCondition" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleTypeVo" resultType="cn.uce.suc.bkg.vo.price.PricingRuleTypeVo">
+		SELECT prt.id, prt.work_center_code,prt.work_center_name,prt.rule_type_code,prt.rule_type_code AS utf1,prt.group_type,prt.business_type,prt.status
+		FROM t_suc_bkg_pricing_rule_type prt
+		<where>
+			prt.delete_flag != '1'
+			<if test="status != null and status != ''">
+				AND prt.status = #{status}
+			</if>
+			<if test="ruleTypeCode != null and ruleTypeCode != ''">
+				AND prt.rule_type_code = #{ruleTypeCode}
+			</if>
+		</where>
+	</select>
+</mapper>

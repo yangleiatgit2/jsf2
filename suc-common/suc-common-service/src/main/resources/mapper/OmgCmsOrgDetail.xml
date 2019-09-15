@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IOmgCmsOrgDetailDao">
+	
+	<sql id="Base_Column_List">
+			BASE_ORG_CODE,CMS_ORG_ID,COMPANY_NAME,
+			ALIAS_NAME,COUNTRY,PROVINCE,
+			CITY,COUNTY,PRINCIPAL,
+			PRINCIPAL_MOBILE,TEL,FAX,
+			ADDRESS,MAX_GP,MAX_VIP_GP,
+			GP_LIMIT,LONGITUDE,LATITUDE,
+			PUBLISHED,CUSTOM_AREA,REMARK,
+			DELETE_FLAG,VERSION,CREATE_EMP,
+			CREATE_ORG,CREATE_TIME,UPDATE_EMP,
+			UPDATE_ORG,UPDATE_TIME,sync_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="baseOrgCode != null">
+		and BASE_ORG_CODE = #{baseOrgCode}
+		</if>
+	    <if test="cmsOrgId != null">
+		and CMS_ORG_ID = #{cmsOrgId}
+		</if>
+	    <if test="companyName != null">
+		and COMPANY_NAME = #{companyName}
+		</if>
+	    <if test="aliasName != null">
+		and ALIAS_NAME = #{aliasName}
+		</if>
+	    <if test="country != null">
+		and COUNTRY = #{country}
+		</if>
+	    <if test="province != null">
+		and PROVINCE = #{province}
+		</if>
+	    <if test="city != null">
+		and CITY = #{city}
+		</if>
+	    <if test="county != null">
+		and COUNTY = #{county}
+		</if>
+	    <if test="principal != null">
+		and PRINCIPAL = #{principal}
+		</if>
+	    <if test="principalMobile != null">
+		and PRINCIPAL_MOBILE = #{principalMobile}
+		</if>
+	    <if test="tel != null">
+		and TEL = #{tel}
+		</if>
+	    <if test="fax != null">
+		and FAX = #{fax}
+		</if>
+	    <if test="address != null">
+		and ADDRESS = #{address}
+		</if>
+	    <if test="maxGp != null">
+		and MAX_GP = #{maxGp}
+		</if>
+	    <if test="maxVipGp != null">
+		and MAX_VIP_GP = #{maxVipGp}
+		</if>
+	    <if test="gpLimit != null">
+		and GP_LIMIT = #{gpLimit}
+		</if>
+	    <if test="longitude != null">
+		and LONGITUDE = #{longitude}
+		</if>
+	    <if test="latitude != null">
+		and LATITUDE = #{latitude}
+		</if>
+	    <if test="published != null">
+		and PUBLISHED = #{published}
+		</if>
+	    <if test="customArea != null">
+		and CUSTOM_AREA = #{customArea}
+		</if>
+	    <if test="remark != null">
+		and REMARK = #{remark}
+		</if>
+	    <if test="deleteFlag != null">
+		and DELETE_FLAG = #{deleteFlag}
+		</if>
+	    <if test="version != null">
+		and VERSION = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and CREATE_EMP = #{createEmp}
+		</if>
+	    <if test="createOrg != null">
+		and CREATE_ORG = #{createOrg}
+		</if>
+	    <if test="createTime != null">
+		and CREATE_TIME = #{createTime}
+		</if>
+	    <if test="updateEmp != null">
+		and UPDATE_EMP = #{updateEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and UPDATE_ORG = #{updateOrg}
+		</if>
+	    <if test="updateTime != null">
+		and UPDATE_TIME = #{updateTime}
+		</if>
+	    <if test="syncTime != null">
+		and sync_time = #{syncTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.OmgCmsOrgDetail">
+	UPDATE omg_cms_org_detail
+	<set>
+		<if test="cmsOrgId != null">
+		CMS_ORG_ID = #{cmsOrgId},
+		</if>
+		<if test="companyName != null">
+		COMPANY_NAME = #{companyName},
+		</if>
+		<if test="aliasName != null">
+		ALIAS_NAME = #{aliasName},
+		</if>
+		<if test="country != null">
+		COUNTRY = #{country},
+		</if>
+		<if test="province != null">
+		PROVINCE = #{province},
+		</if>
+		<if test="city != null">
+		CITY = #{city},
+		</if>
+		<if test="county != null">
+		COUNTY = #{county},
+		</if>
+		<if test="principal != null">
+		PRINCIPAL = #{principal},
+		</if>
+		<if test="principalMobile != null">
+		PRINCIPAL_MOBILE = #{principalMobile},
+		</if>
+		<if test="tel != null">
+		TEL = #{tel},
+		</if>
+		<if test="fax != null">
+		FAX = #{fax},
+		</if>
+		<if test="address != null">
+		ADDRESS = #{address},
+		</if>
+		<if test="maxGp != null">
+		MAX_GP = #{maxGp},
+		</if>
+		<if test="maxVipGp != null">
+		MAX_VIP_GP = #{maxVipGp},
+		</if>
+		<if test="gpLimit != null">
+		GP_LIMIT = #{gpLimit},
+		</if>
+		<if test="longitude != null">
+		LONGITUDE = #{longitude},
+		</if>
+		<if test="latitude != null">
+		LATITUDE = #{latitude},
+		</if>
+		<if test="published != null">
+		PUBLISHED = #{published},
+		</if>
+		<if test="customArea != null">
+		CUSTOM_AREA = #{customArea},
+		</if>
+		<if test="remark != null">
+		REMARK = #{remark},
+		</if>
+		<if test="deleteFlag != null">
+		DELETE_FLAG = #{deleteFlag},
+		</if>
+		<if test="version != null">
+		VERSION = #{version},
+		</if>
+		<if test="createEmp != null">
+		CREATE_EMP = #{createEmp},
+		</if>
+		<if test="createOrg != null">
+		CREATE_ORG = #{createOrg},
+		</if>
+		<if test="createTime != null">
+		CREATE_TIME = #{createTime},
+		</if>
+		<if test="updateEmp != null">
+		UPDATE_EMP = #{updateEmp},
+		</if>
+		<if test="updateOrg != null">
+		UPDATE_ORG = #{updateOrg},
+		</if>
+		<if test="updateTime != null">
+		UPDATE_TIME = #{updateTime},
+		</if>
+		<if test="syncTime != null">
+		sync_time = #{syncTime},
+		</if>
+	</set>
+	WHERE BASE_ORG_CODE = #{baseOrgCode}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.OmgCmsOrgDetailVo" resultType="cn.uce.suc.common.entity.OmgCmsOrgDetail">
+	select <include refid="Base_Column_List" /> from omg_cms_org_detail
+	</select>
+	
+</mapper>

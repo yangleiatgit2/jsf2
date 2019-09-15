@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.ILineGroupRelDao">
+	
+	<sql id="Base_Column_List">
+			id,line_group_code,business_code,
+			business_type,business_mode,remark,
+			version,delete_falg,create_org,
+			create_emp,update_org,update_emp,
+			create_time,update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="lineGroupCode != null">
+		and line_group_code = #{lineGroupCode}
+		</if>
+	    <if test="businessCode != null">
+		and business_code = #{businessCode}
+		</if>
+	    <if test="businessType != null">
+		and business_type = #{businessType}
+		</if>
+	    <if test="businessMode != null">
+		and business_mode = #{businessMode}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="deleteFalg != null">
+		and delete_falg = #{deleteFalg}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.operation.LineGroupRel">
+	UPDATE t_suc_bkg_line_group_rel
+	<set>
+		<if test="lineGroupCode != null">
+		line_group_code = #{lineGroupCode},
+		</if>
+		<if test="businessCode != null">
+		business_code = #{businessCode},
+		</if>
+		<if test="businessType != null">
+		business_type = #{businessType},
+		</if>
+		<if test="businessMode != null">
+		business_mode = #{businessMode},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFalg != null">
+		delete_falg = #{deleteFalg},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupRelVo" resultType="cn.uce.suc.bkg.entity.operation.LineGroupRel">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_line_group_rel
+	</select>
+	
+</mapper>

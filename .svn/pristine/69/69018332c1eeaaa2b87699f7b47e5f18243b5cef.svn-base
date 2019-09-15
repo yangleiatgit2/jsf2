@@ -1,0 +1,184 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+
+
+/**
+ * 
+ * @Description: 发车计划详情单元测试
+ * @author litianjian
+ * @date 2017年12月07日 上午9:31:18
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+
+public class DirverPlanDetailTest  extends AbstractJUnit4SpringContextTests{
+		
+	@Resource
+	private DirvingPlanBiz dirvingPlanBiz;
+	@Resource
+	private DirvingPlanDetailBiz dirvingPlanDetailBiz;
+	
+	
+	@Test
+	public void testAddDeparturePlan() {
+		DirvingPlan dirvingPlan = new DirvingPlan();
+		dirvingPlan.setAdjustType("00");
+		dirvingPlanBiz.addDirvingPlan(dirvingPlan);
+		
+	}
+	
+	@Test
+	public void testUpdateDeparturePlan() {
+		DirvingPlan dirvingPlan = new DirvingPlan();
+		dirvingPlan.setId(Long.getLong("0"));
+		dirvingPlan.setAdjustType("00");
+		dirvingPlanBiz.updateDirvingPlan(dirvingPlan);
+		
+	}
+	@Test
+	public void testaddDirvingPlanDetail(){
+		DirvingPlanDetail dirvingPlandetail = new DirvingPlanDetail();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlanDetailBiz.addDirvingPlanDetail(dirvingPlandetail);
+	}
+	@Test
+	public void testupdateDirvingPlanDetail(){
+		DirvingPlanDetail dirvingPlandetail = new DirvingPlanDetail();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlanDetailBiz.updateDirvingPlanDetail(dirvingPlandetail);
+	}
+	
+	@Test
+	public void testDeleteDirvingPlanDetail(){
+		dirvingPlanDetailBiz.deleteDirvingPlanDetail(1L);
+	}
+	@Test
+	public void testFindById(){
+		dirvingPlanDetailBiz.findById(1L);
+	}
+	@Test
+	public void testFindByPagination(){
+		DirvingPlanDetailVo dirvingPlandetail = new DirvingPlanDetailVo();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		Page page=new Page();
+		page.setCurrentPage(0);
+		page.setPageSize(10);
+		page.setTotal(100);
+		dirvingPlanDetailBiz.findByPagination(dirvingPlandetail, page);
+	}
+	@Test
+	public void testUpdateByWhere(){
+		DirvingPlanDetail dirvingPlandetail = new DirvingPlanDetail();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlandetail.setWayPointCode("fffffff");
+		dirvingPlandetail.setId(1L);
+		dirvingPlandetail.setPlanDriverStatus("1");
+		dirvingPlanDetailBiz.updateByWhere(dirvingPlandetail);
+	}
+	@Test
+	public void testsendError(){
+		ExceptionManager exceptionManager=new ExceptionManager();
+		exceptionManager.setExceptionCode("EC2017120000");
+		DirvingPlanDetail dirvingPlandetail = new DirvingPlanDetail();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlandetail.setWayPointCode("eeeeee");
+		dirvingPlanDetailBiz.sendError(exceptionManager, dirvingPlandetail);
+	}
+	@Test
+	public void testappUpdateAppraise(){
+		DirvingPlanDetailVo dirvingPlandetail = new DirvingPlanDetailVo();
+		dirvingPlandetail.setDrivingPlanCode("FC201715555");
+		dirvingPlandetail.setWayPointCode("UC555555");
+		dirvingPlanDetailBiz.appUpdateAppraise(dirvingPlandetail);
+	}
+	@Test
+	public void testappUpdateActualNumber(){
+		DirvingPlanDetailVo dirvingPlandetail = new DirvingPlanDetailVo();
+		dirvingPlandetail.setDrivingPlanCode("FC201715555");
+		dirvingPlandetail.setWayPointCode("555555555555");
+		dirvingPlandetail.setId(1L);
+		dirvingPlanDetailBiz.appUpdateActualNumber(dirvingPlandetail);
+	}
+	@Test
+	public void testfindByDetailId(){
+		dirvingPlanDetailBiz.findByDetailId(1L);
+	}
+	@Test
+	public void testupdateByApp(){
+		DirvingPlanDetailVo dirvingPlandetail = new DirvingPlanDetailVo();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlandetail.setWayPointCode("555555555555");
+		dirvingPlandetail.setWayPointName("上海分拨中心");
+		dirvingPlanDetailBiz.updateByApp(dirvingPlandetail);
+	}
+	@Test
+	public void testgetStation(){
+		DirvingPlanDetailVo dirvingPlandetail = new DirvingPlanDetailVo();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlanDetailBiz.getStation(dirvingPlandetail);
+	}
+	@Test
+	public void testfindByCriteria(){
+		DirvingPlanDetailVo dirvingPlandetail = new DirvingPlanDetailVo();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlandetail.setWayPointCode("fffffff");
+		dirvingPlanDetailBiz.findByCriteria(dirvingPlandetail);
+	}
+	@Test
+	public void testupdateByid(){
+		DirvingPlanDetail dirvingPlandetail = new DirvingPlanDetail();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlanDetailBiz.updateByid(dirvingPlandetail);
+	}
+	@Test
+	public void testfindByDrivePlanCode(){
+		dirvingPlanDetailBiz.findByDrivePlanCode("FC2222222");
+	}
+	@Test
+	public void testsendErrorBak(){
+		ExceptionManager exceptionManager=new ExceptionManager();
+		exceptionManager.setStartTrunkCode("FClllllllllllllllll");
+		dirvingPlanDetailBiz.sendErrorBak(exceptionManager);
+	}
+	@Test
+	public void testfindAllDetailByCode(){
+		dirvingPlanDetailBiz.findAllDetailByCode("FC2222222222");
+	}
+	@Test
+	public void testgetById(){
+		dirvingPlanDetailBiz.getById(1L);
+	}
+	@Test
+	public void testfindByCode(){
+		dirvingPlanDetailBiz.findByCode("FC000000");
+	}
+	public void testinConfirmByCodeBak(){
+		DirvingPlanDetailVo dirvingPlandetail = new DirvingPlanDetailVo();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlandetail.setWayPointCode("555555555555");
+		dirvingPlandetail.setWayPointName("上海分拨中心");
+		dirvingPlanDetailBiz.inConfirmByCodeBak(dirvingPlandetail);
+	}
+	public void testoutConfirmByCodeBak(){
+		DirvingPlanDetailVo dirvingPlandetail = new DirvingPlanDetailVo();
+		dirvingPlandetail.setDrivingPlanCode("FC11111111");
+		dirvingPlandetail.setWayPointCode("555555555555");
+		dirvingPlandetail.setWayPointName("上海分拨中心");
+		dirvingPlanDetailBiz.outConfirmByCodeBak(dirvingPlandetail);
+	}
+}

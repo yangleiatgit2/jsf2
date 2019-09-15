@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD SQL Map 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.app.dao.IappCaptchaDao">
+	<sql id="Base_Column_List">
+		 id,mobile_phone,
+		 content,count,
+		 dead_time,
+		 user_type,remark,
+		 delete_flag,version,
+		 create_emp,create_org,create_time,
+		 update_emp,update_org,
+		 update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="mobilephone != null">
+		and mobile_phone = #{mobilePhone}
+		</if>
+		<if test="content != null">
+		and content = #{content}
+		</if>
+		<if test="count != null">
+		and count = #{count}
+		</if>
+		<if test="dead_time != null">
+		and dead_time = #{deadTime}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<!-- 查找验证码 -->
+	<select id="queryCaptcha" parameterType="cn.uce.suc.app.entity.CaptchaEntity" resultType="cn.uce.suc.app.entity.CaptchaEntity">
+		select 
+			 sc.*
+		from 
+			t_suc_app_captcha sc
+		where
+			sc.mobile_phone=#{mobilePhone}
+		and
+			sc.content=#{content}
+			
+		<if test="dot_type != null">
+		and dot_type = #{dot_type}
+		</if>
+		<if test="dpt_type != null">
+		and dpt_type = #{dpt_type}
+		</if>
+		and delete_flag = 0
+		
+	</select>
+</mapper>

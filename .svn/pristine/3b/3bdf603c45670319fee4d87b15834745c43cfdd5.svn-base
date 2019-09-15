@@ -1,0 +1,35 @@
+package cn.uce.suc.app.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.app.entity.Logininfo;
+import cn.uce.suc.app.vo.LogininfoVo;
+
+/**
+ * @Description: DAO接口类
+ * @author liwei
+ * @date 2017年10月11日 下午05:55:14
+ */
+@Repository("logininfoDao")
+public interface ILogininfoDao extends IBaseDao<Logininfo, Long> {
+	
+	/**
+	 * 新增登陆明细
+	 * @param logininfoVo
+	 * @return
+	 */
+    int  insertLoginInfo(LogininfoVo logininfoVo);
+    
+    
+    /**
+     * 注销登陆
+     * @param mobilephone
+     * @return
+     */
+    int updateById(String  mobilephone);
+    
+	
+}

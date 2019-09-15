@@ -1,0 +1,86 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.ILineGroupRelBiz;
+import cn.uce.suc.bkg.entity.operation.LineGroupRel;
+import cn.uce.suc.bkg.vo.operation.LineGroupRelVo;
+import cn.uce.suc.bkg.service.operation.LineGroupRelService;
+
+/**
+ * @Description: 班次订单需求等关系新BIZ实现类
+ * @author liwei
+ * @date 2017年11月06日 下午03:52:11
+ */
+@Service("lineGroupRelBiz")
+public class LineGroupRelBiz implements ILineGroupRelBiz {
+	
+	/**
+	 * 注入班次订单需求等关系新Service
+	 */
+	@Resource
+	private LineGroupRelService lineGroupRelService;
+	
+	/**
+	 * @Description: 新增班次订单需求等关系新
+	 * @param lineGroupRel
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月06日 下午03:52:11
+	 */
+	public int addLineGroupRel(LineGroupRel lineGroupRel) {
+		return lineGroupRelService.addLineGroupRel(lineGroupRel);
+	}
+	
+	/**
+	 * @Description: 修改班次订单需求等关系新
+	 * @param lineGroupRel 班次订单需求等关系新
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月06日 下午03:52:11
+	 */
+	public int updateLineGroupRel(LineGroupRel lineGroupRel) {
+		return lineGroupRelService.updateById(lineGroupRel);
+	}
+	
+	/**
+	 * @Description: 删除班次订单需求等关系新
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月06日 下午03:52:11
+	 */
+	public int deleteLineGroupRel(Long id) {
+		return lineGroupRelService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询班次订单需求等关系新
+	 * @param id 主键
+	 * @return 班次订单需求等关系新
+	 * @author liwei
+	 * @date 2017年11月06日 下午03:52:11
+	 */
+	@Override
+	public LineGroupRel findById(Long id) {
+		return lineGroupRelService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询班次订单需求等关系新
+	 * @param lineGroupRelVo 班次订单需求等关系新
+	 * @param page 分页参数
+	 * @return 班次订单需求等关系新
+	 * @author liwei
+	 * @date 2017年11月06日 下午03:52:11
+	 */
+	public Pagination<LineGroupRel> findByPagination(LineGroupRelVo lineGroupRelVo, Page page) {
+		Pagination<LineGroupRel> pagination = lineGroupRelService.findByPagination(lineGroupRelVo, page);
+		return pagination;
+	}
+
+}

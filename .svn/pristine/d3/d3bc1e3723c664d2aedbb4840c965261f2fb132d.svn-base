@@ -1,0 +1,75 @@
+package cn.uce.suc.common.ids;
+
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.ids.IdsConstants.NamesPrefix;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月3日 下午9:19:57
+ */
+public interface IIdsWorker {
+
+	/**
+	 * 
+	 * @Description: 获取下一个流水号
+	 * @param prefix
+	 *            枚举型前缀 如长期需求 CQ
+	 * @param format
+	 *            格式 如：yyMMdd
+	 * @param length
+	 *            流水号长度 如： 00001
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月25日 上午9:52:47
+	 */
+	public String nextId(IdsPrefix prefix, String format, int length);
+	/**
+	 * 
+	 * @Description: 获取下一个流水号
+	 * @param prefix 枚举型前缀 如长期需求 CQ
+	 * @param operatorCode 分拨中心编码
+	 * @param format 格式 如：yyyyMMdd
+	 * @param length 流水号长度 如： 0001
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月10日 上午9:52:47
+	 */
+	public String nextId(IdsPrefix prefix,String operatorCode, String format, int length) ;
+	/**
+	 * 
+	 * @Description: 根据前缀获取下一个流水号，默认是格式是yyyyMMdd,长度是5位
+	 * @param prefix
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月25日 上午9:54:19
+	 */
+	public String nextId(IdsPrefix prefix);
+
+	/**
+	 * 
+	 * @Description: 获取下一个流水号
+	 * @param prefix
+	 *            枚举型前缀 如长期需求 CQ
+	 * @param format
+	 *            格式 如：yyMMdd
+	 * @param length
+	 *            流水号长度 如： 00001
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月25日 上午9:52:47
+	 */
+	public String nextName(String name, NamesPrefix prefix, String format, int length);
+
+	/**
+	 * 
+	 * @Description: 根据前缀获取下一个流水号，默认是格式是yyyyMMdd,长度是5位
+	 * @param prefix
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月25日 上午9:54:19
+	 */
+	public String nextName(String name, NamesPrefix prefix);
+
+
+}

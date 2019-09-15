@@ -1,0 +1,590 @@
+package cn.uce.suc.common.vo;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 乾坤机构详情Vo类
+ * @author liwei
+ * @date 2017年10月15日 下午09:56:38
+ */
+public class OmgCmsOrgDetailVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 机构基准编码. 
+	 */
+	private String baseOrgCode;
+    /** 
+	 * 乾坤机构ID. 
+	 */
+	private Integer cmsOrgId;
+    /** 
+	 * 公司名称. 
+	 */
+	private String companyName;
+    /** 
+	 * 别名.商铺圈 
+	 */
+	private String aliasName;
+    /** 
+	 * 国家编码. 
+	 */
+	private String country;
+    /** 
+	 * 省份. 
+	 */
+	private String province;
+    /** 
+	 * 城市. 
+	 */
+	private String city;
+    /** 
+	 * 区/县. 
+	 */
+	private String county;
+    /** 
+	 * 负责人.机构名称唯一 
+	 */
+	private String principal;
+    /** 
+	 * 负责人手机.机构名称唯一 
+	 */
+	private String principalMobile;
+    /** 
+	 * 电话. 
+	 */
+	private String tel;
+    /** 
+	 * 传真. 
+	 */
+	private String fax;
+    /** 
+	 * 地址. 
+	 */
+	private String address;
+    /** 
+	 * 普货最大限额.普货代收款金额,只用于显示. 
+	 */
+	private Double maxGp;
+    /** 
+	 * VIP最大限额.VIP代收款金额,只用于显示. 
+	 */
+	private Double maxVipGp;
+    /** 
+	 * 直退限额. 
+	 */
+	private Double gpLimit;
+    /** 
+	 * 经度. 
+	 */
+	private Double longitude;
+    /** 
+	 * 伟度. 
+	 */
+	private Double latitude;
+    /** 
+	 * 是否公布.0/1 默认为1 
+	 */
+	private Boolean published;
+    /** 
+	 * 所属特殊地区.所属特殊地区 
+	 */
+	private Integer customArea;
+    /** 
+	 * 备注. 
+	 */
+	private String remark;
+    /** 
+	 * 删除标识.1表示已删除，默认为0 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本. 
+	 */
+	private Integer version;
+    /** 
+	 * 创建人. 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建机构. 
+	 */
+	private Integer createOrg;
+    /** 
+	 * 创建时间. 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新人. 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新机构. 
+	 */
+	private Integer updateOrg;
+    /** 
+	 * 更新时间. 
+	 */
+	private Date updateTime;
+    /** 
+	 * 同步时间 
+	 */
+	private Date syncTime;
+	
+	
+	
+	/**
+	 * 获取 机构基准编码.
+	 */
+	public String getBaseOrgCode() {
+		return baseOrgCode;
+	}
+	
+	/**
+	 * 设置 机构基准编码.
+	 */
+	public void setBaseOrgCode(String baseOrgCode) {
+		this.baseOrgCode = baseOrgCode;
+	}
+
+	
+	/**
+	 * 获取 乾坤机构ID.
+	 */
+	public Integer getCmsOrgId() {
+		return cmsOrgId;
+	}
+	
+	/**
+	 * 设置 乾坤机构ID.
+	 */
+	public void setCmsOrgId(Integer cmsOrgId) {
+		this.cmsOrgId = cmsOrgId;
+	}
+
+	
+	/**
+	 * 获取 公司名称.
+	 */
+	public String getCompanyName() {
+		return companyName;
+	}
+	
+	/**
+	 * 设置 公司名称.
+	 */
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	
+	/**
+	 * 获取 别名.商铺圈
+	 */
+	public String getAliasName() {
+		return aliasName;
+	}
+	
+	/**
+	 * 设置 别名.商铺圈
+	 */
+	public void setAliasName(String aliasName) {
+		this.aliasName = aliasName;
+	}
+
+	
+	/**
+	 * 获取 国家编码.
+	 */
+	public String getCountry() {
+		return country;
+	}
+	
+	/**
+	 * 设置 国家编码.
+	 */
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	
+	/**
+	 * 获取 省份.
+	 */
+	public String getProvince() {
+		return province;
+	}
+	
+	/**
+	 * 设置 省份.
+	 */
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	
+	/**
+	 * 获取 城市.
+	 */
+	public String getCity() {
+		return city;
+	}
+	
+	/**
+	 * 设置 城市.
+	 */
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	
+	/**
+	 * 获取 区/县.
+	 */
+	public String getCounty() {
+		return county;
+	}
+	
+	/**
+	 * 设置 区/县.
+	 */
+	public void setCounty(String county) {
+		this.county = county;
+	}
+
+	
+	/**
+	 * 获取 负责人.机构名称唯一
+	 */
+	public String getPrincipal() {
+		return principal;
+	}
+	
+	/**
+	 * 设置 负责人.机构名称唯一
+	 */
+	public void setPrincipal(String principal) {
+		this.principal = principal;
+	}
+
+	
+	/**
+	 * 获取 负责人手机.机构名称唯一
+	 */
+	public String getPrincipalMobile() {
+		return principalMobile;
+	}
+	
+	/**
+	 * 设置 负责人手机.机构名称唯一
+	 */
+	public void setPrincipalMobile(String principalMobile) {
+		this.principalMobile = principalMobile;
+	}
+
+	
+	/**
+	 * 获取 电话.
+	 */
+	public String getTel() {
+		return tel;
+	}
+	
+	/**
+	 * 设置 电话.
+	 */
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+
+	
+	/**
+	 * 获取 传真.
+	 */
+	public String getFax() {
+		return fax;
+	}
+	
+	/**
+	 * 设置 传真.
+	 */
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	
+	/**
+	 * 获取 地址.
+	 */
+	public String getAddress() {
+		return address;
+	}
+	
+	/**
+	 * 设置 地址.
+	 */
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	
+	/**
+	 * 获取 普货最大限额.普货代收款金额,只用于显示.
+	 */
+	public Double getMaxGp() {
+		return maxGp;
+	}
+	
+	/**
+	 * 设置 普货最大限额.普货代收款金额,只用于显示.
+	 */
+	public void setMaxGp(Double maxGp) {
+		this.maxGp = maxGp;
+	}
+
+	
+	/**
+	 * 获取 VIP最大限额.VIP代收款金额,只用于显示.
+	 */
+	public Double getMaxVipGp() {
+		return maxVipGp;
+	}
+	
+	/**
+	 * 设置 VIP最大限额.VIP代收款金额,只用于显示.
+	 */
+	public void setMaxVipGp(Double maxVipGp) {
+		this.maxVipGp = maxVipGp;
+	}
+
+	
+	/**
+	 * 获取 直退限额.
+	 */
+	public Double getGpLimit() {
+		return gpLimit;
+	}
+	
+	/**
+	 * 设置 直退限额.
+	 */
+	public void setGpLimit(Double gpLimit) {
+		this.gpLimit = gpLimit;
+	}
+
+	
+	/**
+	 * 获取 经度.
+	 */
+	public Double getLongitude() {
+		return longitude;
+	}
+	
+	/**
+	 * 设置 经度.
+	 */
+	public void setLongitude(Double longitude) {
+		this.longitude = longitude;
+	}
+
+	
+	/**
+	 * 获取 伟度.
+	 */
+	public Double getLatitude() {
+		return latitude;
+	}
+	
+	/**
+	 * 设置 伟度.
+	 */
+	public void setLatitude(Double latitude) {
+		this.latitude = latitude;
+	}
+
+	
+	/**
+	 * 获取 是否公布.0/1 默认为1
+	 */
+	public Boolean getPublished() {
+		return published;
+	}
+	
+	/**
+	 * 设置 是否公布.0/1 默认为1
+	 */
+	public void setPublished(Boolean published) {
+		this.published = published;
+	}
+
+	
+	/**
+	 * 获取 所属特殊地区.所属特殊地区
+	 */
+	public Integer getCustomArea() {
+		return customArea;
+	}
+	
+	/**
+	 * 设置 所属特殊地区.所属特殊地区
+	 */
+	public void setCustomArea(Integer customArea) {
+		this.customArea = customArea;
+	}
+
+	
+	/**
+	 * 获取 备注.
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注.
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 删除标识.1表示已删除，默认为0
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标识.1表示已删除，默认为0
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 版本.
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本.
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 创建人.
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人.
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建机构.
+	 */
+	public Integer getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构.
+	 */
+	public void setCreateOrg(Integer createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建时间.
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间.
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新人.
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人.
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新机构.
+	 */
+	public Integer getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构.
+	 */
+	public void setUpdateOrg(Integer updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新时间.
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间.
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 同步时间
+	 */
+	public Date getSyncTime() {
+		return syncTime;
+	}
+	
+	/**
+	 * 设置 同步时间
+	 */
+	public void setSyncTime(Date syncTime) {
+		this.syncTime = syncTime;
+	}
+
+	
+}

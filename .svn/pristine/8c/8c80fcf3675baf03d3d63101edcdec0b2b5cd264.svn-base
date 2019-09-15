@@ -1,0 +1,509 @@
+package cn.uce.suc.bkg.service.operation;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.operation.IDirvingPlanDao;
+import cn.uce.suc.bkg.dao.operation.IDirvingPlanDetailDao;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DrivingPlanExecutedVo;
+import cn.uce.suc.common.biz.INoticeDetailBiz;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.cache.CarPositioningCache;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.PromptConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.util.MessageTemplateUtil;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * @Description: 发车计划明细Service类
+ * @author liwei
+ * @date 2017年10月26日 下午05:05:52
+ */
+@Service("dirvingPlanDetailService")
+public class DirvingPlanDetailService {
+
+	/**
+	 * 注入发车计划明细Dao
+	 */
+	@Resource
+	private IDirvingPlanDetailDao dirvingPlanDetailDao;
+	/**
+	 * 注入发车计划Dao
+	 */
+	@Resource
+	private IDirvingPlanDao dirvingPlanDao;
+	/**
+	   * 车辆当前位置
+	   */
+	@Resource(name = "carPositioningCache")
+	private CarPositioningCache carPositioningCache;
+	/**
+	 * 注入发车计划Biz
+	 */
+	@Resource
+	private INoticeDetailBiz noticeDetailBiz;
+	/**
+	 * 注入手机注册用户Biz
+	 */
+	@Resource
+	private MobileuserService mobileuserService;
+	/**
+	 * 注入机构
+	 */
+	@Resource
+	IOmgCmsOrgBiz omgCmsOrgBiz;
+	/**
+	 * @Description: 新增发车计划明细
+	 * @param dirvingPlanDetail
+	 *            发车计划明细
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int addDirvingPlanDetail(DirvingPlanDetail dirvingPlanDetail) {
+		return dirvingPlanDetailDao.insert(dirvingPlanDetail);
+	}
+
+	/**
+	 * @Description: 修改发车计划明细
+	 * @param dirvingPlanDetail
+	 *            发车计划明细
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int updateById(DirvingPlanDetail dirvingPlanDetail) {
+		return dirvingPlanDetailDao.updateById(dirvingPlanDetail);
+	}
+
+	/**
+	 * @Description: 删除发车计划明细
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int deleteById(Long id) {
+		return dirvingPlanDetailDao.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询发车计划明细
+	 * @param id
+	 *            主键
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public DirvingPlanDetail findById(Long id) {
+		return dirvingPlanDetailDao.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询发车计划明细
+	 * @param dirvingPlanDetailVo
+	 *            发车计划明细
+	 * @param page
+	 *            分页参数
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public Pagination<DirvingPlanDetail> findByPagination(DirvingPlanDetailVo dirvingPlanDetailVo, Page page) {
+		Pagination<DirvingPlanDetail> paginationDirvingPlanDetail = dirvingPlanDetailDao.findByPagination(
+				dirvingPlanDetailVo, page);
+		return paginationDirvingPlanDetail;
+	}
+
+	/**
+	 * @Description:发车计划号详情状态
+	 * @param DirvingPlanDetail
+	 *            发车计划明细
+	 * @return 变更的条数
+	 * @author haizhou
+	 * @date 2017年11月7日 下午05:05:52
+	 */
+	public int updatePlanDriverStatusByWhere(DirvingPlanDetail dirvingPlanDetail) {
+		return dirvingPlanDetailDao.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+
+	}
+
+	public int updateByApp(DirvingPlanDetail detail) {
+		return dirvingPlanDetailDao.updateByApp(detail);
+	}
+
+	public DirvingPlan getStation(String drivingPlanCode) {
+		System.out.print("dao接收参数：" + drivingPlanCode);
+		return dirvingPlanDao.findByPlanCode(drivingPlanCode);
+
+	}
+
+	public DirvingPlanDetail findByCriteria(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		return dirvingPlanDetailDao.findByCriteria(dirvingPlanDetailVo);
+
+	}
+
+	/**
+	 * 
+	 * @Description: 网点端 历史执行 查询/查询详情
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午12:31:43
+	 */
+	public List<DrivingPlanExecutedVo> findSiteDepartPlan(DrivingPlanExecutedVo dirvingPlanDetailVo) {
+		return dirvingPlanDetailDao.findSiteDepartPlan(dirvingPlanDetailVo);
+	}
+
+	/**
+	 * 
+	 * @Description: 查询网点端有几个没有评价的 发车计划明细
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月13日 上午11:34:52
+	 */
+	public DirvingPlanDetailVo findLastStationByPlanCodeAndMode(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		return dirvingPlanDetailDao.findLastStationByPlanCodeAndMode(dirvingPlanDetailVo);
+	}
+
+	/**
+	 * 
+	 * @Description: 网点端 根据网点编码或者司机编码查询发车计划
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午12:31:43
+	 */
+	public List<DirvingPlanDetailVo> findByCode(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		return dirvingPlanDetailDao.findByCode(dirvingPlanDetailVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据发车计划编号查询 发车计划下 所有的发车计划详情Vo数据 并按照升序排序
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author dipsy
+	 * @date 2017年12月19日 下午8:54:07
+	 */
+	public List<DirvingPlanDetailVo> findByCodeAsc(DirvingPlanDetailVo dirvingPlanDetailVo){
+		return dirvingPlanDetailDao.findByCodeAsc(dirvingPlanDetailVo);
+	}
+
+	public List<DirvingPlanDetail> findByDrivePlanCode(String drivePlanCode) {
+		return dirvingPlanDetailDao.findByDrivePlanCode(drivePlanCode);
+	}
+	/**
+	 * @Description: 发车计划中心详情卸货确定
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	public int centerUnload(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		/**
+		 * 中心卸货，该发车计划完成，修改发车计划号的状态为已完成
+		 */
+		DirvingPlan dirvingPlan = new DirvingPlan();
+		dirvingPlan.setDrivingPlanCode(dirvingPlanDetailVo.getDrivingPlanCode());
+		dirvingPlan.setStatus(BkgConstants.PLAN_CODE_EXECUTE);
+		int val = dirvingPlanDao.updateByCode(dirvingPlan);
+		if(val>0){
+			DirvingPlanDetail dirvingPlanDetail = ObjectConvertUtil.convertObject(dirvingPlanDetailVo, DirvingPlanDetail.class);
+			dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_UNLOADING_COMPLETED);
+			dirvingPlanDetail.setPlanSiteStatus(BkgConstants.SITE_STATUS_UNLOAD);
+			dirvingPlanDetail.setPlanDriverPrompt(PromptConstants.DRIVER_STATUS_COMPLETED);
+			dirvingPlanDetail.setPlanSitePrompt(PromptConstants.SITE_STATUS_UNLOAD);
+			val = dirvingPlanDetailDao.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+			if(val>0){
+					carPositioningCache.remove(dirvingPlanDetailVo.getDrivingPlanCode());
+				/**发送消息*/
+					NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+					noticeDetailVo.setBusinessType(BkgConstants.APP_FREIGHT_DEMAND);
+					noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_CENTER_OUT_CONFIRM);
+					/**查询该分拨中心下注册的信息*/
+					/*MobileuserVo mobileuserVo =new MobileuserVo();
+					mobileuserVo.setBaseOrgCode(dirvingPlanDetail.getWayPointCode());
+					mobileuserVo.setDotType(true);
+					List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVo);*/
+					/*for (int i = 0; i < mobileuserVos.size(); i++) {
+						if(StringUtil.isNotBlank(mobileuserVos.get(i).getMobilephone())){
+							noticeDetailVo.setUserPhone(mobileuserVos.get(i).getMobilephone());
+							noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+						}
+					}*///TODO
+					List<DirvingPlanDetail> dpds = dirvingPlanDetailDao.findByDrivePlanCode(dirvingPlanDetailVo.getDrivingPlanCode());
+					for (int i = 0; i < dpds.size(); i++) {
+						MobileuserVo centerVO = new MobileuserVo();
+						centerVO.setBaseOrgCode(dpds.get(i).getWayPointCode());
+						centerVO.setDotType(true);
+						List<MobileuserVo> centerVOs=mobileuserService.findByCondition(centerVO);
+						for (int j = 0; j < centerVOs.size(); j++) {
+							noticeDetailVo.setUserPhone(null);
+							if(StringUtil.isNotBlank(centerVOs.get(j).getMobilephone())){
+								noticeDetailVo.setUserPhone(centerVOs.get(j).getMobilephone());
+								/**给每个该网点下的app用户推送消息*/
+								noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+							}
+						}
+						
+						
+					}
+					
+					
+					/*noticeDetailVo.setUserPhone(null);
+					noticeDetailVo.setJpushAlia(null);
+					noticeDetailVo.setNoticeRuleCode(SucConstants.PC_CENTER_OUT_CONFIRM);
+					noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);*/
+			}
+			
+		}
+		return val;
+	}
+	/**
+	 * @Description: 发车计划网点详情卸货确定
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	public int dotUnload(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		
+		
+			DirvingPlanDetail dirvingPlanDetail = ObjectConvertUtil.convertObject(dirvingPlanDetailVo, DirvingPlanDetail.class);
+			dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_PENDING_CONFIRM);
+			dirvingPlanDetail.setPlanSiteStatus(BkgConstants.SITE_STATUS_CONFIRM_UNLOAD);
+			
+			String planDriverPrompt = MessageTemplateUtil.convertObject(PromptConstants.DRIVER_STATUS_PEND_CONFIRM,dirvingPlanDetailVo);
+			dirvingPlanDetail.setPlanDriverPrompt(planDriverPrompt);
+			dirvingPlanDetail.setPlanSitePrompt(PromptConstants.SITE_STATUS_CONFIRM_UNLOAD);
+			int val = dirvingPlanDetailDao.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+			if(val>0){
+					carPositioningCache.remove(dirvingPlanDetailVo.getDrivingPlanCode());
+				/**发送消息*/
+					NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+					noticeDetailVo.setBusinessType(BkgConstants.APP_FREIGHT_DEMAND);
+					noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_OUT_CONFIRM);
+					/**查询该网点下注册的信息*/
+					MobileuserVo mobileuserVo =new MobileuserVo();
+					mobileuserVo.setBaseOrgCode(dirvingPlanDetail.getWayPointCode());
+					mobileuserVo.setDotType(true);
+					List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVo);
+					for (int i = 0; i < mobileuserVos.size(); i++) {
+						if(StringUtil.isNotBlank(mobileuserVos.get(i).getMobilephone())){
+							noticeDetailVo.setUserPhone(mobileuserVos.get(i).getMobilephone());
+							noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+						}
+					}
+				/*	noticeDetailVo.setUserPhone(null);
+					noticeDetailVo.setJpushAlia(null);
+					noticeDetailVo.setNoticeRuleCode(SucConstants.PC_OUT_CONFIRM);
+					noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);*/
+			}
+			return val;
+	}
+	/**
+	 * @Description: 发车计划中心详情装货确定
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	public int centerLoad(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		DirvingPlanDetail dirvingPlanDetail = ObjectConvertUtil.convertObject(dirvingPlanDetailVo, DirvingPlanDetail.class);
+		dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_LOADING_FINISH);
+		dirvingPlanDetail.setPlanSiteStatus(BkgConstants.SITE_STATUS_LOAD);
+		/**
+		 * 查询下一站点的名称
+		 */
+		DirvingPlanDetail findByCriteria = dirvingPlanDetailDao.findByCriteria(dirvingPlanDetailVo);
+		if(findByCriteria==null ){
+			return -1;
+		}
+		DirvingPlanDetailVo dpdVo = new DirvingPlanDetailVo();
+		dpdVo.setDrivingPlanCode(dirvingPlanDetailVo.getDrivingPlanCode());
+		dpdVo.setSort(findByCriteria.getSort()+1);
+		DirvingPlanDetail nextDetail = dirvingPlanDetailDao.findByCriteria(dpdVo);
+		if(nextDetail==null ){
+			return 0;
+		}
+		String planDriverPrompt = MessageTemplateUtil.convertObject(PromptConstants.DRIVER_STATUS_LOAD_FINISH, nextDetail);
+		String planSitePrompt = MessageTemplateUtil.convertObject(PromptConstants.SITE_STATUS_LOAD_EVALUATED,dirvingPlanDetailVo );
+		dirvingPlanDetail.setPlanDriverPrompt(planDriverPrompt);
+		dirvingPlanDetail.setPlanSitePrompt(planSitePrompt);
+		int val = dirvingPlanDetailDao.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+		if(val>0){
+			carPositioningCache.remove(dirvingPlanDetailVo.getDrivingPlanCode());
+			/**发送消息*/
+				NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+				noticeDetailVo.setBusinessType(BkgConstants.APP_FREIGHT_DEMAND);
+				noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_CENTER_LOAD_CONFIRM);
+				/**查询该网点下注册的信息*/
+				/*MobileuserVo mobileuserVo =new MobileuserVo();
+				mobileuserVo.setBaseOrgCode(dirvingPlanDetail.getWayPointCode());
+				mobileuserVo.setDotType(true);*/
+				/*List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVo);
+				for (int i = 0; i < mobileuserVos.size(); i++) {
+					if(StringUtil.isNotBlank(mobileuserVos.get(i).getMobilephone())){
+						noticeDetailVo.setUserPhone(mobileuserVos.get(i).getMobilephone());
+						noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+					}
+				}*/
+				List<DirvingPlanDetail> dpds = dirvingPlanDetailDao.findByDrivePlanCode(dirvingPlanDetailVo.getDrivingPlanCode());
+				for (int i = 0; i < dpds.size(); i++) {
+					MobileuserVo centerVO = new MobileuserVo();
+					centerVO.setBaseOrgCode(dpds.get(i).getWayPointCode());
+					centerVO.setDotType(true);
+					List<MobileuserVo> centerVOs=mobileuserService.findByCondition(centerVO);
+					for (int j = 0; j < centerVOs.size(); j++) {
+						noticeDetailVo.setUserPhone(null);
+						if(StringUtil.isNotBlank(centerVOs.get(j).getMobilephone())){
+							noticeDetailVo.setUserPhone(centerVOs.get(j).getMobilephone());
+							/**给每个该网点下的app用户推送消息*/
+							noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+						}
+					}
+					
+					
+				}
+				
+			/*	noticeDetailVo.setUserPhone(null);
+				noticeDetailVo.setJpushAlia(null);
+				noticeDetailVo.setNoticeRuleCode(SucConstants.PC_OUT_CONFIRM);
+				noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);*/
+			
+		}
+		return val;
+	}
+	/**
+	 * @Description: 发车计划网点详情装货确定
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	public int dotLoad(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		DirvingPlanDetail dirvingPlanDetail = ObjectConvertUtil.convertObject(dirvingPlanDetailVo, DirvingPlanDetail.class);
+		dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_LOAD_CONFIRM);
+		dirvingPlanDetail.setPlanSiteStatus(BkgConstants.SITE_STATUS_CONFIRM_LOAD);
+		String planDriverPrompt = MessageTemplateUtil.convertObject(PromptConstants.DRIVER_STATUS_LOADING_CONFIRM, dirvingPlanDetailVo);
+		dirvingPlanDetail.setPlanDriverPrompt(planDriverPrompt);
+		dirvingPlanDetail.setPlanSitePrompt(PromptConstants.SITE_STATUS_CONFIRM_LOAD);
+		 int val = dirvingPlanDetailDao.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+		 if(val>0){
+			 carPositioningCache.remove(dirvingPlanDetailVo.getDrivingPlanCode());
+				/**发送消息*/
+					NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+					noticeDetailVo.setBusinessType(BkgConstants.APP_FREIGHT_DEMAND);
+					noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_LOAD_CONFIRM);
+					/**查询该网点下注册的信息*/
+					MobileuserVo mobileuserVo =new MobileuserVo();
+					mobileuserVo.setBaseOrgCode(dirvingPlanDetail.getWayPointCode());
+					mobileuserVo.setDotType(true);
+					List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVo);
+					for (int i = 0; i < mobileuserVos.size(); i++) {
+						if(StringUtil.isNotBlank(mobileuserVos.get(i).getMobilephone())){
+							noticeDetailVo.setUserPhone(mobileuserVos.get(i).getMobilephone());
+							noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+						}
+					}
+			/*		noticeDetailVo.setUserPhone(null);
+					noticeDetailVo.setJpushAlia(null);
+					noticeDetailVo.setNoticeRuleCode(SucConstants.PC_LOAD_CONFIRM);
+					noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);*/
+			 
+		 }
+		
+		return val;
+	}
+	
+	/**
+	 * @Description: 通过发车计划和发车计划详情去赋值该点属于装货/卸货
+	 * @param drivingPlan 发车计划号
+	 * @param drivingPlanDetail 发车计划号详情
+	 * @return void
+	 * @author UCE-haizhou
+	 * @date 2017年12月15日 下午13:37:13
+	 */
+	public void checkUtil(DirvingPlanDetail dirvingPlanDetail,DirvingPlan dirvingPlan){
+		/**
+		 * 分析该网点是处在已个卸货/装货   1:查询该点是分拨中心还是网点
+		 */
+		OmgCmsOrgVo omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(dirvingPlanDetail.getWayPointCode());
+		if(omgCmsOrgVo!= null && BkgConstants.ORG_TYPE_OPERATE_CENTER==omgCmsOrgVo.getOrgType()){
+			/**判断为分拨中心*/
+			/**
+			 * 查询是进港还是出港
+			 */
+			if(BkgConstants.BUSINESS_MODE_IN.equals(dirvingPlan.getBusinessMode())){
+				dirvingPlanDetail.setUtf2(BkgConstants.CENTER_MODE_IN);
+			}else{
+				dirvingPlanDetail.setUtf2(BkgConstants.CENTER_MODE_OUT);
+			}
+		}else{
+			/**判断为网点*/
+			/**
+			 * 查询是进港还是出港
+			 */
+			if(BkgConstants.BUSINESS_MODE_IN.equals(dirvingPlan.getBusinessMode())){
+				dirvingPlanDetail.setUtf2(BkgConstants.DOT_MODE_IN);
+			}else{
+				dirvingPlanDetail.setUtf2(BkgConstants.DOT_MODE_OUT);
+			}
+		}
+		
+		
+		
+	}
+	/**
+	 * @Description: 通过发车计划号，和对应的发车计划详情去修改已经赋值号的异常状态
+	 * @param drivingPlan 发车计划号
+	 * @param dirvingPlanDetailVo 发车计划号详情
+	 * @return 修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年12月15日 下午13:37:13
+	 */
+	public int sendError(DirvingPlan dirvingPlan,
+			DirvingPlanDetailVo dirvingPlanDetailVo) {
+		/**修改发车计划号的异常标识*/
+		int val = dirvingPlanDao.updateByCode(dirvingPlan);
+		if(val<1){
+			return val;
+		}
+		DirvingPlanDetail dirvingPlanDetail = ObjectConvertUtil.convertObject(dirvingPlanDetailVo, DirvingPlanDetail.class);
+		/**设置发车计划号详情的异常状态，备注发车计划号司机的状态*/
+		val = dirvingPlanDetailDao.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+		if(val<1){
+			return val;
+		}
+		/**给司机和网点推送消息*/
+		NoticeDetailVo noticeDetailVo = new  NoticeDetailVo();
+		/**设置消息的业务id和业务类型*/
+		noticeDetailVo.setBusinessId(dirvingPlan.getId());
+		noticeDetailVo.setBusinessType(BkgConstants.APP_DRIVER_TASK);
+		noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_SEND_ERROR);
+		/**给PC端发送消息*/
+		noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+		/**给司机本人发送消息*/
+		noticeDetailVo.setUserPhone(dirvingPlan.getDriverPhone());
+		noticeDetailVo.setNoticeRuleCode(SucConstants.DRIVER_SEND_ERROR);
+		noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+		return val;
+	}
+}

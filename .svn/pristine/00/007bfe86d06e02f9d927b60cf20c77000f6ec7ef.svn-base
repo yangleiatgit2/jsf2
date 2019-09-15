@@ -1,0 +1,71 @@
+package cn.uce.suc.bkg.biz.datamain;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.vo.datamain.ExceptionManagerVo;
+
+/**
+ * @Description: 运输异常管理BIZ接口类
+ * @author yanglei
+ * @date 2017年10月31日 下午03:48:43
+ */
+public interface IExceptionManagerBiz {
+	
+	/**
+	 * @Description: 新增运输异常管理
+	 * @param exception
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年10月31日 下午03:48:43
+	 */
+	public int addException(ExceptionManager exception);
+	
+	/**
+	 * @Description: 修改运输异常管理
+	 * @param exception 运输异常管理
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年10月31日 下午03:48:43
+	 */
+	public int updateException(ExceptionManager exception);
+	
+	/**
+	 * @Description: 删除运输异常管理
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年10月31日 下午03:48:43
+	 */
+	public int deleteException(Long id);
+	
+	/**
+	 * @Description: 根据ID查询运输异常管理
+	 * @param id 主键
+	 * @return 运输异常管理
+	 * @author yanglei
+	 * @date 2017年10月31日 下午03:48:43
+	 */
+	public ExceptionManager findById(Long id);
+	
+	/**
+	 * @Description: 分页查询运输异常管理
+	 * @param exceptionVo 运输异常管理
+	 * @param page 分页参数
+	 * @return 运输异常管理
+	 * @author yanglei
+	 * @date 2017年10月31日 下午03:48:43
+	 */
+	public Pagination<ExceptionManagerVo> findByPagination(ExceptionManagerVo exceptionVo, Page page);
+	/**
+	 * @Description: 查询运输异常管理list
+	 * @param exceptionVo 运输异常管理
+	 * @return 运输异常管理
+	 * @author yanglei
+	 * @date 2017年10月7日 下午03:48:43
+	 */
+	public List<ExceptionManager> findByVo(ExceptionManagerVo exceptionVo, Page page);
+	
+}

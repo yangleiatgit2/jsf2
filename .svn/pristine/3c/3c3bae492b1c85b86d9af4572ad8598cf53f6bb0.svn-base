@@ -1,0 +1,15 @@
+#\u914d\u7f6elog4j\u7684\u6839logger "og4j.rootLogger = [ level ] , appenderName"   
+log4j.logger.cn.uce.core.cache=info, stdout
+log4j.logger.org.springframework=INFO,stdout
+
+#\u8f93\u51fa\u5230\u63a7\u5236\u53f0   
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d %p %t [%c] - <%m>%n
+#\u6307\u5b9a\u65e5\u5fd7\u8f93\u5165\u6587\u4ef6\u7684\u5927\u5c0f 
+log4j.appender.stdout.MaxFileSize=500KB
+log4j.appender.stdout.MaxBackupIndex=50
+log4j.appender.stdout.Append=true
+
+log4j.cn.uce=info
+

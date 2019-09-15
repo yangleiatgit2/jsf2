@@ -1,0 +1,40 @@
+package cn.uce.suc.common.biz;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author liwei
+ * @date 2017年12月1日 下午3:36:22
+ */
+
+
+
+
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.service.NoticePushService;
+import cn.uce.suc.common.util.SucAppConstants;
+
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class NoticePushServiceTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	private NoticePushService noticePushService;
+
+	@Test
+	public void testPro() {
+		String requeParams=noticePushService.initParams(SucConstants.CAPTCH_USER_AUTH, "1120", "18729255646", SucConstants.CAPTCH_PLATFROM_DOT);
+		Map<String, Object> resultEntity = noticePushService.sendMessageToPhone(requeParams);
+		noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "请求参数不正确", null);
+	}
+}

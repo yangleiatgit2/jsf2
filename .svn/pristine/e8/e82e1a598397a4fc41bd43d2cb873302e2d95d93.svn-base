@@ -1,0 +1,362 @@
+package cn.uce.suc.bkg.vo.operation;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 发车计划轨迹记录Vo类
+ * @author liwei
+ * @date 2017年11月15日 上午09:19:32
+ */
+public class DirvingPlanTraceVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 发车计划编号 
+	 */
+	private String drivingPlanCode;
+    /** 
+	 * 状态 
+	 */
+	private Integer status;
+    /** 
+	 * 状态描述 
+	 */
+	private String statusDescribe;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 站点编号 
+	 */
+	private String scanStationCode;
+    /** 
+	 * 站点名称 
+	 */
+	private String scanStationName;
+	
+	
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 发车计划编号
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	
+	/**
+	 * 设置 发车计划编号
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+
+	
+	/**
+	 * 获取 状态
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+	
+	/**
+	 * 设置 状态
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	
+	/**
+	 * 获取 状态描述
+	 */
+	public String getStatusDescribe() {
+		return statusDescribe;
+	}
+	
+	/**
+	 * 设置 状态描述
+	 */
+	public void setStatusDescribe(String statusDescribe) {
+		this.statusDescribe = statusDescribe;
+	}
+
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 站点编号
+	 */
+	public String getScanStationCode() {
+		return scanStationCode;
+	}
+	
+	/**
+	 * 设置 站点编号
+	 */
+	public void setScanStationCode(String scanStationCode) {
+		this.scanStationCode = scanStationCode;
+	}
+
+	
+	/**
+	 * 获取 站点名称
+	 */
+	public String getScanStationName() {
+		return scanStationName;
+	}
+	
+	/**
+	 * 设置 站点名称
+	 */
+	public void setScanStationName(String scanStationName) {
+		this.scanStationName = scanStationName;
+	}
+
+	
+}

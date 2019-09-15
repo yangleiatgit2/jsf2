@@ -1,0 +1,38 @@
+package cn.uce.suc.bkg.biz.impl.price;
+
+import org.junit.Test;
+
+import cn.uce.suc.bkg.exception.BkgIaException;
+import cn.uce.suc.bkg.exception.BkgIaMonitorException;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.common.exception.ComModuleException;
+
+/**
+ * 
+ * @Description: 异常捕获
+ * @author liwei
+ * @date 2017年11月24日 上午11:02:07
+ */
+public class ModuleExceptiontest {
+	/**
+	 * 
+	 * @Description:单元测试
+	 * @author liwei
+	 * @date 2017年11月24日 上午11:02:46
+	 */
+	@Test
+	public void testModole() {
+		new BkgIaMonitorException("TEST");
+		new BkgIaMonitorException("TEST", "TEST");
+		new BkgIaMonitorException("TEST", "TEST", new Throwable());
+		new BkgModuleException("TEST");
+		new BkgModuleException("TEST", "TEST");
+		new BkgModuleException("TEST", "TEST", new Throwable());
+		new BkgIaException("TEST");
+		new BkgIaException("TEST", "TEST");
+		new BkgIaException("TEST", "TEST", new Throwable());
+		new ComModuleException("TEST");
+		new ComModuleException("TEST", "TEST");
+		new ComModuleException("TEST", "TEST", new Throwable());
+	}
+}

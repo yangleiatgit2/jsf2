@@ -1,0 +1,47 @@
+package cn.uce.suc.common.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.Version;
+import cn.uce.suc.common.vo.VersionVo;
+
+/**
+ * @Description: 移动端软件更新记录DAO接口类
+ * @author liwei
+ * @date 2017年11月12日 上午09:15:11
+ */
+@Repository("versionDao")
+public interface IVersionDao extends IBaseDao<Version, Long> {
+	
+	/**
+	 * @Description: 分页查询移动端软件更新记录
+	 * @param versionVo 移动端软件更新记录
+	 * @param page 分页参数
+	 * @return 移动端软件更新记录
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public Pagination<Version> findByPagination(VersionVo versionVo, Page page);
+	/**
+	 * 
+	 * @Description: 版本校验
+	 * @param versionVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月12日 下午3:15:28
+	 */
+	public Version versionCheck(VersionVo versionVo);
+	/**
+	 * @Description: 查询版本list
+	 * @param versionVo 移动端软件更新记录
+	 * @return list
+	 * @author yanglei
+	 * @date 2017年12月7日 上午09:15:11
+	 */
+	public List<Version> findByListByVo(VersionVo versionVo);
+}

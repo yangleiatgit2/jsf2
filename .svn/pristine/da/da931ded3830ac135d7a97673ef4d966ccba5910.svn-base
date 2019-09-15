@@ -1,0 +1,82 @@
+package cn.uce.suc.common.biz;
+
+import java.util.Map;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.vo.MobileuserVo;
+
+/**
+ * @Description: app用户表BIZ接口类
+ * @author liwei
+ * @date 2017年10月10日 下午08:42:21
+ */
+public interface IMobileuserBiz {
+	
+	/**
+	 * @Description: 新增app用户表
+	 * @param mobileuser
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public Long addMobileuser(MobileuserVo mobileuserVo);
+	
+	/**
+	 * @Description: 修改app用户表
+	 * @param mobileuser app用户表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public int updateMobileuser(MobileuserVo mobileuserVo);
+	
+	/**
+	 * @Description: 删除app用户表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public int deleteMobileuser(Long id);
+	
+	/**
+	 * @Description: 根据ID查询app用户表
+	 * @param id 主键
+	 * @return app用户表
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public Mobileuser findById(Long id);
+	
+	/**
+	 * @Description: 分页查询app用户表
+	 * @param mobileuserVo app用户表
+	 * @param page 分页参数
+	 * @return app用户表
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public Pagination<MobileuserVo> findByPagination(MobileuserVo mobileuserVo, Page page);
+	/**
+	 * 
+	 * @Description: 查询手机号是否注册
+	 * @param mobilephone
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月10日 下午5:05:54
+	 */
+	public Integer findCountByMobilephone(String mobilephone);
+	
+	/**
+	 * 
+	 * @Description: 根据手机号和用户类型 校验用户唯一性
+	 * @param mobileuserVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月28日 下午1:43:22
+	 */
+	public MobileuserVo checkExistsByMobileAndUserType(MobileuserVo mobileuserVo);
+}

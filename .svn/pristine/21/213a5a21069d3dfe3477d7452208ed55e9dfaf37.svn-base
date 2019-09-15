@@ -1,0 +1,27 @@
+package cn.uce.suc.common.util;
+
+import java.util.Random;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月3日 下午9:02:17
+ */
+public class RandomStringUtil {
+	
+	/**
+	 * 产生验证码
+	 * */
+	public static String getCaptcha(int length){
+		String val = "0123456789";
+		//参数length，表示生成几位随机数 
+		StringBuilder sb=new StringBuilder(length);
+		for(int i=0;i<length;i++)
+		{
+			char ch=val.charAt(new Random().nextInt(val.length()));
+			sb.append(ch);
+		}
+		return sb.toString();
+	}
+
+}

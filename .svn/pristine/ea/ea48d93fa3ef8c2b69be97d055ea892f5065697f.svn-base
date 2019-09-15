@@ -1,0 +1,92 @@
+package cn.uce.suc.common.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.NoticeDetail;
+import cn.uce.suc.common.vo.AppNotice;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+
+/**
+ * @Description: 消息详情--DAO接口类
+ * @author liwei
+ * @date 2017年10月30日 下午10:46:47
+ */
+@Repository("noticeDetailDao")
+public interface INoticeDetailDao extends IBaseDao<NoticeDetail, Long> {
+	
+	/**
+	 * @Description: 分页查询消息详情--
+	 * @param noticeDetailVo 消息详情--
+	 * @param page 分页参数
+	 * @return 消息详情--
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:46:47
+	 */
+	public Pagination<NoticeDetail> findByPagination(NoticeDetailVo noticeDetailVo, Page page);
+	
+	/**
+	 * 
+	 * @Description: 获取要推送的消息
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月31日 下午3:53:36
+	 */
+	public List<NoticeDetail> findByJpushFlase();
+	/**
+	 * @Description: 司机端获取首页消息
+	 * @param  noticeDetailVo
+	 * @return  首页的消息列表
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 */
+	public List<AppNotice> getIndexNews(NoticeDetailVo noticeDetailVo);
+	/**
+	 * @Description: 司机端获取消息详情,把消息设置为已读状态
+	 * @param  司机手机号码
+	 * @return  消息详情
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 */
+	public AppNotice getNewsDetailsById(NoticeDetailVo noticeDetailVo);
+	/**
+	 * @Description: 司机获取所有的消息,
+	 * @param  司机手机号码
+	 * @return  查询的数据
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 * 
+	 */
+	public Pagination<AppNotice> getAllNews(NoticeDetailVo noticeDetailVo,Page page);
+	/**
+	 * @Description: PC首页获取消息
+	 * @param 
+	 * @return Pagination<NoticeDetail> pc端首页显示的消息
+	 * @author UCE-haizhou
+	 * @date 2017年10月30日 下午13:37:13
+	 */	
+	public Pagination<NoticeDetail> findPcIndex(NoticeDetailVo noticeDetailVo,
+			Page page);
+	/**
+	 * @Description: 司机获取所有的未读消息,
+	 * @param  noticeDetailVo
+	 * @return  消息总数
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 * 
+	 */
+	public Integer getNotReadNewsNumber(NoticeDetailVo noticeDetailVo);
+	/**
+	 * @Description: 根据消息详情的业务ID和创建时间去更新
+	 * @param  noticeDetail
+	 * @return  消息总数
+	 * @author UCE-haizhou
+	 * @date 2017年12月8日 下午17:37:13
+	 */
+	public int updateNewsDetails(NoticeDetail noticeDetail);
+	
+}

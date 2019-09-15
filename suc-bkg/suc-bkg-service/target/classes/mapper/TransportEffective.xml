@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datamain.ITransportEffectiveDao">
+	
+	<sql id="Base_Column_List">
+			id,effective_code,start_site,end_site,start_site_code,end_site_code,
+			distance,speed,effective,
+			status,remark,del_flag,
+			version,create_emp,create_time,create_org,
+			update_emp,update_time,update_org,
+			start_parent_code,start_parent_name,end_parent_code,end_parent_name
+			
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="effectiveCode != null">
+		and effective_code = #{effectiveCode}
+		</if>
+	    <if test="startSite != null">
+		and start_site = #{startSite}
+		</if>
+	    <if test="endSite != null">
+		and end_site = #{endSite}
+		</if>
+		
+		  <if test="startSiteCode != null">
+		and start_site_code = #{startSiteCode}
+		</if>
+	    <if test="endSiteCode != null">
+		and end_site_code = #{endSiteCode}
+		</if>
+		
+	    <if test="distance != null">
+		and distance = #{distance}
+		</if>
+	    <if test="speed != null">
+		and speed = #{speed}
+		</if>
+	    <if test="effective != null">
+		and effective = #{effective}
+		</if>
+	    <if test="status != null">
+		and status = #{status}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	   <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.datamain.TransportEffective">
+	UPDATE t_suc_bkg_transport_effective
+	<set>
+		<if test="effectiveCode != null">
+		effective_code = #{effectiveCode},
+		</if>
+		<if test="startSite != null">
+		start_site = #{startSite},
+		</if>
+		<if test="endSite != null">
+		end_site = #{endSite},
+		</if>
+		
+		<if test="startSiteCode != null">
+		 start_site_code = #{startSiteCode},
+		</if>
+	    <if test="endSiteCode != null">
+		 end_site_code = #{endSiteCode},
+		</if>
+		
+		<if test="distance != null">
+		distance = #{distance},
+		</if>
+		<if test="speed != null">
+		speed = #{speed},
+		</if>
+		<if test="effective != null">
+		effective = #{effective},
+		</if>
+		<if test="status != null">
+		status = #{status},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="startParentCode != null">
+		start_parent_code = #{startParentCode},
+		</if>
+		<if test="startParentName != null">
+		start_parent_name = #{startParentName},
+		</if>
+		<if test="endParentCode != null">
+		end_parent_code = #{endParentCode},
+		</if>
+		<if test="endParentName != null">
+		end_parent_name = #{endParentName},
+		</if>
+		
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo" resultType="cn.uce.suc.bkg.entity.datamain.TransportEffective">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_transport_effective
+	 <where>
+		 	<if test="startSiteCode != null and startSiteCode !='' ">
+				and start_site_code = #{startSiteCode}
+			</if>
+		 	<if test="endSiteCode != null and endSiteCode !='' ">
+				and end_site_code = #{endSiteCode}
+			</if>
+		 	<if test="status != null and status !='' ">
+				and status = #{status}
+			</if>
+		 </where>
+		 order by create_time desc
+	</select>
+	
+	<!-- 根据需求组合查询时效 -->
+	<select id="findByCombine" parameterType="cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo" resultType="cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo">
+		(
+			SELECT
+				te.id,te.effective_code,te.start_site,te.end_site,te.start_site_code,te.end_site_code,te.distance,te.speed,te.effective,te. STATUS,dr.workcenter_code AS parentOrgCode
+			FROM t_suc_bkg_transport_effective te
+			LEFT JOIN t_suc_bkg_delivery_relation dr ON te.start_site_code = dr.site_code
+			<where>
+				te.status = '1'
+				<if test="parentOrgCode != null and parentOrgCode != ''">
+					AND dr.workcenter_code = #{parentOrgCode}
+				</if>
+			</where>
+		)
+		UNION
+		(
+				SELECT te.id,te.effective_code,te.start_site,te.end_site,te.start_site_code,te.end_site_code,te.distance,te.speed,te.effective,te.STATUS,te.start_site_code AS parent_org_code
+				FROM t_suc_bkg_transport_effective te
+				<where>
+					te.status = '1'
+					<if test="parentOrgCode != null and parentOrgCode != ''">
+						AND te.start_site_code = #{parentOrgCode}
+					</if>
+				</where>
+		)
+		UNION
+			(
+				SELECT te.id,te.effective_code,te.start_site,te.end_site,te.start_site_code,te.end_site_code,te.distance,te.speed,te.effective,te. STATUS,te.end_site_code AS parent_org_code
+				FROM t_suc_bkg_transport_effective te
+				<where>
+					te.status = '1'
+					<if test="parentOrgCode != null and parentOrgCode != ''">
+						AND te.end_site_code = #{parentOrgCode}
+					</if>
+				</where>
+			)
+	</select>
+	
+	<select id="findByCondition" parameterType="cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo" resultType="cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo">
+		SELECT <include refid="Base_Column_List" /> 
+		FROM t_suc_bkg_transport_effective
+		<where>
+			status = '1'
+			<if test="startSiteCode != null and startSiteCode != ''">
+				AND start_site_code = #{startSiteCode}
+			</if>
+			<if test="endSiteCode != null and endSiteCode != ''">
+				AND end_site_code = #{endSiteCode}
+			</if>
+		</where>
+	</select>
+	
+	<select id="countByVo" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupVo" resultType="java.lang.Integer">
+	select count(*) from t_suc_bkg_transport_effective
+	   	 <where>
+		 	<if test="startSite != null and startSite !='' ">
+				and start_site = #{startSite}
+			</if>
+		 	<if test="endSite != null and endSite !='' ">
+				and end_site = #{endSite}
+			</if>
+		 	<!--  <if test="status != null and status !='' ">
+				and status = #{status}
+			</if>  -->
+		 </where>
+	</select>
+	
+	<select id="deleteByIds" parameterType="java.util.ArrayList" resultType="java.lang.Integer">
+		delete from t_suc_bkg_transport_effective 
+		<where>  
+	        id in (  
+	        <foreach item="id" index="index" collection="array"  
+	            separator=","> #{id} </foreach>  
+	        )  
+       </where>  
+	</select>
+</mapper>

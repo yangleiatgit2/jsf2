@@ -1,0 +1,874 @@
+package cn.uce.suc.bkg.entity.datamain;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import cn.uce.core.db.annotion.Transient;
+
+import java.util.Date;
+
+/**
+ * @Description: 车辆信息表Entity类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月25日 下午05:08:33
+ */
+@Table("t_suc_bkg_car")
+public class CarManage extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 车牌号 
+	 */
+	private String plateNumbers;
+    /** 
+	 * 车辆编号 
+	 */
+	private String carNumber;
+    /** 
+	 * 车辆状态 
+	 */
+	private String carStatus;
+    /** 
+	 * 车辆所属类型 
+	 */
+	private String carBelongType;
+    /** 
+	 * 车辆所属承运商 
+	 */
+	private String carBelongCarrier;
+    /** 
+	 * 车辆所属机构（分拨） 
+	 */
+	private String carOrg;
+    /** 
+	 * 司机组织 
+	 */
+	private String driverOrg;
+    /** 
+	 * 车辆类型 
+	 */
+	private String carType;
+    /** 
+	 * 车辆品牌 
+	 */
+	private String carBrand;
+    /** 
+	 * 车主姓名 
+	 */
+	private String carOwnerName;
+    /** 
+	 * 车主手机号 
+	 */
+	private String carOwnerMoble;
+    /** 
+	 * 车宽 
+	 */
+	private Double carWidth;
+    /** 
+	 * 车长 
+	 */
+	private Double carLength;
+    /** 
+	 * 车高 
+	 */
+	private Double carHeight;
+    /** 
+	 * 车厢容积 
+	 */
+	private Double carVolume;
+    /** 
+	 * 车厢荷载吨数 
+	 */
+	private Double carLoad;
+    /** 
+	 * 整备质量 
+	 */
+	private Double curbWeight;
+    /** 
+	 * 底盘高度 
+	 */
+	private Double chassisHeight;
+    /** 
+	 * 发动机号码 
+	 */
+	private String engineNumber;
+    /** 
+	 * gps设备号 
+	 */
+	private String gpsDeviceNumber;
+    /** 
+	 * 行驶证编号 
+	 */
+	private String drivingLicenseNumber;
+    /** 
+	 * 运力可用开始时间 
+	 */
+	private Date capacityStartTime;
+    /** 
+	 * 运力可用结束时间 
+	 */
+	private Date capacityEndTime;
+    /** 
+	 * 上线时间 
+	 */
+	private Date onlineTime;
+    /** 
+	 * 交强险到期日 
+	 */
+	private Date tciEndTime;
+    /** 
+	 * 商业险到期日 
+	 */
+	private Date vciEndTime;
+    /** 
+	 * 货物险到期日 
+	 */
+	private Date ciEndTime;
+    /** 
+	 * 行驶证附件ID 
+	 */
+	private String drivingLicenseFile;
+	/**
+	 * 同行证附件id
+	 */
+	private String trafficPermitFile;
+    /** 
+	 * 营运证附件ID 
+	 */
+	private String operationCertificateFile;
+    /** 
+	 * 交强险附件ID 
+	 */
+	private String tciFile;
+    /** 
+	 * 商业险附件ID 
+	 */
+	private String vciFile;
+    /** 
+	 * 其它险附件ID 
+	 */
+	private String otherInsuranceFile;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 常驻点
+	 */
+	private String residentPoint;
+    /** 
+	 * 删除标志 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构 
+	 */
+	private Integer createOrg;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+	/**
+	 * 营运证编号
+	 */
+	private String operationNumber;
+	/**
+	 * 是否有通行证标识
+	 */
+	private String trafficPermitFlag;
+	/**
+	 * 是否可用标识
+	 */
+	private String usableFlag;
+	/**
+	 * 发车计划号
+	 */
+	@Transient
+	private String dirvingPlanCode;
+	/**
+	 * 经度
+	 */
+	@Transient
+	private String lng;
+	/**
+	 * 纬度
+	 */
+	@Transient
+	private String lat;
+	
+	/**
+	 * 获取 车牌号
+	 */
+	public String getPlateNumbers() {
+		return plateNumbers;
+	}
+	
+	/**
+	 * 设置 车牌号
+	 */
+	public void setPlateNumbers(String plateNumbers) {
+		this.plateNumbers = plateNumbers;
+	}
+	
+	/**
+	 * 获取 车辆编号
+	 */
+	public String getCarNumber() {
+		return carNumber;
+	}
+	
+	/**
+	 * 设置 车辆编号
+	 */
+	public void setCarNumber(String carNumber) {
+		this.carNumber = carNumber;
+	}
+	
+	/**
+	 * 获取 车辆状态
+	 */
+	public String getCarStatus() {
+		return carStatus;
+	}
+	
+	/**
+	 * 设置 车辆状态
+	 */
+	public void setCarStatus(String carStatus) {
+		this.carStatus = carStatus;
+	}
+	
+	/**
+	 * 获取 车辆所属类型
+	 */
+	public String getCarBelongType() {
+		return carBelongType;
+	}
+	
+	/**
+	 * 设置 车辆所属类型
+	 */
+	public void setCarBelongType(String carBelongType) {
+		this.carBelongType = carBelongType;
+	}
+	
+	/**
+	 * 获取 车辆所属承运商
+	 */
+	public String getCarBelongCarrier() {
+		return carBelongCarrier;
+	}
+	
+	/**
+	 * 设置 车辆所属承运商
+	 */
+	public void setCarBelongCarrier(String carBelongCarrier) {
+		this.carBelongCarrier = carBelongCarrier;
+	}
+	
+	/**
+	 * 获取 车辆所属机构（分拨）
+	 */
+	public String getCarOrg() {
+		return carOrg;
+	}
+	
+	/**
+	 * 设置 车辆所属机构（分拨）
+	 */
+	public void setCarOrg(String carOrg) {
+		this.carOrg = carOrg;
+	}
+	
+	/**
+	 * 获取 司机组织
+	 */
+	public String getDriverOrg() {
+		return driverOrg;
+	}
+	
+	/**
+	 * 设置 司机组织
+	 */
+	public void setDriverOrg(String driverOrg) {
+		this.driverOrg = driverOrg;
+	}
+	
+	/**
+	 * 获取 车辆类型
+	 */
+	public String getCarType() {
+		return carType;
+	}
+	
+	/**
+	 * 设置 车辆类型
+	 */
+	public void setCarType(String carType) {
+		this.carType = carType;
+	}
+	
+	/**
+	 * 获取 车辆品牌
+	 */
+	public String getCarBrand() {
+		return carBrand;
+	}
+	
+	/**
+	 * 设置 车辆品牌
+	 */
+	public void setCarBrand(String carBrand) {
+		this.carBrand = carBrand;
+	}
+	
+	/**
+	 * 获取 车主姓名
+	 */
+	public String getCarOwnerName() {
+		return carOwnerName;
+	}
+	
+	/**
+	 * 设置 车主姓名
+	 */
+	public void setCarOwnerName(String carOwnerName) {
+		this.carOwnerName = carOwnerName;
+	}
+	
+	/**
+	 * 获取 车主手机号
+	 */
+	public String getCarOwnerMoble() {
+		return carOwnerMoble;
+	}
+	
+	/**
+	 * 设置 车主手机号
+	 */
+	public void setCarOwnerMoble(String carOwnerMoble) {
+		this.carOwnerMoble = carOwnerMoble;
+	}
+	
+	/**
+	 * 获取 车宽
+	 */
+	public Double getCarWidth() {
+		return carWidth;
+	}
+	
+	/**
+	 * 设置 车宽
+	 */
+	public void setCarWidth(Double carWidth) {
+		this.carWidth = carWidth;
+	}
+	
+	/**
+	 * 获取 车长
+	 */
+	public Double getCarLength() {
+		return carLength;
+	}
+	
+	/**
+	 * 设置 车长
+	 */
+	public void setCarLength(Double carLength) {
+		this.carLength = carLength;
+	}
+	
+	/**
+	 * 获取 车高
+	 */
+	public Double getCarHeight() {
+		return carHeight;
+	}
+	
+	/**
+	 * 设置 车高
+	 */
+	public void setCarHeight(Double carHeight) {
+		this.carHeight = carHeight;
+	}
+	
+	/**
+	 * 获取 车厢容积
+	 */
+	public Double getCarVolume() {
+		return carVolume;
+	}
+	
+	/**
+	 * 设置 车厢容积
+	 */
+	public void setCarVolume(Double carVolume) {
+		this.carVolume = carVolume;
+	}
+	
+	/**
+	 * 获取 车厢荷载吨数
+	 */
+	public Double getCarLoad() {
+		return carLoad;
+	}
+	
+	/**
+	 * 设置 车厢荷载吨数
+	 */
+	public void setCarLoad(Double carLoad) {
+		this.carLoad = carLoad;
+	}
+	
+	/**
+	 * 获取 整备质量
+	 */
+	public Double getCurbWeight() {
+		return curbWeight;
+	}
+	
+	/**
+	 * 设置 整备质量
+	 */
+	public void setCurbWeight(Double curbWeight) {
+		this.curbWeight = curbWeight;
+	}
+	
+	/**
+	 * 获取 底盘高度
+	 */
+	public Double getChassisHeight() {
+		return chassisHeight;
+	}
+	
+	/**
+	 * 设置 底盘高度
+	 */
+	public void setChassisHeight(Double chassisHeight) {
+		this.chassisHeight = chassisHeight;
+	}
+	
+	/**
+	 * 获取 发动机号码
+	 */
+	public String getEngineNumber() {
+		return engineNumber;
+	}
+	
+	/**
+	 * 设置 发动机号码
+	 */
+	public void setEngineNumber(String engineNumber) {
+		this.engineNumber = engineNumber;
+	}
+	
+	/**
+	 * 获取 gps设备号
+	 */
+	public String getGpsDeviceNumber() {
+		return gpsDeviceNumber;
+	}
+	
+	/**
+	 * 设置 gps设备号
+	 */
+	public void setGpsDeviceNumber(String gpsDeviceNumber) {
+		this.gpsDeviceNumber = gpsDeviceNumber;
+	}
+	
+	/**
+	 * 获取 行驶证编号
+	 */
+	public String getDrivingLicenseNumber() {
+		return drivingLicenseNumber;
+	}
+	
+	/**
+	 * 设置 行驶证编号
+	 */
+	public void setDrivingLicenseNumber(String drivingLicenseNumber) {
+		this.drivingLicenseNumber = drivingLicenseNumber;
+	}
+	
+	/**
+	 * 获取 运力可用开始时间
+	 */
+	public Date getCapacityStartTime() {
+		return capacityStartTime;
+	}
+	
+	/**
+	 * 设置 运力可用开始时间
+	 */
+	public void setCapacityStartTime(Date capacityStartTime) {
+		this.capacityStartTime = capacityStartTime;
+	}
+	
+	/**
+	 * 获取 运力可用结束时间
+	 */
+	public Date getCapacityEndTime() {
+		return capacityEndTime;
+	}
+	
+	/**
+	 * 设置 运力可用结束时间
+	 */
+	public void setCapacityEndTime(Date capacityEndTime) {
+		this.capacityEndTime = capacityEndTime;
+	}
+	
+	/**
+	 * 获取 上线时间
+	 */
+	public Date getOnlineTime() {
+		return onlineTime;
+	}
+	
+	/**
+	 * 设置 上线时间
+	 */
+	public void setOnlineTime(Date onlineTime) {
+		this.onlineTime = onlineTime;
+	}
+	
+	/**
+	 * 获取 交强险到期日
+	 */
+	public Date getTciEndTime() {
+		return tciEndTime;
+	}
+	
+	/**
+	 * 设置 交强险到期日
+	 */
+	public void setTciEndTime(Date tciEndTime) {
+		this.tciEndTime = tciEndTime;
+	}
+	
+	/**
+	 * 获取 商业险到期日
+	 */
+	public Date getVciEndTime() {
+		return vciEndTime;
+	}
+	
+	/**
+	 * 设置 商业险到期日
+	 */
+	public void setVciEndTime(Date vciEndTime) {
+		this.vciEndTime = vciEndTime;
+	}
+	
+	/**
+	 * 获取 货物险到期日
+	 */
+	public Date getCiEndTime() {
+		return ciEndTime;
+	}
+	
+	/**
+	 * 设置 货物险到期日
+	 */
+	public void setCiEndTime(Date ciEndTime) {
+		this.ciEndTime = ciEndTime;
+	}
+	
+	/**
+	 * 获取 行驶证附件ID
+	 */
+	public String getDrivingLicenseFile() {
+		return drivingLicenseFile;
+	}
+	
+	/**
+	 * 设置 行驶证附件ID
+	 */
+	public void setDrivingLicenseFile(String drivingLicenseFile) {
+		this.drivingLicenseFile = drivingLicenseFile;
+	}
+	
+	/**
+	 * 获取 营运证附件ID
+	 */
+	public String getOperationCertificateFile() {
+		return operationCertificateFile;
+	}
+	
+	/**
+	 * 设置 营运证附件ID
+	 */
+	public void setOperationCertificateFile(String operationCertificateFile) {
+		this.operationCertificateFile = operationCertificateFile;
+	}
+	
+	/**
+	 * 获取 交强险附件ID
+	 */
+	public String getTciFile() {
+		return tciFile;
+	}
+	
+	/**
+	 * 设置 交强险附件ID
+	 */
+	public void setTciFile(String tciFile) {
+		this.tciFile = tciFile;
+	}
+	
+	/**
+	 * 获取 商业险附件ID
+	 */
+	public String getVciFile() {
+		return vciFile;
+	}
+	
+	/**
+	 * 设置 商业险附件ID
+	 */
+	public void setVciFile(String vciFile) {
+		this.vciFile = vciFile;
+	}
+	
+	/**
+	 * 获取 其它险附件ID
+	 */
+	public String getOtherInsuranceFile() {
+		return otherInsuranceFile;
+	}
+	
+	/**
+	 * 设置 其它险附件ID
+	 */
+	public void setOtherInsuranceFile(String otherInsuranceFile) {
+		this.otherInsuranceFile = otherInsuranceFile;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	
+	
+	/**
+	 * @return the residentPoint
+	 */
+	public String getResidentPoint() {
+		return residentPoint;
+	}
+
+	/**
+	 * @param residentPoint the residentPoint to set
+	 */
+	public void setResidentPoint(String residentPoint) {
+		this.residentPoint = residentPoint;
+	}
+
+	/**
+	 * 获取 删除标志
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标志
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public Integer getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(Integer createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	/**
+	 * @return the operationNumber
+	 */
+	public String getOperationNumber() {
+		return operationNumber;
+	}
+
+	/**
+	 * @param operationNumber the operationNumber to set
+	 */
+	public void setOperationNumber(String operationNumber) {
+		this.operationNumber = operationNumber;
+	}
+
+	/**
+	 * @return the trafficPermitFlag
+	 */
+	public String getTrafficPermitFlag() {
+		return trafficPermitFlag;
+	}
+
+	/**
+	 * @param trafficPermitFlag the trafficPermitFlag to set
+	 */
+	public void setTrafficPermitFlag(String trafficPermitFlag) {
+		this.trafficPermitFlag = trafficPermitFlag;
+	}
+
+	/**
+	 * @return the usableFlag
+	 */
+	public String getUsableFlag() {
+		return usableFlag;
+	}
+
+	/**
+	 * @param usableFlag the usableFlag to set
+	 */
+	public void setUsableFlag(String usableFlag) {
+		this.usableFlag = usableFlag;
+	}
+
+	public String getDirvingPlanCode() {
+		return dirvingPlanCode;
+	}
+
+	public void setDirvingPlanCode(String dirvingPlanCode) {
+		this.dirvingPlanCode = dirvingPlanCode;
+	}
+
+	public String getLng() {
+		return lng;
+	}
+
+	public void setLng(String lng) {
+		this.lng = lng;
+	}
+
+	public String getLat() {
+		return lat;
+	}
+
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	/**
+	 * @return the trafficPermitFile
+	 */
+	public String getTrafficPermitFile() {
+		return trafficPermitFile;
+	}
+
+	/**
+	 * @param trafficPermitFile the trafficPermitFile to set
+	 */
+	public void setTrafficPermitFile(String trafficPermitFile) {
+		this.trafficPermitFile = trafficPermitFile;
+	}
+	
+	
+}

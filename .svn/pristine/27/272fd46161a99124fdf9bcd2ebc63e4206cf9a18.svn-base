@@ -1,0 +1,601 @@
+package cn.uce.suc.bkg.entity.datamain;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import cn.uce.utils.StringUtil;
+
+import java.util.Date;
+
+/**
+ * @Description: 网点运力管理Entity类
+ * @author UCE-lixueyuan
+ * @date 2017年10月23日 下午06:54:13
+ */
+@Table("t_suc_bkg_capacity_management")
+public class CapacityManagement extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 运力编号 
+	 */
+	private String capacityCode;
+	  /** 
+		 * 车牌号 
+		 * carPlateSurname 车牌号前缀
+		 * 
+		 * carPlateEnd 车牌号后缀
+		 * carPlateNumber=carPlateSurname+carPlateEnd；
+		 */
+
+		private String carPlateNumber;
+    /** 
+	 * 所属站点编号 
+	 */
+	private String belongSiteCode;
+    /** 
+	 * 所属站点名称 
+	 */
+	private String belongSiteName;
+    /** 
+	 * 车辆所属 
+	 */
+	private String carBelong;
+    /** 
+	 * 车辆类型(来源于运力费用id) 
+	 */
+	private String carType;
+    /** 
+	 * 车辆类型value 
+	 */
+	private String carTypeValue;
+    /** 
+	 * 长 
+	 */
+	private Double length;
+    /** 
+	 * 宽 
+	 */
+	private Double width;
+    /** 
+	 * 高 
+	 */
+	private Double hight;
+    /** 
+	 * 最大载重 
+	 */
+	private Double largestLoad;
+    /** 
+	 * 司机姓名 
+	 */
+	private String driverName;
+    /** 
+	 * 司机电话 
+	 */
+	private String driverPhone;
+    /** 
+	 * 采购价格 
+	 */
+	private Double purchasePrice;
+    /** 
+	 * 采购状态 
+	 */
+	private String buyStatus;
+    /** 
+	 * 是否含有通行证 
+	 */
+	private Boolean passFlag;
+    /** 
+	 * 通行证图片id 
+	 */
+	private String passImageId;
+    /** 
+	 * 驾驶证图片id 
+	 */
+	private String drivingLicenceImageId;
+    /** 
+	 * 行驶证ID 
+	 */
+	private String idCardFrontImageId;
+    /** 
+	 * 身份证ID 
+	 */
+	private String idCardBackImageId;
+	
+	
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 营运证图片id 
+	 */
+	private String operationId;
+	/**
+	 * 驾驶证照片
+	 */
+	private  String driverLicensePhoto;
+
+	/**
+	 * 行驶证照片
+	 */
+	private  String drivingLicensePhoto;
+	public String getDriverLicensePhoto() {
+		return driverLicensePhoto;
+	}
+
+	public void setDriverLicensePhoto(String driverLicensePhoto) {
+		this.driverLicensePhoto = driverLicensePhoto;
+	}
+
+	public String getDrivingLicensePhoto() {
+		return drivingLicensePhoto;
+	}
+
+	public void setDrivingLicensePhoto(String drivingLicensePhoto) {
+		this.drivingLicensePhoto = drivingLicensePhoto;
+	}
+
+	public String getIdFrontPhoto() {
+		return idFrontPhoto;
+	}
+
+	public void setIdFrontPhoto(String idFrontPhoto) {
+		this.idFrontPhoto = idFrontPhoto;
+	}
+
+	public String getPassCheckPhoto() {
+		return passCheckPhoto;
+	}
+
+	public void setPassCheckPhoto(String passCheckPhoto) {
+		this.passCheckPhoto = passCheckPhoto;
+	}
+
+	public String getOperationCertificate() {
+		return operationCertificate;
+	}
+
+	public void setOperationCertificate(String operationCertificate) {
+		this.operationCertificate = operationCertificate;
+	}
+
+	public String getIdSidePhoto() {
+		return idSidePhoto;
+	}
+
+	public void setIdSidePhoto(String idSidePhoto) {
+		this.idSidePhoto = idSidePhoto;
+	}
+
+	/**
+	 * 身份证正面照片
+	 */
+	private  String idFrontPhoto;
+	/**
+	 * 通行证照片
+	 */
+	private  String passCheckPhoto;
+	/**
+	 * 营运证照片
+	 */
+	private  String operationCertificate;
+	/**
+	 * 身份证反面照片
+	 */
+	private  String idSidePhoto;
+	
+	/**
+	 * 获取 运力编号
+	 */
+	public String getCapacityCode() {
+		return capacityCode;
+	}
+	
+	/**
+	 * 设置 运力编号
+	 */
+	public void setCapacityCode(String capacityCode) {
+		this.capacityCode = capacityCode;
+	}
+	
+	/**
+	 * 获取 车牌号
+	 */
+	public String getCarPlateNumber() {
+		return carPlateNumber;
+	}
+	
+	/**
+	 * 设置 车牌号
+	 */
+	public void setCarPlateNumber(String carPlateNumber) {
+		this.carPlateNumber = carPlateNumber;
+	}
+	
+	/**
+	 * 获取 所属站点编号
+	 */
+	public String getBelongSiteCode() {
+		return belongSiteCode;
+	}
+	
+	/**
+	 * 设置 所属站点编号
+	 */
+	public void setBelongSiteCode(String belongSiteCode) {
+		this.belongSiteCode = belongSiteCode;
+	}
+	
+	/**
+	 * 获取 所属站点名称
+	 */
+	public String getBelongSiteName() {
+		return belongSiteName;
+	}
+	
+	/**
+	 * 设置 所属站点名称
+	 */
+	public void setBelongSiteName(String belongSiteName) {
+		this.belongSiteName = belongSiteName;
+	}
+	
+	/**
+	 * 获取 车辆所属
+	 */
+	public String getCarBelong() {
+		return carBelong;
+	}
+	
+	/**
+	 * 设置 车辆所属
+	 */
+	public void setCarBelong(String carBelong) {
+		this.carBelong = carBelong;
+	}
+	
+	/**
+	 * 获取 车辆类型(来源于运力费用id)
+	 */
+	public String getCarType() {
+		return carType;
+	}
+	
+	/**
+	 * 设置 车辆类型(来源于运力费用id)
+	 */
+	public void setCarType(String carType) {
+		this.carType = carType;
+	}
+	
+	
+	/**
+	 * 获取 长
+	 */
+	public Double getLength() {
+		return length;
+	}
+	
+	/**
+	 * 设置 长
+	 */
+	public void setLength(Double length) {
+		this.length = length;
+	}
+	
+	/**
+	 * 获取 宽
+	 */
+	public Double getWidth() {
+		return width;
+	}
+	
+	/**
+	 * 设置 宽
+	 */
+	public void setWidth(Double width) {
+		this.width = width;
+	}
+	
+	/**
+	 * 获取 高
+	 */
+	public Double getHight() {
+		return hight;
+	}
+	
+	/**
+	 * 设置 高
+	 */
+	public void setHight(Double hight) {
+		this.hight = hight;
+	}
+	
+	/**
+	 * 获取 最大载重
+	 */
+	public Double getLargestLoad() {
+		return largestLoad;
+	}
+	
+	/**
+	 * 设置 最大载重
+	 */
+	public void setLargestLoad(Double largestLoad) {
+		this.largestLoad = largestLoad;
+	}
+	
+	/**
+	 * 获取 司机姓名
+	 */
+	public String getDriverName() {
+		return driverName;
+	}
+	
+	/**
+	 * 设置 司机姓名
+	 */
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+	
+	/**
+	 * 获取 司机电话
+	 */
+	public String getDriverPhone() {
+		return driverPhone;
+	}
+	
+	/**
+	 * 设置 司机电话
+	 */
+	public void setDriverPhone(String driverPhone) {
+		this.driverPhone = driverPhone;
+	}
+	
+	/**
+	 * 获取 采购价格
+	 */
+	public Double getPurchasePrice() {
+		return purchasePrice;
+	}
+	
+	/**
+	 * 设置 采购价格
+	 */
+	public void setPurchasePrice(Double purchasePrice) {
+		this.purchasePrice = purchasePrice;
+	}
+	
+	/**
+	 * 获取 采购状态
+	 */
+	public String getBuyStatus() {
+		return buyStatus;
+	}
+	
+	/**
+	 * 设置 采购状态
+	 */
+	public void setBuyStatus(String buyStatus) {
+		this.buyStatus = buyStatus;
+	}
+	
+	/**
+	 * 获取 是否含有通行证
+	 */
+	public Boolean getPassFlag() {
+		return passFlag;
+	}
+	
+	/**
+	 * 设置 是否含有通行证
+	 */
+	public void setPassFlag(Boolean passFlag) {
+		this.passFlag = passFlag;
+	}
+	
+	/**
+	 * 获取 通行证图片id
+	 */
+	public String getPassImageId() {
+		return passImageId;
+	}
+	
+	/**
+	 * 设置 通行证图片id
+	 */
+	public void setPassImageId(String passImageId) {
+		this.passImageId = passImageId;
+	}
+	
+	/**
+	 * 获取 驾驶证图片id
+	 */
+	public String getDrivingLicenceImageId() {
+		return drivingLicenceImageId;
+	}
+	
+	/**
+	 * 设置 驾驶证图片id
+	 */
+	public void setDrivingLicenceImageId(String drivingLicenceImageId) {
+		this.drivingLicenceImageId = drivingLicenceImageId;
+	}
+	
+	/**
+	 * 获取 通行证片ID
+	 */
+	public String getIdCardFrontImageId() {
+		return idCardFrontImageId;
+	}
+	
+	/**
+	 * 设置 身份证ID
+	 */
+	public void setIdCardFrontImageId(String idCardFrontImageId) {
+		this.idCardFrontImageId = idCardFrontImageId;
+	}
+	
+	/**
+	 * 获取 身份证反面图片ID
+	 */
+	public String getIdCardBackImageId() {
+		return idCardBackImageId;
+	}
+	
+	/**
+	 * 设置 身份证反面图片ID
+	 */
+	public void setIdCardBackImageId(String idCardBackImageId) {
+		this.idCardBackImageId = idCardBackImageId;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	
+	
+	/** 
+	 * @return carTypeValue 
+	 */
+	public String getCarTypeValue() {
+		return carTypeValue;
+	}
+
+	/**
+	 * @param carTypeValue the carTypeValue to set
+	 */
+	public void setCarTypeValue(String carTypeValue) {
+		this.carTypeValue = carTypeValue;
+	}
+
+	/**
+	 * 获取 营运证图片id
+	 */
+	public String getOperationId() {
+		return operationId;
+	}
+	
+	/**
+	 * 设置 营运证图片id
+	 */
+	public void setOperationId(String operationId) {
+		this.operationId = operationId;
+	}
+	
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	private Date startTime;
+	private Date endTime;
+}

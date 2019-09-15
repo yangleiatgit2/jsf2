@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.app.dao.ICaptchaDao">
+	
+	<sql id="Base_Column_List">
+			id,mobile_phone,content,
+			count,dead_time,user_type,
+			remark,delete_flag,version,
+			create_emp,create_org,create_time,
+			update_emp,update_org,update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="mobilePhone != null">
+		and mobile_phone = #{mobilePhone}
+		</if>
+	    <if test="content != null">
+		and content = #{content}
+		</if>
+	    <if test="count != null">
+		and count = #{count}
+		</if>
+	    <if test="deadTime != null">
+		and dead_time = #{deadTime}
+		</if>
+	    <if test="userType != null">
+		and user_type = #{userType}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.app.entity.Captcha">
+	UPDATE t_suc_app_captcha
+	<set>
+		<if test="mobilePhone != null">
+		mobile_phone = #{mobilePhone},
+		</if>
+		<if test="content != null">
+		content = #{content},
+		</if>
+		<if test="count != null">
+		count = #{count},
+		</if>
+		<if test="deadTime != null">
+		dead_time = #{deadTime},
+		</if>
+		<if test="userType != null">
+		user_type = #{userType},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.app.vo.CaptchaVo" resultType="cn.uce.suc.app.entity.Captcha">
+	select <include refid="Base_Column_List" /> from t_suc_app_captcha
+	</select>
+	<!-- 组合查询 -->
+	<select id="findByCondtion" parameterType="cn.uce.suc.app.vo.CaptchaVo" resultType="cn.uce.suc.app.entity.Captcha">
+	select <include refid="Base_Column_List" /> from t_suc_app_captcha <include refid="Base_Column_Where" />
+	</select>
+	
+</mapper>

@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.IDirvingPlanDetailDao">
+	
+	<sql id="Base_Column_List">
+			id,driving_plan_code,way_point_code,
+			way_point_name,forecast_volume,forecast_weight,
+			actual_volume,actual_weight,actual_number,site_number,
+			driver_actual_volume,driver_actual_weight,driver_actual_number,
+			oper_number,forecast_end_time,actual_end_time,
+			forecast_runing_time,actual_running_time,leave_station_time,
+			forecast_load_unload_tine,forecast_distance,actual_distance,
+			station_eval_judge,station_eval_lever,way_point_status,plan_driver_status,plan_site_status,
+			delay_time,upload_emp,blow_volume,
+			upload_time,blow_flag,station_appraise,
+			remark,utf1,utf2,sort,
+			utf3,version,delete_flag,
+			create_org,create_emp,create_time,
+			update_org,update_emp,update_time,
+			next_point_name,next_point_code,appraise_time,plan_driver_prompt,plan_site_prompt
+			
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	1=1
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="drivingPlanCode != null">
+		and driving_plan_code = #{drivingPlanCode}
+		</if>
+	    <if test="wayPointCode != null">
+		and way_point_code = #{wayPointCode}
+		</if>
+	    <if test="wayPointName != null">
+		and way_point_name = #{wayPointName}
+		</if>
+	    <if test="forecastVolume != null">
+		and forecast_volume = #{forecastVolume}
+		</if>
+	    <if test="forecastWeight != null">
+		and forecast_weight = #{forecastWeight}
+		</if>
+	    <if test="actualVolume != null">
+		and actual_volume = #{actualVolume}
+		</if>
+	    <if test="actualWeight != null">
+		and actual_weight = #{actualWeight}
+		</if>
+	    <if test="actualNumber != null">
+		and actual_number = #{actualNumber}
+		</if>
+	    <if test="driverActualVolume != null">
+		and driver_actual_volume = #{driverActualVolume}
+		</if>
+	    <if test="driverActualWeight != null">
+		and driver_actual_weight = #{driverActualWeight}
+		</if>
+	    <if test="driverActualNumber != null">
+		and driver_actual_number = #{driverActualNumber}
+		</if>
+	    <if test="siteNumber != null">
+		and site_number = #{siteNumber}
+		</if>
+	    <if test="operNumber != null">
+		and oper_number = #{operNumber}
+		</if>
+	    <if test="forecastEndTime != null">
+		and forecast_end_time = #{forecastEndTime}
+		</if>
+	    <if test="actualEndTime != null">
+		and actual_end_time = #{actualEndTime}
+		</if>
+	    <if test="forecastRuningTime != null">
+		and forecast_runing_time = #{forecastRuningTime}
+		</if>
+	    <if test="actualRunningTime != null">
+		and actual_running_time = #{actualRunningTime}
+		</if>
+	    <if test="leaveStationTime != null">
+		and leave_station_time = #{leaveStationTime}
+		</if>
+	    <if test="forecastLoadUnloadTine != null">
+		and forecast_load_unload_tine = #{forecastLoadUnloadTine}
+		</if>
+	    <if test="forecastDistance != null">
+		and forecast_distance = #{forecastDistance}
+		</if>
+	    <if test="actualDistance != null">
+		and actual_distance = #{actualDistance}
+		</if>
+	    <if test="stationEvalJudge != null">
+		and station_eval_judge = #{stationEvalJudge}
+		</if>
+	    <if test="stationEvalLever != null">
+		and station_eval_lever = #{stationEvalLever}
+		</if>
+	    <if test="wayPointStatus != null">
+		and way_point_status = #{wayPointStatus}
+		</if>
+	    <if test="planDriverStatus != null">
+		and plan_driver_status = #{planDriverStatus}
+		</if>
+	    <if test="planSiteStatus != null">
+		and plan_site_status = #{planSiteStatus}
+		</if>
+	    <if test="delayTime != null">
+		and delay_time = #{delayTime}
+		</if>
+	    <if test="uploadEmp != null">
+		and upload_emp = #{uploadEmp}
+		</if>
+	    <if test="blowVolume != null">
+		and blow_volume = #{blowVolume}
+		</if>
+	    <if test="uploadTime != null">
+		and upload_time = #{uploadTime}
+		</if>
+	    <if test="blowFlag != null">
+		and blow_flag = #{blowFlag}
+		</if>
+	    <if test="stationAppraise != null">
+		and station_appraise = #{stationAppraise}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+		<if test="nextPointName != null">
+		and next_point_name =#{nextPointName}
+		</if>
+		<if test="nextPointCode != null">
+		and next_point_code =#{nextPointCode}
+		</if>
+	</where>
+	</sql>
+	<update id="updatePlanDriverStatusByWhere"  parameterType="cn.uce.suc.bkg.entity.operation.DirvingPlanDetail" >
+	UPDATE t_suc_bkg_dirving_plan_detail
+	<set>
+		<if test="forecastVolume != null">
+		forecast_volume = #{forecastVolume},
+		</if>
+		<if test="forecastWeight != null">
+		forecast_weight = #{forecastWeight},
+		</if>
+		<if test="actualVolume != null">
+		actual_volume = #{actualVolume},
+		</if>
+		<if test="actualWeight != null">
+		actual_weight = #{actualWeight},
+		</if>
+		<if test="actualNumber != null">
+		actual_number = #{actualNumber},
+		</if>
+		 <if test="driverActualVolume != null">
+		driver_actual_volume = #{driverActualVolume},
+		</if>
+	    <if test="driverActualWeight != null">
+		driver_actual_weight = #{driverActualWeight},
+		</if>
+	    <if test="driverActualNumber != null">
+		driver_actual_number = #{driverActualNumber},
+		</if>
+		<if test="siteNumber != null">
+		site_number = #{siteNumber},
+		</if>
+		<if test="operNumber != null">
+		oper_number = #{operNumber},
+		</if>
+		<if test="forecastEndTime != null">
+		forecast_end_time = #{forecastEndTime},
+		</if>
+		<if test="actualEndTime != null">
+		actual_end_time = #{actualEndTime},
+		</if>
+		<if test="forecastRuningTime != null">
+		forecast_runing_time = #{forecastRuningTime},
+		</if>
+		<if test="actualRunningTime != null">
+		actual_running_time = #{actualRunningTime},
+		</if>
+		<if test="leaveStationTime != null">
+		leave_station_time = #{leaveStationTime},
+		</if>
+		<if test="forecastLoadUnloadTine != null">
+		forecast_load_unload_tine = #{forecastLoadUnloadTine},
+		</if>
+		<if test="forecastDistance != null">
+		forecast_distance = #{forecastDistance},
+		</if>
+		<if test="actualDistance != null">
+		actual_distance = #{actualDistance},
+		</if>
+		<if test="stationEvalJudge != null">
+		station_eval_judge = #{stationEvalJudge},
+		</if>
+		<if test="stationEvalLever != null">
+		station_eval_lever = #{stationEvalLever},
+		</if>
+		<if test="wayPointStatus != null">
+		way_point_status = #{wayPointStatus},
+		</if>
+		<if test="planDriverStatus != null">
+		plan_driver_status = #{planDriverStatus},
+		</if>
+		<if test="planSiteStatus != null">
+		plan_site_status = #{planSiteStatus},
+		</if>
+		<if test="appraiseTime != null">
+		appraise_time = #{appraiseTime},
+		</if>
+		<if test="planDriverPrompt!= null">
+		plan_driver_prompt = #{planDriverPrompt},
+		</if>
+		<if test="planSitePrompt != null">
+		plan_site_prompt = #{planSitePrompt},
+		</if>		
+		<if test="delayTime != null">
+		delay_time = #{delayTime},
+		</if>
+		<if test="uploadEmp != null">
+		upload_emp = #{uploadEmp},
+		</if>
+		<if test="blowVolume != null">
+		blow_volume = #{blowVolume},
+		</if>
+		<if test="uploadTime != null">
+		upload_time = #{uploadTime},
+		</if>
+		<if test="blowFlag != null">
+		blow_flag = #{blowFlag},
+		</if>
+		<if test="stationAppraise != null">
+		station_appraise = #{stationAppraise},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		
+	</set>
+	<where>
+		<if test="id != null">
+			and id =#{id}
+		</if>
+		<if test="drivingPlanCode != null and drivingPlanCode !=''" >
+			and	driving_plan_code = #{drivingPlanCode}
+		</if>
+		<if test="wayPointCode != null and wayPointCode !=''">
+			and	way_point_code = #{wayPointCode}
+		</if>
+		<if test="wayPointName != null and wayPointName != ''">
+			and	way_point_name = #{wayPointName}
+		</if>
+	
+	</where>
+	
+	</update>
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.operation.DirvingPlanDetail">
+	UPDATE t_suc_bkg_dirving_plan_detail
+	<set>
+		<if test="drivingPlanCode != null">
+		driving_plan_code = #{drivingPlanCode},
+		</if>
+		<if test="wayPointCode != null">
+		way_point_code = #{wayPointCode},
+		</if>
+		<if test="wayPointName != null">
+		way_point_name = #{wayPointName},
+		</if>
+		<if test="forecastVolume != null">
+		forecast_volume = #{forecastVolume},
+		</if>
+		<if test="forecastWeight != null">
+		forecast_weight = #{forecastWeight},
+		</if>
+		<if test="actualVolume != null">
+		actual_volume = #{actualVolume},
+		</if>
+		<if test="actualWeight != null">
+		actual_weight = #{actualWeight},
+		</if>
+		<if test="actualNumber != null">
+		actual_number = #{actualNumber},
+		</if>
+		 <if test="driverActualVolume != null">
+		driver_actual_volume = #{driverActualVolume},
+		</if>
+	    <if test="driverActualWeight != null">
+		driver_actual_weight = #{driverActualWeight},
+		</if>
+	    <if test="driverActualNumber != null">
+		driver_actual_number = #{driverActualNumber},
+		</if>
+		<if test="siteNumber != null">
+		site_number = #{siteNumber},
+		</if>
+		<if test="operNumber != null">
+		oper_number = #{operNumber},
+		</if>
+		<if test="forecastEndTime != null">
+		forecast_end_time = #{forecastEndTime},
+		</if>
+		<if test="actualEndTime != null">
+		actual_end_time = #{actualEndTime},
+		</if>
+		<if test="forecastRuningTime != null">
+		forecast_runing_time = #{forecastRuningTime},
+		</if>
+		<if test="actualRunningTime != null">
+		actual_running_time = #{actualRunningTime},
+		</if>
+		<if test="leaveStationTime != null">
+		leave_station_time = #{leaveStationTime},
+		</if>
+		<if test="forecastLoadUnloadTine != null">
+		forecast_load_unload_tine = #{forecastLoadUnloadTine},
+		</if>
+		<if test="forecastDistance != null">
+		forecast_distance = #{forecastDistance},
+		</if>
+		<if test="actualDistance != null">
+		actual_distance = #{actualDistance},
+		</if>
+		<if test="stationEvalJudge != null">
+		station_eval_judge = #{stationEvalJudge},
+		</if>
+		<if test="stationEvalLever != null">
+		station_eval_lever = #{stationEvalLever},
+		</if>
+		<if test="wayPointStatus != null">
+		way_point_status = #{wayPointStatus},
+		</if>
+		<if test="planDriverStatus != null">
+		plan_driver_status = #{planDriverStatus},
+		</if>
+		<if test="planSiteStatus != null">
+		plan_site_status = #{planSiteStatus},
+		</if>
+		<if test="appraiseTime != null">
+		appraise_time = #{appraiseTime},
+		</if>
+		<if test="planDriverPrompt!= null">
+		plan_driver_prompt = #{planDriverPrompt},
+		</if>
+		<if test="planSitePrompt != null">
+		plan_site_prompt = #{planSitePrompt},
+		</if>
+		<if test="delayTime != null">
+		delay_time = #{delayTime},
+		</if>
+		<if test="uploadEmp != null">
+		upload_emp = #{uploadEmp},
+		</if>
+		<if test="blowVolume != null">
+		blow_volume = #{blowVolume},
+		</if>
+		<if test="uploadTime != null">
+		upload_time = #{uploadTime},
+		</if>
+		<if test="blowFlag != null">
+		blow_flag = #{blowFlag},
+		</if>
+		<if test="stationAppraise != null">
+		station_appraise = #{stationAppraise},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="nextPointName != null">
+		next_point_name =#{nextPointName},
+		</if>
+		<if test="nextPointCode != null">
+		next_point_code =#{nextPointCode},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlanDetail">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan_detail
+	<include refid="Base_Column_Where"></include>
+	order by sort 
+	</select>
+	<select id="findByCriteria"  parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo"  resultType="cn.uce.suc.bkg.entity.operation.DirvingPlanDetail">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan_detail
+		<where>
+			<if test="drivingPlanCode != null and  drivingPlanCode != ''">
+				and driving_plan_code = #{drivingPlanCode}
+			</if>
+			<if test="wayPointCode != null and  wayPointCode != ''">
+				and way_point_code = #{wayPointCode}
+			</if>
+			<if test="wayPointName != null and  wayPointName != ''">
+				and way_point_name = #{wayPointName}
+			</if>
+			<if test="sort != null and sort != 0 ">
+				and sort = #{sort}
+			</if>
+		
+		</where>
+	</select>
+	
+	<update id="updateByApp" parameterType="cn.uce.suc.bkg.entity.operation.DirvingPlanDetail">
+		UPDATE t_suc_bkg_dirving_plan_detail
+	<set>
+		<if test="wayPointName != null">
+		way_point_name = #{wayPointName},
+		</if>
+		<if test="forecastVolume != null">
+		forecast_volume = #{forecastVolume},
+		</if>
+		<if test="forecastWeight != null">
+		forecast_weight = #{forecastWeight},
+		</if>
+		<if test="actualVolume != null">
+		actual_volume = #{actualVolume},
+		</if>
+		<if test="actualWeight != null">
+		actual_weight = #{actualWeight},
+		</if>
+		<if test="actualNumber != null">
+		actual_number = #{actualNumber},
+		</if>
+		 <if test="driverActualVolume != null">
+		driver_actual_volume = #{driverActualVolume},
+		</if>
+	    <if test="driverActualWeight != null">
+		driver_actual_weight = #{driverActualWeight},
+		</if>
+	    <if test="driverActualNumber != null">
+		driver_actual_number = #{driverActualNumber},
+		</if>
+		<if test="siteNumber != null">
+		site_number = #{siteNumber},
+		</if>
+		<if test="operNumber != null">
+		oper_number = #{operNumber},
+		</if>
+		<if test="forecastEndTime != null">
+		forecast_end_time = #{forecastEndTime},
+		</if>
+		<if test="actualEndTime != null">
+		actual_end_time = #{actualEndTime},
+		</if>
+		<if test="forecastRuningTime != null">
+		forecast_runing_time = #{forecastRuningTime},
+		</if>
+		<if test="actualRunningTime != null">
+		actual_running_time = #{actualRunningTime},
+		</if>
+		<if test="leaveStationTime != null">
+		leave_station_time = #{leaveStationTime},
+		</if>
+		<if test="forecastLoadUnloadTine != null">
+		forecast_load_unload_tine = #{forecastLoadUnloadTine},
+		</if>
+		<if test="forecastDistance != null">
+		forecast_distance = #{forecastDistance},
+		</if>
+		<if test="actualDistance != null">
+		actual_distance = #{actualDistance},
+		</if>
+		<if test="stationEvalJudge != null">
+		station_eval_judge = #{stationEvalJudge},
+		</if>
+		<if test="stationEvalLever != null">
+		station_eval_lever = #{stationEvalLever},
+		</if>
+		<if test="wayPointStatus != null">
+		way_point_status = #{wayPointStatus},
+		</if>
+		<if test="planDriverStatus != null">
+		plan_driver_status = #{planDriverStatus},
+		</if>
+		<if test="planSiteStatus != null">
+		plan_site_status = #{planSiteStatus},
+		</if>
+		<if test="appraiseTime != null">
+		appraise_time = #{appraiseTime},
+		</if>
+		<if test="planDriverPrompt!= null">
+		plan_driver_prompt = #{planDriverPrompt},
+		</if>
+		<if test="planSitePrompt != null">
+		plan_site_prompt = #{planSitePrompt},
+		</if>
+		<if test="delayTime != null">
+		delay_time = #{delayTime},
+		</if>
+		<if test="uploadEmp != null">
+		upload_emp = #{uploadEmp},
+		</if>
+		<if test="blowVolume != null">
+		blow_volume = #{blowVolume},
+		</if>
+		<if test="uploadTime != null">
+		upload_time = #{uploadTime},
+		</if>
+		<if test="blowFlag != null">
+		blow_flag = #{blowFlag},
+		</if>
+		<if test="stationAppraise != null">
+		station_appraise = #{stationAppraise},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="nextPointName != null">
+		next_point_name =#{nextPointName},
+		</if>
+		<if test="nextPointCode != null">
+		next_point_code =#{nextPointCode},
+		</if>
+	</set>
+	WHERE driving_plan_code = #{drivingPlanCode}
+	and way_point_code = #{wayPointCode}
+	
+	</update>
+	
+	<!--网点端  查询网点的已执行的列表或者   未评价/已评价的列表-->
+	<select id="findSiteDepartPlan" parameterType="cn.uce.suc.bkg.vo.operation.DrivingPlanExecutedVo" resultType="cn.uce.suc.bkg.vo.operation.DrivingPlanExecutedVo">
+	select t.way_point_code,t.way_point_name,t.driving_plan_code,a.driving_plan_name,
+		t.id,t.forecast_end_time,t.actual_end_time,a.depart_time,a.arrival_time,
+		t.forecast_volume,t.forecast_weight,t.actual_volume,t.actual_weight,t.actual_number,
+		t.driver_actual_volume,t.driver_actual_weight,t.driver_actual_number,
+		a.start_org_code,a.start_org_name,a.end_org_code,a.end_org_name,a.business_mode,
+		a.status,t.plan_site_status,a.dirver_name,a.driver_phone,a.car_code,a.car_type,a.plate_number,a.next_station_code,a.next_station,
+		t.station_eval_judge,t.station_eval_lever,t.station_appraise,t.appraise_time,t.plan_driver_prompt,t.plan_site_prompt
+		FROM
+			t_suc_bkg_dirving_plan_detail t
+		LEFT OUTER JOIN t_suc_bkg_dirving_plan a ON t.driving_plan_code = a.driving_plan_code
+		<where> 
+			<if test="wayPointCode != null and  wayPointCode != ''">
+				and t.way_point_code  = #{wayPointCode}
+			</if>
+			<if test="detailId != null and  detailId != ''">
+				and t.id=#{detailId}
+			</if>
+			<if test="drivingPlanCode != null and  drivingPlanCode != ''">
+				and a.driving_plan_code = #{drivingPlanCode}
+			</if>
+			<if test="stationEvalLever ==1">
+				and t.station_eval_lever is null
+			</if>
+			<if test="stationEvalLever ==2">
+				and t.station_eval_lever is not null
+			</if>
+			<if test="departTime != null and status != null and status!='' ">
+			and STR_TO_DATE(a.depart_time,"%Y-%m-%d")=#{departTime} and a.status=#{status}
+			</if>
+		</where>
+		order by t.create_time desc
+	</select>
+	<!-- 查询进港时 发车计划中的 最后一个网点 -->
+	<select id="findLastStationByPlanCodeAndMode"  parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo"  resultType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo" >
+		select  
+			<include refid="Base_Column_List" />
+		from t_suc_bkg_dirving_plan_detail
+		<where>
+			driving_plan_code = #{drivingPlanCode} and sort =(
+				SELECT  max(a.sort) FROM `t_suc_bkg_dirving_plan_detail` a where a.driving_plan_code == #{drivingPlanCode}
+			)
+		</where>
+	</select>
+	
+	<!-- 根据网点编码/发车计划编码 查询发车计划明细 -->
+	<select id="findByCode"  parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo"  resultType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan_detail
+		<where>
+			<if test="drivingPlanCode != null and  drivingPlanCode != ''">
+				and driving_plan_code = #{drivingPlanCode}
+			</if>
+			<if test="wayPointCode != null and  wayPointCode != ''">
+				and way_point_code = #{wayPointCode}
+			</if>
+		</where>
+		order by sort desc
+	</select>
+	
+	<!-- 根据网点编码/发车计划编码 查询发车计划明细    升序 -->
+	<select id="findByCodeAsc"  parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo"  resultType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan_detail
+		<where>
+			<if test="drivingPlanCode != null and  drivingPlanCode != ''">
+				and driving_plan_code = #{drivingPlanCode}
+			</if>
+			<if test="wayPointCode != null and  wayPointCode != ''">
+				and way_point_code = #{wayPointCode}
+			</if>
+		</where>
+		order by sort asc
+	</select>
+	
+	<select id="findByDrivePlanCode"  parameterType="java.lang.String"  resultType="cn.uce.suc.bkg.entity.operation.DirvingPlanDetail" >
+		select <include refid="Base_Column_List" /> from t_suc_bkg_dirving_plan_detail
+		<where>
+			driving_plan_code = #{drivingPlanCode} 
+		</where>
+	</select>
+</mapper>

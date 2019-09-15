@@ -1,0 +1,112 @@
+package cn.uce.suc.common.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.OmgCmsOrg;
+import cn.uce.suc.common.vo.ComboOrgVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.OrgVo;
+import cn.uce.suc.common.vo.ZTreeVo;
+import cn.uce.suc.common.dao.IOmgCmsOrgDao;
+
+/**
+ * @Description: 乾坤机构Service类
+ * @author liwei
+ * @date 2017年10月15日 下午09:57:58
+ */
+@Service("omgCmsOrgService")
+public class OmgCmsOrgService {
+	
+	/**
+	 * 注入乾坤机构Dao
+	 */
+	@Resource
+	private IOmgCmsOrgDao omgCmsOrgDao;
+	
+	
+	/**
+	 * @Description: 分页查询乾坤机构
+	 * @param omgCmsOrgVo 乾坤机构
+	 * @param page 分页参数
+	 * @return 乾坤机构
+	 * @author liwei
+	 * @date 2017年10月15日 下午09:57:58
+	 */
+	public Pagination<OmgCmsOrg> findByPagination(OmgCmsOrgVo omgCmsOrgVo, Page page) {
+		Pagination<OmgCmsOrg> paginationOmgCmsOrg = omgCmsOrgDao.findByPagination(omgCmsOrgVo, page);
+		return paginationOmgCmsOrg;
+	}
+	/**
+	 * 
+	 * @Description: 前端查询乾坤组织机构
+	 * @param omgCmsOrgVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午10:18:38
+	 */
+	public Pagination<ComboOrgVo> findByCombox(OmgCmsOrgVo omgCmsOrgVo, Page page){
+		return omgCmsOrgDao.findByCombox(omgCmsOrgVo, page);
+	}
+	/**
+	 * 
+	 * @Description: 根据baseOrgCode获取组织机构对象
+	 * @param baseOrgCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午11:24:29
+	 */
+	public OmgCmsOrgVo findByBaseOrgCode(String baseOrgCode) {
+		return omgCmsOrgDao.findByBaseOrgCode(baseOrgCode);
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param parentOrg
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月3日 下午9:19:06
+	 */
+	public List<OmgCmsOrg> findOperationByVo(OmgCmsOrgVo omgCmsOrgVo) {
+		return omgCmsOrgDao.findOperationByVo(omgCmsOrgVo);
+	}
+	/**
+	 * 
+	 * @Description: 获取所有的分拨中心数量
+	 * @param status,orgType
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月17日 下午15:24:29
+	 */
+	public int getAllOperationCount (OmgCmsOrgVo omgCmsOrgVo){
+		return omgCmsOrgDao.getAllOperationCount(omgCmsOrgVo);
+	}
+
+	
+	/**
+	 * @Description: (查询子营运机构列表) 
+	 * @param orgVo
+	 * @return
+	 * @author XJ
+	 * @date 2017年7月20日 下午6:21:32
+	 */
+	public List<ZTreeVo> findChildNosOrgList(OrgVo orgVo){
+		return omgCmsOrgDao.findChildNosOrgList(orgVo);
+	}
+	/**
+	 * @Description: (根据orgCode查询虚拟机构) 
+	 * @param orgCode
+	 * @return
+	 * @author XJ
+	 * @date 2017年7月20日 下午9:03:22
+	 */
+	public OrgVo findVirtualOrgByCode(String orgCode){
+		return omgCmsOrgDao.findVirtualOrgByCode(orgCode);
+	}
+}

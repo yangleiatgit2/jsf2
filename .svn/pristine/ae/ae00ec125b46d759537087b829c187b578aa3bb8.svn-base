@@ -1,0 +1,491 @@
+package cn.uce.suc.common.vo;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 车型成本管理Vo类
+ * @author liwei
+ * @date 2017年10月31日 下午01:36:11
+ */
+public class TruckCostManagementVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	/**
+	 * 模糊查询
+	 * @return
+	 */
+	public String getQ() {
+		return q;
+	}
+
+	public void setQ(String q) {
+		this.q = q;
+	}
+	/**
+	 * 模糊查询的参数
+	 */
+	private  String  q;  
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 车辆管理号 
+	 */
+	private String truckManageCode;
+    /** 
+	 * 车型成本名称 
+	 */
+	private String truckCostName;
+    /** 
+	 * 分拨中心的名称 
+	 */
+	private String belongSiteName;
+    /** 
+	 * 分拨中心的代码 
+	 */
+	private String belongSiteCode;
+    /** 
+	 * 车辆类型(1长期/2临时) 
+	 */
+	private String truckType;
+    /** 
+	 * 具体车型(对应的长度划分) 
+	 */
+	private String truckConcrete;
+    /** 
+	 * 状态(1已生成/2正式版本) 
+	 */
+	private String detailsStatus;
+    /** 
+	 * 变动成本系数 
+	 */
+	private Double costCoefficient;
+    /** 
+	 * 装卸费系数 
+	 */
+	private Double handlingCharges;
+    /** 
+	 * 固定成本费用(月) 
+	 */
+	private Double fixedCharges;
+    /** 
+	 * 版本号 
+	 */
+	private Long version;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 车辆的实际容积(方) 
+	 */
+	private Double truckVolume;
+    /** 
+	 * 缓冲方数(只能比实际方数小) 
+	 */
+	private Double bufferVolume;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+	
+	
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 车辆管理号
+	 */
+	public String getTruckManageCode() {
+		return truckManageCode;
+	}
+	
+	/**
+	 * 设置 车辆管理号
+	 */
+	public void setTruckManageCode(String truckManageCode) {
+		this.truckManageCode = truckManageCode;
+	}
+
+	
+	/**
+	 * 获取 车型成本名称
+	 */
+	public String getTruckCostName() {
+		return truckCostName;
+	}
+	
+	/**
+	 * 设置 车型成本名称
+	 */
+	public void setTruckCostName(String truckCostName) {
+		this.truckCostName = truckCostName;
+	}
+
+	
+	/**
+	 * 获取 分拨中心的名称
+	 */
+	public String getBelongSiteName() {
+		return belongSiteName;
+	}
+	
+	/**
+	 * 设置 分拨中心的名称
+	 */
+	public void setBelongSiteName(String belongSiteName) {
+		this.belongSiteName = belongSiteName;
+	}
+
+	
+	/**
+	 * 获取 分拨中心的代码
+	 */
+	public String getBelongSiteCode() {
+		return belongSiteCode;
+	}
+	
+	/**
+	 * 设置 分拨中心的代码
+	 */
+	public void setBelongSiteCode(String belongSiteCode) {
+		this.belongSiteCode = belongSiteCode;
+	}
+
+	
+	/**
+	 * 获取 车辆类型(1长期/2临时)
+	 */
+	public String getTruckType() {
+		return truckType;
+	}
+	
+	/**
+	 * 设置 车辆类型(1长期/2临时)
+	 */
+	public void setTruckType(String truckType) {
+		this.truckType = truckType;
+	}
+
+	
+	/**
+	 * 获取 具体车型(对应的长度划分)
+	 */
+	public String getTruckConcrete() {
+		return truckConcrete;
+	}
+	
+	/**
+	 * 设置 具体车型(对应的长度划分)
+	 */
+	public void setTruckConcrete(String truckConcrete) {
+		this.truckConcrete = truckConcrete;
+	}
+
+	
+	/**
+	 * 获取 状态(1已生成/2正式版本)
+	 */
+	public String getDetailsStatus() {
+		return detailsStatus;
+	}
+	
+	/**
+	 * 设置 状态(1已生成/2正式版本)
+	 */
+	public void setDetailsStatus(String detailsStatus) {
+		this.detailsStatus = detailsStatus;
+	}
+
+	
+	/**
+	 * 获取 变动成本系数
+	 */
+	public Double getCostCoefficient() {
+		return costCoefficient;
+	}
+	
+	/**
+	 * 设置 变动成本系数
+	 */
+	public void setCostCoefficient(Double costCoefficient) {
+		this.costCoefficient = costCoefficient;
+	}
+
+	
+	/**
+	 * 获取 装卸费系数
+	 */
+	public Double getHandlingCharges() {
+		return handlingCharges;
+	}
+	
+	/**
+	 * 设置 装卸费系数
+	 */
+	public void setHandlingCharges(Double handlingCharges) {
+		this.handlingCharges = handlingCharges;
+	}
+
+	
+	/**
+	 * 获取 固定成本费用(月)
+	 */
+	public Double getFixedCharges() {
+		return fixedCharges;
+	}
+	
+	/**
+	 * 设置 固定成本费用(月)
+	 */
+	public void setFixedCharges(Double fixedCharges) {
+		this.fixedCharges = fixedCharges;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Long getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Long version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 车辆的实际容积(方)
+	 */
+	public Double getTruckVolume() {
+		return truckVolume;
+	}
+	
+	/**
+	 * 设置 车辆的实际容积(方)
+	 */
+	public void setTruckVolume(Double truckVolume) {
+		this.truckVolume = truckVolume;
+	}
+
+	
+	/**
+	 * 获取 缓冲方数(只能比实际方数小)
+	 */
+	public Double getBufferVolume() {
+		return bufferVolume;
+	}
+	
+	/**
+	 * 设置 缓冲方数(只能比实际方数小)
+	 */
+	public void setBufferVolume(Double bufferVolume) {
+		this.bufferVolume = bufferVolume;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+}

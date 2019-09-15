@@ -1,0 +1,121 @@
+package cn.uce.suc.bkg.biz.price;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.price.PricingRuleType;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeVo;
+
+/**
+ * @Description: 定价分类管理BIZ接口类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月31日 下午05:28:19
+ */
+public interface IPricingRuleTypeBiz {
+
+	/**
+	 * @Description: 新增定价分类管理
+	 * @param pricingRuleType
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	public int addPricingRuleType(PricingRuleType pricingRuleType);
+
+	/**
+	 * @Description: 修改定价分类管理
+	 * @param pricingRuleType
+	 *            定价分类管理
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	public int updatePricingRuleType(PricingRuleType pricingRuleType);
+
+	/**
+	 * 
+	 * @Description: 编辑保存
+	 * @param pricingRuleType
+	 * @param details
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午5:12:03
+	 */
+	public int updatePricingRuleType(PricingRuleType pricingRuleType, String details);
+
+	/**
+	 * @Description: 删除定价分类管理
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	public int deletePricingRuleType(Long id);
+
+	/**
+	 * @Description: 根据ID查询定价分类管理
+	 * @param id
+	 *            主键
+	 * @return 定价分类管理
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	public PricingRuleType findById(Long id);
+
+	/**
+	 * @Description: 分页查询定价分类管理
+	 * @param pricingRuleTypeVo
+	 *            定价分类管理
+	 * @param page
+	 *            分页参数
+	 * @return 定价分类管理
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	public Pagination<PricingRuleType> findByPagination(PricingRuleTypeVo pricingRuleTypeVo, Page page);
+
+	/**
+	 * 
+	 * @Description: 添加定价规则分类及明细
+	 * @param pricingRuleTypeVo
+	 * @param pricingRuleTypeBiz
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 上午9:40:50
+	 */
+	public int addPricingRuleType(PricingRuleTypeVo pricingRuleTypeVo, String details);
+
+	/**
+	 * 
+	 * @Description: 升级版本 
+	 * @param ruleType
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午10:02:09
+	 */
+	public int updateVersion(PricingRuleType ruleType);
+
+	/**
+	 * 
+	 * @Description: 升级版本 ，支持定价分类可编辑 
+	 * @param ruleTypeVo
+	 * @param details
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月7日 下午6:26:24
+	 */
+	public int updateVersion(PricingRuleType ruleTypeVo, String details);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则详情
+	 * @param pricingRuleTypeDetailVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月2日 下午5:18:23
+	 */
+	public List<PricingRuleTypeVo> findByCondition(PricingRuleTypeVo pricingRuleTypeVo);
+
+}

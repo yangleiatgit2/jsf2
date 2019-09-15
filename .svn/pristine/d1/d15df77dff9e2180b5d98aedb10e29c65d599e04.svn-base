@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.app.dao.ISucDictDataDao">
+	
+	<sql id="Base_Column_List">
+			ID,TYPE_CLASS_CODE,TYPE_ID,
+			type_code,TYPE_NAME,FLD_S1,
+			FLD_S2,FLD_N1,FLD_N2,
+			REMARK,DELETE_FLAG,VERSION,
+			CREATE_EMP,CREATE_ORG,CREATE_TIME,
+			UPDATE_EMP,UPDATE_ORG,UPDATE_TIME,
+			SOURCE_TYPE,sync_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and ID = #{id}
+		</if>
+	    <if test="typeClassCode != null">
+		and TYPE_CLASS_CODE = #{typeClassCode}
+		</if>
+	    <if test="typeId != null">
+		and TYPE_ID = #{typeId}
+		</if>
+	    <if test="typeCode != null">
+		and type_code = #{typeCode}
+		</if>
+	    <if test="typeName != null">
+		and TYPE_NAME = #{typeName}
+		</if>
+	    <if test="fldS1 != null">
+		and FLD_S1 = #{fldS1}
+		</if>
+	    <if test="fldS2 != null">
+		and FLD_S2 = #{fldS2}
+		</if>
+	    <if test="fldN1 != null">
+		and FLD_N1 = #{fldN1}
+		</if>
+	    <if test="fldN2 != null">
+		and FLD_N2 = #{fldN2}
+		</if>
+	    <if test="remark != null">
+		and REMARK = #{remark}
+		</if>
+	    <if test="deleteFlag != null">
+		and DELETE_FLAG = #{deleteFlag}
+		</if>
+	    <if test="version != null">
+		and VERSION = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and CREATE_EMP = #{createEmp}
+		</if>
+	    <if test="createOrg != null">
+		and CREATE_ORG = #{createOrg}
+		</if>
+	    <if test="createTime != null">
+		and CREATE_TIME = #{createTime}
+		</if>
+	    <if test="updateEmp != null">
+		and UPDATE_EMP = #{updateEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and UPDATE_ORG = #{updateOrg}
+		</if>
+	    <if test="updateTime != null">
+		and UPDATE_TIME = #{updateTime}
+		</if>
+	    <if test="sourceType != null">
+		and SOURCE_TYPE = #{sourceType}
+		</if>
+	    <if test="syncTime != null">
+		and sync_time = #{syncTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.app.entity.SucDictData">
+	UPDATE omg_Suc_dict_data
+	<set>
+		<if test="typeClassCode != null">
+		TYPE_CLASS_CODE = #{typeClassCode},
+		</if>
+		<if test="typeId != null">
+		TYPE_ID = #{typeId},
+		</if>
+		<if test="typeCode != null">
+		type_code = #{typeCode},
+		</if>
+		<if test="typeName != null">
+		TYPE_NAME = #{typeName},
+		</if>
+		<if test="fldS1 != null">
+		FLD_S1 = #{fldS1},
+		</if>
+		<if test="fldS2 != null">
+		FLD_S2 = #{fldS2},
+		</if>
+		<if test="fldN1 != null">
+		FLD_N1 = #{fldN1},
+		</if>
+		<if test="fldN2 != null">
+		FLD_N2 = #{fldN2},
+		</if>
+		<if test="remark != null">
+		REMARK = #{remark},
+		</if>
+		<if test="deleteFlag != null">
+		DELETE_FLAG = #{deleteFlag},
+		</if>
+		<if test="version != null">
+		VERSION = #{version},
+		</if>
+		<if test="createEmp != null">
+		CREATE_EMP = #{createEmp},
+		</if>
+		<if test="createOrg != null">
+		CREATE_ORG = #{createOrg},
+		</if>
+		<if test="createTime != null">
+		CREATE_TIME = #{createTime},
+		</if>
+		<if test="updateEmp != null">
+		UPDATE_EMP = #{updateEmp},
+		</if>
+		<if test="updateOrg != null">
+		UPDATE_ORG = #{updateOrg},
+		</if>
+		<if test="updateTime != null">
+		UPDATE_TIME = #{updateTime},
+		</if>
+		<if test="sourceType != null">
+		SOURCE_TYPE = #{sourceType},
+		</if>
+		<if test="syncTime != null">
+		sync_time = #{syncTime},
+		</if>
+	</set>
+	WHERE ID = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.app.vo.SucDictDataVo" resultType="cn.uce.suc.app.entity.SucDictData">
+	select <include refid="Base_Column_List" /> from omg_Suc_dict_data
+	</select>
+	
+	<!-- 根据typeClassCode查询数据字典 -->
+	<select id="findListByTypeClassCode" parameterType="java.lang.String" resultType="cn.uce.suc.app.vo.SucDictDataVo">
+		SELECT <include refid="Base_Column_List"/> from OMG_FSP_DICT_DATA
+		where
+		type_class_code=#{typeClassCode,jdbcType=VARCHAR}
+		and DELETE_FLAG <![CDATA[ <> ]]> 1
+	</select>
+</mapper>

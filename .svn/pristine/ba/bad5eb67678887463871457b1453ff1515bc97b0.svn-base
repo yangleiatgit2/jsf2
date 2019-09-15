@@ -1,0 +1,43 @@
+package cn.uce.suc.common.cache;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.suc.common.vo.CarPositioningVo;
+
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年12月3日 下午6:24:54
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class CarPositioningCacheTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * token
+	 */
+	@Resource(name = "carPositioningCache")
+	private CarPositioningCache carPositioningCache;
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @author liwei
+	 * @date 2017年12月3日 下午6:25:50
+	 */
+	@Test
+	public void testpro(){
+		CarPositioningVo carPositioningVo=new CarPositioningVo();
+		carPositioningCache.set("jjjjjjj", carPositioningVo);
+		carPositioningCache.remove("jjjjjjjj");
+		
+	}
+
+}

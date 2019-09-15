@@ -1,0 +1,285 @@
+package cn.uce.suc.bkg.control.datamain;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.impl.datamain.CarrierInfoBiz;
+import cn.uce.suc.bkg.entity.datamain.CarrierInfo;
+import cn.uce.suc.bkg.vo.datamain.CarrierInfoVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+/**
+ * 
+ * @Description: 承运商管理controller 
+ * @author haizhou
+ * @date 2017年10月30日 上午10:47:12
+ */
+
+@Controller
+@RequestMapping("/carrierManage")
+public class CarrierManageController extends BaseController {
+	
+	/**
+	 * 注入BIz
+	 */
+	@Resource
+	CarrierInfoBiz carrierInfoBiz;
+	
+	/**
+	 * 
+	 * @Description: 跳转到页面
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author haizhou
+	 * @date 2017年11月1日 上午11:20:33
+	 */
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/carrierManage";
+	}
+	/**
+	 * 
+	 * @Description: 根据input标签查询
+	 * @param page
+	 * @param carManageVo
+	 * @return
+	 * @author haizhou
+	 * @@date 2017年11月1日 上午11:50:33
+	 */
+	@RequestMapping(value = "findByCondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(CarrierInfoVo carrierInfoVo,Page page){
+		if(carrierInfoVo.getUpdateTime()!=null){
+			   
+			   
+	        Calendar c = Calendar.getInstance();  
+	        c.setTime(carrierInfoVo.getUpdateTime());  
+	        c.add(Calendar.DAY_OF_MONTH, 1);// 今天+1天  
+	   
+	        Date tomorrow = c.getTime();  
+	        carrierInfoVo.setUpdateTime(tomorrow);
+		}
+		Pagination<CarrierInfo> pagination = carrierInfoBiz.findByPagination(carrierInfoVo, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * 
+	 * @Description: 跟进承运商名称查询承运商
+	 * @param companyFullName
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月23日 下午5:37:45
+	 */
+	@RequestMapping(value = "findByCompanyFullName")
+	@ResponseBody
+	public Map<String, Object> findByCompanyFullName(String companyFullName){
+		List<CarrierInfo> list = carrierInfoBiz.findByCompanyFullName(companyFullName);
+		return returnSuccess(list);
+	}
+	/**
+	 * 
+	 * @Description: 新增
+	 * @param CarrierInfo
+	 * @param 影响的条数
+	 * @return
+	 * @author haizhou
+	 * @@date 2017年11月1日 上午11:50:33
+	 */
+	@RequestMapping(value = "addCarrierInfo")
+	@ResponseBody
+	public Map<String, Object> addCarrierInfo(CarrierInfo carrierInfo){
+		carrierInfo.setCarrierType(BkgConstants.CARRIER_GROUP);
+		carrierInfo.setDelFlag(false);
+		//添加版本号
+		carrierInfo.setVersion(1);
+		carrierInfo.setCreateTime(new Date());
+		carrierInfo.setUpdateTime(null);
+		carrierInfo.setStatus(BkgConstants.CARRIER_START);
+		int val=carrierInfoBiz.addCarrierInfo(carrierInfo);
+		if(val>0){
+			return returnSuccess();
+		}else{
+			
+			return returnError(Resources.getMessage("common.save.fail"));
+		}
+	}
+	/**
+	 * 
+	 * @Description: 编辑
+	 * @param CarrierInfo
+	 * @param 影响的条数
+	 * @return
+	 * @author haizhou
+	 * @@date 2017年11月1日 上午11:50:33
+	 */
+	
+	@RequestMapping(value = "editCarrierInfo")
+	@ResponseBody
+	public Map<String, Object> editCarrierInfo(CarrierInfo carrierInfo){
+		//carrierInfo.setDelFlag(false);
+		carrierInfo.setUpdateTime(new Date());
+		carrierInfo.setCreateTime(null);
+		int val=carrierInfoBiz.updateCarrierInfo(carrierInfo);
+		if(val>0){
+			return returnSuccess();
+		}else{
+			
+			return returnError(Resources.getMessage("common.update.fail"));
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 查询
+	 * @param id
+	 * @param carrierInfo
+	 * @return
+	 * @author haizhou
+	 * @@date 2017年11月1日 上午11:50:33
+	 */
+	
+	@RequestMapping(value = "findCarrierById")
+	@ResponseBody
+	 
+	public Map<String, Object> findCarrierById(Long id){
+		if(id != null){
+			CarrierInfo carrierInfo=carrierInfoBiz.findById(id);
+			if(carrierInfo!= null){
+				return returnSuccess(carrierInfo);
+			}
+			
+		}
+		return returnError(Resources.getMessage("error.opm.biz.CarrierinfoBiz.dataNotExist"));
+		
+		
+	}
+	/**
+	 * 
+	 * @Description: 批量启用承运商
+	 * @param ids
+	 * @param 影响的条数
+	 * @return
+	 * @author haizhou
+	 * @@date 2017年11月1日 上午11:50:33
+	 */
+	@RequestMapping(value = "startDetailsStatusByIds")
+	@ResponseBody
+	public int startDetailsStatusByIds(String ids){
+		String [] idarr=ids.split(",");
+		for (int i = 0; i < idarr.length; i++) {
+			Pattern pattern = Pattern.compile("[0-9]*"); 
+			Matcher isNum = pattern.matcher(idarr[i]);
+			if( !isNum.matches() ){
+			       return 0; 
+			}
+			CarrierInfo findById = carrierInfoBiz.findById(Long.valueOf(idarr[i]));
+			if(BkgConstants.CARRIER_START.equals(findById.getStatus())){
+				return 0;
+			}
+			
+		}
+		
+		return	carrierInfoBiz.startDetails(idarr,BkgConstants.CARRIER_START);
+	}
+	
+	/**
+	 * 
+	 * @Description: 批量停用承运商
+	 * @param ids
+	 * @param 影响的条数
+	 * @return
+	 * @author haizhou
+	 * @@date 2017年11月1日 上午11:50:33
+	 */
+	@RequestMapping(value = "stopDetailsStatusByIds")
+	@ResponseBody
+	public int stopDetailsStatusByIds(String ids){
+		String [] idarr=ids.split(",");
+		for (int i = 0; i < idarr.length; i++) {
+			Pattern pattern = Pattern.compile("[0-9]*"); 
+			Matcher isNum = pattern.matcher(idarr[i]);
+			if( !isNum.matches() ){
+			       return 0; 
+			}
+			CarrierInfo findById = carrierInfoBiz.findById(Long.valueOf(idarr[i]));
+			if(BkgConstants.CARRIER_STOP.equals(findById.getStatus())){
+				return 0;
+			}
+			
+		}
+		return carrierInfoBiz.startDetails(idarr,BkgConstants.CARRIER_STOP);
+		
+	}
+	
+	
+	/**
+	 * @Description: 获取供应商简称编号
+	 * @param 
+	 * @return companySimpleName
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午06:54:13
+	 */
+	@PostMapping(value = "/getCompanySimpleName")
+	@ResponseBody
+	public String getCapacityCode(){
+		
+		String companySimpleName = carrierInfoBiz.getCompanySimpleName();
+		if(StringUtil.isNotBlank(companySimpleName)){
+			return companySimpleName;
+		}else{
+			return null;
+		}
+	}
+	/**
+	 * 
+	 * @Description: 承运商下拉
+	 * @param carrierInfoVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月7日 下午5:57:39
+	 */
+	@PostMapping(value = "/findCarrierByCmb")
+	@ResponseBody
+	public Map<String, Object> findCarrierByCmb(CarrierInfoVo carrierInfoVo, Page page){
+		Pagination<CarrierInfo> carrier  = carrierInfoBiz.findCarrierByCmb(carrierInfoVo, page);
+		return returnSuccess(carrier);
+	}
+	
+	/**
+	 * 
+	 * @Description:  根据承运商名称做唯一校验
+	 * @param carrierInfoVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月28日 上午11:23:29
+	 */
+	@RequestMapping(value="/checkExistsByCompanyFullName")
+	@ResponseBody
+	public Boolean checkExistsByCompanyFullName(CarrierInfoVo carrierInfoVo){
+		List<CarrierInfoVo> flag=carrierInfoBiz.checkExistsByCompanyFullName(carrierInfoVo);
+		if(flag==null){
+			return true;
+		}else{
+			return flag.size()>0?false:true;
+		}
+	}
+}

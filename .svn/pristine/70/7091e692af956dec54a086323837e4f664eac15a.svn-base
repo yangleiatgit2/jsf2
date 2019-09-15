@@ -1,0 +1,153 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.IOrgExtendBiz;
+import cn.uce.suc.common.cache.OrgExtendCache;
+import cn.uce.suc.common.entity.OrgExtend;
+import cn.uce.suc.common.vo.OrgExtendVo;
+import cn.uce.suc.common.service.OrgExtendService;
+
+/**
+ * @Description: 组织机构扩展信息BIZ实现类
+ * @author liwei
+ * @date 2017年10月22日 下午10:06:24
+ */
+@Service("orgExtendBiz")
+public class OrgExtendBiz implements IOrgExtendBiz {
+	
+	/**
+	 * 注入组织机构扩展信息Service
+	 */
+	@Resource
+	private OrgExtendService orgExtendService;
+	
+	@Resource(name = "orgExtendCache")
+	private OrgExtendCache orgExtendCache;
+	
+	/**
+	 * @Description: 新增组织机构扩展信息
+	 * @param orgExtend
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public int addOrgExtend(OrgExtend orgExtend) {
+		return orgExtendService.addOrgExtend(orgExtend);
+	}
+	
+	/**
+	 * @Description: 修改组织机构扩展信息
+	 * @param orgExtend 组织机构扩展信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public int updateOrgExtend(OrgExtend orgExtend) {
+		int i =orgExtendService.updateById(orgExtend);
+		//刷新缓存
+		orgExtendCache.refresh(orgExtend.getBaseOrgCode());
+		//调用后台数据处理层
+		return i;
+	}
+	
+	/**
+	 * @Description: 删除组织机构扩展信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public int deleteOrgExtend(Long id) {
+		return orgExtendService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询组织机构扩展信息
+	 * @param id 主键
+	 * @return 组织机构扩展信息
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	@Override
+	public OrgExtend findById(Long id) {
+		return orgExtendService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询组织机构扩展信息
+	 * @param orgExtendVo 组织机构扩展信息
+	 * @param page 分页参数
+	 * @return 组织机构扩展信息
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public Pagination<OrgExtend> findByPagination(OrgExtendVo orgExtendVo, Page page) {
+		Pagination<OrgExtend> pagination = orgExtendService.findByPagination(orgExtendVo, page);
+		return pagination;
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询组织机构扩展信息
+	 * @param orgExtendVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月27日 下午4:58:40
+	 */
+	public List<OrgExtendVo> findByCombine(OrgExtendVo orgExtendVo){
+		return orgExtendService.findByCombine(orgExtendVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询集货点 
+	 * @param orgExtendVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午3:58:15
+	 */
+	public List<OrgExtendVo> findByCondition(OrgExtendVo orgExtendVo){
+		return orgExtendService.findByCondition(orgExtendVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据code查询扩展机构
+	 * @param orgExtendVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月11日 下午3:58:15
+	 */
+	@Override
+	public OrgExtendVo findByBaseOrgCode(String baseOrgCode) {
+		return orgExtendCache.get(baseOrgCode);
+	}
+	/**
+	 * 
+	 * @Description: 启用、停用操作
+	 * @param ids
+	 * @param orgStatus
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月29日 下午9:26:22
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	public int updateOrgStatus(String[] ids,String orgStatus){
+		if(ids.length>0){
+			OrgExtend orgExtend=new OrgExtend();
+			for(int i=0;i<ids.length;i++){
+				orgExtend.setId(Long.parseLong(ids[i]));
+				orgExtend.setOrgStatus(orgStatus);
+				orgExtendService.updateById(orgExtend);
+			}
+		}
+		return 1;
+	}
+}

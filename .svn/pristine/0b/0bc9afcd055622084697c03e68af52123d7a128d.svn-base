@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.app.dao.IAppFeedbackDao">
+	
+	<sql id="Base_Column_List">
+			id,name,mobilePhone,
+			feedback_problem,feedback_platform,utf1,
+			utf2,utf3,version,
+			del_flag,create_emp,create_time,
+			create_org,update_emp,update_time,
+			update_org
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="name != null">
+		and name = #{name}
+		</if>
+	    <if test="mobilephone != null">
+		and mobilePhone = #{mobilephone}
+		</if>
+	    <if test="feedbackProblem != null">
+		and feedback_problem = #{feedbackProblem}
+		</if>
+	    <if test="feedbackPlatform != null">
+		and feedback_platform = #{feedbackPlatform}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.app.vo.AppFeedbackVo">
+	UPDATE t_suc_app_feedback
+	<set>
+		<if test="name != null">
+		name = #{name},
+		</if>
+		<if test="mobilephone != null">
+		mobilePhone = #{mobilephone},
+		</if>
+		<if test="feedbackProblem != null">
+		feedback_problem = #{feedbackProblem},
+		</if>
+		<if test="feedbackPlatform != null">
+		feedback_platform = #{feedbackPlatform},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.app.vo.AppFeedbackVo" resultType="cn.uce.suc.app.vo.AppFeedbackVo">
+	select <include refid="Base_Column_List" /> from t_suc_app_feedback
+	</select>
+	
+</mapper>

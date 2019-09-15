@@ -1,0 +1,47 @@
+package cn.uce.suc.app.cache;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.suc.app.service.SucDictDataService;
+import cn.uce.suc.app.vo.SucDictDataVo;
+/**
+ * 
+ * @Description: 数据字典缓存
+ * @author liwei
+ * @date 2017年10月26日 下午10:50:07
+ */
+public class SucDictDataCache extends CacheSupport<List<SucDictDataVo>>{
+/**
+ * 数据字典service
+ */
+	@Resource
+	SucDictDataService sucDictDataService;
+	/**
+	* <p>Title: doGet</p> 
+	* <p>Description: </p> 
+	* @param k
+	* @return
+	* @throws BusinessException 
+	* @see cn.uce.core.cache.base.CacheCallBack#doGet(java.lang.Object)
+	 */
+	@Override
+	public List<SucDictDataVo> doGet(String k) throws BusinessException {
+		
+		return sucDictDataService.findListByTypeClassCode(k);
+	}
+	/**
+	* <p>Title: getCacheId</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see cn.uce.core.cache.base.ICache#getCacheId()
+	 */
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+
+}

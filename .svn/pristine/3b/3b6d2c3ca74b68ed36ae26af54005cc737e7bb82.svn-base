@@ -1,0 +1,248 @@
+package cn.uce.suc.common.vo;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: Vo类
+ * @author UCE-CodeGenerator
+ * @date 2017年11月02日 下午02:23:32
+ */
+public class ExceptionInfoVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 异常类型 
+	 */
+	private String exceptionNode;
+    /** 
+	 * 异常原因 
+	 */
+	private String exceptionCause;
+    /** 
+	 * 异常类 
+	 */
+	private String exceptionType;
+    /** 
+	 * 异常信息 
+	 */
+	private String exceptionMsg;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	
+	
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 异常类型
+	 */
+	public String getExceptionNode() {
+		return exceptionNode;
+	}
+	
+	/**
+	 * 设置 异常类型
+	 */
+	public void setExceptionNode(String exceptionNode) {
+		this.exceptionNode = exceptionNode;
+	}
+
+	
+	/**
+	 * 获取 异常原因
+	 */
+	public String getExceptionCause() {
+		return exceptionCause;
+	}
+	
+	/**
+	 * 设置 异常原因
+	 */
+	public void setExceptionCause(String exceptionCause) {
+		this.exceptionCause = exceptionCause;
+	}
+
+	
+	/**
+	 * 获取 异常类
+	 */
+	public String getExceptionType() {
+		return exceptionType;
+	}
+	
+	/**
+	 * 设置 异常类
+	 */
+	public void setExceptionType(String exceptionType) {
+		this.exceptionType = exceptionType;
+	}
+
+	
+	/**
+	 * 获取 异常信息
+	 */
+	public String getExceptionMsg() {
+		return exceptionMsg;
+	}
+	
+	/**
+	 * 设置 异常信息
+	 */
+	public void setExceptionMsg(String exceptionMsg) {
+		this.exceptionMsg = exceptionMsg;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+}

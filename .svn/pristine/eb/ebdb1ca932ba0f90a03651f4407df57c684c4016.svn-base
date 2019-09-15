@@ -1,0 +1,95 @@
+package cn.uce.suc.bkg.service.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.datamain.IExceptionTraceDao;
+import cn.uce.suc.bkg.entity.datamain.ExceptionTrace;
+import cn.uce.suc.bkg.vo.datamain.ExceptionTraceVo;
+
+/**
+ * @Description: 异常跟踪信息Service类
+ * @author yanglei
+ * @date 2017年11月01日 上午11:26:20
+ */
+@Service("exceptionTraceService")
+public class ExceptionTraceService {
+	
+	/**
+	 * 注入异常跟踪信息Dao
+	 */
+	@Resource
+	private IExceptionTraceDao exceptionTraceDao;
+	
+	/**
+	 * @Description: 新增异常跟踪信息
+	 * @param exceptionTrace 异常跟踪信息
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public int addExceptionTrace(ExceptionTrace exceptionTrace) {
+		return exceptionTraceDao.insert(exceptionTrace);
+	}
+	
+	/**
+	 * @Description: 修改异常跟踪信息
+	 * @param exceptionTrace 异常跟踪信息
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public int updateById(ExceptionTrace exceptionTrace) {
+		return exceptionTraceDao.updateById(exceptionTrace);
+	}
+	
+	/**
+	 * @Description: 删除异常跟踪信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public int deleteById(Long id) {
+		return exceptionTraceDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询异常跟踪信息
+	 * @param id 主键
+	 * @return 异常跟踪信息
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public ExceptionTrace findById(Long id) {
+		return exceptionTraceDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询异常跟踪信息
+	 * @param exceptionTraceVo 异常跟踪信息
+	 * @param page 分页参数
+	 * @return 异常跟踪信息
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public Pagination<ExceptionTrace> findByPagination(ExceptionTraceVo exceptionTraceVo, Page page) {
+		Pagination<ExceptionTrace> paginationExceptionTrace = exceptionTraceDao.findByPagination(exceptionTraceVo, page);
+		return paginationExceptionTrace;
+	}
+	/**
+	 * @Description: 根据异常code查询异常跟踪信息
+	 * @param exceptionCode
+	 * @return 异常跟踪信息
+	 * @author yanglei
+	 * @date 2017年11月07日 上午11:26:20
+	 */
+	public List<ExceptionTrace> findByExceptionCode(String exceptionCode){
+		return exceptionTraceDao.findByExceptionCode(exceptionCode);
+	}
+}

@@ -1,0 +1,224 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.ITruckCostManagementBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.entity.TruckCostManagement;
+import cn.uce.suc.common.vo.TruckCostManagementVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+
+/**
+ * 
+ * @Description: 车辆成本管理
+ * @author haizhou
+ * @date 2017年10月20日 上午11:22:31
+ */
+@Controller
+@RequestMapping("/truckCostManage")
+public class TruckCostManageController extends BaseController {
+	/**
+	 * 车辆成本管理biz
+	 */
+	@Resource
+	private ITruckCostManagementBiz truckCostManagementBiz;
+	/**
+	 * 
+	 * @Description: TODO页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author haizhou
+	 * @date 2017年10月27日 下午4:42:02
+	 */
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/truckCostManage";
+		
+		
+	}
+	/**
+	 * 
+	 * @Description: 组合查询分页
+	 * @param truckCostManagementVo
+	 * @param page
+	 * @return pagination
+	 * @author haizhou
+	 * @date 2017年10月27日 下午3:50:59
+	 */
+	@PostMapping(value  = "/findByPagination" )
+	@ResponseBody
+	public Map<String, Object> findByPagination(TruckCostManagementVo truckCostManagementVo, Page page) {
+		truckCostManagementVo.setDeleteFlag(false);
+		Pagination<TruckCostManagement> pagination = truckCostManagementBiz.findByPagination(truckCostManagementVo, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * 
+	 * @Description: 车辆信息编辑/版本升级
+	 * @param truckCostManagementVo
+	 * @return
+	 * @author haizhou
+	 * @date 2017年10月27日 下午4:45:03
+	 */
+	@RequestMapping(value  = "/editTruckCost")
+	@ResponseBody
+	public Map<String, Object> editTruckCost(TruckCostManagement truckCostManagement) {
+		//首先通过车型管理号去查询最大的版本号
+			
+			if(truckCostManagementBiz.addTruckAndDeleteOld(truckCostManagement)>0){
+				return returnSuccess(Resources.getMessage("common.update.success"));
+			}
+		
+		
+		return returnError(Resources.getMessage("common.update.fail"));
+	}
+	
+	/**
+	 * 
+	 * @Description: 车辆信息编辑/新增
+	 * @param truckCostManagementVo
+	 * @return
+	 * @author haizhou
+	 * @date 2017年10月27日 下午4:45:03
+	 */
+	@RequestMapping(value  = "/addTruckCost")
+	@ResponseBody
+	public Map<String, Object> addTruckCost(TruckCostManagement truckCostManagement) {
+		//truckCostManagement.setVersion(1L);
+		truckCostManagement.setDeleteFlag(false);
+		truckCostManagement.setDetailsStatus(BkgConstants.TRUCK_GENERATED);
+		int val =truckCostManagementBiz.addTruckCostManagement(truckCostManagement);
+		if(val>0){
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}else if(val<0){
+			return returnError(Resources.getMessage("common.save.again"));
+		}else{
+			return returnError(Resources.getMessage("common.save.fail"));
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据需求d查询需求详情
+	 * @param page
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月24日 下午3:11:00
+	 */
+	@RequestMapping(value = "/updateTruckCost")
+	@ResponseBody
+	public Map<String, Object> updateTruckCost(TruckCostManagement truckCostManagement) {
+		return returnSuccess(truckCostManagementBiz.updateTruckCostManagement(truckCostManagement));
+	}
+	/**
+	 * 
+	 * @Description: 根据需求组合id查询历史版本
+	 * @param truckCostManagement 
+	 * @param page 
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月24日 下午3:11:00
+	 */
+	@RequestMapping(value = "/findHistoryByTruckManageCode")
+	@ResponseBody
+	public Map<String, Object> findHistoryByTruckManageCode(TruckCostManagementVo truckCostManagementVo,Page page){
+		
+		Pagination<TruckCostManagement> pagination =truckCostManagementBiz.findByPagination(truckCostManagementVo, page);
+		
+		return returnSuccess(pagination);
+		
+		
+	}
+	/**
+	 * 
+	 * @Description: 根据ids批量修改审核状态
+	 * @param ids 
+	 * @param int 
+	 * @return
+	 * @author haizhou
+	 * @date 2017年10月24日 下午3:11:00
+	 */
+	@RequestMapping(value = "/updateDetailsStatusByIds")
+	@ResponseBody
+	public int updateDetailsStatusByIds(String ids){
+		//String [] arrid=ids.split(",");
+		return truckCostManagementBiz.updateDetailsStatusByIds(ids,BkgConstants.TRUCK_START);
+	}
+	
+	/**
+	 * 
+	 * @Description: 获取一个新的车型管理号
+	 * @param 
+	 * @param truckManageCode 
+	 * @return
+	 * @author haizhou
+	 * @date 2017年11月6日 下午3:11:00
+	 */
+	@RequestMapping(value = "/getTruckManageCode")
+	@ResponseBody
+	public String getTruckManageCode(){
+		//return truckCostManagementBiz.updateDetailsStatusByIds(ids,"2");
+		
+		String truckManageCode =truckCostManagementBiz.getTruckManageCode();
+		if( StringUtil.isNotBlank(truckManageCode)){
+			return truckManageCode;
+		}else {
+			return null;
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 车型版本号数据未作修改，版本升级
+	 * @param ids  
+	 * @return 修改的条数
+	 * @author haizhou
+	 * @date 2017年11月6日 下午3:11:00
+	 */
+	@RequestMapping(value = "/versionUpByIds")
+	@ResponseBody
+	public int versionUpByIds(String ids,String updateEmp){
+		
+		int val=truckCostManagementBiz.versionUpByIds(ids,updateEmp);
+		
+			return val;
+		
+		
+	}
+	/**
+	 * 
+	 * @Description: 车型成本名称下拉
+	 * @param carrierInfoVo
+	 * @param page
+	 * @return
+	 * @author haizhou
+	 * @date 2017年11月7日 下午5:57:39
+	 */
+	@PostMapping(value = "/getByTruckCostName")
+	@ResponseBody
+	public Map<String, Object> getByTruckCostName(TruckCostManagementVo truckCostManagementVo, Page page){
+		if(StringUtil.isNotBlank(truckCostManagementVo.getQ())){
+			truckCostManagementVo.setTruckCostName(truckCostManagementVo.getQ());
+			
+		}
+		Pagination<TruckCostManagement> truckCostManagements  = truckCostManagementBiz.getByTruckCostName(truckCostManagementVo, page);
+		return returnSuccess(truckCostManagements);
+	}
+	
+	
+}

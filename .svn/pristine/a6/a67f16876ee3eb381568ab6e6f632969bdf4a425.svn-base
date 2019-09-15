@@ -1,0 +1,28 @@
+package cn.uce.suc.app.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.app.entity.CaptchaEntity;
+/**
+ * 
+ * @Description: 数据字典dao 
+ * @author liwei
+ * @date 2017年11月3日 下午8:52:45
+ */
+@Repository("appCaptchaDao")
+public interface IappCaptchaDao extends IBaseDao<CaptchaEntity, Long>{
+		
+
+	/**
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param phoneNumber
+	 * @param userType
+	 * @param captcha
+	 * @return
+	 * @author uce-wh03
+	 * @date 2017年10月15日 下午3:14:53
+	 */
+	public CaptchaEntity queryCaptcha(CaptchaEntity captchaEntity);		
+}
+

@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.INoticeRuleDao">
+	
+	<sql id="Base_Column_List">
+			id,rule_code,news_type,
+			title,contents,trigger_condition,
+			business_scenarios,trigger_type,send_aisle,
+			display_ways,version,remark,
+			create_org,create_emp,create_time,
+			update_org,update_emp,update_time,platform
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	   	<if test="ruleCode != null and ruleCode !='' ">
+		and rule_code = #{ruleCode}
+		</if>
+	    <if test="newsType != null and newsType !='' ">
+		and news_type = #{newsType}
+		</if>
+	    <if test="title != null">
+		and title = #{title}
+		</if>
+	    <if test="contents != null">
+		and contents = #{contents}
+		</if>
+	    <if test="triggerCondition != null">
+		and trigger_condition = #{triggerCondition}
+		</if>
+	    <if test="businessScenarios != null">
+		and business_scenarios = #{businessScenarios}
+		</if>
+	    <if test="triggerType != null">
+		and trigger_type = #{triggerType}
+		</if>
+		 <if test="platform != null">
+		and platform = #{platform}
+		</if>
+	    <if test="sendAisle != null">
+		and send_aisle = #{sendAisle}
+		</if>
+	    <if test="displayWays != null">
+		and display_ways = #{displayWays}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.NoticeRule">
+	UPDATE t_suc_comm_notice_rule
+	<set>
+		<if test="ruleCode != null and ruleCode !='' ">
+		rule_code = #{ruleCode},
+		</if>
+		<if test="newsType != null">
+		news_type = #{newsType},
+		</if>
+		<if test="title != null">
+		title = #{title},
+		</if>
+		<if test="contents != null">
+		contents = #{contents},
+		</if>
+		<if test="platform != null">
+		platform = #{platform},
+		</if>
+		<if test="triggerCondition != null">
+		trigger_condition = #{triggerCondition},
+		</if>
+		<if test="businessScenarios != null">
+		business_scenarios = #{businessScenarios},
+		</if>
+		<if test="triggerType != null">
+		trigger_type = #{triggerType},
+		</if>
+		<if test="sendAisle != null">
+		send_aisle = #{sendAisle},
+		</if>
+		<if test="displayWays != null">
+		display_ways = #{displayWays},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.NoticeRuleVo" resultType="cn.uce.suc.common.entity.NoticeRule">
+	select <include refid="Base_Column_List" /> from t_suc_comm_notice_rule  <include refid="Base_Column_Where" />
+	</select>
+	<!-- 根据规则编号获取消息规则 -->
+	<select id="findByCode" parameterType="java.lang.String" resultType="cn.uce.suc.common.entity.NoticeRule">
+	select <include refid="Base_Column_List" /> from t_suc_comm_notice_rule 
+	where
+		rule_code=#{ruleCode,jdbcType=VARCHAR}
+		and DELETE_FLAG <![CDATA[ <> ]]> 1
+	</select>
+	
+</mapper>

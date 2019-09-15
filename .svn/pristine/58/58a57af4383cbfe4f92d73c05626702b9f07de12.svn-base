@@ -1,0 +1,29 @@
+package cn.uce.suc.app.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.app.entity.AppFeedback;
+import cn.uce.suc.app.vo.AppFeedbackVo;
+
+/**
+ * @Description: DAO接口类
+ * @author litianjian
+ * @date 2017年11月29日 下午03:19:08
+ */
+@Repository("appFeedbackDao")
+public interface IAppFeedbackDao extends IBaseDao<AppFeedback, Long> {
+	
+	/**
+	 * @Description: 分页查询
+	 * @param appFeedbackVo 
+	 * @param page 分页参数
+	 * @return 
+	 * @author litianjian
+	 * @date 2017年11月29日 下午03:19:08
+	 */
+	public Pagination<AppFeedback> findByPagination(AppFeedbackVo appFeedbackVo, Page page);
+	
+}

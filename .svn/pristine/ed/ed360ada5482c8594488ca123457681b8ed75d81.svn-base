@@ -1,0 +1,43 @@
+package cn.uce.suc.common.biz.imp;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.IOmgCmsOrgDetailBiz;
+import cn.uce.suc.common.entity.OmgCmsOrgDetail;
+import cn.uce.suc.common.service.OmgCmsOrgDetailService;
+import cn.uce.suc.common.vo.OmgCmsOrgDetailVo;
+
+/**
+ * @Description: 乾坤机构详情BIZ实现类
+ * @author liwei
+ * @date 2017年10月15日 下午09:56:38
+ */
+@Service("omgCmsOrgDetailBiz")
+public class OmgCmsOrgDetailBiz implements IOmgCmsOrgDetailBiz {
+	
+	/**
+	 * 注入乾坤机构详情Service
+	 */
+	@Resource
+	private OmgCmsOrgDetailService omgCmsOrgDetailService;
+	
+	
+	
+	/**
+	 * @Description: 分页查询乾坤机构详情
+	 * @param omgCmsOrgDetailVo 乾坤机构详情
+	 * @param page 分页参数
+	 * @return 乾坤机构详情
+	 * @author liwei
+	 * @date 2017年10月15日 下午09:56:38
+	 */
+	public Pagination<OmgCmsOrgDetail> findByPagination(OmgCmsOrgDetailVo omgCmsOrgDetailVo, Page page) {
+		Pagination<OmgCmsOrgDetail> pagination = omgCmsOrgDetailService.findByPagination(omgCmsOrgDetailVo, page);
+		return pagination;
+	}
+
+}

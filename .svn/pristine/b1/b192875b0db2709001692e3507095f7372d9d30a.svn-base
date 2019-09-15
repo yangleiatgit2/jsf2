@@ -1,0 +1,424 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.ICapacityManagementBiz;
+import cn.uce.suc.bkg.entity.datamain.CapacityManagement;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.entity.datamain.Dirver;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.service.datamain.CapacityManagementService;
+import cn.uce.suc.bkg.service.datamain.CarManageService;
+import cn.uce.suc.bkg.service.datamain.DirverService;
+import cn.uce.suc.bkg.vo.datamain.CapacityManagementVo;
+import cn.uce.suc.common.biz.INoticeDetailBiz;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.i18n.Resources;
+
+/**
+ * @Description: 网点运力管理BIZ实现类
+ * @author UCE-lixueyuan
+ * @date 2017年10月23日 下午06:54:13
+ */
+@Service("capacityManagementBiz")
+@Transactional(readOnly = true,propagation=Propagation.SUPPORTS)
+public class CapacityManagementBiz implements ICapacityManagementBiz {
+	
+	/**
+	 * 注入网点运力管理Service
+	 */
+	@Resource
+	private CapacityManagementService capacityManagementService;
+	/**
+	 * 组织机构biz
+	 */
+	@Resource
+	IOmgCmsOrgBiz omgCmsOrgBiz;
+	/**
+	 * 编码
+	 */
+	@Resource
+	IIdsWorker  redisIdsWorker;
+	/**
+	 * 注入发车计划Biz
+	 */
+	@Resource
+	private INoticeDetailBiz noticeDetailBiz;
+	/**
+	 * app用户信息
+	 */
+	@Resource
+	private MobileuserService mobileuserService;
+	/**
+	 * 注入车辆的BIZ
+	 */
+	@Resource
+	private CarManageService carManageService;
+	/**
+	 * 注入司机的biz
+	 */
+	@Resource
+	private DirverService dirverService;
+	/**
+	 * @Description: 新增网点运力管理
+	 * @param capacityManagement
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public int addCapacityManagement(CapacityManagement capacityManagement) {
+		if( StringUtil.isBlank(capacityManagement.getCapacityCode())){
+			return 0;
+		}
+		CapacityManagementVo capacityManagementVo = new CapacityManagementVo();
+		capacityManagementVo.setCarPlateNumber(capacityManagement.getCarPlateNumber());
+		
+		capacityManagementVo.setStartTime(capacityManagement.getStartTime());
+		capacityManagementVo.setEndTime(capacityManagement.getEndTime());
+		Page page= new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		Pagination<CapacityManagement>	pagination = capacityManagementService.findByPagination(capacityManagementVo, page);
+		if(pagination.getData().size()>0){
+			/**
+			 * 返回-1，该时间段内，有该车的信息，不允许再添加
+			 */
+			return -1;
+		}
+		improveParameters(capacityManagement);
+		return capacityManagementService.addCapacityManagement(capacityManagement);
+	}
+	/**
+	 * @Description: 网点端 新增运力 需要向PC端 发送消息(目前不能向平台发送消息)
+	 * @param capacityManagement
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public int appAddCapacityManagement(CapacityManagement capacityManagement) {
+		int addCapacityManagement = addCapacityManagement(capacityManagement);
+		if(addCapacityManagement==1){
+			generateMessageToDispatch(BkgConstants.RULE_CODE_SUBMIT_CAPACITY_TO_DISPATCH,capacityManagement);
+		}else if(addCapacityManagement ==0){
+			throw new BkgModuleException(Resources.getMessage("error.bkg.biz.CapacityManagementBiz.dotSave.fail"));
+		}
+		return addCapacityManagement;
+	}
+	/**
+	 * 
+	 * @Description: 网点端上报运力时,  向平台发送消息
+	 * @param dirvingPlanDetail
+	 * @author lixueyuan
+	 * @date 2017年11月16日 下午8:15:51
+	 */
+	private void generateMessageToDispatch( String ruleCode,CapacityManagement capacityManagement) {
+		NoticeDetailVo noticeDetailVoDispatch=new NoticeDetailVo();
+		noticeDetailVoDispatch.setBusinessId(Long.parseLong(capacityManagement.getId().toString()));
+		noticeDetailVoDispatch.setBusinessType("");
+		noticeDetailVoDispatch.setNoticeRuleCode(ruleCode);
+		noticeDetailBiz.generateMessage(capacityManagement, noticeDetailVoDispatch);
+	}
+	
+	/**
+	 * @Description: 修改网点运力管理
+	 * @param capacityManagement 网点运力管理
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public int updateCapacityManagement(CapacityManagement capacityManagement) {
+		improveParameters(capacityManagement);
+		return capacityManagementService.updateById(capacityManagement);
+	}
+	/**
+	 * @Description: 网点端 取消运力  并向平台发送消息
+	 * @param capacityManagement 网点运力管理
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public int appUpdateById(CapacityManagement capacityManagement) {
+		int res =updateCapacityManagement(capacityManagement);
+		if(res>0){
+			CapacityManagement findById = capacityManagementService.findById(capacityManagement.getId());
+			if(BkgConstants.CAPACITY_STATUS_CANCEL .equals(capacityManagement.getBuyStatus())){
+				generateMessageToDispatch(BkgConstants.RULE_CODE_CANCEL_CAPACITY_TO_DISPATCH,findById);
+			}
+			if(BkgConstants.CAPACITY_STATUS_DOT_CONFIRM .equals(capacityManagement.getBuyStatus())){
+				generateMessageToDispatch(BkgConstants.RULE_CODE_CONFIRM_CAPACITY_TO_DISPATCH,findById);
+			}
+		}else{
+			if(BkgConstants.CAPACITY_STATUS_CANCEL .equals(capacityManagement.getBuyStatus())){
+				throw new BkgModuleException(Resources.getMessage("error.bkg.biz.CapacityManagementBiz.dotCancel.fail"));
+			}
+			if(BkgConstants.CAPACITY_STATUS_DOT_CONFIRM .equals(capacityManagement.getBuyStatus())){
+				throw new BkgModuleException(Resources.getMessage("error.bkg.biz.CapacityManagementBiz.dotConfirm.fail"));
+			}
+		}
+		return res;
+	}
+
+	
+	/**
+	 * @Description: 删除网点运力管理
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	public int deleteCapacityManagement(Long id) {
+		return capacityManagementService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询网点运力管理
+	 * @param id 主键
+	 * @return 网点运力管理
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	@Override
+	public CapacityManagement findById(Long id) {
+		return capacityManagementService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询网点运力管理
+	 * @param capacityManagementVo 网点运力管理
+	 * @param page 分页参数
+	 * @return 网点运力管理
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	public Pagination<CapacityManagement> findByPagination(CapacityManagementVo capacityManagementVo, Page page) {
+		Pagination<CapacityManagement> pagination = capacityManagementService.findByPagination(capacityManagementVo, page);
+		return pagination;
+	}
+
+	/**
+	 * @Description: 批量修改
+	 * @param ids capacityManagements的id拼接
+	 * @param buyStatus 需要修改的状态
+	 * @return 修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public Integer updateByIdsAndBuyStatus(String ids, String buyStatus) {
+		String [] idarr=ids.split(",");
+		List<CapacityManagement>  capacityManagements=new ArrayList<CapacityManagement>();
+		for (int i = 0; i < idarr.length; i++) {
+			CapacityManagement capacityManagement= new CapacityManagement();
+			capacityManagement.setId(Long.valueOf(idarr[i]));
+			capacityManagement.setBuyStatus(buyStatus);
+			capacityManagements.add(capacityManagement);
+		}
+		if(BkgConstants.CAPACITY_STATUS_OFFER.equals(buyStatus)){
+			for (int i = 0; i < idarr.length; i++) {
+				CapacityManagement cm=capacityManagementService.findById(Long.valueOf(idarr[i]));
+				MobileuserVo mobileuserVo = new MobileuserVo();
+				mobileuserVo.setBaseOrgCode(cm.getBelongSiteCode());
+				List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVo);
+				if(mobileuserVos.isEmpty()){
+					return 0;
+				}
+				//通过code查询改网点的手机号
+				for (int j = 0; j < mobileuserVos.size(); j++) {
+					NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+					noticeDetailVo.setBusinessType(BkgConstants.APP_CAPACITY_DETAIL);
+					noticeDetailVo.setNoticeRuleCode("DOT_CAPACITY_DETAIL");
+					noticeDetailVo.setBusinessId(cm.getId());
+					noticeDetailVo.setUserPhone(mobileuserVos.get(j).getMobilephone());
+					noticeDetailBiz.generateMessage(cm, noticeDetailVo);
+				}
+				
+			}
+		}
+		return capacityManagementService.updateByIdsAndBuyStatus(capacityManagements);
+	}
+
+	/**
+	 * @Description: 通过网点编号查询网点名称并且为实体类赋值网点名称
+	 * @param capacityManagement
+	 * @return void
+	 * @author UCE-haizhou
+	 * @date 2017年11月3日 下午06:54:13
+	 */
+	private void improveParameters(CapacityManagement capacityManagement){
+		String baseOrgCode=capacityManagement.getBelongSiteCode();
+		if(StringUtil.isNotBlank(baseOrgCode)){
+			OmgCmsOrgVo omgCmsOrgVo=omgCmsOrgBiz.findByBaseOrgCode(baseOrgCode);
+			if(omgCmsOrgVo!=null){
+				capacityManagement.setBelongSiteName(omgCmsOrgVo.getOrgName());
+			}
+		
+		}
+	}
+	/**
+	 * @Description: 获取网点运力编号
+	 * @param 
+	 * @return CapacityCode
+	 * @author UCE-haizhou
+	 * @date 2017年11月3日 下午06:54:13
+	 */
+	@Override
+	public String getCapacityCode() {
+		return redisIdsWorker.nextId(IdsPrefix.YL);
+	}
+	
+	/**
+	 * @Description: 定时器修改过期的运力状态为过期
+	 * @param 
+	 * @return 
+	 * @author UCE-haizhou
+	 * @date 2017年11月3日 下午06:54:13
+	 */
+	@Override
+	public int updateTimeOver() {
+		return capacityManagementService.updateTimeOver();
+	}
+	/**
+	 * @Description: 平台批量确认/向司机和车辆表中添加数据
+	 * @param String ids的集合
+	 * @param buyStatus 需要修改的状态
+	 * @return 修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年10月23日 下午06:54:13
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public Integer updateConfirmByIds(String ids,
+			String capacityStatusPlatformConfirm) {
+		int val=0;
+		String [] idarr=ids.split(",");
+		for (int i = 0; i < idarr.length; i++) {
+			CapacityManagement cm=capacityManagementService.findById(Long.valueOf(idarr[i]));
+			CapacityManagement capacityManagement = new CapacityManagement();
+			capacityManagement.setId(cm.getId());
+			capacityManagement.setBuyStatus(capacityStatusPlatformConfirm);
+			val =capacityManagementService.updateById(capacityManagement)+val;
+			if(val > 0){
+				Dirver dirver = new  Dirver();
+				if(StringUtil.isNotBlank(cm.getUpdateEmp())){
+					dirver.setCreateEmp(cm.getUpdateEmp());					//设置司机信息的创建人
+				}
+				if(StringUtil.isNotBlank(cm.getUpdateOrg())){															
+				dirver.setCreateOrg(cm.getUpdateOrg());						//设置司机信息的创建机构
+				}
+				dirver.setDirverType(BkgConstants.CAR_BELONG_TYPE_SITE); //设置司机所属类型=网点运力
+				dirver.setCreateTime(new Date());							//设置司机信息的创建时间
+				dirver.setDeleteFlag(false);								//设置司机的
+				dirver.setDirverStatus(BkgConstants.CARRIER_START);			//设置司机的状态
+				if(StringUtil.isNotBlank(cm.getBelongSiteCode())){
+					dirver.setDriverOrg(cm.getBelongSiteCode());			//设置司机所属机构
+				}
+				if(StringUtil.isNotBlank(cm.getBelongSiteCode())){
+					dirver.setCarriveId(cm.getBelongSiteCode());
+				}
+				if(StringUtil.isNotBlank(cm.getBelongSiteName())){
+					dirver.setCarrierName(cm.getBelongSiteName());
+				}
+				if(StringUtil.isNotBlank(cm.getDrivingLicenceImageId())){
+					dirver.setDrivingNumber(cm.getDrivingLicenceImageId()); //设置驾驶证号码
+				}			
+				 if(StringUtil.isNotBlank(cm.getDriverName())){
+					 dirver.setDriverName(cm.getDriverName());  			//设置司机姓名
+				 }
+				if(StringUtil.isNotBlank(cm.getDriverPhone())){
+					dirver.setMobilePhone(cm.getDriverPhone());  			//设置司机手机号码
+				}	
+				if(StringUtil.isNotBlank(cm.getCarPlateNumber())){
+					dirver.setPlateNumber(cm.getCarPlateNumber());			//设置车牌号
+				}				
+				if(StringUtil.isNotBlank(cm.getCarBelong()))  {
+					dirver.setDirverType(cm.getCarBelong());				//设置车辆所属类型
+				}  			
+				if(StringUtil.isNotBlank(cm.getDriverLicensePhoto())){
+					dirver.setDrivingFileUrl(cm.getDriverLicensePhoto());	//设置司机的驾驶证照片
+				}					
+					dirver.setVersion(1);    //设置版本号默认为1
+				
+				//dirver.setDirverType(BkgConstants.);
+				int a=dirverService.addDirver(dirver);
+				
+				CarManage carManage =  new  CarManage();
+				carManage.setCarNumber(redisIdsWorker.nextId(IdsPrefix.CL));	//随机获取车辆编号
+				if(cm.getCarPlateNumber() != null){
+					carManage.setPlateNumbers(cm.getCarPlateNumber());  		//设置车牌号
+				}
+				if(cm.getEndTime() != null){
+					carManage.setCapacityEndTime(cm.getEndTime());      		//设置运力的结束时间
+				}
+				if(cm.getStartTime() != null){
+					carManage.setCapacityStartTime(cm.getStartTime()); 			//设置运力的开始时间
+				}
+				if(StringUtil.isNotBlank(cm.getCarBelong())){
+					carManage.setCarBelongType(BkgConstants.CAR_BELONG_TYPE_SITE);				//设置车辆所属类型=网点运力
+				}
+				if(StringUtil.isNotBlank(cm.getBelongSiteCode())){
+					carManage.setCarBelongCarrier(cm.getBelongSiteCode());				//设置车辆所属类型=网点运力
+				}
+				if(cm.getHight() != null){
+					carManage.setCarHeight(cm.getHight());  					//设置车辆的高度
+				}
+				if(cm.getLength() != null){
+					carManage.setCarLength(cm.getLength());  					//设置车辆的长度
+				}
+				if(cm.getWidth() != null){
+					carManage.setCarWidth(cm.getWidth());  						//设置车辆的宽度
+				}
+				if(StringUtil.isNotBlank(cm.getCarType())){
+					carManage.setCarType(cm.getCarType()); 						//设置车辆的类型
+				}
+				if(StringUtil.isNotBlank(cm.getBelongSiteCode())){
+					carManage.setCarOrg(cm.getBelongSiteCode()); 				//设置车辆所属网点
+				}
+				
+				if(StringUtil.isNotBlank(cm.getIdCardFrontImageId())){
+					carManage.setDrivingLicenseNumber(cm.getIdCardFrontImageId());  //设置行驶证的编号
+				}
+				if(cm.getPassFlag() != null && true==cm.getPassFlag()){
+					carManage.setTrafficPermitFlag(BkgConstants.PASS_TRUE);	//设置是否含有通行证
+					if(StringUtil.isNotBlank(cm.getPassCheckPhoto())){
+						carManage.setTrafficPermitFile(cm.getPassCheckPhoto());	//设置通行证的照片
+					}
+					
+				}else{
+					carManage.setTrafficPermitFlag(BkgConstants.PASS_FALSE);
+				}
+				carManage.setCarStatus(BkgConstants.CARRIER_START);			//默认设置车辆为启用状态
+				carManageService.addCarManage(carManage);
+				
+			}
+		}
+		
+		return val;
+	}
+}

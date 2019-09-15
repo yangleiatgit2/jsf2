@@ -1,0 +1,111 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import com.alibaba.fastjson.JSON;
+
+import cn.jpush.api.TestOrder;
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.IIaMonitorBiz;
+import cn.uce.suc.bkg.entity.operation.FreightDemandCombine;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.entity.operation.IaMonitor;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.IaMonitorVo;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+
+/**
+ * 
+ * @Description: 算法参数
+ * @author laizhendong
+ * @date 2017年10月21日 下午2:50:04
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class IaMonitorBizTest extends AbstractJUnit4SpringContextTests {
+	
+	@Resource
+	private IIaMonitorBiz iaMonitorBiz;
+	
+	/**
+	 * 
+	 * @Description: 测试查询
+	 * @author laizhendong
+	 * @date 2017年12月4日 下午9:03:14
+	 */
+	@Test
+	public void testFind(){
+		IaMonitor iaMonitor = iaMonitorBiz.findById(67L);
+		System.out.println(JSON.toJSONString(iaMonitor));
+		iaMonitorBiz.findByCombineCode("OZ170800001");
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		iaMonitorBiz.findByPagination(null, page);
+	}
+	
+	/**
+	 * 
+	 * @Description: 测试流程 
+	 * @author laizhendong
+	 * @date 2017年12月4日 下午9:14:12
+	 */
+	@Test
+	public void test(){
+		String iaMonitorJson = "{\"businessMode\":\"1\",\"combineCode\":\"OZ18112300000\",\"combineType\":\"2\",\"createEmp\":\"智能排班\",\"createOrg\":\"智能排班\",\"createTime\":1512392006000,\"deleteFlag\":false,\"demandType\":\"2\",\"errorMsg\":\"\",\"executeTime\":1512392006000,\"orgCode\":\"UC010140\",\"orgName\":\"上海分拨中心\",\"status\":\"10\",\"taskCode\":\"ZN17120400002\",\"version\":1}";
+		IaMonitor iaMonitor = JSON.parseObject(iaMonitorJson,IaMonitor.class);
+		iaMonitorBiz.addIaMonitor(iaMonitor);
+		iaMonitorBiz.updateIaMonitor(iaMonitor);
+		iaMonitorBiz.deleteIaMonitor(iaMonitor.getId());
+	}
+	
+	/**
+	 * 
+	 * @Description: 测试算法任务状态
+	 * @author laizhendong
+	 * @date 2017年12月5日 上午10:14:35
+	 */
+	@Test
+	public void testCheckIaTaskStatus(){
+		Long orderId = null;
+		Long demandId = null;
+		try {
+			String orderCombineJson = "{\"businessMode\":\"1\",\"createEmp\":\"系统\",\"createTime\":1511416271000,\"executeTime\":1511452800000,\"operStationCode\":\"UC010140\",\"orderCombineCode\":\"OZ19112300000\",\"orderCombineName\":\"上海分拨中心11008\",\"orderCombineStatus\":\"00\",\"orderCombineType\":\"2\",\"version\":1}";
+			String demandCombineJson = "{\"businessMode\":\"1\",\"createEmp\":\"调度系统\",\"createOrg\":\"调度系统\",\"createTime\":1511405751451,\"demandCombineCode\":\"XZ19112300001\",\"demandCombineName\":\"UC01014011008\",\"demandCombineStatus\":\"1\",\"demandCombineType\":\"2\",\"executeTime\":1511452800000,\"stationCode\":\"UC010140\"}";
+			FreightDemandCombineVo demandCombineVo = JSON.parseObject(demandCombineJson, FreightDemandCombineVo.class);
+			FreightOrderCombineVo orderCombineVo = JSON.parseObject(orderCombineJson, FreightOrderCombineVo.class);
+			//FreightDemandCombine demandCombine = ObjectConvertUtil.convertObject(demandCombineVo, FreightDemandCombine.class);
+			//FreightOrderCombine orderCombine = ObjectConvertUtil.convertObject(orderCombineVo, FreightOrderCombine.class);
+			
+			iaMonitorBiz.checkIaTaskStatus(demandCombineVo);
+			IaMonitorVo demandIaMonitorVo = iaMonitorBiz.findByCombineCode("XZ19112300001");
+			demandId = demandIaMonitorVo.getId();
+			iaMonitorBiz.checkIaTaskStatus(demandCombineVo);
+			
+			iaMonitorBiz.checkIaTaskStatus(orderCombineVo);
+			IaMonitorVo orderIaMonitorVo = iaMonitorBiz.findByCombineCode("OZ19112300000");
+			orderId = orderIaMonitorVo.getId();
+			iaMonitorBiz.checkIaTaskStatus(orderCombineVo);
+			
+		} catch (Exception e) {
+			System.out.println(e);
+		}finally{
+			if (orderId != null ) {
+				iaMonitorBiz.deleteIaMonitor(orderId);
+			}
+			if (demandId != null ) {
+				iaMonitorBiz.deleteIaMonitor(demandId);
+			}
+		}
+	}
+}

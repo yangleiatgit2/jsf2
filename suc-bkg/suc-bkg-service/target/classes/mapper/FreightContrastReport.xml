@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datastatis.IFreightContrastReportDao">
+
+	<sql id="Base_Column_List">
+	plan.driving_plan_code,
+	(case when business_mode =1 then start_org_code
+	when business_mode =2 then end_org_code
+	end) as 'work_center_code',
+	(case
+	when business_mode =1 then start_org_name 
+	when business_mode=2 then end_org_name
+	end) as 'work_center_name',
+	(case when business_mode =1 then end_org_code
+	when business_mode =2 then start_org_code
+	end) as 'site_code',
+	(case
+	when business_mode=1 then end_org_name
+	when business_mode=2 then start_org_name
+	end) as 'site_name',
+	business_mode,
+	business.type_name as business_mode_name,
+	dirver_name as driver_name,
+	plate_number,
+	depart_time,
+	arrival_time,
+	forecast_volume,
+	actual_volume,
+	(actual_volume-forecast_volume) 'volume_diff',
+	forecast_weight,
+	actual_weight,
+	(actual_weight-forecast_weight) 'weight_diff'
+	</sql>
+
+	<sql id="Base_Column_Where">
+		<where>
+			<if test="businessMode != null and businessMode != ''">
+				and business_mode =#{businessMode}
+			</if>
+			<if test="workCenterCode != null and workCenterCode != ''">
+				and work_center_code =#{workCenterCode}
+			</if>
+			<if test="siteCode != null and siteCode != ''">
+				and site_code = #{siteCode}
+			</if>
+			<if test="startTimeByBegin != null and startTimeByBegin !=''">
+				and date_format(depart_time,'%Y-%m-%d') &gt;= #{startTimeByBegin}
+			</if>
+			<if test="startTimeByEnd != null and startTimeByEnd !=''">
+				and date_format(depart_time,'%Y-%m-%d') &lt;= #{startTimeByEnd}
+			</if>
+			<!-- 0 无差异数据，1有差异数据 -->
+			<if test="contrastStatus !=null and contrastStatus ==0">
+				and (weight_diff = 0 or volume_diff = 0 or weight_diff is null or volume_diff is null)
+			</if>
+			<if test="contrastStatus !=null and contrastStatus ==1">
+				and (weight_diff <![CDATA[<>]]> 0 and volume_diff <![CDATA[<>]]> 0)
+			</if>
+		</where>
+	</sql>
+
+	<select id="findFreightContrastReportByPage" parameterType="cn.uce.suc.bkg.vo.datastatis.FreightContrastReportVo"
+		resultType="cn.uce.suc.bkg.vo.datastatis.FreightContrastReportVo">
+		select * from(
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_dirving_plan plan
+		left join (select driving_plan_code,sum(forecast_volume)
+		forecast_volume,sum(forecast_weight) forecast_weight,sum(actual_volume)
+		actual_volume,sum(actual_weight) actual_weight from
+		t_suc_bkg_dirving_plan_detail
+		group by driving_plan_code) detail on
+		plan.driving_plan_code=detail.driving_plan_code
+		left join omg_fsp_dict_data business on
+		business.type_class_code="BUSINESS_MODE" and
+		business.type_code=plan.business_mode
+		) freightContrastReport
+	<include refid="Base_Column_Where" />
+	</select>
+
+	<select id="findByExport"  parameterType="cn.uce.suc.bkg.vo.datastatis.FreightContrastReportVo"
+		resultType="cn.uce.suc.bkg.vo.datastatis.FreightContrastReportVo">
+	select * from(
+	select
+	<include refid="Base_Column_List" />
+	from t_suc_bkg_dirving_plan plan
+	left join (select driving_plan_code,sum(forecast_volume)
+	forecast_volume,sum(forecast_weight) forecast_weight,sum(actual_volume)
+	actual_volume,sum(actual_weight) actual_weight from
+	t_suc_bkg_dirving_plan_detail
+	group by driving_plan_code) detail on
+	plan.driving_plan_code=detail.driving_plan_code
+	left join omg_fsp_dict_data business on
+	business.type_class_code="BUSINESS_MODE" and
+	business.type_code=plan.business_mode
+	) freightContrastReport
+	<include refid="Base_Column_Where" />
+	</select>
+
+</mapper>

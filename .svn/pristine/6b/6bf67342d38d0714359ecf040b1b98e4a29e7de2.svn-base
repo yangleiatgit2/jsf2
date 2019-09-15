@@ -1,0 +1,258 @@
+package cn.uce.suc.bkg.vo.ia;
+
+import cn.uce.base.vo.BaseVo;
+
+public class WsLineDetailsVo extends BaseVo {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 流水号
+	 */
+	private Long id;
+	
+	/**
+	 * 机构编号
+	 */
+	private String orgCode;
+	
+	/**
+	 * 机构名称
+	 */
+	private String orgName;
+	
+	/**
+	 * 下一站机构编号
+	 */
+	private String nextOrgCode;
+	
+	/**
+	 * 下一站机构名称
+	 */
+	private String nextOrgName;
+	
+	/**
+	 * 开始时间
+	 */
+	private String startTime;
+	
+	/**
+	 * 结束时间
+	 */
+	private String endTime;
+	
+	/**
+	 * 货量
+	 */
+	private Double volume;
+	/**
+	 * 装卸货时间
+	 */
+	private Double loadUnloadTime;
+	/**
+	 * 距离
+	 */
+	private Double distance;
+	/**
+	 * 距离下一站距离
+	 */
+	private Double nextWayDistance;
+	/**
+	 * 运行时长
+	 */
+	private Double runningTime;
+	
+	/**
+	 * 排序
+	 */
+	private Integer sort;
+
+	/** 
+	 * @return id 
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/** 
+	 * @return orgCode 
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	/**
+	 * @param orgCode the orgCode to set
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	/** 
+	 * @return orgName 
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+
+	/**
+	 * @param orgName the orgName to set
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	/** 
+	 * @return nextOrgCode 
+	 */
+	public String getNextOrgCode() {
+		return nextOrgCode;
+	}
+
+	/**
+	 * @param nextOrgCode the nextOrgCode to set
+	 */
+	public void setNextOrgCode(String nextOrgCode) {
+		this.nextOrgCode = nextOrgCode;
+	}
+
+	/** 
+	 * @return nextOrgName 
+	 */
+	public String getNextOrgName() {
+		return nextOrgName;
+	}
+
+	/**
+	 * @param nextOrgName the nextOrgName to set
+	 */
+	public void setNextOrgName(String nextOrgName) {
+		this.nextOrgName = nextOrgName;
+	}
+
+
+	/** 
+	 * @return startTime 
+	 */
+	public String getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	/** 
+	 * @return endTime 
+	 */
+	public String getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+	/** 
+	 * @return volume 
+	 */
+	public Double getVolume() {
+		return volume;
+	}
+
+	/**
+	 * @param volume the volume to set
+	 */
+	public void setVolume(Double volume) {
+		this.volume = volume;
+	}
+
+	/** 
+	 * @return loadUnloadTime 
+	 */
+	public Double getLoadUnloadTime() {
+		return loadUnloadTime;
+	}
+
+	/**
+	 * @param loadUnloadTime the loadUnloadTime to set
+	 */
+	public void setLoadUnloadTime(Double loadUnloadTime) {
+		this.loadUnloadTime = loadUnloadTime;
+	}
+
+	/** 
+	 * @return distance 
+	 */
+	public Double getDistance() {
+		return distance;
+	}
+
+	/**
+	 * @param distance the distance to set
+	 */
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+
+	/** 
+	 * @return nextWayDistance 
+	 */
+	public Double getNextWayDistance() {
+		return nextWayDistance;
+	}
+
+	/**
+	 * @param nextWayDistance the nextWayDistance to set
+	 */
+	public void setNextWayDistance(Double nextWayDistance) {
+		this.nextWayDistance = nextWayDistance;
+	}
+
+	/** 
+	 * @return runingTime 
+	 */
+	public Double getRunningTime() {
+		return runningTime;
+	}
+
+	/**
+	 * @param runingTime the runingTime to set
+	 */
+	public void setRunningTime(Double runningTime) {
+		this.runningTime = runningTime;
+	}
+
+	/** 
+	 * @return sort 
+	 */
+	public Integer getSort() {
+		return sort;
+	}
+
+	/**
+	 * @param sort the sort to set
+	 */
+	public void setSort(Integer sort) {
+		this.sort = sort;
+	}
+	
+	
+
+}

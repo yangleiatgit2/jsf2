@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datamain.ICapacityManagementDao">
+	
+	<sql id="Base_Column_List">
+			id,capacity_code,car_plate_number,
+			belong_site_code,belong_site_name,car_belong,
+			car_type,car_type_value,length,
+			width,hight,largest_load,
+			driver_name,driver_phone,purchase_price,
+			buy_status,pass_flag,pass_image_id,
+			driving_licence_image_id,ID_card_front_image_id,ID_card_back_image_id,
+			version,delete_flag,create_org,
+			create_emp,create_time,update_org,
+			update_emp,update_time,operation_id,
+			driver_license_photo,driving_license_photo,id_front_photo,
+			pass_check_photo,operation_certificate,id_side_photo,start_time,end_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="capacityCode != null">
+		and capacity_code = #{capacityCode}
+		</if>
+	    <if test="carPlateNumber != null">
+		and car_plate_number = #{carPlateNumber}
+		</if>
+	    <if test="belongSiteCode != null  ">
+		and belong_site_code = #{belongSiteCode}
+		</if>
+	    <if test="belongSiteName != null">
+		and belong_site_name = #{belongSiteName}
+		</if>
+	    <if test="carBelong != null ">
+		and car_belong = #{carBelong}
+		</if>
+	    <if test="carType != null">
+		and car_type = #{carType}
+		</if>
+	    <if test="carTypeValue != null">
+		and car_type_value = #{carTypeValue}
+		</if>
+	    <if test="length != null">
+		and length = #{length}
+		</if>
+	    <if test="width != null">
+		and width = #{width}
+		</if>
+	    <if test="hight != null">
+		and hight = #{hight}
+		</if>
+	    <if test="largestLoad != null">
+		and largest_load = #{largestLoad}
+		</if>
+	    <if test="driverName != null">
+		and driver_name = #{driverName}
+		</if>
+	    <if test="driverPhone != null">
+		and driver_phone = #{driverPhone}
+		</if>
+	    <if test="purchasePrice != null">
+		and purchase_price = #{purchasePrice}
+		</if>
+	    <if test="buyStatus != null ">
+		and buy_status = #{buyStatus}
+		</if>
+	    <if test="passFlag != null">
+		and pass_flag = #{passFlag}
+		</if>
+	    <if test="passImageId != null">
+		and pass_image_id = #{passImageId}
+		</if>
+	    <if test="drivingLicenceImageId != null">
+		and driving_licence_image_id = #{drivingLicenceImageId}
+		</if>
+	    <if test="idCardFrontImageId != null">
+		and ID_card_front_image_id = #{idCardFrontImageId}
+		</if>
+	    <if test="idCardBackImageId != null">
+		and ID_card_back_image_id = #{idCardBackImageId}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="operationId != null">
+		and operation_id = #{operationId}
+		</if>
+		<if test="driverLicensePhoto!=null">
+		and	driver_license_photo=#{driverLicensePhoto}
+		</if>
+		<if test="drivingLicensePhoto!=null">
+		and	driving_license_photo=#{drivingLicensePhoto}
+		</if>
+		<if test="idFrontPhoto!=null">
+		and	id_front_photo=#{idFrontPhoto}
+		</if>
+		<if test="passCheckPhoto!=null">
+		and	pass_check_photo=#{passCheckPhoto}
+		</if>
+		<if test="operationCertificate!=null">
+		and	operation_certificate=#{operationCertificate}
+		</if>
+		<if test="idSidePhoto!=null">
+		and	id_side_photo=#{idSidePhoto}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.datamain.CapacityManagement">
+	UPDATE t_suc_bkg_capacity_management
+	<set>
+		<if test="capacityCode != null">
+		capacity_code = #{capacityCode},
+		</if>
+		<if test="carPlateNumber != null">
+		car_plate_number = #{carPlateNumber},
+		</if>
+		<if test="belongSiteCode != null">
+		belong_site_code = #{belongSiteCode},
+		</if>
+		<if test="belongSiteName != null">
+		belong_site_name = #{belongSiteName},
+		</if>
+		<if test="carBelong != null">
+		car_belong = #{carBelong},
+		</if>
+		<if test="carType != null">
+		car_type = #{carType},
+		</if>
+		<if test="carTypeValue != null">
+		car_type_value = #{carTypeValue},
+		</if>
+		<if test="length != null">
+		length = #{length},
+		</if>
+		<if test="width != null">
+		width = #{width},
+		</if>
+		<if test="hight != null">
+		hight = #{hight},
+		</if>
+		<if test="largestLoad != null">
+		largest_load = #{largestLoad},
+		</if>
+		<if test="driverName != null">
+		driver_name = #{driverName},
+		</if>
+		<if test="driverPhone != null">
+		driver_phone = #{driverPhone},
+		</if>
+		<if test="purchasePrice != null">
+		purchase_price = #{purchasePrice},
+		</if>
+		<if test="buyStatus != null">
+		buy_status = #{buyStatus},
+		</if>
+		<if test="passFlag != null">
+		pass_flag = #{passFlag},
+		</if>
+		<if test="passImageId != null">
+		pass_image_id = #{passImageId},
+		</if>
+		<if test="drivingLicenceImageId != null">
+		driving_licence_image_id = #{drivingLicenceImageId},
+		</if>
+		<if test="idCardFrontImageId != null">
+		ID_card_front_image_id = #{idCardFrontImageId},
+		</if>
+		<if test="idCardBackImageId != null">
+		ID_card_back_image_id = #{idCardBackImageId},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="operationId != null">
+		operation_id = #{operationId},
+		</if>
+		<if test="startTime != null">
+			start_time =#{startTime},
+		</if>
+		<if test="endTime != null">
+			end_time =#{endTime},
+		</if>
+		<if test="driverLicensePhoto!=null">
+			driver_license_photo=#{driverLicensePhoto},
+		</if>
+		<if test="drivingLicensePhoto!=null">
+			driving_license_photo=#{drivingLicensePhoto},
+		</if>
+		<if test="idFrontPhoto!=null">
+			id_front_photo=#{idFrontPhoto},
+		</if>
+		<if test="passCheckPhoto!=null">
+			pass_check_photo=#{passCheckPhoto},
+		</if>
+		<if test="operationCertificate!=null">
+			operation_certificate=#{operationCertificate},
+		</if>
+		<if test="idSidePhoto!=null">
+			id_side_photo=#{idSidePhoto},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.datamain.CapacityManagementVo" resultType="cn.uce.suc.bkg.entity.datamain.CapacityManagement">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_capacity_management
+	 <where>
+	 		<if test="capacityCode != null and capacityCode != ''">
+	 			and capacity_code = #{capacityCode}
+	 		</if>
+		 	<if test="belongSiteCode != null and belongSiteCode !='' ">
+				and belong_site_code = #{belongSiteCode}
+			</if>
+			<if test="carPlateNumber != null  and '' != carPlateNumber ">
+				and car_plate_number = #{carPlateNumber}
+			</if>
+		 	<if test="buyStatus != null and buyStatus !='' ">
+				and buy_status = #{buyStatus}
+			</if>
+		 	<if test="carBelong != null and carBelong !='' ">
+				and car_belong = #{carBelong}
+			</if>
+		 	<if test="carTypeValue != null and carTypeValue!=''">
+				and car_type_value = #{carTypeValue}
+			</if>
+		 	<if test="startTime != null and endTime !=null ">
+		 		and start_time between #{startTime} and #{endTime} 
+		 	</if>
+		 	<if test="startTime !=null and endTime == null">
+				and start_time <![CDATA[   >=  ]]> #{startTime}
+			</if>
+			<if test="startTime == null and endTime != null">
+				and start_time <![CDATA[   <  ]]> #{endTime}
+			</if>
+		</where>
+			order by create_time desc
+	</select>
+	<!-- 网点端,我的运力查询 -->
+	<select id="findByBelongSiteCodePagination" parameterType="cn.uce.suc.bkg.vo.datamain.CapacityManagementVo" resultType="cn.uce.suc.bkg.vo.datamain.CapacityManagementVo">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_capacity_management
+		 <where>
+	 		 belong_site_code = #{belongSiteCode}
+			<if test="buyStatus != null and buyStatus !='' and buyStatus =='01' ">
+				and buy_status = #{buyStatus} 
+			</if>		
+		 	<if test="buyStatus != null and buyStatus !='' and buyStatus =='03' ">
+				and (buy_status = #{buyStatus} or buy_status = "02" or buy_status = "04")
+			</if>		
+			<if test="buyStatus != null and buyStatus !='' and buyStatus =='07' ">
+				and (buy_status = #{buyStatus} or buy_status = "05" or buy_status = "06")
+			</if>	
+		</where> 	
+			order by create_time desc
+	</select>
+	<!-- 定时扫描过期的运力，修改运力状态 -->
+	<update id="updateTimeOver">
+		UPDATE t_suc_bkg_capacity_management
+	<set>
+		buy_status = "05"
+	</set>
+	<where>
+		buy_status IN ('01','02','03','04') AND end_time <![CDATA[   <  ]]> SYSDATE() ;
+	</where>
+	</update>
+</mapper>

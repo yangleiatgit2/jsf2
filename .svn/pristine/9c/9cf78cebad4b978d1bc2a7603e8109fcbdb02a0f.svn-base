@@ -1,0 +1,47 @@
+package cn.uce.suc.app.service;
+
+import javax.annotation.Resource;
+
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.suc.app.biz.impl.ServiceevaluationBiz;
+import cn.uce.suc.app.entity.Serviceevaluation;
+
+/**
+ * 
+ * @Description: 单元测试
+ * @author liwei
+ * @date 2017年12月7日 上午11:11:40
+ */
+
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class AppScoreForDriverTest {
+	/**
+	 * biz注入
+	 */
+	@Resource
+	ServiceevaluationBiz appServiceevaluationBiz;
+	
+	
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @author liwei
+	 * @date 2017年12月7日 上午11:13:37
+	 */
+	@Test
+	public void testScoreForDirver() {
+		String mobliePhone = "13022111073";
+	Serviceevaluation appServiceevaluation=	appServiceevaluationBiz.findScoreforDriver(mobliePhone);
+	}
+
+}

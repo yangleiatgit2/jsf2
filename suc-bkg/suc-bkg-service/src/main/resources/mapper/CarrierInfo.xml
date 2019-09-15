@@ -1,0 +1,440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datamain.ICarrierInfoDao">
+	
+	<sql id="Base_Column_List">
+			id,company_simple_name,company_full_name,
+			company_nature,company_validity,tax_no,
+			org_code,company_phone,fax,
+			carrier_type,self_car,legal_person_name,
+			legal_person_number,legal_person_mobile,contacts_name,
+			contacts_mobile,contacts_position,contacts_number,
+			postcode,registered_capital,company_begin_time,
+			business_scope,register_province_code,register_city_code,
+			register_area_code,register_address,actual_province_code,
+			actual_city_code,actual_area_code,actual_address,
+			license_photo,credit_code_photo,qualifications_photo,
+			org_photo,tax_photo,legal_person_photo,
+			legal_person_auth_photo,contacts_photo,disabled_reason,
+			status,utf1,utf2,
+			utf3,remark,del_flag,
+			version,create_emp,create_time,
+			create_org,update_emp,update_time,
+			update_org
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="companySimpleName != null">
+		and company_simple_name = #{companySimpleName}
+		</if>
+	    <if test="companyFullName != null">
+		and company_full_name = #{companyFullName}
+		</if>
+	    <if test="companyNature != null">
+		and company_nature = #{companyNature}
+		</if>
+	    <if test="companyValidity != null">
+		and company_validity = #{companyValidity}
+		</if>
+	    <if test="taxNo != null">
+		and tax_no = #{taxNo}
+		</if>
+	    <if test="orgCode != null">
+		and org_code = #{orgCode}
+		</if>
+	    <if test="companyPhone != null">
+		and company_phone = #{companyPhone}
+		</if>
+	    <if test="fax != null">
+		and fax = #{fax}
+		</if>
+	    <if test="carrierType != null">
+		and carrier_type = #{carrierType}
+		</if>
+	    <if test="selfCar != null">
+		and self_car = #{selfCar}
+		</if>
+	    <if test="legalPersonName != null">
+		and legal_person_name = #{legalPersonName}
+		</if>
+	    <if test="legalPersonNumber != null">
+		and legal_person_number = #{legalPersonNumber}
+		</if>
+	    <if test="legalPersonMobile != null">
+		and legal_person_mobile = #{legalPersonMobile}
+		</if>
+	    <if test="contactsName != null">
+		and contacts_name = #{contactsName}
+		</if>
+	    <if test="contactsMobile != null">
+		and contacts_mobile = #{contactsMobile}
+		</if>
+	    <if test="contactsPosition != null">
+		and contacts_position = #{contactsPosition}
+		</if>
+	    <if test="contactsNumber != null">
+		and contacts_number = #{contactsNumber}
+		</if>
+	    <if test="postcode != null">
+		and postcode = #{postcode}
+		</if>
+	    <if test="registeredCapital != null">
+		and registered_capital = #{registeredCapital}
+		</if>
+	    <if test="companyBeginTime != null">
+		and company_begin_time = #{companyBeginTime}
+		</if>
+	    <if test="businessScope != null">
+		and business_scope = #{businessScope}
+		</if>
+	    <if test="registerProvinceCode != null">
+		and register_province_code = #{registerProvinceCode}
+		</if>
+	    <if test="registerCityCode != null">
+		and register_city_code = #{registerCityCode}
+		</if>
+	    <if test="registerAreaCode != null">
+		and register_area_code = #{registerAreaCode}
+		</if>
+	    <if test="registerAddress != null">
+		and register_address = #{registerAddress}
+		</if>
+	    <if test="actualProvinceCode != null">
+		and actual_province_code = #{actualProvinceCode}
+		</if>
+	    <if test="actualCityCode != null">
+		and actual_city_code = #{actualCityCode}
+		</if>
+	    <if test="actualAreaCode != null">
+		and actual_area_code = #{actualAreaCode}
+		</if>
+	    <if test="actualAddress != null">
+		and actual_address = #{actualAddress}
+		</if>
+	    <if test="licensePhoto != null">
+		and license_photo = #{licensePhoto}
+		</if>
+	    <if test="creditCodePhoto != null">
+		and credit_code_photo = #{creditCodePhoto}
+		</if>
+	    <if test="qualificationsPhoto != null">
+		and qualifications_photo = #{qualificationsPhoto}
+		</if>
+	    <if test="orgPhoto != null">
+		and org_photo = #{orgPhoto}
+		</if>
+	    <if test="taxPhoto != null">
+		and tax_photo = #{taxPhoto}
+		</if>
+	    <if test="legalPersonPhoto != null">
+		and legal_person_photo = #{legalPersonPhoto}
+		</if>
+	    <if test="legalPersonAuthPhoto != null">
+		and legal_person_auth_photo = #{legalPersonAuthPhoto}
+		</if>
+	    <if test="contactsPhoto != null">
+		and contacts_photo = #{contactsPhoto}
+		</if>
+	    <if test="disabledReason != null">
+		and disabled_reason = #{disabledReason}
+		</if>
+	    <if test="status != null">
+		and status = #{status}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.datamain.CarrierInfo">
+	UPDATE t_suc_bkg_carrier_info
+	<set>
+		<if test="companySimpleName != null">
+		company_simple_name = #{companySimpleName},
+		</if>
+		<if test="companyFullName != null">
+		company_full_name = #{companyFullName},
+		</if>
+		<if test="companyNature != null">
+		company_nature = #{companyNature},
+		</if>
+		<if test="companyValidity != null">
+		company_validity = #{companyValidity},
+		</if>
+		<if test="taxNo != null">
+		tax_no = #{taxNo},
+		</if>
+		<if test="orgCode != null">
+		org_code = #{orgCode},
+		</if>
+		<if test="companyPhone != null">
+		company_phone = #{companyPhone},
+		</if>
+		<if test="fax != null">
+		fax = #{fax},
+		</if>
+		<if test="carrierType != null">
+		carrier_type = #{carrierType},
+		</if>
+		<if test="selfCar != null">
+		self_car = #{selfCar},
+		</if>
+		<if test="legalPersonName != null">
+		legal_person_name = #{legalPersonName},
+		</if>
+		<if test="legalPersonNumber != null">
+		legal_person_number = #{legalPersonNumber},
+		</if>
+		<if test="legalPersonMobile != null">
+		legal_person_mobile = #{legalPersonMobile},
+		</if>
+		<if test="contactsName != null">
+		contacts_name = #{contactsName},
+		</if>
+		<if test="contactsMobile != null">
+		contacts_mobile = #{contactsMobile},
+		</if>
+		<if test="contactsPosition != null">
+		contacts_position = #{contactsPosition},
+		</if>
+		<if test="contactsNumber != null">
+		contacts_number = #{contactsNumber},
+		</if>
+		<if test="postcode != null">
+		postcode = #{postcode},
+		</if>
+		<if test="registeredCapital != null">
+		registered_capital = #{registeredCapital},
+		</if>
+		<if test="companyBeginTime != null">
+		company_begin_time = #{companyBeginTime},
+		</if>
+		<if test="businessScope != null">
+		business_scope = #{businessScope},
+		</if>
+		<if test="registerProvinceCode != null">
+		register_province_code = #{registerProvinceCode},
+		</if>
+		<if test="registerCityCode != null">
+		register_city_code = #{registerCityCode},
+		</if>
+		<if test="registerAreaCode != null">
+		register_area_code = #{registerAreaCode},
+		</if>
+		<if test="registerAddress != null">
+		register_address = #{registerAddress},
+		</if>
+		<if test="actualProvinceCode != null">
+		actual_province_code = #{actualProvinceCode},
+		</if>
+		<if test="actualCityCode != null">
+		actual_city_code = #{actualCityCode},
+		</if>
+		<if test="actualAreaCode != null">
+		actual_area_code = #{actualAreaCode},
+		</if>
+		<if test="actualAddress != null">
+		actual_address = #{actualAddress},
+		</if>
+		<if test="licensePhoto != null">
+		license_photo = #{licensePhoto},
+		</if>
+		<if test="creditCodePhoto != null">
+		credit_code_photo = #{creditCodePhoto},
+		</if>
+		<if test="qualificationsPhoto != null">
+		qualifications_photo = #{qualificationsPhoto},
+		</if>
+		<if test="orgPhoto != null">
+		org_photo = #{orgPhoto},
+		</if>
+		<if test="taxPhoto != null">
+		tax_photo = #{taxPhoto},
+		</if>
+		<if test="legalPersonPhoto != null">
+		legal_person_photo = #{legalPersonPhoto},
+		</if>
+		<if test="legalPersonAuthPhoto != null">
+		legal_person_auth_photo = #{legalPersonAuthPhoto},
+		</if>
+		<if test="contactsPhoto != null">
+		contacts_photo = #{contactsPhoto},
+		</if>
+		<if test="disabledReason != null">
+		disabled_reason = #{disabledReason},
+		</if>
+		<if test="status != null">
+		status = #{status},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="version != null">
+		version =version+1,
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+	</set>
+	WHERE id = #{id}
+		<if test="version != null">
+		and version=#{version}
+		</if>
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.datamain.CarrierInfoVo" resultType="cn.uce.suc.bkg.entity.datamain.CarrierInfo">
+	select id,company_simple_name,company_full_name,
+			company_nature,company_validity,tax_no,
+			org_code,company_phone,fax,
+			carrier_type,self_car,legal_person_name,
+			legal_person_number,legal_person_mobile,contacts_name,
+			contacts_mobile,contacts_position,contacts_number,
+			postcode,registered_capital,company_begin_time,
+			business_scope,register_province_code,register_city_code,
+			register_area_code,register_address,actual_province_code,
+			actual_city_code,actual_area_code,actual_address,
+			license_photo,credit_code_photo,qualifications_photo,
+			org_photo,tax_photo,legal_person_photo,
+			legal_person_auth_photo,contacts_photo,disabled_reason,
+			status,utf1,utf2,
+			utf3,remark,del_flag,
+			version,create_emp,create_time,
+			create_org,update_emp,update_time,
+			update_org, d.car_num car_num,d.dirver_num dirver_num from t_suc_bkg_carrier_info  
+	LEFT JOIN (SELECT a.car_num  car_num ,b.dirver_num dirver_num ,b.carrier_name carrier_name
+             FROM (SELECT
+                     	COUNT(*)   car_num ,      
+                     		car_belong_carrier
+                   FROM t_suc_bkg_car where car_status = 1
+                   GROUP BY car_belong_carrier) a,
+               (SELECT
+                  COUNT(*)   dirver_num,
+                  carrier_name
+                FROM t_suc_bkg_dirver_info where dirver_status = 1
+                GROUP BY carrier_name) b
+             WHERE a.car_belong_carrier = b.carrier_name) d 
+             ON company_full_name = d.carrier_name
+	<where>
+		<if test="companyNature != null  and '' != companyNature">
+				AND company_nature = #{companyNature}
+			</if>
+		<if test="carrierType !=null and carrierType != ''">
+			and carrier_type =#{carrierType}
+		</if>
+		<if test="companyFullName != null and companyFullName !='' ">
+			and company_full_name like "%"#{companyFullName}"%"
+		</if>
+		<if test="status != null and status !=''">
+			and status =#{status}
+		</if>
+		<if test="createTime != null and updateTime != null">
+			and create_time between #{createTime} and #{updateTime} 
+		</if>
+		<if test="createTime !=null and updateTime == null">
+			and create_time <![CDATA[   >=  ]]> #{createTime}
+		</if>
+		<if test="createTime == null and updateTime != null">
+			and create_time <![CDATA[   <=  ]]> #{updateTime}
+		</if>
+	</where>
+	
+	order by create_time desc
+	</select>
+	
+	<select id="findByCompanyFullName" parameterType="String" resultType="cn.uce.suc.bkg.entity.datamain.CarrierInfo">
+	    select * from t_suc_bkg_carrier_info
+	    where company_full_name =#{companyFullName}
+	</select>
+	<!-- 承运商下拉 -->
+	<select id="findCarrierByCmb" parameterType="cn.uce.suc.bkg.vo.datamain.CarrierInfoVo" resultType="cn.uce.suc.bkg.entity.datamain.CarrierInfo">
+		select id,company_full_name,contacts_mobile from t_suc_bkg_carrier_info c
+		<where>
+		1=1
+		<if test="q != null and '' != q">
+			AND (c.company_full_name LIKE CONCAT(CONCAT('%', #{q}),'%')
+			OR
+			c.contacts_mobile LIKE CONCAT(CONCAT('%', #{q}),'%'))
+		</if>
+		and c.status=1
+		</where>
+	</select>
+	<!-- 根据承运商名称做唯一校验 Start -->
+	<select id="checkExistsByCompanyFullName" parameterType="cn.uce.suc.bkg.vo.datamain.CarrierInfoVo" resultType="cn.uce.suc.bkg.vo.datamain.CarrierInfoVo">
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_carrier_info
+		where company_full_name=#{companyFullName}
+		<if test="id != null and id != ''">
+			and id <![CDATA[<>]]> #{id}
+		</if>
+		and (del_flag <![CDATA[<>]]> 1 or del_flag is null)
+	</select>
+	<!-- 根据承运商名称做唯一校验 End -->
+</mapper>

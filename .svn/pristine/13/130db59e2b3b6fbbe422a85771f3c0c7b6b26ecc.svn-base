@@ -1,0 +1,190 @@
+package cn.uce.suc.bkg.vo.operation;
+
+import java.util.Date;
+/**
+ * @Description: app发车计划号的VO 
+ * @author huhaizhou
+ * @date 2017年10月31日 上午10:46:42
+ */
+public class AppDriverPlanVo {
+	/**
+	 * 主键ID
+	 */
+	private long id;
+	/**
+	 * 发车计划号
+	 */
+	private String drivingPlanCode;
+	/**
+	 * 开始时间
+	 */
+	private Date departTime;
+	/**
+	 * 结束时间
+	 */
+	private Date arrivalTime;
+	/**
+	 * 始发站名称
+	 */
+	private String startOrgName;
+	/**
+	 * 始发站编号
+	 */
+	private String startOrgCode;
+	/**
+	 * 目的站名称
+	 */
+	private String endOrgName;
+	/**
+	 * 目的站的编号
+	 */
+	private String endOrgCode;
+	/**
+	 * 进出港状态
+	 */
+	private String businessMode;
+	/**
+	 * 发车计划号的状态
+	 */
+	private String status;
+	/**
+	 * @return the abnormalState
+	 */
+	public String getAbnormalState() {
+		return abnormalState;
+	}
+	/**
+	 * @param abnormalState the abnormalState to set
+	 */
+	public void setAbnormalState(String abnormalState) {
+		this.abnormalState = abnormalState;
+	}
+	/**
+	 * 是否存在异常
+	 */
+	private String abnormalState;
+	/**
+	 * @return the id
+	 */
+	public long getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+	/**
+	 * @return the drivingPlanCode
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	/**
+	 * @param drivingPlanCode the drivingPlanCode to set
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+	/**
+	 * @return the departTime
+	 */
+	public Date getDepartTime() {
+		return departTime;
+	}
+	/**
+	 * @param departTime the departTime to set
+	 */
+	public void setDepartTime(Date departTime) {
+		this.departTime = departTime;
+	}
+	/**
+	 * @return the arrivalTime
+	 */
+	public Date getArrivalTime() {
+		return arrivalTime;
+	}
+	/**
+	 * @param arrivalTime the arrivalTime to set
+	 */
+	public void setArrivalTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+	/**
+	 * @return the startOrgName
+	 */
+	public String getStartOrgName() {
+		return startOrgName;
+	}
+	/**
+	 * @param startOrgName the startOrgName to set
+	 */
+	public void setStartOrgName(String startOrgName) {
+		this.startOrgName = startOrgName;
+	}
+	/**
+	 * @return the startOrgCode
+	 */
+	public String getStartOrgCode() {
+		return startOrgCode;
+	}
+	/**
+	 * @param startOrgCode the startOrgCode to set
+	 */
+	public void setStartOrgCode(String startOrgCode) {
+		this.startOrgCode = startOrgCode;
+	}
+	/**
+	 * @return the endOrgName
+	 */
+	public String getEndOrgName() {
+		return endOrgName;
+	}
+	/**
+	 * @param endOrgName the endOrgName to set
+	 */
+	public void setEndOrgName(String endOrgName) {
+		this.endOrgName = endOrgName;
+	}
+	/**
+	 * @return the endOrgCode
+	 */
+	public String getEndOrgCode() {
+		return endOrgCode;
+	}
+	/**
+	 * @param endOrgCode the endOrgCode to set
+	 */
+	public void setEndOrgCode(String endOrgCode) {
+		this.endOrgCode = endOrgCode;
+	}
+	/**
+	 * @return the businessMode
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	/**
+	 * @param businessMode the businessMode to set
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
+	
+	
+}

@@ -1,0 +1,111 @@
+package cn.uce.suc.common.cache;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.core.cache.storage.ICacheStorage;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.dao.IOrgExtendDao;
+import cn.uce.suc.common.vo.OrgExtendVo;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 集货点缓存
+ * @author laizhendong
+ * @date 2017年11月2日 下午2:48:30
+ */
+public class IADcSubOrgCache extends CacheSupport<String> {
+
+	/**
+	 * 注入biz层
+	 */
+	@Resource
+	private IOrgExtendDao orgExtendDao;
+
+	/**
+	 * 申明logger对象
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(IADcSubOrgCache.class);
+
+	/**
+	 * @Description: key
+	 * @param 
+	 * @return 
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午2:48:30
+	 */
+	@Override
+	public String doGet(String key) throws BusinessException {
+		//查询所有集货点
+		OrgExtendVo searchOrgExtendVo = new OrgExtendVo();
+		searchOrgExtendVo.setParentOrgCode(key);
+		searchOrgExtendVo.setSiteType(BkgConstants.SITE_TYPE_SUB);
+		List<OrgExtendVo> list = orgExtendDao.findByCombine(searchOrgExtendVo);
+		if(null != list && !list.isEmpty()){
+			return JSON.toJSONString(list);
+		}
+		return "";
+	}
+
+	
+	/**
+	 * @Description: 启动时加载集合点数据
+	 * @param 
+	 * @return 
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午2:48:30
+	 */
+	/*@Override
+	public ResultMap<String,String> doInitialization(IKeyGenerator<String> generator) throws BusinessException {
+		//查询所有集货点
+		OrgExtendVo searchOrgExtendVo = new OrgExtendVo();
+		searchOrgExtendVo.setSiteType(BkgConstants.SITE_TYPE_SUB);
+		List<OrgExtendVo> list = orgExtendDao.findByCombine(searchOrgExtendVo);
+		ResultMap<String, String> map = new ResultMap<String, String>(generator);
+		//按集货点已中心为一个key,存该中心下的所有集货点的集合
+		if (null != list && !list.isEmpty()) {
+			Map<String, List<OrgExtendVo>> orgExtendMap = new HashMap<String, List<OrgExtendVo>>();
+			for (OrgExtendVo orgExtendVo: list) {
+				String parentOrgCode = orgExtendVo.getParentOrgCode();
+				if (StringUtil.isNotBlank(parentOrgCode)) {
+					List<OrgExtendVo> dcSucOrgExtendVos = orgExtendMap.get(parentOrgCode);
+					if (null == dcSucOrgExtendVos) {
+						dcSucOrgExtendVos = new ArrayList<OrgExtendVo>();
+					}
+					dcSucOrgExtendVos.add(orgExtendVo);
+					orgExtendMap.put(parentOrgCode, dcSucOrgExtendVos);
+				}
+			}
+			if (!orgExtendMap.isEmpty()) {
+				for (String key : orgExtendMap.keySet()) {
+					map.put(key, JSON.toJSONString(orgExtendMap.get(key)));
+				}
+			}
+		}
+		return map;
+	}*/
+
+	/** cache名称 
+	* <p>Title: getCacheId</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see cn.uce.core.cache.base.ICache#getCacheId() 
+	*/
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+	
+	@Override
+	public ICacheStorage<String,String> getStorage(){
+		return super.getStorage();
+	}
+}

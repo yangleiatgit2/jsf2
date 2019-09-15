@@ -1,0 +1,61 @@
+package cn.uce.suc.common.biz;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.ActivityAdvert;
+import cn.uce.suc.common.vo.ActivityAdvertVo;
+
+/**
+ * @Description: 首页banner表BIZ接口类
+ * @author yanglei
+ * @date 2017年12月06日 上午09:46:40
+ */
+public interface IActivityAdvertBiz {
+	
+	/**
+	 * @Description: 新增活动广告宣传表
+	 * @param activityAdvert
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年12月06日 上午09:46:40
+	 */
+	public int addActivityAdvert(ActivityAdvertVo activityAdvert);
+	
+	/**
+	 * @Description: 修改活动广告宣传表
+	 * @param activityAdvert 活动广告宣传表
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年12月06日 上午09:46:40
+	 */
+	public int updateActivityAdvert(ActivityAdvertVo activityAdvertVo);
+	
+	/**
+	 * @Description: 删除活动广告宣传表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年12月06日 上午09:46:40
+	 */
+	public int deleteActivityAdvert(Long id);
+	
+	/**
+	 * @Description: 根据ID查询活动广告宣传表
+	 * @param id 主键
+	 * @return 活动广告宣传表
+	 * @author yanglei
+	 * @date 2017年12月06日 上午09:46:40
+	 */
+	public ActivityAdvert findById(Long id);
+	
+	/**
+	 * @Description: 分页查询活动广告宣传表
+	 * @param activityAdvertVo 活动广告宣传表
+	 * @param page 分页参数
+	 * @return 活动广告宣传表
+	 * @author yanglei
+	 * @date 2017年12月06日 上午09:46:40
+	 */
+	public Pagination<ActivityAdvert> findByPagination(ActivityAdvertVo activityAdvertVo, Page page);
+	
+}

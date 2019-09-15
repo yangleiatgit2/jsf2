@@ -1,0 +1,68 @@
+package cn.uce.suc.app.control;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import cn.uce.suc.app.biz.impl.SucDictDataBiz;
+import cn.uce.suc.app.vo.SucDictDataVo;
+import cn.uce.suc.common.util.BaseAppController;
+
+/**
+ * 
+ * @Description: 数据字典 
+ * @author liwei
+ * @date 2017年11月8日 下午1:03:04
+ */
+@RestController
+@RequestMapping("/sucdict")
+public class SucDictDataController extends BaseAppController {
+	/**
+	 * 资源注入
+	 */
+	@Resource
+	private SucDictDataBiz sucDictDataBiz;
+
+	/**
+	 * 
+	 * @Description: 数据字典 
+	 * @param tyPeClassCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月8日 下午1:03:48
+	 */
+
+	@GetMapping(value = "getdict")
+	@ResponseBody
+	public Map<String, Object> getdiuct(@RequestParam(value = "tyPeClassCode") String tyPeClassCode) {
+		return returnSuccess(sucDictDataBiz.findListByTypeClassCode(tyPeClassCode));
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param sucDictDataVo
+	 * @param account_number账号
+	 *            ，tokenid;account_type 账号类别；platform 平台，phone_models 手机型号
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月27日 上午10:47:35
+	 */
+	@PostMapping(value = "dictpost")
+	@ResponseBody
+	public  Map<String, Object> getdictpost(@RequestBody SucDictDataVo sucDictDataVo) {
+	
+		return returnSuccess(sucDictDataBiz.findListByTypeClassCode(sucDictDataVo.getTypeClassCode()));
+	}
+
+
+
+}

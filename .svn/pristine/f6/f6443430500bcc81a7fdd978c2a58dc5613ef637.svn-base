@@ -1,0 +1,66 @@
+package cn.uce.suc.bkg.cache;
+
+import javax.annotation.Resource;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.core.cache.base.IKeyGenerator;
+import cn.uce.core.cache.base.ResultMap;
+import cn.uce.suc.bkg.service.operation.DirvingPlanService;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+
+/**
+ * 
+ * @Description: 发车计划缓存--按照手机号存取
+ * @author liwei
+ * @date 2017年11月20日 上午6:32:33
+ */
+public class DirierPlanCache extends CacheSupport<DirvingPlanVo> {
+	/**
+	 * 发车计划服务
+	 */
+	@Resource
+	private DirvingPlanService dirvingPlanService;
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: doGet</p> 
+	* <p>Description: </p> 
+	* @param k
+	* @return
+	* @throws BusinessException 
+	* @see cn.uce.core.cache.base.CacheCallBack#doGet(java.lang.Object)
+	 */
+	@Override
+	public DirvingPlanVo doGet(String k) throws BusinessException {
+		return findbyPhone(k);
+	}
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: getCacheId</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see cn.uce.core.cache.base.ICache#getCacheId()
+	 */
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月20日 上午6:34:52
+	 */
+	private DirvingPlanVo findbyPhone(String driverPhone) {
+		return dirvingPlanService.findByPhone(driverPhone);
+	}
+	
+	@Override
+	public ResultMap<String, DirvingPlanVo> doInitialization(IKeyGenerator<String> generator) throws BusinessException {
+		ResultMap<String, DirvingPlanVo> resultMap = new ResultMap<String, DirvingPlanVo>(generator);
+		
+		return resultMap;
+	}
+}

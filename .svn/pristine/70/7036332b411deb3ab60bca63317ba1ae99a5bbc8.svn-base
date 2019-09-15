@@ -1,0 +1,674 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.entity.operation.FreightOrder;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.service.operation.FreightOrderCombineService;
+import cn.uce.suc.bkg.service.operation.FreightOrderService;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.ids.IdsConstants.NamesPrefix;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.utils.DateUtil;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * @Description: 货运需求订单表BIZ实现类
+ * @author liwei
+ * @date 2017年10月20日 上午12:25:58
+ */
+@Service("freightOrderBiz")
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class FreightOrderBiz implements IFreightOrderBiz {
+
+	/**
+	 * 注入货运需求订单表Service
+	 */
+	@Resource
+	private FreightOrderService freightOrderService;
+	/**
+	 * 组织机构biz
+	 */
+	@Resource
+	IOmgCmsOrgBiz omgCmsOrgBiz;
+	/**
+	 * 编码规则
+	 */
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	/**
+	 * 注入订单组合信息Service
+	 */
+	@Resource
+	private FreightOrderCombineService freightOrderCombineService;
+	
+	
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+	/**
+	 * 日志
+	 */
+	protected static Logger log = LoggerFactory.getLogger(FreightOrderBiz.class);
+
+	/**
+	 * @Description: 新增货运需求订单表
+	 * @param freightOrder
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public Long addFreightOrder(FreightOrderVo freightOrderVo) {
+		String orderCode=redisIdsWorker.nextId(IdsPrefix.OR);
+		//填充数据
+		improveParameters(freightOrderVo);
+		String name=freightOrderVo.getDemandSite();
+		String orderName=redisIdsWorker.nextName(name, NamesPrefix.ORNA);
+		freightOrderVo.setOrderCode(orderCode);
+		freightOrderVo.setOrderName(orderName);
+		//默认版本号
+		freightOrderVo.setVersion(BkgConstants.DEFALUT_VERSION);
+		// 获取目的站点
+		FreightOrder freightOrder = ObjectConvertUtil.convertObject(freightOrderVo, FreightOrder.class);
+		//调用方法
+		 freightOrderService.addFreightOrder(freightOrder);
+		return freightOrder.getId();
+	}
+
+	/**
+	 * @Description: 修改货运需求订单表
+	 * @param freightOrder
+	 *            货运需求订单表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updateFreightOrder(FreightOrderVo freightOrderVo) {
+		//并发校验
+		concurrencyControl(freightOrderVo);
+		// 填充数据
+		improveParameters(freightOrderVo);
+		//freightOrderVo.setOrderCode(redisIdsWorker.nextId(IdsPrefix.OR));
+		/*redisIdsWorker*/
+		// 获取目的站点
+		FreightOrder freightOrder = ObjectConvertUtil.convertObject(freightOrderVo, FreightOrder.class);
+		return freightOrderService.updateById(freightOrder);
+	}
+
+	/**
+	 * @Description: 删除货运需求订单表
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	public int deleteFreightOrder(Long id) {
+		return freightOrderService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询货运需求订单表
+	 * @param id
+	 *            主键
+	 * @return 货运需求订单表
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@Override
+	public FreightOrder findById(Long id) {
+		return freightOrderService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询货运需求订单表
+	 * @param freightOrderVo
+	 *            货运需求订单表
+	 * @param page
+	 *            分页参数
+	 * @return 货运需求订单表
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	public Pagination<FreightOrder> findByPagination(FreightOrderVo freightOrderVo, Page page) {
+		Pagination<FreightOrder> pagination = freightOrderService.findByPagination(freightOrderVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description: 完善参数
+	 * @author liwei
+	 * @date 2017年10月24日 下午4:59:47
+	 */
+	private void improveParameters(FreightOrderVo freightOrderVo) {
+		// 非空校验
+		if (StringUtils.isNotBlank(freightOrderVo.getDepartureTimeStr())) {
+			String departureTimeStr = "1970-01-01 " + freightOrderVo.getDepartureTimeStr();
+			// 写入发车时间
+			freightOrderVo.setDepartureTime(DateUtil.getDateFromString(departureTimeStr));
+		}
+		// 非空校验
+		if (StringUtils.isNotBlank(freightOrderVo.getArrivalTimeStr())) {
+			String arrivalTimeStr = "1970-01-01 " + freightOrderVo.getArrivalTimeStr();
+			// 写入到车时间
+			freightOrderVo.setArrivalTime(DateUtil.getDateFromString(arrivalTimeStr));
+		}
+		// 获取始发站点
+		OmgCmsOrgVo omgCmsOrgVoBegin = null;
+		//非空校验
+		if (StringUtils.isNotBlank(freightOrderVo.getBeginStationCode())) {
+			 omgCmsOrgVoBegin = omgCmsOrgBiz.findByBaseOrgCode(freightOrderVo.getBeginStationCode());
+			// 非空校验
+			if (omgCmsOrgVoBegin == null) {
+				throw new BkgModuleException("excep.order.begin.station");
+			}
+			//写入始发站点名称
+			freightOrderVo.setBeginStation(omgCmsOrgVoBegin.getOrgName());
+		}
+		// 获取目的站点
+		OmgCmsOrgVo omgCmsOrgVoEnd=null;
+		if (StringUtils.isNotBlank(freightOrderVo.getEndStationCode())) {
+			 omgCmsOrgVoEnd = omgCmsOrgBiz.findByBaseOrgCode(freightOrderVo.getEndStationCode());
+			// 非空校验
+			if (omgCmsOrgVoEnd == null) {
+				throw new BkgModuleException("excep.order.end.station");
+			}
+			//写入目的站点名称
+			freightOrderVo.setEndStation(omgCmsOrgVoEnd.getOrgName());
+		}
+		// 获取需求站点
+		OmgCmsOrgVo omgCmsOrgVoDemandSite=null;
+		//非空校验
+		if (StringUtils.isNotBlank(freightOrderVo.getDemandSiteCode())) {
+			omgCmsOrgVoDemandSite = omgCmsOrgBiz.findByBaseOrgCode(freightOrderVo.getDemandSiteCode());
+			// 非空校验
+			if (omgCmsOrgVoDemandSite == null) {
+				throw new BkgModuleException("excep.order.demand.station");
+			}
+			//写入需求站点名称
+			freightOrderVo.setDemandSite(omgCmsOrgVoDemandSite.getOrgName());
+			if (null != omgCmsOrgVoDemandSite.getOrgType()) {
+				// 需求网点类型校验
+				if (!omgCmsOrgVoDemandSite.getOrgType().equals(BkgConstants.ORG_TYPE_SITE)) {
+					throw new BkgModuleException("excep.order.demand.station.not.site");
+				}
+			}
+		}
+		//始发站点及目的站点类型不能一直
+		if (null != omgCmsOrgVoBegin && null != omgCmsOrgVoEnd && null != omgCmsOrgVoBegin.getOrgType()
+				&& null != omgCmsOrgVoEnd.getOrgType()) {
+			if (omgCmsOrgVoBegin.getOrgType().equals(omgCmsOrgVoEnd.getOrgType())) {
+				throw new BkgModuleException("excep.order.begin.end.orgtype.same");
+			}
+		}
+		//删除标示默认为false
+		freightOrderVo.setDeleteFlag(false);
+	}
+	/**
+	 * 
+	 * @Description: 并发操作控制 --1，首先校验删除，2，匹配版本号
+	 * @author liwei
+	 * @date 2017年10月24日 下午5:21:22
+	 */
+	private void concurrencyControl(FreightOrderVo freightOrderVo){
+		//传入对象非空
+		if(freightOrderVo == null) {
+			throw new BkgModuleException("concurrency.ontrol.data.is.not.exist");
+		}
+		//获取历史记录
+		FreightOrder freightOrderOld=freightOrderService.findById(freightOrderVo.getId());
+		if(freightOrderOld == null){
+			//不存在异常
+			throw new BkgModuleException("concurrency.ontrol.data.is.not.exist");
+		}
+		//版本号匹配
+		if(!freightOrderVo.getVersion().equals(freightOrderOld.getVersion())){
+			throw new BkgModuleException("concurrency.ontrol.data.is.change");
+		}
+	}
+
+	@Override
+	public List<FreightOrderVo> findByVo(FreightOrderVo freightOrderVo) {
+		// TODO Auto-generated method stub
+		return freightOrderService.findByVo(freightOrderVo);
+	}
+	/**
+	 * 
+	 * @Description: 处理长期需求合并任务
+	 * 1，处理进港
+	 * 2，处理出港
+	 * @author liwei
+	 * @date 2017年10月31日 下午10:11:23
+	 */
+	@Override
+	public void processLongTerm(){
+		/**进港*/
+		Map<String, FreightOrderCombineVo> inOrderCombineMap = processArriveOrder(true);
+		/**出港*/
+		Map<String, FreightOrderCombineVo> outOrderCombineMap = processSendOrder(true);
+		insertOrderCombine(inOrderCombineMap,outOrderCombineMap,BkgConstants.DEMAND_TYPE_LONG);
+		
+	}
+	/**
+	 * 
+	 * @Description: 处理长期需求合并任务
+	 * 1，处理进港
+	 * 2，处理出港
+	 * @author liwei
+	 * @date 2017年10月31日 下午10:11:23
+	 */
+	@Override
+	public void processtempTerm(){
+		/**进港*/
+		Map<String, FreightOrderCombineVo> inOrderCombineMap = processArriveOrder(false);
+		/**出港*/
+		Map<String, FreightOrderCombineVo> outOrderCombineMap = processSendOrder(false);
+		insertOrderCombine(inOrderCombineMap,outOrderCombineMap,BkgConstants.DEMAND_TYPE_TEMP);
+	}
+	
+	/**
+	 * 
+	 * @Description: 插入进出港订单组合
+	 * @param inOrderCombineMap
+	 * @param outOrderCombineMap
+	 * @param demandType
+	 * @author laizhendong
+	 * @date 2017年12月4日 上午10:33:21
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public void insertOrderCombine(Map<String, FreightOrderCombineVo> inOrderCombineVoMap,Map<String, FreightOrderCombineVo> outOrderCombineVoMap,String demandType){
+		//进港组合遍历保存
+		if (null != inOrderCombineVoMap && !inOrderCombineVoMap.isEmpty()) {
+			for (String key:inOrderCombineVoMap.keySet()) {
+				FreightOrderCombineVo addInCombineVo = inOrderCombineVoMap.get(key);
+				//如果长期没有对应出港组合，则不保存组合
+				if(BkgConstants.DEMAND_COMBINE_TYPE_LONG.equals(demandType)){
+					if (outOrderCombineVoMap != null && outOrderCombineVoMap.containsKey(key)) {
+						FreightOrderCombineVo addOutCombineVo = outOrderCombineVoMap.get(key);
+						addInCombineVo.setBrotherOrderCombineCode(addOutCombineVo.getOrderCombineCode());
+					}else {
+						continue;
+					}
+				}
+				//更新订单的组合编号
+				List<FreightOrder> updOrders = addInCombineVo.getFreightOrders();
+				if (null != updOrders && !updOrders.isEmpty()) {
+					for (FreightOrder freightOrder : updOrders) {
+						freightOrderService.updateById(freightOrder);
+					}
+				}
+				addInCombineVo.setCreateTime(new Date());
+				freightOrderCombineService.addFreightOrderCombine(ObjectConvertUtil.convertObject(addInCombineVo, FreightOrderCombine.class));
+			}
+		}
+		//出港组合遍历保存
+		if (null != outOrderCombineVoMap && !outOrderCombineVoMap.isEmpty()) {
+			for (String key:outOrderCombineVoMap.keySet()) {
+				FreightOrderCombineVo addOutCombineVo = outOrderCombineVoMap.get(key);
+				//如果长期没有对应出港组合，则不保存组合
+				if(BkgConstants.DEMAND_COMBINE_TYPE_LONG.equals(demandType) ){
+					if (inOrderCombineVoMap != null && inOrderCombineVoMap.containsKey(key)) {
+						FreightOrderCombineVo addInCombineVo = inOrderCombineVoMap.get(key);
+						addOutCombineVo.setBrotherOrderCombineCode(addInCombineVo.getOrderCombineCode());
+					}else {
+						continue;
+					}
+				}
+				//更新订单的组合编号
+				List<FreightOrder> updOrders = addOutCombineVo.getFreightOrders();
+				if (null != updOrders && !updOrders.isEmpty()) {
+					for (FreightOrder freightOrder : updOrders) {
+						freightOrderService.updateById(freightOrder);
+					}
+				}
+				addOutCombineVo.setCreateTime(new Date());
+				//新增订单
+				freightOrderCombineService.addFreightOrderCombine(ObjectConvertUtil.convertObject(addOutCombineVo, FreightOrderCombine.class));
+			}
+		}
+	}
+	
+	
+	/**
+	 * 获取临时订单计算间隔时间--
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月6日 上午10:26:59
+	 */
+	private Integer getOrderTepmTime(){
+		//从缓存获取
+		/*SystemConfig systemConfig=systemConfigBiz.findCacheByCode("ORDER_TEPM_TIME");
+		if(null == systemConfig){
+			log.info("未获取到系统配置参数，采取默认值1天");
+			return 1;
+		}
+		//获取配置置
+		String value=systemConfig.getConfigValue();*/
+		
+		return 1;
+	}
+	/**
+	 * 将开始时间，结束时间插入对象
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param days
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月6日 上午10:35:14
+	 */
+	private FreightOrderVo getTempStartAndEndTime(Integer days) {
+		FreightOrderVo freightOrderVo = new FreightOrderVo();
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, 0);
+		calendar.set(Calendar.MINUTE, 0);
+		calendar.set(Calendar.SECOND, 0);
+		calendar.add(Calendar.DAY_OF_MONTH, days);
+		calendar.set(Calendar.MILLISECOND, 0);
+
+		freightOrderVo.setBeginTime(calendar.getTime());
+		calendar.add(Calendar.DAY_OF_MONTH, 1);
+		freightOrderVo.setEndTime(calendar.getTime());
+		return freightOrderVo;
+	}
+	/**
+	 * 将开始时间，结束时间插入对象
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param days
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月6日 上午10:35:14
+	 */
+	private FreightOrderVo getlongStartAndEndTime(){
+		FreightOrderVo freightOrderVo=new FreightOrderVo();
+		Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        /**下一个月的开始时间*/
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date begin =calendar.getTime();
+        begin =DateUtils.setHours(begin, 0);
+        begin =DateUtils.setMinutes(begin, 0);
+        begin =DateUtils.setSeconds(begin, 0);
+        begin =DateUtils.setMilliseconds(begin, 0);
+        /**下一个月的结束时间*/
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date end =calendar.getTime();
+        end =DateUtils.setHours(end, 0);
+        end =DateUtils.setMinutes(end, 0);
+        end =DateUtils.setSeconds(end, 0);
+        end =DateUtils.setMilliseconds(end, 0);
+        freightOrderVo.setBeginTime(begin);
+        freightOrderVo.setEndTime(end);
+        
+		return freightOrderVo;
+	}
+	/**
+	 * 
+	 * @Description: 处理长期出港；1，获取分拨，2，根据分拨获取订单
+	 * @author liwei
+	 * @date 2017年10月31日 下午10:12:58
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public Map<String, FreightOrderCombineVo> processSendOrder(boolean longflag){
+		List<String> endStationCodes = null;
+		//查询对象--获取需要处理的站点条件
+		FreightOrderVo freightOrderVo=new FreightOrderVo();
+		//查询对象--需要回写的筛选条件
+		FreightOrderVo freightOrderVonew = new FreightOrderVo();
+		
+		//业务模式--醋出港
+		freightOrderVonew.setBusinessMode(BkgConstants.BUSINESS_MODE_OUT);
+		if (longflag) {
+			//获取处理时间
+			freightOrderVo=getlongStartAndEndTime();
+			//需求类型
+			freightOrderVo.setDemandType(BkgConstants.ORDER_COMBINE_TYPE_LONG);
+			freightOrderVonew.setDemandType(BkgConstants.ORDER_COMBINE_TYPE_LONG);
+			
+		} else {
+			//获取处理时间
+			freightOrderVo=getTempStartAndEndTime(getOrderTepmTime());
+			//需求类型
+			freightOrderVo.setDemandType(BkgConstants.ORDER_COMBINE_TYPE_TEMP);
+			freightOrderVonew.setDemandType(BkgConstants.ORDER_COMBINE_TYPE_TEMP);
+		}
+		Date starDate=freightOrderVo.getBeginTime();
+		//业务模式--出港
+		freightOrderVo.setBusinessMode(BkgConstants.BUSINESS_MODE_OUT);
+		//获取需要处理的站点集合
+		endStationCodes = freightOrderService.findEndStationCode(freightOrderVo);
+		Map<String, FreightOrderCombineVo> orderCombineMap = new HashMap<String, FreightOrderCombineVo>();
+		//校验
+		if (null != endStationCodes && !endStationCodes.isEmpty()) {
+			//遍历
+			for (String endStationCode : endStationCodes) {
+				/*根据分拨获取到所有的订单信息*/
+				freightOrderVonew.setEndStationCode(endStationCode);
+				List<FreightOrder> freightOrders=freightOrderService.findByCondtion(freightOrderVonew);
+				if(null == freightOrders|| freightOrders.size()==0){
+					continue;
+				}
+				FreightOrderCombineVo freightOrderCombineVo=new FreightOrderCombineVo();
+				String orderCombineCode = redisIdsWorker.nextId(IdsConstants.IdsPrefix.OZ);
+				for (FreightOrder freightOrder : freightOrders) {
+					if (null !=freightOrder && StringUtil.isBlank(freightOrder.getOrderCombinCode())) {
+						freightOrder.setOrderCombinCode(orderCombineCode);
+						//freightOrderService.updateById(freightOrder);
+					}
+				}
+				freightOrderCombineVo.setExecuteTime(starDate);
+				freightOrderCombineVo.setOrderCombineCode(orderCombineCode);
+				freightOrderCombineVo.setBusinessMode(BkgConstants.BUSINESS_MODE_OUT);
+				buildOrderCombine(freightOrderCombineVo,endStationCode,longflag);
+				freightOrderCombineVo.setFreightOrders(freightOrders);
+				orderCombineMap.put(endStationCode, freightOrderCombineVo);
+			}
+		}
+		return orderCombineMap;
+	}
+	/**
+	 * 
+	 * @Description: 订单组合插入 
+	 * @param freightOrderCombine
+	 * @param operOrgCode
+	 * @author liwei
+	 * @date 2017年11月4日 下午2:31:27
+	 */
+	private void buildOrderCombine(FreightOrderCombineVo freightOrderCombineVo,String operOrgCode,boolean longflag){
+		if(StringUtil.isNotBlank(operOrgCode)){
+			String orderCombineName = "";
+			OmgCmsOrgVo omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(operOrgCode);
+			if(null!=omgCmsOrgVo){
+				orderCombineName=redisIdsWorker.nextName(omgCmsOrgVo.getOrgName(), NamesPrefix.OZNA);
+			}
+			freightOrderCombineVo.setOrderCombineName(orderCombineName);
+		}
+		//长期标示
+		if (longflag) {
+			/**长期需求*/
+			freightOrderCombineVo.setOrderCombineType(BkgConstants.ORDER_COMBINE_TYPE_LONG);
+		} else {
+			/**临时需求*/
+			freightOrderCombineVo.setOrderCombineType(BkgConstants.ORDER_COMBINE_TYPE_TEMP);
+		}
+		//写入分拨中心编码
+		freightOrderCombineVo.setOperStationCode(operOrgCode);
+		//初始状态已排班
+		freightOrderCombineVo.setOrderCombineStatus(BkgConstants.ORDER_COMBINE_STATUS_CREATE);
+		freightOrderCombineVo.setCreateEmp(BkgConstants.SYSTEM_CREATE_ORG);;
+		//freightOrderCombineService.addFreightOrderCombine(freightOrderCombine);
+	}
+	/**
+	 * 
+	 * @Description:处理长期进港 ;1，获取分拨，2，根据分拨获取订单
+	 * @author liwei
+	 * @date 2017年10月31日 下午10:13:13
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public Map<String, FreightOrderCombineVo> processArriveOrder(boolean longflag){
+		List<String> beginStationCodes = null;
+		//查询对象--获取需要处理的站点条件
+		FreightOrderVo freightOrderVo=new FreightOrderVo();
+		//查询对象--需要回写的筛选条件
+		FreightOrderVo freightOrderVonew = new FreightOrderVo();
+		//业务类型-进港
+		freightOrderVonew.setBusinessMode(BkgConstants.BUSINESS_MODE_IN);
+		if (longflag) {
+			freightOrderVo=getlongStartAndEndTime();
+			//长期订单
+			freightOrderVo.setDemandType(BkgConstants.ORDER_COMBINE_TYPE_LONG);
+			freightOrderVonew.setDemandType(BkgConstants.ORDER_COMBINE_TYPE_LONG);
+			
+		} else {
+			freightOrderVo=getTempStartAndEndTime(getOrderTepmTime());
+			//临时订单
+			freightOrderVo.setDemandType(BkgConstants.ORDER_COMBINE_TYPE_TEMP);
+			freightOrderVonew.setDemandType(BkgConstants.ORDER_COMBINE_TYPE_TEMP);
+		}
+		//业务类型-进港
+		freightOrderVo.setBusinessMode(BkgConstants.BUSINESS_MODE_IN);
+		Date starDate=freightOrderVo.getBeginTime();
+		beginStationCodes = freightOrderService.findbeginStationCode(freightOrderVo);
+		
+		Map<String/**分拨中心编号*/, FreightOrderCombineVo/**订单组合*/> orderCombineMap = new HashMap<String, FreightOrderCombineVo>();
+		if(null!=beginStationCodes&&!beginStationCodes.isEmpty()){
+			//循环出来
+			for (String beginStationCode : beginStationCodes) {
+				freightOrderVonew.setBeginStationCode(beginStationCode);
+				//查询订单
+				List<FreightOrder> freightOrders=freightOrderService.findByCondtion(freightOrderVonew);
+				//非空校验
+				if(null == freightOrders|| freightOrders.size()==0){
+					continue;
+				}
+				FreightOrderCombineVo freightOrderCombine=new FreightOrderCombineVo();
+				String orderCombineCode = redisIdsWorker.nextId(IdsConstants.IdsPrefix.OZ);
+				//遍历处理
+				for (FreightOrder freightOrder : freightOrders) {
+					if (null !=freightOrder && StringUtil.isBlank(freightOrder.getOrderCombinCode())) {
+						freightOrder.setOrderCombinCode(orderCombineCode);
+						//freightOrderService.updateById(freightOrder);
+					}
+				}
+				freightOrderCombine.setExecuteTime(starDate);
+				//订单组合组合号
+				freightOrderCombine.setOrderCombineCode(orderCombineCode);
+				freightOrderCombine.setBusinessMode(BkgConstants.BUSINESS_MODE_IN);
+				buildOrderCombine(freightOrderCombine,beginStationCode,longflag);
+				//订单
+				freightOrderCombine.setFreightOrders(freightOrders);
+				orderCombineMap.put(beginStationCode, freightOrderCombine);
+			}
+		}
+		/*根据分拨获取到所有的订单信息*/
+		return orderCombineMap;
+	}
+	/**
+	 * 
+	 * @Description: 根据ID 进行更新
+	 * @param freightOrder
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月2日 下午9:44:04
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updateById(FreightOrder freightOrder){
+		if(null == freightOrder|| null == freightOrder.getId()){
+			throw new BkgModuleException("excep.order.parameter");
+		}
+		FreightOrder freightOrderOld=freightOrderService.findById(freightOrder.getId());
+		if(null == freightOrderOld){
+			throw new BkgModuleException("excep.order.is.null");
+		}
+		if(freightOrderOld.getOrderStatus().equals(BkgConstants.ORDER_STATUS_TERING)){
+			throw new BkgModuleException("excep.order.status.is.tering");
+		}
+		return freightOrderService.updateById(freightOrder);
+	}
+	/**
+	 * 
+	 * @Description: 查询不在订单组合的订单 
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月4日 下午11:13:55
+	 */
+	public Pagination<FreightOrder> findCombineByPagination(FreightOrderVo freightOrderVo, Page page){
+		return freightOrderService.findCombineByPagination(freightOrderVo, page);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据组合查询订单 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月27日 上午12:01:08
+	 */
+	public List<FreightOrderVo> findByCombine(FreightOrderVo freightOrderVo){
+		return freightOrderService.findByCombine(freightOrderVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据组合编号更新订单状态 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午2:10:27
+	 */
+	public int updStatusByCombineCode(FreightOrderVo freightOrderVo){
+		return freightOrderService.updStatusByCombineCode(freightOrderVo);
+	}
+
+	@Override
+	public List<FreightOrderVo> findByOderNoTimeDesc(
+			FreightOrderVo freightOrderVo) {
+		return freightOrderService.findByOderNoTimeDesc(freightOrderVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据订单编号更新订单执行时间 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月16日 下午11:49:55
+	 */
+	public int updateTimeByOrderCode(List<FreightOrderVo>  freightOrderVos){
+		return freightOrderService.updateTimeByOrderCode(freightOrderVos);
+	}
+	
+	public List<FreightOrder> findByCondition(FreightOrderVo freightOrderVo){
+		return freightOrderService.findByCondtion(freightOrderVo);
+	}
+}

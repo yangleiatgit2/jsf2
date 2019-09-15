@@ -1,0 +1,85 @@
+package cn.uce.suc.app.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.suc.app.entity.Captcha;
+import cn.uce.suc.app.util.PhoneFormatCheckUtils;
+import cn.uce.suc.common.vo.MobileuserVo;
+
+/**
+ * 
+ * @Description: 单元测试
+ * @author liwei
+ * @date 2017年11月23日 下午8:58:32
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class AppRegisterBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 注入
+	 */
+	@Resource
+	private IappRegisterbiz appRegisterbiz;
+	/**
+	 * 对象
+	 */
+	private MobileuserVo mobileuserVo;
+
+	/**
+	 * 
+	 * @Description: 单元测试前执行
+	 * @author liwei
+	 * @date 2017年12月4日 下午11:29:35
+	 */
+	@Before
+	public void testBefor() {
+		mobileuserVo = new MobileuserVo();
+		mobileuserVo.setMobilephone("13777777777");
+		mobileuserVo.setUserType("dot");
+		mobileuserVo.setBaseOrgCode("UC000017");
+		mobileuserVo.setCaptcha("01247");
+	}
+
+	/**
+	 * 
+	 * @Description:单元测试
+	 * @author liwei
+	 * @date 2017年12月4日 下午11:29:51
+	 */
+	@Test
+	public void testpro() {
+		appRegisterbiz.getCaptcha("1982983373", "dot");
+		appRegisterbiz.getCaptcha("1982983373", "dpt");
+		appRegisterbiz.register("19882863737", "dot", "hduqh2", "32323q");
+		appRegisterbiz.register("19882863737", "dpt", "hduqh2", "32323q");
+		appRegisterbiz.userAuthentication(mobileuserVo);
+		appRegisterbiz.userAuthenticationCapch(mobileuserVo);
+		mobileuserVo.setUserType("dpt");
+		appRegisterbiz.userAuthentication(mobileuserVo);
+		appRegisterbiz.userAuthenticationCapch(mobileuserVo);
+	}
+	/**
+	 * 
+	 * @Description: 手机号码单元测试
+	 * @author liwei
+	 * @date 2017年12月7日 下午4:07:58
+	 */
+	@Test
+	public void testCheck(){
+		PhoneFormatCheckUtils.isChinaPhoneLegal("18729255646");
+		PhoneFormatCheckUtils.isHKPhoneLegal("18710246785");
+		PhoneFormatCheckUtils.isPhoneLegal("15872545");
+	}
+}

@@ -1,0 +1,260 @@
+package cn.uce.suc.bkg.biz.infomon;
+
+import java.util.HashMap;
+import java.util.List;
+
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.common.entity.OmgCmsOrg;
+import cn.uce.suc.common.vo.CarPositioningVo;
+import cn.uce.suc.common.vo.OrgExtendVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+/**
+ * 
+ * @Description: TODO(可视化运输BIZ接口类) 
+ * @author liuhai
+ * @date 2017年10月26日 下午4:57:16
+ */
+public interface IVisibleTransportBiz {
+	
+	/**
+	 * 
+	 * @Description: TODO(查询发车计划) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月26日 下午5:53:42
+	 */
+	public List<DirvingPlanVo> queryDirvingPlan(DirvingPlanVo dirvingPlanVo);
+
+	/**
+	 * 
+	 * @Description: TODO(插入发车计划车辆运输轨迹) 
+	 * @param visibleTransportVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月26日 下午4:58:02
+	 */
+	public int updateTransportTrail(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: TODO(通过可视化运输条件查询车辆信息) 
+	 * @param visibleTransportInfoVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月30日 下午8:59:19
+	 */
+	public List<CarManage> searchCarInfo(CarManageVo carManageVo);
+	/**
+	 * 
+	 * @Description: TODO(查询分拨中心信息) 
+	 * @param carManageVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月31日 下午12:45:33
+	 */
+	public List<OrgExtendVo> searchGroupCenterInfo(CarManageVo carManageVo);
+	/**
+	 * 
+	 * @Description: TODO(查询异常信息) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月31日 下午5:17:19
+	 */
+	public List<ExceptionManager> queryExceptionInfo(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: TODO(查询车辆信息且带有经纬度) 
+	 * @param carManageVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月3日 下午3:40:32
+	 */
+	public List<CarManage> queryCarInfo(CarManageVo carManageVo);
+	/**
+	 * 
+	 * @Description: TODO(查询所有异常车辆) 
+	 * @param omgCmsOrg
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月3日 下午6:47:42
+	 */
+	public List<CarManage> queryExceptionCar(OmgCmsOrg omgCmsOrg);
+	/**
+	 * 
+	 * @Description: TODO(根据发车计划单号查询是否有异常) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月5日 下午1:58:20
+	 */
+	public List<ExceptionManager> queryExceptionByDrivingPlanCode(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: TODO(根据发车计划查询发车计划详情) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月6日 下午7:26:36
+	 */
+	public List<DirvingPlanDetail> queryDirvingPlanDetail(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: TODO(重绑发车计划(生成新的发车计划，班次不变)) 
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月7日 下午4:29:32
+	 */
+	public int updateDeparturePlan(DirvingPlan dirvingPlan,String dpCode,SucCurrentUser userInfo);
+	/**
+	 * 
+	 * @Description: TODO(查询发车计划车辆起途终点经纬度及司机信息) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月13日 下午3:21:25
+	 */
+	public List<DirvingPlanVo> queryDriverStatus(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: TODO(查询途经点经纬度) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月13日 下午4:14:18
+	 */
+	public List<DirvingPlanDetail> queryThroughLngLat(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: 校验经纬度
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月13日 下午7:55:05
+	 */
+	public HashMap<String,Boolean> validLatLng(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 终止班操作
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param classCode
+	 * @param drivingPlanCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月16日 下午4:36:12
+	 */
+	public int stopLineGroup(String classCode,String drivingPlanCode);
+	/**
+	 * 保存异常上报
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param exceptionManager
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月16日 下午11:49:47
+	 */
+	public List<ExceptionManager> saveReportException(ExceptionManager exceptionManager,String exceptionCode,SucCurrentUser userInfo);
+	/**
+	 * 新增需求或新增发车计划
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param lineGroupStr
+	 * @param drivePlanStr
+	 * @param detailVos
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月17日 上午11:18:27
+	 */
+	public int saveLineGroupAndDrivePlan(String lineGroupStr, String drivePlanStr, String detailVos,SucCurrentUser userInfo);
+	/**
+	 * 
+	 * @Description: 刷新位置信息
+	 * @param dirvingPlanVo
+	 * @author liuhai
+	 * @date 2017年12月4日 下午8:04:05
+	 */
+	public HashMap<String,Boolean> refreshPositionMethod(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: 车辆位置在缓存中不存在时进行处理--不存在正在执行中的发车计划时，不回写缓存
+	 * @param driverPhone
+	 * @author liwei
+	 * @date 2017年11月13日 下午8:05:50
+	 */
+	public boolean carNotExist(DirvingPlanVo dirvingPlanVoNew);
+	/**
+	 * 
+	 * @Description:  (这里用一句话描述这个方法的作用) 
+	 * @param dirvingPlanVo
+	 * @author liwei
+	 * @date 2017年11月13日 下午8:38:30
+	 */
+	public HashMap<String,Boolean> carExist(CarPositioningVo carPositioningVo, DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description: 电子围栏离开--本站提示，下一站提示，即将前往下一站。下一站 待执行
+	 * @author liwei
+	 * @date 2017年11月13日 下午10:29:42
+	 */
+	public void sendOut(CarPositioningVo carPositioningVo);
+	/**
+	 * 
+	 * @Description:根据机构编号获取手机号
+	 * @param baseOrgCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月3日 下午10:17:42
+	 */
+	public String getSitePhine(String baseOrgCode);
+	/**
+	 * 
+	 * @Description: 校验到达
+	 * @param orgExtendVo
+	 * @param dirvingPlanVo
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月3日 下午10:17:35
+	 */
+	public boolean getdistance(OrgExtendVo orgExtendVo, DirvingPlanVo dirvingPlanVo, DirvingPlanDetail dirvingPlanDetail);
+	/**
+	 * 
+	 * @Description: 异常打回
+	 * @param drivingPlanCode
+	 * @param exceptionCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月18日 上午11:10:52
+	 */
+	public int exceptionBack(String drivingPlanCode,String exceptionCode);
+	/**
+	 * 
+	 * @Description:异常确认
+	 * @param drivingPlanCode
+	 * @param exceptionCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月27日 下午4:06:38
+	 */
+	public int exceptionConfirm(String drivingPlanCode,String exceptionCode);
+	/**
+	 * 终止发车计划
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param planCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月27日 下午4:45:04
+	 */
+	public int stopDrivePlan(String planCode);
+	/**
+	 * 通过组织编码查询在执行中的发车计划号
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param orgCode
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月28日 下午3:44:39
+	 */
+	public List<DirvingPlanVo> queryDirvingPlanByOrgCode(DirvingPlanDetailVo pvd);
+}

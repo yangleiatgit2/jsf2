@@ -1,0 +1,86 @@
+package cn.uce.suc.app.biz.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.biz.IAppFeedbackBiz;
+import cn.uce.suc.app.entity.AppFeedback;
+import cn.uce.suc.app.vo.AppFeedbackVo;
+import cn.uce.suc.app.service.AppFeedbackService;
+
+/**
+ * @Description: BIZ实现类
+ * @author litianjian
+ * @date 2017年11月29日 下午03:19:08
+ */
+@Service("appFeedbackBiz")
+public class AppFeedbackBiz implements IAppFeedbackBiz {
+	
+	/**
+	 * 注入Service
+	 */
+	@Resource
+	private AppFeedbackService appFeedbackService;
+	
+	/**
+	 * @Description: 新增
+	 * @param appFeedback1
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年11月29日 下午03:19:08
+	 */
+	public int addAppFeedback(AppFeedback appFeedback) {
+		return appFeedbackService.addAppFeedback(appFeedback);
+	}
+	
+	/**
+	 * @Description: 修改
+	 * @param appFeedback 
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年11月29日 下午03:19:08
+	 */
+	public int updateAppFeedback(AppFeedback appFeedback) {
+		return appFeedbackService.updateById(appFeedback);
+	}
+	
+	/**
+	 * @Description: 删除
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年11月29日 下午03:19:08
+	 */
+	public int deleteAppFeedback(Long id) {
+		return appFeedbackService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询
+	 * @param id 主键
+	 * @return 
+	 * @author litianjian
+	 * @date 2017年11月29日 下午03:19:08
+	 */
+	@Override
+	public AppFeedback findById(Long id) {
+		return appFeedbackService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询
+	 * @param appFeedbackVo 
+	 * @param page 分页参数
+	 * @return 
+	 * @author litianjian
+	 * @date 2017年11月29日 下午03:19:08
+	 */
+	public Pagination<AppFeedback> findByPagination(AppFeedbackVo appFeedbackVo, Page page) {
+		Pagination<AppFeedback> pagination = appFeedbackService.findByPagination(appFeedbackVo, page);
+		return pagination;
+	}
+
+}

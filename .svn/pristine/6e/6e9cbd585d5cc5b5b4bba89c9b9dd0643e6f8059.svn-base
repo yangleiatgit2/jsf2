@@ -1,0 +1,92 @@
+package cn.uce.suc.bkg.cache;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.suc.bkg.dao.datamain.IOperationTimeDao;
+import cn.uce.suc.bkg.vo.datamain.OperationTimeVo;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 算法分拨时刻缓存
+ * @author laizhendong
+ * @date 2017年11月15日 下午9:22:05
+ */
+public class IAOperaTimeCache extends CacheSupport<String> {
+	@Resource
+	IOperationTimeDao operationTimeDao;
+	
+	/**
+	 * @Description: 刷新分拨时刻
+	 * @param 
+	 * @return 
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午2:48:30
+	 */
+	@Override
+	public String doGet(String k) throws BusinessException {
+		//刷新缓存时根据分拨时刻中心编号从数据库查询该中心下的分拨时刻信息
+		OperationTimeVo search = new OperationTimeVo();
+		search.setOperationCenterCode(k);
+		List<OperationTimeVo> list = operationTimeDao.findByCombine(search);
+		if (null != list && !list.isEmpty()) {
+			return JSON.toJSONString(list);
+		}
+		return "";
+	}
+
+	/**
+	 * @Description: 初始化用于算法分拨时刻缓存，存储方式以key(中心编号)-value(中心到各网点的时刻信息list)
+	 * @param 
+	 * @return 
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午2:48:30
+	 */
+	/*@Override
+	public ResultMap<String,String> doInitialization(IKeyGenerator<String> generator) throws BusinessException {
+		//查询分拨时刻
+		List<OperationTimeVo> list = operationTimeDao.findByCombine(null);
+		ResultMap<String,String> map = new ResultMap<String,String>(generator);
+		//存入rides
+		if (null != list && !list.isEmpty()) {
+			Map<String, List<OperationTimeVo>> operationTimeMap = new HashMap<String, List<OperationTimeVo>>();
+			for (OperationTimeVo operationTime : list) {
+				//中心编号
+				String operationCenterCode = operationTime.getOperationCenterCode();
+				if (StringUtil.isNotBlank(operationCenterCode)) {
+					List<OperationTimeVo> operationTimes = operationTimeMap.get(operationCenterCode);
+					if (null == operationTimes) {
+						operationTimes = new ArrayList<OperationTimeVo>();
+					}
+					operationTimes.add(operationTime);
+					operationTimeMap.put(operationCenterCode, operationTimes);
+				}
+			}
+			//已中心为key，存放关于该中心到各网点的中心时刻
+			if (!operationTimeMap.isEmpty()) {
+				for (String key : operationTimeMap.keySet()) {
+					map.put(key, JSON.toJSONString(operationTimeMap.get(key)));
+				}
+			}
+		}
+		return map;
+	}*/
+	
+	/**
+	 * @Description: 获取缓存名
+	 * @param 
+	 * @return 
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午2:48:30
+	 */
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+
+}

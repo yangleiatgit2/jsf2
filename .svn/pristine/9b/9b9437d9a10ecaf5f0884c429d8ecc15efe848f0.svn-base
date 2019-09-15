@@ -1,0 +1,49 @@
+package cn.uce.suc.common.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.OmgArea;
+import cn.uce.suc.common.vo.OmgAreaVo;
+
+/**
+ * @Description: 地区DAO接口类
+ * @author liwei
+ * @date 2017年11月08日 下午03:22:02
+ */
+@Repository("omgAreaDao")
+public interface IOmgAreaDao extends IBaseDao<OmgArea, Long> {
+	
+	/**
+	 * @Description: 分页查询地区
+	 * @param omgAreaVo 地区
+	 * @param page 分页参数
+	 * @return 地区
+	 * @author liwei
+	 * @date 2017年11月08日 下午03:22:02
+	 */
+	public Pagination<OmgArea> findByPagination(OmgAreaVo omgAreaVo, Page page);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param omgAreaVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月8日 下午3:29:43
+	 */
+	public List<OmgArea> findBycondition(OmgAreaVo omgAreaVo);
+	/**
+	 * 
+	 * @Description: 通过区/县编码查询省市编码及名称
+	 * @param omgAreaVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月19日 下午6:15:56
+	 */
+	public OmgAreaVo queryAreaByRegion(OmgAreaVo omgAreaVo);
+	
+}

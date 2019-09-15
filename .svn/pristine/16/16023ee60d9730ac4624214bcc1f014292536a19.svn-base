@@ -1,0 +1,117 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.entity.operation.FreightOrder;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * 
+ * @Description: 订单管理biz单元测试
+ * @author liwei
+ * @date 2017年10月21日 下午4:31:18
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class FreightOrderBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 订单biz
+	 */
+	@Resource
+	private IFreightOrderBiz freightOrderBiz;
+
+	private FreightOrder freightOrder;
+	private FreightOrderVo freightOrderVo;
+	/**
+	 * 编码规则
+	 */
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	/**
+	 * 
+	 * @Description: 每次执行单元测试之前调用
+	 * @author liwei
+	 * @date 2017年10月21日 下午4:32:43
+	 */
+	@Before
+	public void before() {
+		freightOrder = new FreightOrder();
+		freightOrder.setAdjustPrice(10.00);
+		freightOrder.setArrivalTime(new Date());
+		/*freightOrder.setBeginStation("测试网点1");*/
+		freightOrder.setBeginStationCode("UC000014");
+		freightOrder.setCarpoolSitesCode("test01,test02");
+		freightOrder.setCarpoolSitesName("测试网点1，测试网点2");
+		freightOrder.setOrderStatus("00");
+		freightOrder.setOrderName("测试");
+		freightOrder.setDemandType("00");
+		freightOrder.setDayVolume(10.00);
+		freightOrder.setDayWeight(10.00);
+		freightOrder.setDemandSite("UC000060");
+		freightOrder.setDemandSiteCode("UC000053");
+		freightOrder.setExecuteStartTime(new Date());
+		freightOrder.setEndStation("测试2");
+		freightOrder.setEndStationCode("UC000060");
+		freightOrder.setDepartureTime(new Date());
+		freightOrder.setIsCarpool(true);
+	}
+
+	/**
+	 * 
+	 * @Description: 班次新增单元测试
+	 * @author liwei
+	 * @date 2017年10月21日 下午4:33:24
+	 */
+	@Test
+	public void addFreightOrder() {
+		freightOrder.setOrderCode(redisIdsWorker.nextId(IdsPrefix.OR));
+		freightOrder.setOrderStatus(BkgConstants.ORDER_STATUS_PERFORM);
+		freightOrder.setBusinessMode(BkgConstants.BUSINESS_MODE_OUT);
+		FreightOrderVo freightOrderVo = ObjectConvertUtil.convertObject(freightOrder, FreightOrderVo.class);
+		Long id =freightOrderBiz.addFreightOrder(freightOrderVo);
+		freightOrder.setId(id.longValue());
+		freightOrderBiz.findByCombine(freightOrderVo);
+		Page page=new Page();
+		
+		freightOrderBiz.findByPagination(freightOrderVo, page);
+		freightOrderBiz.findByVo(freightOrderVo);
+		freightOrderBiz.findCombineByPagination(freightOrderVo, page);
+		List<FreightOrderVo> freightOrderVos=new ArrayList<FreightOrderVo>();
+		freightOrderVos.add(freightOrderVo);
+		freightOrderBiz.updateTimeByOrderCode(freightOrderVos);
+		freightOrderBiz.updStatusByCombineCode(freightOrderVo);
+		freightOrderBiz.findByOderNoTimeDesc(freightOrderVo);
+		//更新
+		freightOrderBiz.updateById(freightOrder);
+		freightOrderVo.setId(id.longValue());
+		freightOrderBiz.updateFreightOrder(freightOrderVo);
+		freightOrderBiz.findById(id.longValue());
+		freightOrderBiz.deleteFreightOrder(id.longValue());
+	}
+
+
+	@Test
+	public void processLongTerm(){
+		freightOrderBiz.processLongTerm();
+		freightOrderBiz.processtempTerm();
+	}
+}

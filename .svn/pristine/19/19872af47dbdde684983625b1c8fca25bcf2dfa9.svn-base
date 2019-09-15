@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>优拼货的--网点端下载</title>
+<style type="text/css">
+body{background:url(img/welcome.jpg) no-repeat;background-size:100%}
+.footer{bottom:0;width:100%;height:60px;background-color:#585858;color:#e6e6e6;text-align:center;font-size:25px;line-height:60px}
+.content,.footer{position:absolute;left:0}
+.content{top:60%;right:0;margin:auto;width:90%}
+.download{margin:0;padding:0;width:100%}
+.download,.download li{float:left;display:block}
+.download li{width:50%;text-align:center}
+</style>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script src="js/app.js"></script>
+<script>
+	$(function() {
+		var platform = getPlatfrom();
+		download(platform);
+	});
+
+	function download(e) {
+		url = getDownloadUrl('dot', e);
+		/* 安卓不支持调用下载方法 */
+		if (url) {
+			window.location = url;
+		}else{
+			alert('下载地址不存在，请重试');
+		} 
+		/* if (e == 'ios') {
+			if (url) {
+				window.location = url;
+			}
+		} else {
+			url = url.replace('suc-app-webapi/applogin/downloadFile.do?filePath=/uc/files/suc/',''); 
+			window.location = url;
+		} */
+	}
+</script>
+</head>
+<body>
+	<!-- 父层 -->
+	<div class="wapper">
+		<!-- 主要内容 -->
+		<div class="content">
+			<ul class="download">
+				<li onclick="download('ios')" class="l-left"><a href="javascript:void(0)"><img src="img/iphone.png"></a></li>
+				<li onclick="download('android')" class="l_right"><a href="javascript:void(0)"><img src="img/android.png"></a></li>
+			</ul>
+		</div>
+		<!-- 页脚 -->
+		<div class="footer">Copyright @ 2017 优货拼的</div>
+	</div>
+</body>
+</html>

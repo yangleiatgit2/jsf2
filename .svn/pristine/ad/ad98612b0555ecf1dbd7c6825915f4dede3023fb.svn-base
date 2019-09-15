@@ -1,0 +1,418 @@
+package cn.uce.suc.common.entity;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import java.util.Date;
+
+/**
+ * @Description: 地区Entity类
+ * @author liwei
+ * @date 2017年11月08日 下午03:22:02
+ */
+@Table("omg_area")
+public class OmgArea extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 乾坤地区ID. 
+	 */
+	private Integer cmsAreaId;
+    /** 
+	 * 地区编号. 
+	 */
+	private String areaCode;
+    /** 
+	 * 地区名称(简体). 
+	 */
+	private String areaName;
+    /** 
+	 * 地区名称(繁体). 
+	 */
+	private String areaNameTw;
+    /** 
+	 * 地区名称(英文). 
+	 */
+	private String areaNameEn;
+    /** 
+	 * 全量code 
+	 */
+	private String areaFullCode;
+    /** 
+	 * 地区类型.1国家，2省份，3城市，4县/区 
+	 */
+	private Integer areaType;
+    /** 
+	 * 所属地区. 
+	 */
+	private Integer parentArea;
+    /** 
+	 * 所属地区编码. 
+	 */
+	private String parentAreaCode;
+    /** 
+	 * 所属财务中心 
+	 */
+	private Integer financeCenter;
+    /** 
+	 * 所属财务中心基准编码 
+	 */
+	private String financeCenterCode;
+    /** 
+	 * 邮政编号. 
+	 */
+	private String zipCode;
+    /** 
+	 * 电话区号. 
+	 */
+	private String telCode;
+    /** 
+	 * 是否启用. 
+	 */
+	private Boolean enabled;
+    /** 
+	 * 地区名称全拼. 
+	 */
+	private String namePy;
+    /** 
+	 * 地区名称拼音缩写. 
+	 */
+	private String nameSpy;
+    /** 
+	 * 备注. 
+	 */
+	private String remark;
+    /** 
+	 * 删除标识.1表示已删除，默认为0 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本. 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构. 
+	 */
+	private Integer createOrg;
+    /** 
+	 * 更新机构. 
+	 */
+	private Integer updateOrg;
+    /** 
+	 * 同步时间 
+	 */
+	private Date syncTime;
+	
+	
+	/**
+	 * 获取 乾坤地区ID.
+	 */
+	public Integer getCmsAreaId() {
+		return cmsAreaId;
+	}
+	
+	/**
+	 * 设置 乾坤地区ID.
+	 */
+	public void setCmsAreaId(Integer cmsAreaId) {
+		this.cmsAreaId = cmsAreaId;
+	}
+	
+	/**
+	 * 获取 地区编号.
+	 */
+	public String getAreaCode() {
+		return areaCode;
+	}
+	
+	/**
+	 * 设置 地区编号.
+	 */
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+	
+	/**
+	 * 获取 地区名称(简体).
+	 */
+	public String getAreaName() {
+		return areaName;
+	}
+	
+	/**
+	 * 设置 地区名称(简体).
+	 */
+	public void setAreaName(String areaName) {
+		this.areaName = areaName;
+	}
+	
+	/**
+	 * 获取 地区名称(繁体).
+	 */
+	public String getAreaNameTw() {
+		return areaNameTw;
+	}
+	
+	/**
+	 * 设置 地区名称(繁体).
+	 */
+	public void setAreaNameTw(String areaNameTw) {
+		this.areaNameTw = areaNameTw;
+	}
+	
+	/**
+	 * 获取 地区名称(英文).
+	 */
+	public String getAreaNameEn() {
+		return areaNameEn;
+	}
+	
+	/**
+	 * 设置 地区名称(英文).
+	 */
+	public void setAreaNameEn(String areaNameEn) {
+		this.areaNameEn = areaNameEn;
+	}
+	
+	/**
+	 * 获取 全量code
+	 */
+	public String getAreaFullCode() {
+		return areaFullCode;
+	}
+	
+	/**
+	 * 设置 全量code
+	 */
+	public void setAreaFullCode(String areaFullCode) {
+		this.areaFullCode = areaFullCode;
+	}
+	
+	/**
+	 * 获取 地区类型.1国家，2省份，3城市，4县/区
+	 */
+	public Integer getAreaType() {
+		return areaType;
+	}
+	
+	/**
+	 * 设置 地区类型.1国家，2省份，3城市，4县/区
+	 */
+	public void setAreaType(Integer areaType) {
+		this.areaType = areaType;
+	}
+	
+	/**
+	 * 获取 所属地区.
+	 */
+	public Integer getParentArea() {
+		return parentArea;
+	}
+	
+	/**
+	 * 设置 所属地区.
+	 */
+	public void setParentArea(Integer parentArea) {
+		this.parentArea = parentArea;
+	}
+	
+	/**
+	 * 获取 所属地区编码.
+	 */
+	public String getParentAreaCode() {
+		return parentAreaCode;
+	}
+	
+	/**
+	 * 设置 所属地区编码.
+	 */
+	public void setParentAreaCode(String parentAreaCode) {
+		this.parentAreaCode = parentAreaCode;
+	}
+	
+	/**
+	 * 获取 所属财务中心
+	 */
+	public Integer getFinanceCenter() {
+		return financeCenter;
+	}
+	
+	/**
+	 * 设置 所属财务中心
+	 */
+	public void setFinanceCenter(Integer financeCenter) {
+		this.financeCenter = financeCenter;
+	}
+	
+	/**
+	 * 获取 所属财务中心基准编码
+	 */
+	public String getFinanceCenterCode() {
+		return financeCenterCode;
+	}
+	
+	/**
+	 * 设置 所属财务中心基准编码
+	 */
+	public void setFinanceCenterCode(String financeCenterCode) {
+		this.financeCenterCode = financeCenterCode;
+	}
+	
+	/**
+	 * 获取 邮政编号.
+	 */
+	public String getZipCode() {
+		return zipCode;
+	}
+	
+	/**
+	 * 设置 邮政编号.
+	 */
+	public void setZipCode(String zipCode) {
+		this.zipCode = zipCode;
+	}
+	
+	/**
+	 * 获取 电话区号.
+	 */
+	public String getTelCode() {
+		return telCode;
+	}
+	
+	/**
+	 * 设置 电话区号.
+	 */
+	public void setTelCode(String telCode) {
+		this.telCode = telCode;
+	}
+	
+	/**
+	 * 获取 是否启用.
+	 */
+	public Boolean getEnabled() {
+		return enabled;
+	}
+	
+	/**
+	 * 设置 是否启用.
+	 */
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
+	}
+	
+	/**
+	 * 获取 地区名称全拼.
+	 */
+	public String getNamePy() {
+		return namePy;
+	}
+	
+	/**
+	 * 设置 地区名称全拼.
+	 */
+	public void setNamePy(String namePy) {
+		this.namePy = namePy;
+	}
+	
+	/**
+	 * 获取 地区名称拼音缩写.
+	 */
+	public String getNameSpy() {
+		return nameSpy;
+	}
+	
+	/**
+	 * 设置 地区名称拼音缩写.
+	 */
+	public void setNameSpy(String nameSpy) {
+		this.nameSpy = nameSpy;
+	}
+	
+	/**
+	 * 获取 备注.
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注.
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 删除标识.1表示已删除，默认为0
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标识.1表示已删除，默认为0
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 版本.
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本.
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 创建机构.
+	 */
+	public Integer getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构.
+	 */
+	public void setCreateOrg(Integer createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新机构.
+	 */
+	public Integer getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构.
+	 */
+	public void setUpdateOrg(Integer updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	/**
+	 * 获取 同步时间
+	 */
+	public Date getSyncTime() {
+		return syncTime;
+	}
+	
+	/**
+	 * 设置 同步时间
+	 */
+	public void setSyncTime(Date syncTime) {
+		this.syncTime = syncTime;
+	}
+	
+	
+}

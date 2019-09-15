@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+	xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.dangdang.com/schema/ddframe/reg
+                        http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+                        http://www.dangdang.com/schema/ddframe/job
+                        http://www.dangdang.com/schema/ddframe/job/job.xsd
+                        ">
+	<!--配置作业注册中心 -->
+	<reg:zookeeper id="sucRegCenter" server-lists="${suc.job.registry.address}"
+		namespace="suc-elastic-job" base-sleep-time-milliseconds="1000"
+		max-sleep-time-milliseconds="3000" max-retries="10" />
+	<job:simple id="freightOrderLongStaticsJob" class="cn.uce.suc.job.FreightOrderLongStaticsJob"
+		registry-center-ref="sucRegCenter" cron="0 15 10 ? * 4L" disabled="true"
+		overwrite="true" sharding-total-count="1" sharding-item-parameters="0=A,1=B,2=C"
+		description="长期订单组合生成" />
+			<job:simple id="freightOrdertempStaticsJob" class="cn.uce.suc.job.FreightOrderTempStaticsJob"
+		registry-center-ref="sucRegCenter" cron="0 0 13 * * ? *" disabled="true"
+		overwrite="true" sharding-total-count="1" sharding-item-parameters="0=A,1=B,2=C"
+		description="临时订单组合生成" />
+	<job:simple id="msgPushStaticsJob" class="cn.uce.suc.job.MsgPushStaticsJob"
+		registry-center-ref="sucRegCenter" cron="0 0/1 * * * ? *" disabled="true"
+		overwrite="true" sharding-total-count="1" sharding-item-parameters="0=A,1=B,2=C"
+		description="app消息推送" />
+		
+	<job:simple id="freightDemandltStaticsJob" class="cn.uce.suc.job.FreightDemandltStaticsJob"
+		registry-center-ref="sucRegCenter" cron="0 15 10 ? * 3L" disabled="true"
+		overwrite="true" sharding-total-count="1" sharding-item-parameters="0=A,1=B,2=C"
+		description="长期需求组合生成" />
+		
+	<job:simple id="freightDemandstStaticsJob" class="cn.uce.suc.job.FreightDemandstStaticsJob"
+		registry-center-ref="sucRegCenter" cron="0 0 12 * * ? *" disabled="true"
+		overwrite="true" sharding-total-count="1" sharding-item-parameters="0=A,1=B,2=C"
+		description="临时需求组合生成" />
+		
+	<job:simple id="dotAbilityStaticsJob" class="cn.uce.suc.job.DotAbilityStaticsJob"
+		registry-center-ref="sucRegCenter" cron="1 00 00 ? * *" disabled="true"
+		overwrite="true" sharding-total-count="1" sharding-item-parameters="0=A,1=B,2=C"
+		description="运力定时扫描过期运力" />
+
+</beans>

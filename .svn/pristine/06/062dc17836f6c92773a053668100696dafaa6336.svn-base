@@ -1,0 +1,29 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanTrace;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanTraceVo;
+
+/**
+ * @Description: 发车计划轨迹记录DAO接口类
+ * @author liwei
+ * @date 2017年11月15日 上午09:19:32
+ */
+@Repository("dirvingPlanTraceDao")
+public interface IDirvingPlanTraceDao extends IBaseDao<DirvingPlanTrace, Long> {
+	
+	/**
+	 * @Description: 分页查询发车计划轨迹记录
+	 * @param dirvingPlanTraceVo 发车计划轨迹记录
+	 * @param page 分页参数
+	 * @return 发车计划轨迹记录
+	 * @author liwei
+	 * @date 2017年11月15日 上午09:19:32
+	 */
+	public Pagination<DirvingPlanTrace> findByPagination(DirvingPlanTraceVo dirvingPlanTraceVo, Page page);
+	
+}

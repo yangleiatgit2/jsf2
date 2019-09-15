@@ -1,0 +1,255 @@
+package cn.uce.suc.dot.control;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.entity.Serviceevaluation;
+import cn.uce.suc.app.service.ServiceevaluationService;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanDetailBiz;
+import cn.uce.suc.bkg.entity.operation.DeparPlanForApp;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.service.operation.DirvingPlanDetailService;
+import cn.uce.suc.bkg.service.operation.DirvingPlanService;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DrivingPlanExecutedVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.suc.common.vo.DriverScoreAndAvatarVo;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.utils.StringUtil;
+
+
+/**
+ * 
+ * @Description: 司机端发车计划
+ * @author lixueyuan
+ * @date 2017年12月7日 下午4:51:21
+ */
+@RestController
+@RequestMapping("/app/DeparturePlanForApp")
+public class DotDrivingPlanController extends BaseAppController{
+	
+	/**
+	 * 日志
+	 */
+	protected static Logger log = LoggerFactory.getLogger(DotDrivingPlanController.class);
+
+	/**
+	 * 发车计划Biz
+	 */
+	@Resource
+	private IDirvingPlanBiz dirvingPlanBiz;
+	
+	/**
+	 * 发车计划明细Biz
+	 */
+	@Resource
+	private IDirvingPlanDetailBiz dirvingPlanDetailBiz;
+	
+	/**
+	 * 发车计划明细Service
+	 */
+	@Resource
+	private DirvingPlanDetailService dirvingPlanDetailService;
+	@Resource
+	private ServiceevaluationService tSucAppServiceevaluationService;
+	@Resource
+	private MobileuserService mobileUserService;
+	/**
+	 * 注入发车计划Service
+	 */
+	@Resource
+	private DirvingPlanService dirvingPlanService;
+	
+	/**
+	 * 
+	 * @Description: 网点端 查询运输动态列表 司机已确认之后的发车计划
+	 * @param deparPlanForApp
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月15日 下午6:19:07
+	 */
+	@GetMapping(value = "findDepartureForApp")
+	public @ResponseBody Map<String, Object> findDepartureForApp(DeparPlanForApp deparPlanForApp) {
+		List<DeparPlanForApp> dirvingPlans= new ArrayList<DeparPlanForApp>();
+		/**途径节点非空校验*/
+		if(!StringUtils.isBlank(deparPlanForApp.getWayPointCode())){
+			//发车计划状态已生成
+			deparPlanForApp.setGenerateStatus(BkgConstants.PLAN_CODE_GENERATED);
+			//发车计划司机未确认
+			deparPlanForApp.setUnconfirmStaus(BkgConstants.PLAN_CODE_UNCONFIRMED);
+			/**发车计划查询*/
+			dirvingPlans=  dirvingPlanService.findPLanBySiteCode(deparPlanForApp);
+		}
+		return returnSuccess(dirvingPlans);
+	}
+	/**
+	 * 
+	 * @Description:查询发车计划 详情
+	 * @param creteTime
+	 * @param waypoinname
+	 * @param drivingPlanCode
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 上午10:20:22
+	 */
+	@GetMapping(value = "findPlanCodeDetail")
+	public @ResponseBody Map<String, Object> findPlanCodeDetail(@RequestParam(value="detailId", required=true) Long detailId) {
+		DrivingPlanExecutedVo findByDetailId = dirvingPlanDetailBiz.findByDetailId(detailId);
+		if(findByDetailId==null){
+			return returnError("运输详情不存在!");
+		}else{
+			return returnSuccess(findByDetailId);
+		}
+	}
+	/**
+	 * 
+	 * @Description: 网点端确认装货确认//网点提交评价
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 上午10:19:49
+	 */
+	@GetMapping(value = "updateByApp")
+	public @ResponseBody Map<String, Object> updateByApp(DirvingPlanDetailVo dirvingPlanDetail) {
+		int res =0;
+		if(null != dirvingPlanDetail.getStationEvalLever()&&!StringUtils.isEmpty(dirvingPlanDetail.getStationEvalLever())){
+			/**网点评价*/
+			res=dirvingPlanDetailBiz.appUpdateAppraise(dirvingPlanDetail);
+		}else{
+			/**网点确认装卸货完成*/
+			res=dirvingPlanDetailBiz.appUpdateActualNumber(dirvingPlanDetail);
+		}
+		if(res>0){
+			return returnSuccess();
+		}else{
+			return returnError("");
+		}
+	}
+	
+	/**
+	 * @Description: 可视化运输
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  获取的可视化运输详情
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	@RequestMapping(value="/realTimeTransport")
+	public @ResponseBody Map<String, Object> realTimeTransport(String  drivingPlanCode,int currentPage,int pageSize){
+		if( StringUtil.isBlank(drivingPlanCode) ){
+
+			return returnError();
+		}
+		//创建对象
+		DirvingPlanDetailVo dirvingPlanDetailVo = new  DirvingPlanDetailVo();
+		//设置查发车计划编号
+		dirvingPlanDetailVo.setDrivingPlanCode(drivingPlanCode);
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		/**
+		 * 默认设置获取未删除的发车计划号
+		 */
+		if(dirvingPlanDetailVo.getDeleteFlag()!=null){
+			dirvingPlanDetailVo.setDeleteFlag(false);
+		}
+		//查询数据库
+		Pagination<DirvingPlanDetail> pagination=dirvingPlanDetailBiz.findByPagination(dirvingPlanDetailVo, page);
+		if(pagination.getData().size()==0){
+			return returnError();
+		}
+		////获取发车计划
+		DirvingPlan dirvingPlan= dirvingPlanDetailBiz.getStation(dirvingPlanDetailVo);
+		if(dirvingPlan!=null && StringUtil.isNotBlank(dirvingPlan.getNextStationCode())){
+			/*Iterator<DirvingPlanDetail> dirvingPlanDetails=pagination.getData().iterator();
+			while(dirvingPlanDetails.hasNext()){  
+				DirvingPlanDetail s = dirvingPlanDetails.next(); 
+				if(s.getWayPointCode()==dirvingPlan.getNextStationCode()){
+					s.setUtf1("车辆在这个点");
+				}
+			}*/
+			List<DirvingPlanDetail> dirvingPlanDetails=pagination.getData();
+			for (int i = 0; i < dirvingPlanDetails.size(); i++) {
+				//校验车辆在那个网点
+				if(dirvingPlanDetails.get(i).getWayPointCode().equals(dirvingPlan.getNextStationCode())){
+					dirvingPlanDetails.get(i).setUtf1("车辆在这个网点");
+				}
+			}
+			
+		}
+		return returnSuccess(pagination);
+				
+	}
+
+	/**
+	 * 
+	 * @Description: 网点查询  已评价/未评价/  历史执行
+	 * @param status 1 标识未评价  2 标识已评价
+	 * 				departTime: 时间选择框时间戳
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 上午10:19:49
+	 */
+	@GetMapping(value = "findSiteDepartPlan")
+	public @ResponseBody Map<String, Object>  findSiteDepartPlan(DrivingPlanExecutedVo dirvingPlanDetailVo) {
+		List<DrivingPlanExecutedVo> findSiteDepartPlan  = new ArrayList<DrivingPlanExecutedVo>();
+		if(!StringUtils.isBlank(dirvingPlanDetailVo.getWayPointCode())){
+			/**查询已评价/未评价*/
+			if(StringUtils.isNotBlank(dirvingPlanDetailVo.getStatus())){
+				dirvingPlanDetailVo.setStationEvalLever(dirvingPlanDetailVo.getStatus());
+			}
+			dirvingPlanDetailVo.setStatus(BkgConstants.PLAN_CODE_EXECUTE);
+			findSiteDepartPlan = dirvingPlanDetailService.findSiteDepartPlan(dirvingPlanDetailVo);
+		}
+		return returnSuccess(findSiteDepartPlan);
+	}
+	
+	/**
+	 * 
+	 * @Description: 查询司机图片和平分
+	 * @return
+	 * @author yanglei
+	 * @date 2017年12月14日 上午10:19:49
+	 */
+	@GetMapping(value = "findDriverImageAndScore")
+	public @ResponseBody Map<String, Object>  findDriverImageAndScore(@RequestParam(value="mobilePhone", required=true) String mobilePhone) {
+		MobileuserVo user = new MobileuserVo();
+		user.setDptType(true);
+		user.setDotType(false);
+		user.setMobilephone(mobilePhone);
+		List<MobileuserVo> mobileuserVos = mobileUserService.findByUserMobilephone(user);
+		if(CollectionUtils.isNotEmpty(mobileuserVos)){
+			user=mobileuserVos.get(0);
+		}
+		DriverScoreAndAvatarVo vo=new DriverScoreAndAvatarVo();
+		Serviceevaluation tSucAppServiceevaluation = tSucAppServiceevaluationService.findScoreforDriver(mobilePhone);
+		if(tSucAppServiceevaluation !=null){
+			 Double score= tSucAppServiceevaluation.getScore();
+			 if(score!=null){
+				 vo.setDriverScore(score);
+			 }
+		}
+		vo.setAvatar(user.getAvatar());
+		return returnSuccess(vo);
+	}
+	
+
+}

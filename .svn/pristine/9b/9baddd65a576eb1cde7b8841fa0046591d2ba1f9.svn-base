@@ -1,0 +1,300 @@
+package cn.uce.suc.bkg.entity.datamain;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+/**
+ * @Description: 時效管理表Entity类
+ * @author yanglei
+ * @date 2017年10月20日 下午05:12:37
+ */
+@Table("t_suc_bkg_transport_effective")
+public class TransportEffective extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 时效编码 
+	 */
+	private String effectiveCode;
+    /** 
+	 * 目的站 
+	 */
+	private String startSite;
+    /** 
+	 * 终点站 
+	 */
+	private String endSite;
+   /** 
+	 * 目的站編碼
+	 */
+	private String startSiteCode;
+    /** 
+	 * 终点站 編碼
+	 */
+	private String endSiteCode;
+    /** 
+	 * 线路距离(KM) 
+	 */
+	private Double distance;
+    /** 
+	 * 线路速度(KM/H) 
+	 */
+	private Double speed;
+    /** 
+	 * 时效(MIN) 
+	 */
+	private Integer effective;
+    /** 
+	 * 状态(启用停用) 
+	 */
+	private String status;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 删除标志 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+	
+	/**
+	 * 开始站所属机构编号
+	 */
+	private String startParentCode;
+	
+	/**
+	 * 开始站所属机构名称
+	 */
+	private String startParentName;
+	
+	/**
+	 * 终点站站所属机构编号
+	 */
+	private String endParentCode;
+	
+	/**
+	 * 终点站站所属机构名称
+	 */
+	private String endParentName;
+	
+	
+	public String getStartSiteCode() {
+		return startSiteCode;
+	}
+
+	public void setStartSiteCode(String startSiteCode) {
+		this.startSiteCode = startSiteCode;
+	}
+
+	public String getEndSiteCode() {
+		return endSiteCode;
+	}
+
+	public void setEndSiteCode(String endSiteCode) {
+		this.endSiteCode = endSiteCode;
+	}
+
+	public String getEffectiveCode() {
+		return effectiveCode;
+	}
+
+	public void setEffectiveCode(String effectiveCode) {
+		this.effectiveCode = effectiveCode;
+	}
+
+	public String getStartSite() {
+		return startSite;
+	}
+
+	public void setStartSite(String startSite) {
+		this.startSite = startSite;
+	}
+
+	public String getEndSite() {
+		return endSite;
+	}
+
+	public void setEndSite(String endSite) {
+		this.endSite = endSite;
+	}
+
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	public String getCreateOrg() {
+		return createOrg;
+	}
+
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	/**
+	 * 获取 线路距离(KM)
+	 */
+	public Double getDistance() {
+		return distance;
+	}
+	
+	/**
+	 * 设置 线路距离(KM)
+	 */
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+	
+	/**
+	 * 获取 线路速度(KM/H)
+	 */
+	public Double getSpeed() {
+		return speed;
+	}
+	
+	/**
+	 * 设置 线路速度(KM/H)
+	 */
+	public void setSpeed(Double speed) {
+		this.speed = speed;
+	}
+	
+	/**
+	 * 获取 时效(MIN)
+	 */
+	public Integer getEffective() {
+		return effective;
+	}
+	
+	/**
+	 * 设置 时效(MIN)
+	 */
+	public void setEffective(Integer effective) {
+		this.effective = effective;
+	}
+	
+	/**
+	 * 获取 状态(启用停用)
+	 */
+	public String getStatus() {
+		return status;
+	}
+	
+	/**
+	 * 设置 状态(启用停用)
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	/** 
+	 * @return startParentCode 
+	 */
+	public String getStartParentCode() {
+		return startParentCode;
+	}
+
+	/**
+	 * @param startParentCode the startParentCode to set
+	 */
+	public void setStartParentCode(String startParentCode) {
+		this.startParentCode = startParentCode;
+	}
+
+	/** 
+	 * @return startParentName 
+	 */
+	public String getStartParentName() {
+		return startParentName;
+	}
+
+	/**
+	 * @param startParentName the startParentName to set
+	 */
+	public void setStartParentName(String startParentName) {
+		this.startParentName = startParentName;
+	}
+
+	/** 
+	 * @return endParentCode 
+	 */
+	public String getEndParentCode() {
+		return endParentCode;
+	}
+
+	/**
+	 * @param endParentCode the endParentCode to set
+	 */
+	public void setEndParentCode(String endParentCode) {
+		this.endParentCode = endParentCode;
+	}
+
+	/** 
+	 * @return endParentName 
+	 */
+	public String getEndParentName() {
+		return endParentName;
+	}
+
+	/**
+	 * @param endParentName the endParentName to set
+	 */
+	public void setEndParentName(String endParentName) {
+		this.endParentName = endParentName;
+	}
+}

@@ -1,0 +1,54 @@
+package cn.uce.suc.bkg.service.datastatis;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.datastatis.ILoadRatioReportDao;
+import cn.uce.suc.bkg.vo.datastatis.LoadRatioReportVo;
+
+
+/**
+ * 
+ * @Description: TODO 满载率报表Service 
+ * @author xiesonglin
+ * @date 2017年12月4日 下午1:23:10
+ */
+@Service("loadRatioReportService")
+public class LoadRatioReportService {
+
+	/**
+	 * dao注入
+	 */
+	@Resource
+	private ILoadRatioReportDao loadRatioReportDao;
+
+	/**
+	 * 
+	 * @Description: TODO 根据分页查询 满载率报表 
+	 * @param loadRatioReportVo
+	 * @param page
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月4日 下午1:25:44
+	 */
+	public Pagination<LoadRatioReportVo> findLoadRatioReportByPage(LoadRatioReportVo loadRatioReportVo,Page page){
+		return this.loadRatioReportDao.findLoadRatioReportByPage(loadRatioReportVo, page);
+	}
+	
+	/**
+	 * 
+	 * @Description: TODO 根据查询条件查找出数据 并用于数据导出 
+	 * @param loadRatioReportVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月5日 下午4:38:22
+	 */
+	public List<LoadRatioReportVo> findByExport(LoadRatioReportVo loadRatioReportVo){
+		return this.loadRatioReportDao.findByExport(loadRatioReportVo);
+	}
+}

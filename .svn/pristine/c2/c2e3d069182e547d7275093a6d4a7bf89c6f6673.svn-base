@@ -1,0 +1,232 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.IMobileuserBiz;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.cache.AppLoginToKenCache;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.exception.ComModuleException;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * @Description: app用户表BIZ实现类
+ * @author liwei
+ * @date 2017年10月10日 下午08:42:21
+ */
+@Service("mobileuserBiz")
+public class MobileuserBiz implements IMobileuserBiz {
+
+	/**
+	 * 注入app用户表Service
+	 */
+	@Resource
+	private MobileuserService mobileuserService;
+	/**
+	 * token
+	 */
+	@Resource(name = "appLoginToKenCache")
+	private AppLoginToKenCache appLoginToKenCache;
+
+	/**
+	 * 组织机构缓存
+	 */
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz;
+	
+	
+	
+	private final Logger log = LoggerFactory.getLogger(MobileuserBiz.class);
+
+	/**
+	 * 登陆机构
+	 */
+	/*
+	 * @Resource private LogininfoService logininfoService;
+	 */
+
+	/**
+	 * @Description: 新增app用户表
+	 * @param mobileuser
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public Long addMobileuser(MobileuserVo mobileuserVo) {
+		initProcess(mobileuserVo);
+		mobileuserVo.setPassword(BkgConstants.MOBILE_USER_CREATE_PASSWORD);
+		Mobileuser mobileuser = ObjectConvertUtil.convertObject(mobileuserVo, Mobileuser.class);
+		/** 查询用户是否已经存在 */
+		MobileuserVo mobileuserVoOld = new MobileuserVo();
+		//写入手机号
+		mobileuserVoOld.setMobilephone(mobileuserVo.getMobilephone());
+		//写入w网点标示
+		mobileuserVoOld.setDotType(mobileuserVo.getDotType());
+		//写入司机标示
+		mobileuserVoOld.setDptType(mobileuserVo.getDptType());
+		//查询是否存在当前用户
+		List<MobileuserVo> mobileuserVos = mobileuserService.findByCondition(mobileuserVoOld);
+		//校验是否存在
+		if (null != mobileuserVos && mobileuserVos.size() > 0) {
+			return 1l;
+		}
+
+		mobileuserService.addMobileuser(mobileuser);
+		return mobileuser.getId();
+	}
+
+	/**
+	 * 
+	 * @Description: 内部处理
+	 * @author liwei
+	 * @date 2017年11月17日 上午12:18:10
+	 */
+	private void initProcess(MobileuserVo mobileuserVo) {
+		// 非空
+		if (null == mobileuserVo) {
+			return;
+		}
+		// 非空校验
+		if (StringUtil.isNotBlank(mobileuserVo.getUserType())) {
+			// 网点
+			if (mobileuserVo.getUserType().equals(SucConstants.CAPTCH_PLATFROM_DOT)) {
+				mobileuserVo.setDotType(true);
+				mobileuserVo.setDptType(false);
+				// 司机
+			} else if (mobileuserVo.getUserType().equals(SucConstants.CAPTCH_PLATFORM_DPT)) {
+				mobileuserVo.setDotType(false);
+				mobileuserVo.setDptType(true);
+			}
+		}
+		// 非空
+		if (StringUtil.isNotBlank(mobileuserVo.getBaseOrgCode())) {
+			// 获取组织机构
+			OmgCmsOrgVo omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(mobileuserVo.getBaseOrgCode());
+			if (null != omgCmsOrgVo) {
+				mobileuserVo.setOrgName(omgCmsOrgVo.getOrgName());
+			}
+			// 校验该机构是否存在多条用户
+			MobileuserVo mobileuserVo2 = new MobileuserVo();
+			// 设置查询条件
+			mobileuserVo2.setBaseOrgCode(mobileuserVo.getBaseOrgCode());
+			//校验是否为司机--司机绑定分拨，存在一个分拨多个用户
+			if(null!=mobileuserVo.getDptType()&&mobileuserVo.getDptType()){
+				return;
+			}
+			// 查询用户
+			List<MobileuserVo> mobileuserVos = mobileuserService.findByCondition(mobileuserVo2);
+			// 校验用户数量
+			if (null != mobileuserVos && mobileuserVos.size() > 0) {
+				// 判断是更新还是新增
+				if (null != mobileuserVo.getId()) {
+					// 获取存在数据id
+					mobileuserVo2 = mobileuserVos.get(0);
+					// 如果相等则是同一条数据，不等则是两条数据则需要抛出异常
+					if (mobileuserVo.getId() != mobileuserVo2.getId()) {
+						throw new ComModuleException("mobile.user.org.only.one");
+					}
+				} else {
+
+					throw new ComModuleException("mobile.user.org.only.one");
+				}
+			}
+		}
+
+	}
+
+	/**
+	 * @Description: 修改app用户表
+	 * @param mobileuser
+	 *            app用户表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public int updateMobileuser(MobileuserVo mobileuserVo) {
+		initProcess(mobileuserVo);
+		Mobileuser mobileuser = ObjectConvertUtil.convertObject(mobileuserVo, Mobileuser.class);
+		return mobileuserService.updateById(mobileuser);
+	}
+
+	/**
+	 * @Description: 删除app用户表
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public int deleteMobileuser(Long id) {
+		return mobileuserService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询app用户表
+	 * @param id
+	 *            主键
+	 * @return app用户表
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	@Override
+	public Mobileuser findById(Long id) {
+		return mobileuserService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询app用户表
+	 * @param mobileuserVo
+	 *            app用户表
+	 * @param page
+	 *            分页参数
+	 * @return app用户表
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public Pagination<MobileuserVo> findByPagination(MobileuserVo mobileuserVo, Page page) {
+		// 初始化
+		//initProcess(mobileuserVo);
+		// 查询
+		Pagination<MobileuserVo> pagination = mobileuserService.findByPagination(mobileuserVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description: 查询手机号是否注册
+	 * @param mobilephone
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月10日 下午5:05:54
+	 */
+	public Integer findCountByMobilephone(String mobilephone) {
+		return mobileuserService.findCountByMobilephone(mobilephone);
+	}
+
+	
+	/**
+	 * 
+	 * @Description:  根据手机号和用户类型 校验用户唯一性
+	 * @param mobileuserVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月28日 下午1:44:08
+	 */
+	public MobileuserVo checkExistsByMobileAndUserType(MobileuserVo mobileuserVo){
+		return mobileuserService.checkExistsByMobileAndUserType(mobileuserVo);
+	}
+}

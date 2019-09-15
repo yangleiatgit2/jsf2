@@ -1,0 +1,55 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+
+/**
+ * @Description: 班次管理明细DAO接口类
+ * @author litianjian
+ * @date 2017年10月21日 下午05:40:59
+ */
+@Repository("lineGroupDetailDao")
+public interface ILineGroupDetailDao extends IBaseDao<LineGroupDetail, Long> {
+	
+	/**
+	 * @Description: 分页查询班次管理明细
+	 * @param lineGroupDetailVo 班次管理明细
+	 * @param page 分页参数
+	 * @return 班次管理明细
+	 * @author litianjian
+	 * @date 2017年10月21日 下午05:40:59
+	 */
+	public Pagination<LineGroupDetailVo> findByPagination(LineGroupDetailVo lineGroupDetailVo, Page page);
+	
+	/**
+	 * @Description: 新增班次管理明细
+	 * @param lineGroupDetailVo 班次管理明细
+	 * @param page 分页参数
+	 * @return 班次管理明细
+	 * @author litianjian
+	 * @date 2017年10月21日 下午05:40:59
+	 */
+	public int addLineGroupDetail(LineGroupDetail groupDetail);
+	
+	
+	public List<LineGroupDetail> queryByWorkDetailId(String lineGroupCode);
+	public Pagination<LineGroupDetail> findPageByPagination(String lineGroupCode, Page page);
+	
+	
+	/**
+	 * 
+	 * @Description:获取未排班的班次路段--即班次编号为空
+	 * @return
+	 * @author liwei
+	 * @param lineGroupDetailVo 
+	 * @date 2017年11月9日 上午12:18:00
+	 */
+	public List<LineGroupDetail> findGroupDetailByGroupcodeIsNull(LineGroupDetailVo lineGroupDetailVo);
+}

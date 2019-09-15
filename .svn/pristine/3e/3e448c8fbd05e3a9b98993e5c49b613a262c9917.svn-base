@@ -1,0 +1,47 @@
+package cn.uce.suc.common.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.SystemConfig;
+import java.util.List;
+import cn.uce.suc.common.vo.SystemConfigVo;
+
+/**
+ * @Description: 系统配置表DAO接口类
+ * @author UCE-CodeGenerator
+ * @date 2017年11月02日 上午10:10:03
+ */
+@Repository("systemConfigDao")
+public interface ISystemConfigDao extends IBaseDao<SystemConfig, Long> {
+	
+	/**
+	 * @Description: 分页查询系统配置表
+	 * @param systemConfigVo 系统配置表
+	 * @param page 分页参数
+	 * @return 系统配置表
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月02日 上午10:10:03
+	 */
+	public Pagination<SystemConfig> findByPagination(SystemConfigVo systemConfigVo, Page page);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月2日 上午10:48:41
+	 */
+	public SystemConfig findSysConfigBycode(String configCode);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询系统配置信息 
+	 * @param systemConfigVo
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 下午3:02:01
+	 */
+	public List<SystemConfig> findByCondition(SystemConfigVo systemConfigVo);
+}

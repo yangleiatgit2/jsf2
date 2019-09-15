@@ -1,0 +1,129 @@
+package cn.uce.suc.common.util;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import org.apache.commons.lang.time.DateUtils;
+
+
+/**
+ * 
+ * @Description: 日期帮助类
+ * @author wangzhijun
+ * @date 2017年11月15日 下午11:06:16
+ */
+public class CalendarUtil {
+	/**
+	 * 
+	 * @Description: 获取当月第一天
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月15日 下午11:07:26
+	 */
+	public static Date getMonthFristDay() {
+		return getMonthFristDay(0);
+	}
+
+	/**
+	 * 
+	 * @Description: 获取月第一天
+	 * @param 当前月前后天数
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月15日 下午11:22:29
+	 */
+	public static Date getMonthFristDay(Integer i) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.MONTH, i);
+		/** 下一个月的开始时间 */
+		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+		Date begin = calendar.getTime();
+		begin = DateUtils.setHours(begin, 0);
+		begin = DateUtils.setMinutes(begin, 0);
+		begin = DateUtils.setSeconds(begin, 0);
+		begin = DateUtils.setMilliseconds(begin, 0);
+		return begin;
+	}
+
+	/**
+	 * 
+	 * @Description: 获取当月最后一天
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月15日 下午11:09:43
+	 */
+	public static Date getMonthLastDay() {
+		return getMonthLastDay(0);
+	}
+
+	/**
+	 * 
+	 * @Description: 获取月最后一天
+	 * @param 当前月前后天数
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月15日 下午11:20:47
+	 */
+	public static Date getMonthLastDay(Integer i) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.MONTH, i);
+		calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+		Date end = calendar.getTime();
+		end = DateUtils.setHours(end, 0);
+		end = DateUtils.setMinutes(end, 0);
+		end = DateUtils.setSeconds(end, 0);
+		end = DateUtils.setMilliseconds(end, 0);
+		return end;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据时间获取时间参数的月第一天
+	 * @param date
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月29日 下午10:39:25
+	 */
+	public static Date getMonthFristDay(Date date){
+		//获取下一个月第一天
+	    Calendar calendar1 = Calendar.getInstance();
+	    calendar1.setTime(date);
+	    calendar1.add(Calendar.MONTH, 0);  
+	    calendar1.set(Calendar.DAY_OF_MONTH, 1);  
+	    Date firstDate = calendar1.getTime();
+	    return firstDate;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据时间获取时间参数的月最后一天
+	 * @param date
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月29日 下午10:39:25
+	 */
+	public static Date getMonthLastDay(Date date){
+		Calendar calendar = Calendar.getInstance();
+	    calendar.setTime(date);
+	    calendar.add(Calendar.MONTH, 1);
+	    calendar.set(Calendar.DAY_OF_MONTH, 0);
+	    Date lastDate = calendar.getTime();
+	    return lastDate;
+	}
+	/**
+	 * 
+	 * @Description: 根据当前时间获取明天这个时间
+	 * @param date
+	 * @return
+	 * @author huhaizhou
+	 * @date 2017年12月17日 下午10:39:25
+	 */
+	public static Date getTomorrow(Date date){
+		  Calendar c = Calendar.getInstance();  
+	        c.setTime(date);  
+	        c.add(Calendar.DAY_OF_MONTH, 1);// 今天+1天  
+	   
+	        Date tomorrow = c.getTime();
+		return tomorrow;
+	}
+}

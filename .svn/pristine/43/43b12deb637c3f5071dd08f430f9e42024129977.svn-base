@@ -1,0 +1,78 @@
+package cn.uce.suc.common.vo;
+
+/**
+ * 
+ * @Description:控件机构返回数据vo
+ * @author liwei
+ * @date 2017年10月19日 下午10:02:47
+ */
+public class ComboOrgVo {
+	/**
+	 * 机构ID.
+	 */
+	private Integer orgId;
+	/**
+	 * 基础编码
+	 */
+	private String baseOrgCode;
+
+	/**
+	 * 机构名称（简体）.机构名称唯一
+	 */
+	private String orgName;
+	/**
+	 * 机构类型
+	 */
+	private String orgType;
+	
+	/** 
+	 * @return orgType 
+	 */
+	public String getOrgType() {
+		return orgType;
+	}
+	/**
+	 * @param orgType the orgType to set
+	 */
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
+	/**
+	 * 机构ID.
+	 */
+	public Integer getOrgId() {
+		return orgId;
+	}
+	/**
+	 * 机构ID.
+	 */
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
+	/**
+	 * 基础编码
+	 */
+	public String getBaseOrgCode() {
+		return baseOrgCode;
+	}
+	/**
+	 * 基础编码
+	 */
+	public void setBaseOrgCode(String baseOrgCode) {
+		this.baseOrgCode = baseOrgCode;
+	}
+	/**
+	 * 机构名称（简体）.机构名称唯一
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+	/**
+	 * 机构名称（简体）.机构名称唯一
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	
+	
+}

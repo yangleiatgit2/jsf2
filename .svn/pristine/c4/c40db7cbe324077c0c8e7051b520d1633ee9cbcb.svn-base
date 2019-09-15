@@ -1,0 +1,70 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Date;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.ILineGroupOperLogBiz;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.entity.operation.LineGroupOperLog;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupOperLogVo;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.util.WebUtil;
+
+/**
+ * 
+ * @Description: 班次记录操作
+ * @author liwei
+ * @date 2017年10月26日 上午10:42:07
+ */
+@Controller
+@RequestMapping("/lineGroupOperLog")
+public class LineGroupOperLogController extends BaseController {
+	/**
+	 * 班次修改biz
+	 */
+	@Resource
+	ILineGroupOperLogBiz lineGroupOperLogBiz;
+	/**
+	 * 
+	 * @Description: 组合查询分页
+	 * @param lineGroupOperLogVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 下午1:50:59
+	 */
+	@RequestMapping(value  = "/findByPagination")
+	@ResponseBody
+	public Map<String, Object> findByPagination(LineGroupOperLogVo lineGroupOperLogVo, Page page) {
+		Pagination<LineGroupOperLog> pagination = lineGroupOperLogBiz.findByPagination(lineGroupOperLogVo, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * @Description: 新增修改记录
+	 * @param lineGroupOperLog
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@RequestMapping(value  = "/addLineGroupOperLog")
+	@ResponseBody
+	public int addLineGroupOperLog(LineGroupOperLog lineGroupOperLog) {
+		//获取当前用户
+		SucCurrentUser user = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		lineGroupOperLog.setCreateEmp(user.getEmpName());
+		lineGroupOperLog.setCreateOrg(user.getCmsOrgName());
+		lineGroupOperLog.setCreateTime(new Date());
+		return lineGroupOperLogBiz.addLineGroupOperLog(lineGroupOperLog);
+	}
+}

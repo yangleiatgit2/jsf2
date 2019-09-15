@@ -1,0 +1,28 @@
+package cn.uce.suc.bkg.vo.datamain;
+
+import java.util.List;
+
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+
+/**
+ * @Description: 班次和发车计划 数据聚合Vo类
+ * @author yanglei
+ * @date 2017年10月31日 下午03:48:43
+ */
+public class LineGroupDetailListVo  {
+
+	private List<LineGroupDetail> lineGroupDetails;
+
+
+	public List<LineGroupDetail> getLineGroupDetails() {
+		return lineGroupDetails;
+	}
+
+
+	public void setLineGroupDetails(List<LineGroupDetail> lineGroupDetails) {
+		this.lineGroupDetails = lineGroupDetails;
+	}
+	
+	
+	
+}

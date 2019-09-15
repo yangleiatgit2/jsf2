@@ -1,0 +1,732 @@
+package cn.uce.suc.bkg.vo.datamain;
+
+import cn.uce.base.vo.BaseVo;
+import cn.uce.core.excel.annotation.Excel;
+
+import java.util.Date;
+
+/**
+ * @Description: 司机Vo类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月30日 下午07:29:39
+ */
+public class DirverVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 司机姓名 
+	 */
+	@Excel(name="司机姓名")
+	private String driverName;
+    /** 
+	 * 车牌号 
+	 */
+	@Excel(name="车牌号")
+	private String plateNumber;
+    /** 
+	 * 所属类型 
+	 */
+	private String dirverType;
+    /** 
+	 * 司机所属（承运商id） 
+	 */
+	
+	private String carriveId;
+    /** 
+	 * 承运商名称 
+	 */
+	@Excel(name="司机所属")
+	private String carrierName;
+	/** 
+	 * 是否可用 
+	 */
+	@Excel(name="司机是否可用",replace = {"是_1","否_0"})
+	private String usableFlag;
+    /** 
+	 * 所属机构 
+	 */
+	private String driverOrg;
+    /** 
+	 * 手机号 
+	 */
+	@Excel(name="手机号")
+	private String mobilePhone;
+    /** 
+	 * 身份证号 
+	 */
+	private String idCard;
+    /** 
+	 * 从业类型 
+	 */
+	private String employmentType;
+    /** 
+	 * 紧急联系人 
+	 */
+	private String emergencyContact;
+    /** 
+	 * 紧急联系号码 
+	 */
+	private String emergencyNumber;
+	 /** 
+	 * 司机状态 
+	 */
+	@Excel(name="司机状态",replace = {"启用_1","停用_0"})
+	private String dirverStatus;
+    /** 
+	 * 准驾车型 
+	 */
+	@Excel(name="准驾车型")
+	private String drivingModel;
+    /** 
+	 * 驾驶证号 
+	 */
+	private String drivingNumber;
+    /** 
+	 * 驾驶证有效期 
+	 */
+	private Date drivingUsefulTime;
+    /** 
+	 * 从业资格证号 
+	 */
+	private String certificateId;
+    /** 
+	 * 从业资格有效期 
+	 */
+	private Date certificateUsefulTime;
+   
+    /** 
+	 * 身份证附件地址 
+	 */
+	private String idCardUrl;
+    /** 
+	 * 停用说明 
+	 */
+	private String stopInstruction;
+    /** 
+	 * 司机照片地址 
+	 */
+	private String driverPhotoUrl;
+    /** 
+	 * 驾驶证附件地址 
+	 */
+	private String drivingFileUrl;
+    /** 
+	 * 从业资格证附件地址 
+	 */
+	private String certificateFileUrl;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 删除标识.1表示已删除，默认为0 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新人. 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新机构. 
+	 */
+	private String updateOrg;
+    
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	/**
+	 * 下拉传入的参数
+	 */
+	private String q;
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 司机姓名
+	 */
+	public String getDriverName() {
+		return driverName;
+	}
+	
+	/**
+	 * 设置 司机姓名
+	 */
+	public void setDriverName(String driverName) {
+		this.driverName = driverName;
+	}
+
+	
+	/**
+	 * 获取 车牌号
+	 */
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+	
+	/**
+	 * 设置 车牌号
+	 */
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+
+	
+	/**
+	 * 获取 所属类型
+	 */
+	public String getDirverType() {
+		return dirverType;
+	}
+	
+	/**
+	 * 设置 所属类型
+	 */
+	public void setDirverType(String dirverType) {
+		this.dirverType = dirverType;
+	}
+
+	
+	/**
+	 * 获取 司机所属（承运商id）
+	 */
+	public String getCarriveId() {
+		return carriveId;
+	}
+	
+	/**
+	 * 设置 司机所属（承运商id）
+	 */
+	public void setCarriveId(String carriveId) {
+		this.carriveId = carriveId;
+	}
+
+	
+	/**
+	 * 获取 承运商名称
+	 */
+	public String getCarrierName() {
+		return carrierName;
+	}
+	
+	/**
+	 * 设置 承运商名称
+	 */
+	public void setCarrierName(String carrierName) {
+		this.carrierName = carrierName;
+	}
+
+	
+	/**
+	 * 获取 所属机构
+	 */
+	public String getDriverOrg() {
+		return driverOrg;
+	}
+	
+	/**
+	 * 设置 所属机构
+	 */
+	public void setDriverOrg(String driverOrg) {
+		this.driverOrg = driverOrg;
+	}
+
+	
+	/**
+	 * 获取 手机号
+	 */
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+	
+	/**
+	 * 设置 手机号
+	 */
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	
+	/**
+	 * 获取 身份证号
+	 */
+	public String getIdCard() {
+		return idCard;
+	}
+	
+	/**
+	 * 设置 身份证号
+	 */
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
+
+	
+	/**
+	 * 获取 从业类型
+	 */
+	public String getEmploymentType() {
+		return employmentType;
+	}
+	
+	/**
+	 * 设置 从业类型
+	 */
+	public void setEmploymentType(String employmentType) {
+		this.employmentType = employmentType;
+	}
+
+	
+	/**
+	 * 获取 紧急联系人
+	 */
+	public String getEmergencyContact() {
+		return emergencyContact;
+	}
+	
+	/**
+	 * 设置 紧急联系人
+	 */
+	public void setEmergencyContact(String emergencyContact) {
+		this.emergencyContact = emergencyContact;
+	}
+
+	
+	/**
+	 * 获取 紧急联系号码
+	 */
+	public String getEmergencyNumber() {
+		return emergencyNumber;
+	}
+	
+	/**
+	 * 设置 紧急联系号码
+	 */
+	public void setEmergencyNumber(String emergencyNumber) {
+		this.emergencyNumber = emergencyNumber;
+	}
+
+	
+	/**
+	 * 获取 准驾车型
+	 */
+	public String getDrivingModel() {
+		return drivingModel;
+	}
+	
+	/**
+	 * 设置 准驾车型
+	 */
+	public void setDrivingModel(String drivingModel) {
+		this.drivingModel = drivingModel;
+	}
+
+	
+	/**
+	 * 获取 驾驶证号
+	 */
+	public String getDrivingNumber() {
+		return drivingNumber;
+	}
+	
+	/**
+	 * 设置 驾驶证号
+	 */
+	public void setDrivingNumber(String drivingNumber) {
+		this.drivingNumber = drivingNumber;
+	}
+
+	
+	/**
+	 * 获取 驾驶证有效期
+	 */
+	public Date getDrivingUsefulTime() {
+		return drivingUsefulTime;
+	}
+	
+	/**
+	 * 设置 驾驶证有效期
+	 */
+	public void setDrivingUsefulTime(Date drivingUsefulTime) {
+		this.drivingUsefulTime = drivingUsefulTime;
+	}
+
+	
+	/**
+	 * 获取 从业资格证号
+	 */
+	public String getCertificateId() {
+		return certificateId;
+	}
+	
+	/**
+	 * 设置 从业资格证号
+	 */
+	public void setCertificateId(String certificateId) {
+		this.certificateId = certificateId;
+	}
+
+	
+	/**
+	 * 获取 从业资格有效期
+	 */
+	public Date getCertificateUsefulTime() {
+		return certificateUsefulTime;
+	}
+	
+	/**
+	 * 设置 从业资格有效期
+	 */
+	public void setCertificateUsefulTime(Date certificateUsefulTime) {
+		this.certificateUsefulTime = certificateUsefulTime;
+	}
+
+	
+	/**
+	 * 获取 司机状态
+	 */
+	public String getDirverStatus() {
+		return dirverStatus;
+	}
+	
+	/**
+	 * 设置 司机状态
+	 */
+	public void setDirverStatus(String dirverStatus) {
+		this.dirverStatus = dirverStatus;
+	}
+
+	
+	/**
+	 * 获取 身份证附件地址
+	 */
+	public String getIdCardUrl() {
+		return idCardUrl;
+	}
+	
+	/**
+	 * 设置 身份证附件地址
+	 */
+	public void setIdCardUrl(String idCardUrl) {
+		this.idCardUrl = idCardUrl;
+	}
+
+	
+	/**
+	 * 获取 停用说明
+	 */
+	public String getStopInstruction() {
+		return stopInstruction;
+	}
+	
+	/**
+	 * 设置 停用说明
+	 */
+	public void setStopInstruction(String stopInstruction) {
+		this.stopInstruction = stopInstruction;
+	}
+
+	
+	/**
+	 * 获取 司机照片地址
+	 */
+	public String getDriverPhotoUrl() {
+		return driverPhotoUrl;
+	}
+	
+	/**
+	 * 设置 司机照片地址
+	 */
+	public void setDriverPhotoUrl(String driverPhotoUrl) {
+		this.driverPhotoUrl = driverPhotoUrl;
+	}
+
+	
+	/**
+	 * 获取 驾驶证附件地址
+	 */
+	public String getDrivingFileUrl() {
+		return drivingFileUrl;
+	}
+	
+	/**
+	 * 设置 驾驶证附件地址
+	 */
+	public void setDrivingFileUrl(String drivingFileUrl) {
+		this.drivingFileUrl = drivingFileUrl;
+	}
+
+	
+	/**
+	 * 获取 从业资格证附件地址
+	 */
+	public String getCertificateFileUrl() {
+		return certificateFileUrl;
+	}
+	
+	/**
+	 * 设置 从业资格证附件地址
+	 */
+	public void setCertificateFileUrl(String certificateFileUrl) {
+		this.certificateFileUrl = certificateFileUrl;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 删除标识.1表示已删除，默认为0
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标识.1表示已删除，默认为0
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新人.
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人.
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新机构.
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构.
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 是否可用
+	 */
+	public String getUsableFlag() {
+		return usableFlag;
+	}
+	
+	/**
+	 * 设置 是否可用
+	 */
+	public void setUsableFlag(String usableFlag) {
+		this.usableFlag = usableFlag;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/**
+	 * @return the q
+	 */
+	public String getQ() {
+		return q;
+	}
+
+	/**
+	 * @param q the q to set
+	 */
+	public void setQ(String q) {
+		this.q = q;
+	}
+
+	
+}

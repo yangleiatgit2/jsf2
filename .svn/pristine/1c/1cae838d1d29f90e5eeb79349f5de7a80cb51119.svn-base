@@ -1,0 +1,40 @@
+package cn.uce.suc.common.control;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.suc.common.biz.IOmgAreaBiz;
+import cn.uce.suc.common.biz.imp.OmgAreaBiz;
+import cn.uce.suc.common.entity.OmgArea;
+import cn.uce.suc.common.vo.OmgAreaVo;
+import cn.uce.web.common.base.BaseController;
+
+/**
+ * 
+ * @Description: 地址库控制层
+ * @author liwei
+ * @date 2017年11月8日 下午3:24:30
+ */
+@Controller
+@RequestMapping("/area")
+public class OmgAreaController extends BaseController {
+	@Resource
+	private IOmgAreaBiz omgAreaBiz;
+/**
+ * 
+ * @Description: 组合查询 
+ * @return
+ * @author liwei
+ * @date 2017年11月8日 下午3:26:45
+ */
+	@RequestMapping("/findListByAreaType")
+	@ResponseBody
+	public List<OmgArea> findBycondition(OmgAreaVo omgAreaVo) {
+		return omgAreaBiz.findBycondition(omgAreaVo);
+	}
+}

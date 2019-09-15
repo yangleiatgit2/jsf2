@@ -1,0 +1,89 @@
+package cn.uce.suc.bkg.biz.impl.datastatis;
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.datastatis.IDriverEvaluateReportBiz;
+import cn.uce.suc.bkg.vo.datastatis.DriverEvaluateReportVo;
+
+/**
+ * 
+ * @Description:  司机服务评价
+ * @author xiesonglin
+ * @date 2017年12月7日 上午10:39:37
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml"})
+public class DriverEvaluateReportBizTest {
+	
+	/**
+	 * biz注入
+	 */
+	@Resource
+	private IDriverEvaluateReportBiz driverEvaluateReportBiz;
+	
+	/**
+	 * vo对象
+	 */
+	private DriverEvaluateReportVo driverEvaluateReportVo;
+	/**
+	 * page对象
+	 */
+	private Page page;
+	
+	@Before
+	public void setUp() throws Exception {
+		
+		System.out.println("==========单元测试开始========");
+	}
+	
+	/**
+	 * 
+	 * @Description: 测试分页 
+	 * @author xiesonglin
+	 * @date 2017年12月7日 上午10:44:38
+	 */
+	@Test
+	public void findByPagination(){
+		page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		page.setQueryCount(true);
+		driverEvaluateReportVo=new DriverEvaluateReportVo();
+		driverEvaluateReportVo.setDriverName("小");
+		driverEvaluateReportBiz.findDriverEvaluateReportByPage(driverEvaluateReportVo, page);
+		
+	}
+	
+	/**
+	 * 
+	 * @Description:   测试数据导出
+	 * @author xiesonglin
+	 * @date 2017年12月7日 上午10:44:57
+	 */
+	@Test
+	public void findByExport(){
+		driverEvaluateReportVo=new DriverEvaluateReportVo();
+		driverEvaluateReportBiz.findByExport(driverEvaluateReportVo);
+	}
+	
+	/**
+	 * 
+	 * @Description:  测试结束
+	 * @author xiesonglin
+	 * @date 2017年12月7日 上午10:47:36
+	 */
+	@After
+	public void excuteEnd() {
+		System.out.println("==========单元测试结束========");
+	}
+}

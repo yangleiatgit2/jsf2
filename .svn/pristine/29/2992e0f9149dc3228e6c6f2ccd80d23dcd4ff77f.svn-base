@@ -1,0 +1,149 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.cache.SystemConfigProcessor;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.vo.SystemConfigVo;
+import cn.uce.suc.common.service.SystemConfigService;
+import cn.uce.web.common.i18n.Resources;
+
+/**
+ * @Description: 系统配置表BIZ实现类
+ * @author UCE-CodeGenerator
+ * @date 2017年11月02日 上午10:44:12
+ */
+@Service("systemConfigBiz")
+public class SystemConfigBiz implements ISystemConfigBiz {
+	
+	/**
+	 * 注入系统配置表Service
+	 */
+	@Resource
+	private SystemConfigService systemConfigService;
+	
+	/**
+	 * @Description: 新增系统配置表
+	 * @param systemConfig
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月02日 上午10:44:12
+	 */
+	public int addSystemConfig(SystemConfig systemConfig) {
+		int result = 0;
+		try {
+			result = systemConfigService.addSystemConfig(systemConfig);
+		} catch (Exception e) {
+			if (e instanceof DuplicateKeyException) {
+				throw new BusinessException(Resources.getMessage("system.config.exist"));
+			}
+		}
+		return result;
+	}
+	
+	/**
+	 * @Description: 修改系统配置表
+	 * @param systemConfig 系统配置表
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月02日 上午10:44:12
+	 */
+	public int updateSystemConfig(SystemConfig systemConfig) {
+		return systemConfigService.updateById(systemConfig);
+	}
+	
+	/**
+	 * @Description: 删除系统配置表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月02日 上午10:44:12
+	 */
+	public int deleteSystemConfig(Long id) {
+		return systemConfigService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询系统配置表
+	 * @param id 主键
+	 * @return 系统配置表
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月02日 上午10:44:12
+	 */
+	@Override
+	public SystemConfig findById(Long id) {
+		return systemConfigService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询系统配置表
+	 * @param systemConfigVo 系统配置表
+	 * @param page 分页参数
+	 * @return 系统配置表
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月02日 上午10:44:12
+	 */
+	public Pagination<SystemConfig> findByPagination(SystemConfigVo systemConfigVo, Page page) {
+		Pagination<SystemConfig> pagination = systemConfigService.findByPagination(systemConfigVo, page);
+		return pagination;
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月2日 上午10:48:41
+	 */
+	@Override
+	public SystemConfig findSysConfigBycode(String configCode){
+		return systemConfigService.findSysConfigBycode(configCode);
+	}
+
+	/**
+	 * 
+	 * @Description: 根据条件查询系统配置信息 
+	 * @param systemConfigVo
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 下午3:04:39
+	 */
+	@Override
+	public List<SystemConfig> findByCondition(SystemConfigVo systemConfigVo) {
+		return systemConfigService.findByCondition(systemConfigVo);
+	}
+
+	/**
+	 * 
+	 * @Description: 根据编码获取 
+	 * @param configCode
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 下午3:23:17
+	 */
+	@Override
+	public SystemConfig findByConfigCode(String configCode) {
+		return systemConfigService.findSysConfigBycode(configCode);
+	}
+
+	/**
+	 * 
+	 * @Description: 根据编码从缓存中获取
+	 * @param configCode
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 下午3:39:27
+	 */
+	@Override
+	public SystemConfig findCacheByCode(String configCode) {
+		return SystemConfigProcessor.getByCode(configCode);
+	}
+}

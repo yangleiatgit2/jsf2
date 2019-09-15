@@ -1,0 +1,40 @@
+package cn.uce.suc.common.exception;
+
+import cn.uce.base.exception.BusinessException;
+/**
+ * 
+ * @Description: 公共异常类
+ * @author liwei
+ * @date 2017年10月18日 下午9:40:52
+ */
+public class ComModuleException extends BusinessException{
+	//序列化
+	private static final long serialVersionUID = -4883689301600546900L;
+	
+	/**
+	 * 
+	 * @param code
+	 */
+	public ComModuleException(String code){
+		super();
+		super.code = code;
+	}
+	/**
+	 * 
+	 * @param code
+	 * @param msg
+	 * @param cause
+	 */
+	public ComModuleException(String code, String msg, Throwable cause) {
+		super(code, msg, cause);
+	}
+
+	/**
+	 * 
+	 * @param code
+	 * @param msg
+	 */
+	public ComModuleException(String code, String msg) {
+		super(code, msg);
+	}
+}

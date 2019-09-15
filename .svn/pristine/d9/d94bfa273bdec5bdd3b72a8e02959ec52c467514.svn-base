@@ -1,0 +1,57 @@
+package cn.uce.suc.bkg.biz.impl.datastatis;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datastatis.ILoadRatioReportBiz;
+import cn.uce.suc.bkg.service.datastatis.LoadRatioReportService;
+import cn.uce.suc.bkg.vo.datastatis.LoadRatioReportVo;
+
+/**
+ * 
+ * @Description:  司机服务评价报表Biz实现类
+ * @author xiesonglin
+ * @date 2017年12月1日 下午12:19:51
+ */
+@Service("loadRatioReportBiz")
+public class LoadRatioReportBiz implements ILoadRatioReportBiz {
+
+	/**
+	 * service注入
+	 */
+	@Resource
+	private LoadRatioReportService loadRatioReportService;
+
+	/**
+	 * 根据分页查询满载率 报表
+	* <p>Title: findLoadRatioReportByPage</p> 
+	* <p>Description: </p> 
+	* @param loadRatioReportVo
+	* @param page
+	* @return 
+	* @see cn.uce.suc.bkg.biz.infomon.ILoadRatioReportBiz#findLoadRatioReportByPage(cn.uce.suc.bkg.vo.infomon.LoadRatioReportVo, cn.uce.base.page.Page)
+	 */
+	public Pagination<LoadRatioReportVo> findLoadRatioReportByPage(LoadRatioReportVo loadRatioReportVo, Page page) {
+		return this.loadRatioReportService.findLoadRatioReportByPage(loadRatioReportVo, page);
+	}
+
+	
+	/**
+	 * 根据查询条件查找出数据 并用于数据导出 
+	* <p>Title: findByExport</p> 
+	* <p>Description: </p> 
+	* @param loadRatioReportVo
+	* @return 
+	* @see cn.uce.suc.bkg.biz.infomon.ILoadRatioReportBiz#findByExport(cn.uce.suc.bkg.vo.infomon.LoadRatioReportVo)
+	 */
+	public List<LoadRatioReportVo> findByExport(LoadRatioReportVo loadRatioReportVo) {
+		return this.loadRatioReportService.findByExport(loadRatioReportVo);
+	}
+
+	
+}

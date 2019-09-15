@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datamain.ICarManageDao">
+	
+	<sql id="Base_Column_List">
+			id,plate_numbers,car_number,
+			car_status,car_belong_type,car_belong_carrier,
+			car_org,driver_org,car_type,
+			car_brand,car_owner_name,car_owner_moble,
+			car_width,car_length,car_height,
+			car_volume,car_load,curb_weight,
+			chassis_height,engine_number,gps_device_number,
+			driving_license_number,capacity_start_time,capacity_end_time,
+			online_time,tci_end_time,vci_end_time,
+			ci_end_time,driving_license_file,operation_certificate_file,
+			tci_file,vci_file,other_insurance_file,
+			remark,resident_point,delete_flag,
+			version,create_emp,create_org,
+			create_time,update_emp,update_org,
+			update_time,utf1,utf2,operation_number,
+			utf3,traffic_permit_flag,usable_flag
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="plateNumbers != null">
+		and plate_numbers = #{plateNumbers}
+		</if>
+	    <if test="carNumber != null">
+		and car_number = #{carNumber}
+		</if>
+	    <if test="carStatus != null">
+		and car_status = #{carStatus}
+		</if>
+	    <if test="carBelongType != null">
+		and car_belong_type = #{carBelongType}
+		</if>
+	    <if test="carBelongCarrier != null">
+		and acr_belong_carrier = #{carBelongCarrier}
+		</if>
+	    <if test="carOrg != null">
+		and car_org = #{carOrg}
+		</if>
+	    <if test="driverOrg != null">
+		and driver_org = #{driverOrg}
+		</if>
+	    <if test="carType != null">
+		and car_type = #{carType}
+		</if>
+	    <if test="carBrand != null">
+		and car_brand = #{carBrand}
+		</if>
+	    <if test="carOwnerName != null">
+		and car_owner_name = #{carOwnerName}
+		</if>
+	    <if test="carOwnerMoble != null">
+		and car_owner_moble = #{carOwnerMoble}
+		</if>
+	    <if test="carWidth != null">
+		and car_width = #{carWidth}
+		</if>
+	    <if test="carLength != null">
+		and car_length = #{carLength}
+		</if>
+	    <if test="carHeight != null">
+		and car_height = #{carHeight}
+		</if>
+	    <if test="carVolume != null">
+		and car_volume = #{carVolume}
+		</if>
+	    <if test="carLoad != null">
+		and car_load = #{carLoad}
+		</if>
+	    <if test="curbWeight != null">
+		and curb_weight = #{curbWeight}
+		</if>
+	    <if test="chassisHeight != null">
+		and chassis_height = #{chassisHeight}
+		</if>
+	    <if test="engineNumber != null">
+		and engine_number = #{engineNumber}
+		</if>
+	    <if test="gpsDeviceNumber != null">
+		and gps_device_number = #{gpsDeviceNumber}
+		</if>
+	    <if test="drivingLicenseNumber != null">
+		and driving_license_number = #{drivingLicenseNumber}
+		</if>
+	    <if test="capacityStartTime != null">
+		and capacity_start_time = #{capacityStartTime}
+		</if>
+	    <if test="capacityEndTime != null">
+		and capacity_end_time = #{capacityEndTime}
+		</if>
+	    <if test="onlineTime != null">
+		and online_time = #{onlineTime}
+		</if>
+	    <if test="tciEndTime != null">
+		and tci_end_time = #{tciEndTime}
+		</if>
+	    <if test="vciEndTime != null">
+		and vci_end_time = #{vciEndTime}
+		</if>
+	    <if test="ciEndTime != null">
+		and ci_end_time = #{ciEndTime}
+		</if>
+	    <if test="drivingLicenseFile != null">
+		and driving_license_file = #{drivingLicenseFile}
+		</if>
+	    <if test="operationCertificateFile != null">
+		and operation_certificate_file = #{operationCertificateFile}
+		</if>
+	    <if test="tciFile != null">
+		and tci_file = #{tciFile}
+		</if>
+	    <if test="vciFile != null">
+		and vci_file = #{vciFile}
+		</if>
+	    <if test="otherInsuranceFile != null">
+		and other_insurance_file = #{otherInsuranceFile}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="residentPoint != null">
+		and resident_point = #{residentPoint}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+		<if test="operationNumber != null">
+		and operation_number = #{operationNumber}
+		</if>
+		<if test="trafficPermitFlag != null">
+		and traffic_permit_flag = #{trafficPermitFlag}
+		</if>
+		<if test="usableFlag != null">
+		and usable_flag = #{usableFlag}
+		</if>
+		<if test="trafficPermitFile != null">
+		and traffic_permit_file = #{trafficPermitFile}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.datamain.CarManage">
+	UPDATE t_suc_bkg_car
+	<set>
+		<if test="plateNumbers != null and plateNumbers !='' ">
+		plate_numbers = #{plateNumbers},
+		</if>
+		<if test="carNumber != null  and carNumber !='' ">
+		car_number = #{carNumber},
+		</if>
+		<if test="carStatus != null and carStatus !='' ">
+		car_status = #{carStatus},
+		</if>
+		<if test="carBelongType != null and carBelongType !='' ">
+		car_belong_type = #{carBelongType},
+		</if>
+		<if test="carBelongCarrier != null and carBelongCarrier !='' ">
+		car_belong_carrier = #{carBelongCarrier},
+		</if>
+		<if test="carOrg != null and carOrg !='' ">
+		car_org = #{carOrg},
+		</if>
+		<if test="driverOrg != null and driverOrg !='' ">
+		driver_org = #{driverOrg},
+		</if>
+		<if test="carType != null and carType !='' ">
+		car_type = #{carType},
+		</if>
+		<if test="carBrand != null and carBrand !='' ">
+		car_brand = #{carBrand},
+		</if>
+		<if test="carOwnerName != null and carOwnerName !='' ">
+		car_owner_name = #{carOwnerName},
+		</if>
+		<if test="carOwnerMoble != null and carOwnerMoble !='' ">
+		car_owner_moble = #{carOwnerMoble},
+		</if>
+		<if test="carWidth != null and carWidth !='' ">
+		car_width = #{carWidth},
+		</if>
+		<if test="carLength != null and carLength !='' ">
+		car_length = #{carLength},
+		</if>
+		<if test="carHeight != null and carHeight !='' ">
+		car_height = #{carHeight},
+		</if>
+		<if test="carVolume != null and carVolume !='' ">
+		car_volume = #{carVolume},
+		</if>
+		<if test="carLoad != null and carLoad !='' ">
+		car_load = #{carLoad},
+		</if>
+		<if test="curbWeight != null and curbWeight !='' ">
+		curb_weight = #{curbWeight},
+		</if>
+		<if test="chassisHeight != null and chassisHeight !='' ">
+		chassis_height = #{chassisHeight},
+		</if>
+		<if test="engineNumber != null and engineNumber !='' ">
+		engine_number = #{engineNumber},
+		</if>
+		<if test="gpsDeviceNumber != null and gpsDeviceNumber !='' ">
+		gps_device_number = #{gpsDeviceNumber},
+		</if>
+		<if test="drivingLicenseNumber != null and drivingLicenseNumber !='' ">
+		driving_license_number = #{drivingLicenseNumber},
+		</if>
+		<if test="capacityStartTime != null">
+		capacity_start_time = #{capacityStartTime},
+		</if>
+		<if test="capacityEndTime != null">
+		capacity_end_time = #{capacityEndTime},
+		</if>
+		<if test="onlineTime != null">
+		online_time = #{onlineTime},
+		</if>
+		<if test="tciEndTime != null">
+		tci_end_time = #{tciEndTime},
+		</if>
+		<if test="vciEndTime != null">
+		vci_end_time = #{vciEndTime},
+		</if>
+		<if test="ciEndTime != null">
+		ci_end_time = #{ciEndTime},
+		</if>
+		<if test="drivingLicenseFile != null and drivingLicenseFile !='' ">
+		driving_license_file = #{drivingLicenseFile},
+		</if>
+		<if test="operationCertificateFile != null and operationCertificateFile !='' ">
+		operation_certificate_file = #{operationCertificateFile},
+		</if>
+		<if test="tciFile != null and tciFile !='' ">
+		tci_file = #{tciFile},
+		</if>
+		<if test="vciFile != null and vciFile !='' ">
+		vci_file = #{vciFile},
+		</if>
+		<if test="otherInsuranceFile != null and otherInsuranceFile !='' ">
+		other_insurance_file = #{otherInsuranceFile},
+		</if>
+		<if test="remark != null and remark !='' ">
+		remark = #{remark},
+		</if>
+		<if test="residentPoint != null and residentPoint !='' ">
+		resident_point = #{residentPoint},
+		</if>
+		<if test="deleteFlag != null and deleteFlag !='' ">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="version != null and version !='' ">
+		version = version+1,
+		</if>
+		<if test="createEmp != null and createEmp !='' ">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createOrg != null and createOrg !='' ">
+		create_org = #{createOrg},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateEmp != null and updateEmp !='' ">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateOrg != null and updateOrg !='' ">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="utf1 != null and utf1 !='' ">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null and utf2 !='' ">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null and utf3 !='' ">
+		utf3 = #{utf3},
+		</if>
+		<if test="operationNumber != null and operationNumber !='' ">
+		operation_number = #{operationNumber},
+		</if>
+		<if test="trafficPermitFlag != null and trafficPermitFlag !='' ">
+		traffic_permit_flag = #{trafficPermitFlag},
+		</if>
+		<if test="trafficPermitFile != null and trafficPermitFile!='' ">
+		traffic_permit_file = #{trafficPermitFile},
+		</if>
+		<if test="usableFlag != null and usableFlag !='' ">
+		usable_flag = #{usableFlag}
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	
+	
+	
+	<select id="findCarManage"  resultType="cn.uce.suc.bkg.entity.datamain.CarManager">
+		select t.car_type,t.car_load,t.car_width,t.car_length,t.car_height from t_suc_bkg_car t
+	</select>
+	
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.entity.datamain.CarManage">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_car <include refid="Base_Column_Where" />
+	</select>
+	
+	
+	
+	<select id="findByCondition" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.entity.datamain.CarManage">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_car
+	<where>
+		1=1
+		and (delete_flag <![CDATA[<>]]> 1 or delete_flag is null)
+	    <if test="plateNumbers != null and plateNumbers != '' ">
+		and plate_numbers LIKE CONCAT(CONCAT('%', #{plateNumbers}),'%')
+		</if>
+	    <if test="carNumber != null and carNumber !='' ">
+		and car_number LIKE CONCAT(CONCAT('%', #{carNumber}),'%')
+		</if>
+	    <if test="carStatus != null and carStatus !='' ">
+		and car_status = #{carStatus}
+		</if>
+	    <if test="carBelongType != null and carBelongType !='' ">
+		and car_belong_type = #{carBelongType}
+		</if>
+		<if test="carOrg != null and carOrg !='' ">
+		and car_org = #{carOrg}
+		</if>
+		<if test="carType != null and carType !='' ">
+		and car_type = #{carType}
+		</if>
+		<if test="onlineBeginTime != null">
+		and online_time >= #{onlineBeginTime}
+		</if>
+		<if test="onlineEndTime != null">
+		and online_time <![CDATA[<=]]> #{onlineEndTime}
+		</if>
+		<if test="insuranceBeginTime != null or insuranceEndTime != null" >
+			AND ((tci_end_time >= #{insuranceBeginTime} AND tci_end_time <![CDATA[<=]]> #{insuranceEndTime})
+			OR (vci_end_time >= #{insuranceBeginTime} AND vci_end_time <![CDATA[<=]]> #{insuranceEndTime})
+			OR (ci_end_time >= #{insuranceBeginTime} AND ci_end_time <![CDATA[<=]]> #{insuranceEndTime}))
+		</if>
+	</where>
+	order by car_number desc
+	</select>
+	<select id="findByInsurance" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.entity.datamain.CarManage">
+	select * from(
+	select <include refid="Base_Column_List" /> from t_suc_bkg_car
+	<where>
+	    <if test="plateNumbers != null and plateNumbers != '' ">
+		and plate_numbers LIKE CONCAT(CONCAT('%', #{plateNumbers}),'%')
+		</if>
+	    <if test="carNumber != null and carNumber !='' ">
+		and car_number LIKE CONCAT(CONCAT('%', #{carNumber}),'%')
+		</if>
+	    <if test="carStatus != null and carStatus !='' ">
+		and car_status = #{carStatus}
+		</if>
+	    <if test="carBelongType != null and carBelongType !='' ">
+		and car_belong_type = #{carBelongType}
+		</if>
+		<if test="carOrg != null and carOrg !='' ">
+		and car_org = #{carOrg}
+		</if>
+		<if test="carType != null and carType !='' ">
+		and car_type = #{carType}
+		</if>
+		<if test="onlineBeginTime != null">
+		and online_time >= #{onlineBeginTime}
+		</if>
+		<if test="onlineEndTime != null">
+		and online_time <![CDATA[<=]]> #{onlineEndTime}
+		</if>
+		<if test="insuranceBeginTime != null or insuranceEndTime != null" >
+			AND ((tci_end_time >= #{insuranceBeginTime} AND tci_end_time <![CDATA[<=]]> #{insuranceEndTime})
+			OR (vci_end_time >= #{insuranceBeginTime} AND vci_end_time <![CDATA[<=]]> #{insuranceEndTime})
+			OR (ci_end_time >= #{insuranceBeginTime} AND ci_end_time <![CDATA[<=]]> #{insuranceEndTime}))
+		</if>
+	</where>
+	)car
+	<where>
+		<if test="queryType != null and queryType == 1" >
+			AND (car.tci_end_time >= CURDATE() AND car.tci_end_time <![CDATA[<=]]> DATE_SUB(CURDATE(),INTERVAL -30 DAY))
+			OR (car.vci_end_time >= CURDATE() AND car.vci_end_time <![CDATA[<=]]> DATE_SUB(CURDATE(),INTERVAL -30 DAY))
+			OR (car.ci_end_time >= CURDATE() AND car.ci_end_time <![CDATA[<=]]> DATE_SUB(CURDATE(),INTERVAL -30 DAY))
+		</if>
+		<if test="queryType != null and queryType == 2" >
+			AND (car.tci_end_time <![CDATA[<]]> CURDATE())
+			OR (car.vci_end_time <![CDATA[<]]> CURDATE())
+			OR (car.ci_end_time <![CDATA[<]]> CURDATE())
+		</if>
+	</where>
+	order by car.car_number desc
+	</select>
+	<select id="findByExport" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.vo.datamain.CarManageVo">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_car
+	<where>
+	    <if test="plateNumbers != null and plateNumbers != '' ">
+		and plate_numbers LIKE CONCAT(CONCAT('%', #{plateNumbers}),'%')
+		</if>
+	    <if test="carNumber != null and carNumber !='' ">
+		and car_number LIKE CONCAT(CONCAT('%', #{carNumber}),'%')
+		</if>
+	    <if test="carStatus != null and carStatus !='' ">
+		and car_status = #{carStatus}
+		</if>
+	    <if test="carBelongType != null and carBelongType !='' ">
+		and car_belong_type = #{carBelongType}
+		</if>
+		<if test="carOrg != null and carOrg !='' ">
+		and car_org = #{carOrg}
+		</if>
+		<if test="carType != null and carType !='' ">
+		and car_type = #{carType}
+		</if>
+		<if test="onlineBeginTime != null">
+		and online_time >= #{onlineBeginTime}
+		</if>
+		<if test="onlineEndTime != null">
+		and online_time <![CDATA[<=]]> #{onlineEndTime}
+		</if>
+		<if test="insuranceBeginTime != null or insuranceEndTime != null" >
+			AND ((tci_end_time >= #{insuranceBeginTime} AND tci_end_time <![CDATA[<=]]> #{insuranceEndTime})
+			OR (vci_end_time >= #{insuranceBeginTime} AND vci_end_time <![CDATA[<=]]> #{insuranceEndTime})
+			OR (ci_end_time >= #{insuranceBeginTime} AND ci_end_time <![CDATA[<=]]> #{insuranceEndTime}))
+		</if>
+	</where>
+	</select>
+	<select id="findCarByCmbgd" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.entity.datamain.CarManage">
+	select id, plate_numbers,car_number,car_volume,car_type from t_suc_bkg_car c
+	<where>
+	<if test="q != null and '' != q">
+		AND (c.plate_numbers LIKE CONCAT(CONCAT('%', #{q}),'%')
+		OR
+		c.car_number LIKE CONCAT(CONCAT('%', #{q}),'%'))
+	</if>
+	<if test="carVolume!='' and  carVolume!=null">
+	and	car_volume <![CDATA[>=]]>#{carVolume}
+	</if>
+	<if test="carType!='' and  carType!=null">
+	and	car_type <![CDATA[>=]]>#{carType}
+	</if>
+	and c.car_status=1 
+	</where>
+	order by online_time desc
+	</select>
+
+	
+	<select id="findByVo" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.vo.datamain.CarManageVo">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_car
+	<where>
+		<if test="carBelongCarrier != null and carBelongCarrier !='' ">
+		and car_belong_carrier = #{carBelongCarrier}
+		</if>
+		<if test="carType != null and carType !='' ">
+		and car_type = #{carType}
+		</if>
+		<if test="capacityStartTime != null">
+		and capacity_start_time >= #{capacityStartTime}
+		</if>
+		<if test="capacityEndTime != null">
+		and capacity_end_time <![CDATA[<=]]> #{capacityEndTime}
+		</if>
+		<if test="usableFlag != null and usableFlag !='' ">
+		and usable_flag = #{usableFlag}
+		</if>
+		<if test="carStatus != null and carStatus !='' ">
+		and car_status = #{carStatus}
+		</if>
+		<if test="plateNumbers != null and plateNumbers !='' ">
+		and plate_numbers = #{plateNumbers}
+		</if>
+		<if test="carNumber != null and carNumber !='' ">
+		and car_number = #{carNumber}
+		</if>
+	</where>
+	</select>
+	
+	<select id="findMaxCarNumber" parameterType="String" resultType="String">
+		select max(car_number) from t_suc_bkg_car
+		where car_number like CONCAT(#{carNumber}, '%')
+		and usable_flag = 1 and delete_flag !=1
+	</select>
+	
+	<select id="findUsableCarByVo" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="java.lang.Integer">
+	select count(*) from t_suc_bkg_car
+	<where>
+		<!-- <if test="carType != null and carType !='' ">
+		and car_type = #{carType}
+		</if> -->
+		<if test="carTypes != null  ">
+				and car_type in
+				<foreach collection="carTypes" index="index" item="type"
+					open="(" separator="," close=")">
+					#{type}
+				</foreach>
+			</if>
+			
+		<!-- <if test="capacityStartTime != null">
+		  AND  STR_TO_DATE(capacity_start_time,"%Y-%m-%d")<![CDATA[<=]]>DATE_FORMAT(#{capacityStartTime},"%Y-%m-%d")
+		</if> -->
+		<if test="capacityStartTime!=null ">
+		    <![CDATA[   and DATE_FORMAT(capacity_start_time, '%Y-%m-%d')<=  DATE_FORMAT(#{capacityStartTime}, '%Y-%m-%d')   ]]>
+		</if>
+
+	<!-- 	<if test="capacityEndTime != null">
+		  AND  STR_TO_DATE(capacity_end_time,"%Y-%m-%d")>=DATE_FORMAT(#{capacityEndTime},"%Y-%m-%d")
+		</if> -->
+		
+		<if test="capacityEndTime!=null ">
+		    <![CDATA[  and DATE_FORMAT(capacity_end_time, '%Y-%m-%d') >= DATE_FORMAT(#{capacityEndTime}, '%Y-%m-%d')    ]]>
+		</if>
+
+		<if test="usableFlag != null and usableFlag !='' ">
+		and usable_flag = #{usableFlag}
+		</if>
+		<if test="carStatus != null and carStatus !='' ">
+		and car_status = #{carStatus}
+		</if>
+	</where>
+	</select>
+	
+	<!-- 根据车牌号,检查是否存在 -->
+	<select id="checkExistsByPlateNumber" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.vo.datamain.CarManageVo">
+		select 
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_car
+		where plate_numbers=#{plateNumbers}
+		<if test="id !=null and id !=''">
+			and id <![CDATA[<>]]> #{id}
+		</if>
+		and (delete_flag <![CDATA[ <> ]]> 1 or delete_flag is null)
+	</select>
+</mapper>

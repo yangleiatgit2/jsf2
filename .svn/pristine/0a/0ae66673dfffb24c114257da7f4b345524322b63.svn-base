@@ -1,0 +1,296 @@
+package cn.uce.suc.bkg.vo.ia;
+
+import java.util.List;
+
+import cn.uce.base.vo.BaseVo;
+
+public class WsLineGroupVo extends BaseVo {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 始发站机构编号
+	 */
+	private String startOrgCode;
+	
+	/**
+	 * 始发站机构名称
+	 */
+	private String startOrgName;
+	
+	/**
+	 * 终点站机构编号
+	 */
+	private String endOrgCode;
+	
+	/**
+	 * 终点站机构名称
+	 */
+	private String endOrgName;
+	
+	/**
+	 * 车型
+	 */
+	private String carType;
+	
+	/**
+	 * 容积
+	 */
+	private Double capacity;
+	
+	/**
+	 * 拼车类型
+	 */
+	private String carpoolType;
+	
+	/**
+	 * 装载率
+	 */
+	private Double loadRate;
+	
+	/**
+	 * 业务类型
+	 */
+	private String businessType;
+	
+	/**
+	 * 路段详情
+	 */
+	private List<WsLineDetailsVo> lineDetails;
+	/**
+	 * 到达时间
+	 */
+	private String departTime;
+	/**
+	 * 出发时间
+	 */
+	private String arrivalTime;
+	/**
+	 * 班次总距离
+	 */
+	private Double lineGroupDistance;
+	/**
+	 * 班次总时间
+	 */
+	private Double totalTime;
+	/**
+	 * 班次总货量
+	 */
+	private Double totalVolume;
+
+	/** 
+	 * @return startOrgCode 
+	 */
+	public String getStartOrgCode() {
+		return startOrgCode;
+	}
+
+	/**
+	 * @param startOrgCode the startOrgCode to set
+	 */
+	public void setStartOrgCode(String startOrgCode) {
+		this.startOrgCode = startOrgCode;
+	}
+
+	/** 
+	 * @return startOrgName 
+	 */
+	public String getStartOrgName() {
+		return startOrgName;
+	}
+
+	/**
+	 * @param startOrgName the startOrgName to set
+	 */
+	public void setStartOrgName(String startOrgName) {
+		this.startOrgName = startOrgName;
+	}
+
+	/** 
+	 * @return endOrgCode 
+	 */
+	public String getEndOrgCode() {
+		return endOrgCode;
+	}
+
+	/**
+	 * @param endOrgCode the endOrgCode to set
+	 */
+	public void setEndOrgCode(String endOrgCode) {
+		this.endOrgCode = endOrgCode;
+	}
+
+	/** 
+	 * @return endOrgName 
+	 */
+	public String getEndOrgName() {
+		return endOrgName;
+	}
+
+	/**
+	 * @param endOrgName the endOrgName to set
+	 */
+	public void setEndOrgName(String endOrgName) {
+		this.endOrgName = endOrgName;
+	}
+
+	/** 
+	 * @return carType 
+	 */
+	public String getCarType() {
+		return carType;
+	}
+
+	/**
+	 * @param carType the carType to set
+	 */
+	public void setCarType(String carType) {
+		this.carType = carType;
+	}
+
+	/** 
+	 * @return capacity 
+	 */
+	public Double getCapacity() {
+		return capacity;
+	}
+
+	/**
+	 * @param capacity the capacity to set
+	 */
+	public void setCapacity(Double capacity) {
+		this.capacity = capacity;
+	}
+
+	/** 
+	 * @return carpoolType 
+	 */
+	public String getCarpoolType() {
+		return carpoolType;
+	}
+
+	/**
+	 * @param carpoolType the carpoolType to set
+	 */
+	public void setCarpoolType(String carpoolType) {
+		this.carpoolType = carpoolType;
+	}
+
+	/** 
+	 * @return loadRate 
+	 */
+	public Double getLoadRate() {
+		return loadRate;
+	}
+
+	/**
+	 * @param loadRate the loadRate to set
+	 */
+	public void setLoadRate(Double loadRate) {
+		this.loadRate = loadRate;
+	}
+
+	/** 
+	 * @return businessType 
+	 */
+	public String getBusinessType() {
+		return businessType;
+	}
+
+	/**
+	 * @param businessType the businessType to set
+	 */
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
+	}
+
+	/** 
+	 * @return lineDetails 
+	 */
+	public List<WsLineDetailsVo> getLineDetails() {
+		return lineDetails;
+	}
+
+	/**
+	 * @param lineDetails the lineDetails to set
+	 */
+	public void setLineDetails(List<WsLineDetailsVo> lineDetails) {
+		this.lineDetails = lineDetails;
+	}
+
+	/** 
+	 * @return departTime 
+	 */
+	public String getDepartTime() {
+		return departTime;
+	}
+
+	/**
+	 * @param departTime the departTime to set
+	 */
+	public void setDepartTime(String departTime) {
+		this.departTime = departTime;
+	}
+
+	/** 
+	 * @return arrivalTime 
+	 */
+	public String getArrivalTime() {
+		return arrivalTime;
+	}
+
+	/**
+	 * @param arrivalTime the arrivalTime to set
+	 */
+	public void setArrivalTime(String arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+
+	/** 
+	 * @return totalTime 
+	 */
+	public Double getTotalTime() {
+		return totalTime;
+	}
+
+	/**
+	 * @param totalTime the totalTime to set
+	 */
+	public void setTotalTime(Double totalTime) {
+		this.totalTime = totalTime;
+	}
+
+	/** 
+	 * @return totalVolume 
+	 */
+	public Double getTotalVolume() {
+		return totalVolume;
+	}
+
+	/**
+	 * @param totalVolume the totalVolume to set
+	 */
+	public void setTotalVolume(Double totalVolume) {
+		this.totalVolume = totalVolume;
+	}
+
+	/** 
+	 * @return lineGroupDistance 
+	 */
+	public Double getLineGroupDistance() {
+		return lineGroupDistance;
+	}
+
+	/**
+	 * @param lineGroupDistance the lineGroupDistance to set
+	 */
+	public void setLineGroupDistance(Double lineGroupDistance) {
+		this.lineGroupDistance = lineGroupDistance;
+	}
+	
+	
+}

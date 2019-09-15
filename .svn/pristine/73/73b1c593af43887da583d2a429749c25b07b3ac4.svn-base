@@ -1,0 +1,63 @@
+package cn.uce.suc.bkg.util;
+
+public class DepartureConstant {
+	
+	/**
+	 * 班次已生成
+	 */
+	public static final String  ALREDY_DENERATED ="00";
+	
+	/**
+	 * 班次已定价
+	 */
+	public  static final String ALREDY_PRICED = "01"; 
+	
+	/**
+	 * 班次已生成发车计划
+	 */
+	public static final String ALREDY_DENERATED_DEPARTURE ="02";
+	
+	/**
+	 * 班次已终止
+	 */
+	public static final String  TERMINATED = "03";
+	
+	
+	/**
+	 * 发车计划已生成
+	 */
+	public  static final String  DEPARTURE_ALREDY_DENERATED = "00";
+	
+	/**
+	 * 司机未确认
+	 */
+	public static final  String  DIRVER_NOT_CONFIRMED = "02";
+	
+	
+	/**
+	 * 司机已确认
+	 */
+	public static final String  DIRVER_HAS_CONFIRMED ="01";
+	
+	/**
+	 * 执行中
+	 */
+	public static final String IN_EXECUTION = "03" ;
+	
+	
+	/**
+	 * 未评价
+	 */
+	public static final String NOT_EVALUATED ="04";
+
+	
+	/**
+	 * 已评价
+	 */
+	public static final String HAVE_BEEN_EVALUATED = "05";
+
+	/**
+	 * 发车计划已终止
+	 */
+	public static final String TERMINATED_DEPARTURE ="06";
+}

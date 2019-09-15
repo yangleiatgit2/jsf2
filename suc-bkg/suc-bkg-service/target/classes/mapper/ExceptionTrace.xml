@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datamain.IExceptionTraceDao">
+	
+	<sql id="Base_Column_List">
+			id,exception_code,exception_status,
+			solve_solution,remark,version,
+			delete_falg,create_org,create_emp,
+			update_org,update_emp,create_time,
+			update_time,utf1,utf2,
+			utf3,solve_emp
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="exceptionCode != null">
+		and exception_code = #{exceptionCode}
+		</if>
+	    <if test="exceptionStatus != null">
+		and exception_status = #{exceptionStatus}
+		</if>
+	    <if test="solveSolution != null">
+		and solve_solution = #{solveSolution}
+		</if>
+		<if test="solveEmp != null">
+		and solve_emp = #{solveEmp}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="deleteFalg != null">
+		and delete_falg = #{deleteFalg}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.datamain.ExceptionTrace">
+	UPDATE t_suc_bkg_exception_trace
+	<set>
+		<if test="exceptionCode != null">
+		exception_code = #{exceptionCode},
+		</if>
+		<if test="exceptionStatus != null">
+		exception_status = #{exceptionStatus},
+		</if>
+		<if test="solveSolution != null">
+		solve_solution = #{solveSolution},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFalg != null">
+		delete_falg = #{deleteFalg},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="solveEmp != null">
+		solve_emp = #{solveEmp},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.datamain.ExceptionTraceVo" resultType="cn.uce.suc.bkg.entity.datamain.ExceptionTrace">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_exception_trace
+	</select>
+	
+	
+	<select id="findByExceptionCode" parameterType="java.lang.String" resultType="cn.uce.suc.bkg.entity.datamain.ExceptionTrace">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_exception_trace
+		where 
+       <if test="_parameter != null" >  
+         exception_code = #{_parameter,jdbcType=VARCHAR}  
+        </if> 
+	</select>
+	
+</mapper>

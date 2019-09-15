@@ -1,0 +1,276 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanBiz;
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanDetailBiz;
+import cn.uce.suc.bkg.biz.impl.operation.LineGroupBiz;
+import cn.uce.suc.bkg.biz.impl.operation.LineGroupDetailBiz;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.entity.operation.LineGroup;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.util.DepartureConstant;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.util.WebUtil;
+
+/**
+ * 
+ * @Description: 班次管理
+ * @author liwei
+ * @date 2017年12月6日 下午9:37:28
+ */
+@Controller
+@RequestMapping("/workScheduleRule")
+public class WorkScheduleRuleController extends BaseController {
+	@RequestMapping(value = "/forward")
+	public String forward(HttpServletRequest request, HttpServletResponse response) {
+		requiCombinCode = request.getParameter("requiCombinCode");
+		// 获取编号
+		orderCombinCode = request.getParameter("orderCombinCode");
+		return "bkg/workScheduleRule";
+	}
+
+	/**
+	 * biz注入
+	 */
+	@Resource
+	LineGroupBiz lineGroupBiz;
+	// 需求
+	private String requiCombinCode = "";
+	// 订单
+	private String orderCombinCode = "";
+	// 参数
+	private int timer = 0;
+	/**
+	 * 班次明细
+	 */
+	@Resource
+	LineGroupDetailBiz LineGroupDetailBiz;
+	/**
+	 * 发车计划
+	 */
+	@Resource
+	DirvingPlanBiz dirvingPlanBiz;
+	/**
+	 * 发车计划明细
+	 */
+	@Resource
+	DirvingPlanDetailBiz dirvingPlanDetailBiz;
+	/**
+	 * 编码生产器
+	 */
+	@Resource
+	private IIdsWorker redisIdsWorker;
+
+	/**
+	 * 班次查询列表
+	 * 
+	 * @param lineGroupVo
+	 * @param page
+	 * @return
+	 */
+	@RequestMapping(value = "/findWorkByPage")
+	@ResponseBody
+	public Map<String, Object> findWorkByPage(LineGroupVo lineGroupVo, Page page) {
+		//从发车计划管理页面初始化过来的默认不查询
+		if(StringUtils.isBlank(requiCombinCode) && StringUtils.isBlank(orderCombinCode) && StringUtils.isBlank(lineGroupVo.getPageQuery())){
+			return returnSuccess("");
+		}
+		// 非空校验
+		if (StringUtils.isNoneBlank(requiCombinCode)) {
+			lineGroupVo.setRequiCombinCode(requiCombinCode);
+		}
+		// 校验前台跳转
+		if (StringUtils.isNoneBlank(orderCombinCode)) {
+			// 设置订单编号
+			lineGroupVo.setOrderCombinCode(orderCombinCode);
+		}
+		// 调用查询
+		Pagination<LineGroupVo> pagination = lineGroupBiz.findByPagination(lineGroupVo, page);
+		// 后续按钮查询
+		if (timer > 0 && (StringUtils.isNoneBlank(requiCombinCode) || StringUtils.isNoneBlank(orderCombinCode))) {
+			// 置空
+			requiCombinCode = null;
+			orderCombinCode = null;
+			timer = 0;
+		}
+		// 后续按钮查询
+		if (timer == 0 && (StringUtils.isNoneBlank(requiCombinCode) || StringUtils.isNoneBlank(orderCombinCode))) {
+			timer++;
+		}
+		return returnSuccess(pagination);
+	}
+
+	/**
+	 * 
+	 * @Description: 班次明细查询
+	 * @param lineGroupDetailVo
+	 * @param page
+	 * @param lineGroupCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月6日 下午9:39:56
+	 */
+	@RequestMapping(value = "/findWorkDetailByPage")
+	@ResponseBody
+	public Map<String, Object> findWorkDetailByPage(LineGroupDetailVo lineGroupDetailVo, Page page, String lineGroupCode) {
+		/** 设置班次编码 **/
+		lineGroupDetailVo.setLineGroupCode(lineGroupCode);
+		/** c查询 */
+		Pagination<LineGroupDetailVo> pagination = LineGroupDetailBiz.findByPagination(lineGroupDetailVo, page);
+
+		return returnSuccess(pagination);
+	}
+
+	/**
+	 * 根据id查询对应班次信息
+	 * 
+	 * @param lineGroupCode
+	 * @return
+	 */
+	@RequestMapping(value = "/queryById")
+	@ResponseBody
+	public Map<String, Object> queryById(String lineGroupCode) {
+		LineGroup group = lineGroupBiz.queryById(lineGroupCode);
+		return returnSuccess(group);
+	}
+
+	/**
+	 * 更具主办次查询下挂的线路信息
+	 * 
+	 * @param lineGroupCode
+	 * @return
+	 */
+	@RequestMapping(value = "/queryByWorkDetailId")
+	@ResponseBody
+	public Map<String, Object> queryByWorkDetailId(String lineGroupCode) {
+		/*** 调用后台查询 */
+		List<LineGroupDetail> data = (List<LineGroupDetail>) LineGroupDetailBiz.queryByWorkDetailId(lineGroupCode);
+		return returnSuccess(data);
+	}
+
+	/**
+	 * 终止班次
+	 * 
+	 * @param groupVo
+	 * @return
+	 */
+	@RequestMapping(value = "/stopShift")
+	@ResponseBody
+	public Map<String, Object> stopShift(LineGroupVo groupVo) {
+		// 获取当前用户信息
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		/**创建对象*/
+		LineGroup lineGroup = new LineGroup();
+		//设置id
+		lineGroup.setId(groupVo.getId());
+		/***设置班次编码*/
+		lineGroup.setLineGroupCode(groupVo.getLineGroupCode());
+		/**
+		 * 设置初始状态
+		 */
+		lineGroup.setStatus(DepartureConstant.TERMINATED);
+		groupVo.setUpdateTime(new Date());
+		groupVo.setUpdateEmp(userInfo.getEmpName());
+		groupVo.setDeleteFlag(true);
+		groupVo.setUpdateOrg(userInfo.getCmsOrgName());
+		dirvingPlanBiz.stopDirverDlan(groupVo);
+		int n=lineGroupBiz.updateLineGroup(lineGroup);
+		if (n > 0) {
+			return returnSuccess();
+		} else {
+			return returnError("终止班次失败！");
+		}
+
+	}
+
+	/**
+	 * 
+	 * @Description: 生产发车计划
+	 * @param dirvingPlan
+	 * @return
+	 * @author litianjian
+	 * @date 2017年12月6日 下午9:44:29
+	 */
+	@RequestMapping(value = "/savedeparTurePlan")
+	@ResponseBody
+	public Map<String, Object> savedeparTurePlan(DirvingPlan dirvingPlan) {
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		String deparTurePlan = redisIdsWorker.nextId(IdsPrefix.FC);
+		dirvingPlan.setDrivingPlanCode(deparTurePlan);
+		dirvingPlan.setStatus(BkgConstants.PLAN_CODE_GENERATED);
+		dirvingPlan.setCreateTime(new Date());
+		dirvingPlan.setCreateEmp(userInfo.getEmpName());
+		dirvingPlan.setVersion(0);
+		dirvingPlan.setCreateOrg(userInfo.getCmsOrgName());
+		dirvingPlan.setNextStation(dirvingPlan.getStartOrgName());
+		dirvingPlan.setNextStationCode(dirvingPlan.getStartOrgCode());
+
+		try {
+			// 存储发车计划主信息
+			dirvingPlanBiz.addDirvingPlan(dirvingPlan);
+		} catch (Exception e) {
+			return returnError("生成发车计划失败！" + e);
+		}
+
+		List<LineGroupDetail> data = LineGroupDetailBiz.queryByWorkDetailId(dirvingPlan.getLineGroupCode());
+
+		for (int i = 0; i < data.size(); i++) {
+			DirvingPlanDetail dirvingPlanDetail = new DirvingPlanDetail();
+			dirvingPlanDetail.setDrivingPlanCode(deparTurePlan);
+			dirvingPlanDetail.setWayPointCode(data.get(i).getWayPointCode());
+			dirvingPlanDetail.setWayPointName(data.get(i).getWayPointName());
+			dirvingPlanDetail.setForecastVolume(data.get(i).getVolume());
+			dirvingPlanDetail.setForecastWeight(data.get(i).getWeight());
+			dirvingPlanDetail.setForecastEndTime(data.get(i).getEndTime());
+			dirvingPlanDetail.setForecastRuningTime(data.get(i).getRuningTime());
+			dirvingPlanDetail.setForecastLoadUnloadTine(data.get(i).getLoadUnloadTime());
+			dirvingPlanDetail.setForecastDistance(data.get(i).getDistance());
+			dirvingPlanDetail.setCreateTime(new Date());
+			dirvingPlanDetail.setCreateEmp(userInfo.getEmpName());
+			dirvingPlanDetail.setVersion(0);
+			dirvingPlanDetail.setCreateOrg(userInfo.getCmsOrgName());
+			dirvingPlanDetail.setSort(data.get(i).getSort());
+			dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_CONFIRM_WAIT);
+			// 新增发车计划子信息
+			try {
+				dirvingPlanDetailBiz.addDirvingPlanDetail(dirvingPlanDetail);
+			} catch (Exception e) {
+				return returnError("新增发车计划失败" + e);
+			}
+
+		}
+
+		LineGroup group = new LineGroup();
+		group.setLineGroupCode(dirvingPlan.getLineGroupCode());
+		group.setStatus(DepartureConstant.ALREDY_DENERATED_DEPARTURE);
+		group.setDrivingPlanCombinCode(deparTurePlan);
+		group.setLoadFactor(Double.valueOf(StringUtils.isBlank(dirvingPlan.getUtf2())?"0":dirvingPlan.getUtf2()));
+		group.setCarType(dirvingPlan.getCarType());
+		// 修改班次状态，状态变成：已生成发车计划
+		lineGroupBiz.updateLineGroup(group);
+
+		return returnSuccess();
+	}
+}

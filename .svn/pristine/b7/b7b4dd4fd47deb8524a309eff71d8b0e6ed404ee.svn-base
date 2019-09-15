@@ -1,0 +1,70 @@
+package cn.uce.suc.bkg.biz.datamain;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.datamain.ExceptionTrace;
+import cn.uce.suc.bkg.vo.datamain.ExceptionTraceVo;
+
+/**
+ * @Description: 异常跟踪信息BIZ接口类
+ * @author yanglei
+ * @date 2017年11月01日 上午11:26:20
+ */
+public interface IExceptionTraceBiz {
+	
+	/**
+	 * @Description: 新增异常跟踪信息
+	 * @param exceptionTrace
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public int addExceptionTrace(ExceptionTrace exceptionTrace);
+	
+	/**
+	 * @Description: 修改异常跟踪信息
+	 * @param exceptionTrace 异常跟踪信息
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public int updateExceptionTrace(ExceptionTrace exceptionTrace);
+	
+	/**
+	 * @Description: 删除异常跟踪信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public int deleteExceptionTrace(Long id);
+	
+	/**
+	 * @Description: 根据ID查询异常跟踪信息
+	 * @param id 主键
+	 * @return 异常跟踪信息
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public ExceptionTrace findById(Long id);
+	
+	/**
+	 * @Description: 分页查询异常跟踪信息
+	 * @param exceptionTraceVo 异常跟踪信息
+	 * @param page 分页参数
+	 * @return 异常跟踪信息
+	 * @author yanglei
+	 * @date 2017年11月01日 上午11:26:20
+	 */
+	public Pagination<ExceptionTrace> findByPagination(ExceptionTraceVo exceptionTraceVo, Page page);
+	/**
+	 * @Description: 根据异常code查询异常跟踪信息
+	 * @param exceptionCode
+	 * @return 异常跟踪信息
+	 * @author yanglei
+	 * @date 2017年11月07日 上午11:26:20
+	 */
+	public List<ExceptionTrace> findByExceptionCode(String exceptionCode);
+}

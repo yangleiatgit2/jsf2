@@ -1,0 +1,73 @@
+package cn.uce.suc.bkg.biz.price;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.price.PricingRuleTypeDetail;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo;
+
+/**
+ * @Description: 定价分类管理明细BIZ接口类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月31日 下午05:30:43
+ */
+public interface IPricingRuleTypeDetailBiz {
+	
+	/**
+	 * @Description: 新增定价分类管理明细
+	 * @param pricingRuleTypeDetail
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:30:43
+	 */
+	public int addPricingRuleTypeDetail(PricingRuleTypeDetail pricingRuleTypeDetail);
+	
+	/**
+	 * @Description: 修改定价分类管理明细
+	 * @param pricingRuleTypeDetail 定价分类管理明细
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:30:43
+	 */
+	public int updatePricingRuleTypeDetail(PricingRuleTypeDetail pricingRuleTypeDetail);
+	
+	/**
+	 * @Description: 删除定价分类管理明细
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:30:43
+	 */
+	public int deletePricingRuleTypeDetail(Long id);
+	
+	/**
+	 * @Description: 根据ID查询定价分类管理明细
+	 * @param id 主键
+	 * @return 定价分类管理明细
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:30:43
+	 */
+	public PricingRuleTypeDetail findById(Long id);
+	
+	/**
+	 * @Description: 分页查询定价分类管理明细
+	 * @param pricingRuleTypeDetailVo 定价分类管理明细
+	 * @param page 分页参数
+	 * @return 定价分类管理明细
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:30:43
+	 */
+	public Pagination<PricingRuleTypeDetail> findByPagination(PricingRuleTypeDetailVo pricingRuleTypeDetailVo, Page page);
+
+	/**
+	 * 
+	 * @Description: 根据订 
+	 * @param ruleCode
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午6:32:06
+	 */
+	public List<PricingRuleTypeDetailVo> getGroupByCondition(PricingRuleTypeDetailVo detailVo);
+	
+}

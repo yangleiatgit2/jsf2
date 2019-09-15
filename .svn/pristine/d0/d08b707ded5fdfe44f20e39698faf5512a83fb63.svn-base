@@ -1,0 +1,47 @@
+package cn.uce.suc.job;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.suc.common.biz.INoticeDetailBiz;
+
+import com.dangdang.ddframe.job.api.ShardingContext;
+import com.dangdang.ddframe.job.api.simple.SimpleJob;
+/**
+ * 
+ * @Description: 极光消息推送定时器
+ * @author liwei
+ * @date 2017年11月3日 下午10:12:25
+ */
+public class MsgPushStaticsJob implements SimpleJob {
+	/**
+	 * 消息biz
+	 */
+	@Resource
+	INoticeDetailBiz noticeDetailBiz;
+	/**
+	 * 日志
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(MsgPushStaticsJob.class);
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: execute</p> 
+	* <p>Description: </p> 
+	* @param shardingContext 
+	* @see com.dangdang.ddframe.job.api.simple.SimpleJob#execute(com.dangdang.ddframe.job.api.ShardingContext)
+	 */
+	@Override
+	public void execute(ShardingContext shardingContext) {
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("极光消息推送开始。。。。。。。。。。。。" + new Date());
+		}
+		/**任务处理*/
+		noticeDetailBiz.jpushNotice();
+	}
+
+}

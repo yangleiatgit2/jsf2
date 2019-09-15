@@ -1,0 +1,191 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.price.IPricingRuleTypeBiz;
+import cn.uce.suc.bkg.entity.price.PricingRuleType;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.WebUtil;
+
+/**
+ * 
+ * @Description: 定价规则分类
+ * @author wangzhijun
+ * @date 2017年10月31日 下午8:33:12
+ */
+@Controller
+@RequestMapping("/pricingRuleType")
+public class PricingRuleTypeController extends BaseController {
+
+	@Resource
+	private IPricingRuleTypeBiz pricingRuleTypeBiz;
+
+	/**
+	 * 
+	 * @Description: 页面入口方法
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年10月31日 下午8:33:37
+	 */
+	@RequestMapping(value = "/forward")
+	public String forward(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/pricingRuleType";
+	}
+
+	/**
+	 * 
+	 * @Description: 新增定价分类处理
+	 * @param pricingRuleTypeVo
+	 * @param details
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 下午5:47:28
+	 */
+	@RequestMapping(value = "/savePricingRuleType")
+	@ResponseBody
+	public Map<String, Object> savePricingRuleType(PricingRuleTypeVo pricingRuleTypeVo, String details) {
+		SucCurrentUser currentUser = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		pricingRuleTypeVo.setCreateTime(new Date());
+		pricingRuleTypeVo.setCreateEmp(currentUser.getEmpName());
+		pricingRuleTypeVo.setVersion(SucConstants.ZERO);
+		pricingRuleTypeVo.setDeleteFlag(false);
+		pricingRuleTypeVo.setStatus(BkgConstants.PRICING_RULE_STATUS_GENERATE);
+		int result = pricingRuleTypeBiz.addPricingRuleType(pricingRuleTypeVo, details);
+		return result > 0 ? returnSuccess(Resources.getMessage("common.update.success")) : returnError(Resources
+				.getMessage("common.update.fail"));
+	}
+
+	/**
+	 * 
+	 * @Description: 查询所有数据
+	 * @param pricingRuleTypeVo
+	 * @param page
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月3日 下午4:27:22
+	 */
+	@RequestMapping(value = "/findAll")
+	@ResponseBody
+	public Map<String, Object> findByPagination(PricingRuleTypeVo pricingRuleTypeVo, Page page) {
+		Pagination<PricingRuleType> pagination = pricingRuleTypeBiz.findByPagination(pricingRuleTypeVo, page);
+		return returnSuccess(pagination);
+	}
+
+	/**
+	 * 
+	 * @Description: 更新定价规则
+	 * @param ruleTypeVo
+	 * @param details
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午5:18:14
+	 */
+	@RequestMapping(value = "/updatePricingRuleType")
+	@ResponseBody
+	public Map<String, Object> updatePricingRuleType(PricingRuleType ruleTypeVo, String details) {
+		updateCommfield(ruleTypeVo);
+		int result = pricingRuleTypeBiz.updatePricingRuleType(ruleTypeVo, details);
+		return result > 0 ? returnSuccess(Resources.getMessage("common.update.success")) : returnError(Resources
+				.getMessage("common.update.fail"));
+	}
+
+	/**
+	 * 
+	 * @Description: 更新公共字段
+	 * @param ruleTypeVo
+	 * @author wangzhijun
+	 * @date 2017年11月7日 上午10:45:01
+	 */
+	private void updateCommfield(PricingRuleType ruleTypeVo) {
+		SucCurrentUser currentUser = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		ruleTypeVo.setUpdateEmp(currentUser.getEmpName());
+		ruleTypeVo.setUpdateTime(new Date());
+		ruleTypeVo.setVersion(ruleTypeVo.getVersion() + 1);
+	}
+
+	/**
+	 * 
+	 * @Description: 审批
+	 * @param id
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午9:48:09
+	 */
+	@RequestMapping(value = "/verifyPricingRuleType")
+	@ResponseBody
+	public Map<String, Object> verifyPricingRuleType(PricingRuleType ruleTypeVo) {
+		updateCommfield(ruleTypeVo);
+		ruleTypeVo.setRuleTypeVesion(SucConstants.ONE);
+		ruleTypeVo.setStatus(BkgConstants.PRICING_RULE_STATUS_OFFICIAL);
+		int result = pricingRuleTypeBiz.updatePricingRuleType(ruleTypeVo);
+		return result > 0 ? returnSuccess(Resources.getMessage("common.verify.success")) : returnError(Resources
+				.getMessage("common.verify.fail"));
+	}
+
+	/**
+	 * 
+	 * @Description: 升级版本
+	 * @param ruleTypeVo
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午9:57:27
+	 */
+	@RequestMapping(value = "/updateVersion")
+	@ResponseBody
+	public Map<String, Object> updateVersion(PricingRuleType ruleTypeVo) {
+		updateCommfield(ruleTypeVo);
+		int result = pricingRuleTypeBiz.updateVersion(ruleTypeVo);
+		return result > 0 ? returnSuccess(Resources.getMessage("common.upversion.success")) : returnError(Resources
+				.getMessage("common.upversion.fail"));
+	}
+
+	/**
+	 * 
+	 * @Description: 版本升级，支持明细编辑
+	 * @param ruleTypeVo
+	 * @param details
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月7日 下午6:24:02
+	 */
+	@RequestMapping(value = "/updateDetailVersion")
+	@ResponseBody
+	public Map<String, Object> updateVersion(PricingRuleType ruleTypeVo, String details) {
+		updateCommfield(ruleTypeVo);
+		int result = pricingRuleTypeBiz.updateVersion(ruleTypeVo, details);
+		return result > 0 ? returnSuccess(Resources.getMessage("common.upversion.success")) : returnError(Resources
+				.getMessage("common.upversion.fail"));
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询 
+	 * @param ruleTypeVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月5日 下午4:45:32
+	 */
+	@RequestMapping(value = "/findByCondition")
+	@ResponseBody
+	public List<PricingRuleTypeVo> findByCondition(PricingRuleTypeVo ruleTypeVo) {
+		return pricingRuleTypeBiz.findByCondition(ruleTypeVo);
+	}
+}

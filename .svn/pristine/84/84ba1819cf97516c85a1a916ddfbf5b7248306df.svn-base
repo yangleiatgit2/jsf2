@@ -1,0 +1,127 @@
+package cn.uce.suc.bkg.biz.operation;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.operation.LineGroup;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+
+/**
+ * @Description: 班次管理BIZ接口类
+ * @author litianjian
+ * @date 2017年10月24日 下午08:12:56
+ */
+public interface ILineGroupBiz {
+	
+	/**
+	 * @Description: 新增班次管理
+	 * @param lineGroup
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int addLineGroup(LineGroup lineGroup);
+	
+	/**
+	 * @Description: 修改班次管理
+	 * @param lineGroup 班次管理
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int updateLineGroup(LineGroup lineGroup);
+	
+	/**
+	 * @Description: 删除班次管理
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int deleteLineGroup(Long id);
+	
+	/**
+	 * @Description: 根据ID查询班次管理
+	 * @param id 主键
+	 * @return 班次管理
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public LineGroup findById(Long id);
+	
+	/**
+	 * @Description: 分页查询班次管理
+	 * @param lineGroupVo 班次管理
+	 * @param page 分页参数
+	 * @return 班次管理
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public Pagination<LineGroupVo> findByPagination(LineGroupVo lineGroupVo, Page page);
+	/**
+	 * @Description: 根据组织号和时间区间查询班次
+	 * @param lineGroupVo 班次管理
+	 * @param page 分页参数
+	 * @return 班次管理
+	 * @author yanglei
+	 * @date 2017年10月27日 下午04:27:08
+	 */
+	public List<LineGroup> findByLineGroupVo(LineGroupVo vo);
+	/**
+	 * @Description: 根据组织号和时间区间以及车型查询班次数量做统计用
+	 * @param lineGroupVo 班次管理
+	 * @param page 分页参数
+	 * @return 班次管理
+	 * @author yanglei
+	 * @date 2017年10月30日 下午04:27:08
+	 */
+	public int countByLineGroupVo(LineGroupVo vo);
+	/**
+	 * @Description: 根据lineGroupCode查询班次管理
+	 * @param lineGroupCode
+	 * @return 班次管理
+	 * @author yanglei
+	 * @date 2017年11月2日 下午08:12:56
+	 */
+	public LineGroup findByLineGroupCode(String lineGroupCode);
+	
+	/**
+	 * 
+	 * @Description: 批量添加班次 
+	 * @param lineGroupVos
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 上午11:27:02
+	 */
+	public int addLineGroup(List<LineGroupVo> lineGroupVos);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询班次及班次详情 
+	 * @param lineGroupVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月9日 下午10:49:07
+	 */
+	public List<LineGroupVo> findLineGroupAndDetail(LineGroupVo lineGroupVo);
+	/**
+	 * 
+	 * @Description: 根据订单查询班次
+	 * @param lineGroupVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月13日 下午17:49:07
+	 */
+	public List<LineGroupVo> findByCombineOrder(LineGroupVo lineGroupVo);
+	/**
+	 * 
+	 * @Description: 根据订单查询班次
+	 * @param lineGroupVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月13日 下午17:49:07
+	 */
+	public List<LineGroupVo> findComplexByCombineOrder(LineGroupVo lineGroupVo);
+	
+}

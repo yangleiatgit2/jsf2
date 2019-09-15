@@ -1,0 +1,53 @@
+package cn.uce.suc.bkg.cache;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheManager;
+import cn.uce.core.cache.base.ICache;
+import cn.uce.utils.StringUtil;
+
+/**
+ * @Description: 算法时效缓存处理器 
+ * @author laizhendong
+ * @date 2017年4月15日 上午11:05:48
+ */
+public class IATransportEffectiveCacheProcessor {
+	
+	
+	/**
+	 * 
+	 * @Description: 刷新缓存
+	 * @author laizhendong
+	 * @date 2017年11月6日 上午7:51:11
+	 */
+	public static void refresh(String parentOrgCode) throws BusinessException {
+		if (StringUtil.isNotBlank(parentOrgCode)) {
+			ICache<String,String> transportEffectiveCache = CacheManager.getInstance().getCache("IATransportEffectiveCache");
+			if(transportEffectiveCache != null){
+				transportEffectiveCache.refresh(parentOrgCode);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据key判断时效缓存是否存在 
+	 * @param key
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月6日 下午4:21:19
+	 */
+	public static boolean isExist(String key){
+		//获取缓存对象
+		ICache<String,String> cache = CacheManager.getInstance().getCache("IATransportEffectiveCache");
+		if (cache != null) {
+			String cacheJson = cache.get(key);
+			if (StringUtil.isNotBlank(cacheJson)) {
+				//释放
+				cacheJson = null;
+				return true;
+			}
+		}
+		return false;
+	}
+
+}

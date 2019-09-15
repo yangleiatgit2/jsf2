@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.infomon.VisibleTransportDao">
+	
+	<select id="queryDirvingPlan" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo">
+		select 
+		    t.*,
+		    dd.TYPE_NAME as statusName
+            from t_suc_bkg_dirving_plan t
+			LEFT JOIN omg_fsp_dict_data dd ON dd.type_code = t.status
+			AND dd.TYPE_CLASS_CODE = 'DEPARTURE_STATUS'
+			AND (
+				dd.DELETE_FLAG != '1'
+				OR dd.DELETE_FLAG IS NULL
+			)
+		<where>
+		    1=1
+		    <if test="driverPhone != null">
+			and driver_phone = #{driverPhone}
+			</if>
+			<if test="drivingPlanCode != null">
+			and driving_plan_code = #{drivingPlanCode}
+			</if>
+		    <if test="status != null">
+			and status = #{status}
+			</if>
+			and (t.delete_falg != 1 or t.delete_falg is  null)
+		</where>
+	</select>
+
+	<update id="updateTransportTrail" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo">
+		UPDATE t_suc_bkg_dirving_plan
+		<set>
+			<if test="lngLatColleation != null">
+			lng_lat_colleation = #{lngLatColleation},
+			</if>
+			<if test="status != null">
+			status = #{status},
+			</if>
+		</set>
+		<where>
+			1=1
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="drivingPlanCode != null and drivingPlanCode!=''">
+				and driving_plan_code = #{drivingPlanCode}
+			</if>
+			and (delete_falg != 1 or delete_falg is  null)
+		</where>
+	</update>
+	
+	<update id="updateCarTrace" parameterType="cn.uce.suc.bkg.entity.operation.CarTrace">
+		UPDATE t_suc_bkg_car_trace
+		<set>
+			<if test="lat != null">
+			lat = #{lat},
+			</if>
+			<if test="lng != null">
+			lng = #{lng},
+			</if>
+		</set>
+		WHERE driving_plan_code=#{drivingPlanCode} 
+		      and plate_numbers = #{plateNumbers} 
+		      and (delete_flag != 1 or delete_flag is  null)
+	</update>
+	
+	<select id="searchCarInfo" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.entity.datamain.CarManage">
+		SELECT
+			dp.driving_plan_code as dirvingPlanCode,
+			dp.plate_number,
+		    ct.lng,
+            ct.lat,
+			c.*
+		FROM
+			t_suc_bkg_dirving_plan dp
+		LEFT JOIN t_suc_bkg_car c ON c.plate_numbers = dp.plate_number and car_status='1'
+		AND (c.delete_flag != 1 or c.delete_flag is  null)
+		AND c.usable_flag = '1'
+		LEFT JOIN t_suc_bkg_car_trace ct ON ct.driving_plan_code = dp.driving_plan_code
+		and ct.plate_numbers=dp.plate_number
+        AND  (ct.delete_flag != 1 or ct.delete_flag is  null)
+		WHERE 1=1
+		 <if  test="plateNumbers != null">
+			and dp.plate_number = #{plateNumbers}
+		 </if>
+		 <if  test="dirvingPlanCode != null">
+	     	and dp.driving_plan_code= #{dirvingPlanCode}
+	     </if>
+	     and (dp.delete_falg != 1 or dp.delete_falg is  null)
+	</select>
+	
+		
+	<select id="searchGroupCenterInfo" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.common.vo.OrgExtendVo">
+		SELECT
+			oe.*
+		FROM
+			t_suc_bkg_car c
+		LEFT JOIN t_suc_comm_org_extend oe ON oe.base_org_code = c.car_org
+		AND (oe.delete_flag != 1 or oe.delete_flag is  null)
+		WHERE
+			c.plate_numbers =#{plateNumbers}
+		AND (c.delete_flag != 1 or c.delete_flag is  null)
+		AND c.usable_flag = '1' and c.car_status='1'
+	</select>
+	
+	<select id="queryExceptionInfo" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.entity.datamain.ExceptionManager">
+		SELECT
+			dd.TYPE_NAME as exceptionStatusName,
+			dd1.TYPE_NAME as exceptionTypeName,
+			dd2.TYPE_NAME as driverPlanStatusName,
+			c.*
+		FROM
+			t_suc_bkg_exception_manager c
+		LEFT JOIN t_suc_bkg_dirving_plan p ON c.start_trunk_code = p.driving_plan_code
+		AND (p.delete_falg != 1 or p.delete_falg is  null)
+		LEFT JOIN omg_fsp_dict_data dd ON dd.type_code = c.exception_status
+		AND dd.TYPE_CLASS_CODE = 'EXCEPTION_STATUS'
+		AND (
+			dd.DELETE_FLAG != '1'
+			OR dd.DELETE_FLAG IS NULL
+		)
+		LEFT JOIN omg_fsp_dict_data dd1 ON dd1.type_code = c.excep_type
+		AND dd1.TYPE_CLASS_CODE = 'DEPARTURE_EXCEPTION'
+		AND (
+			dd1.DELETE_FLAG != '1'
+			OR dd1.DELETE_FLAG IS NULL
+		)
+		LEFT JOIN omg_fsp_dict_data dd2 ON dd2.type_code = p.status
+		AND dd2.TYPE_CLASS_CODE = 'DEPARTURE_STATUS'
+		AND (
+			dd2.DELETE_FLAG != '1'
+			OR dd2.DELETE_FLAG IS NULL
+		)
+		where 1=1
+		    <if test="drivingPlanCode != null">
+			and c.start_trunk_code  like CONCAT('%', #{drivingPlanCode}, '%') 
+			</if>
+			<if test="utf1 != null and utf1!=''">
+			and c.exception_code =#{utf1}
+			</if>
+			<if test="exceptionStatus != null and exceptionStatus!=''">
+				AND (c.exception_status !=#{exceptionStatus} OR c.exception_status IS NULL)
+			</if>
+		AND (c.delete_flag != 1 or c.delete_flag is  null)
+		order by c.create_time desc
+	</select>
+	<select id="queryCarInfo" parameterType="cn.uce.suc.bkg.vo.datamain.CarManageVo" resultType="cn.uce.suc.bkg.entity.datamain.CarManage">
+		SELECT
+			c.*,
+			ct.lng,
+			ct.lat
+		FROM
+			t_suc_bkg_car c
+		LEFT JOIN t_suc_bkg_car_trace ct ON c.plate_numbers = ct.plate_numbers
+		AND (ct.delete_flag != 1 or ct.delete_flag is  null)
+		WHERE 1=1
+		  <if test="carBelongType != null">
+			and c.car_belong_type = #{carBelongType}
+		  </if>
+		  <if test="carOrg != null">
+			and c.car_org = #{carOrg}
+		  </if>
+		AND (c.delete_flag != 1 or c.delete_flag is  null)
+		and c.car_status='1'
+	</select>
+	<select id="queryExceptionCar" parameterType="cn.uce.suc.common.entity.OmgCmsOrg" resultType="cn.uce.suc.bkg.entity.datamain.CarManage">
+		SELECT
+			em.exception_code,
+			em.lng,
+			em.lat,
+			dp.driving_plan_code,
+			c.*
+		FROM
+			t_suc_bkg_exception_manager em
+		LEFT JOIN t_suc_bkg_dirving_plan dp ON dp.driving_plan_code = em.start_trunk_code
+		AND (
+			dp.delete_falg != 1
+			OR dp.delete_falg IS NULL
+		)
+		LEFT JOIN t_suc_bkg_car c ON c.plate_numbers = dp.plate_number and c.car_status='1'
+		AND (
+			c.delete_flag != '1'
+			OR c.delete_flag IS NULL
+		)
+		WHERE
+			c.car_org =#{baseOrgCode}
+		AND (
+			c.delete_flag != '1'
+			OR c.delete_flag IS NULL
+		)
+	</select>
+	<select id="queryExceptionByDrivingPlanCode" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.entity.datamain.ExceptionManager">
+		SELECT
+		   dd.TYPE_NAME as exceptionStatusName,
+		   em.*
+		FROM
+			t_suc_bkg_exception_manager em
+			LEFT JOIN omg_fsp_dict_data dd ON dd.type_code = em.exception_status
+			AND dd.TYPE_CLASS_CODE = 'EXCEPTION_STATUS'
+			AND (
+				dd.DELETE_FLAG != '1'
+				OR dd.DELETE_FLAG IS NULL
+			)
+		WHERE 1=1
+			<if test="drivingPlanCode != null and drivingPlanCode != ''">
+			 and em.start_trunk_code = #{drivingPlanCode}
+			</if>
+			<if test="utf1 != null and utf1 != ''">
+			 and em.exception_code = #{utf1}
+			</if>
+		AND (
+			em.delete_flag != '1'
+			OR em.delete_flag IS NULL
+		) 
+	</select>
+	
+	<sql id="exception_Base_Column_List">
+			app_srage,exception_status,
+			start_trunk_code,reason,end_time,
+			addvice,job_emp,end_reason,
+			excep_type,blow_volume,lng,
+			lat,excep_sites_name,excep_sites_code,
+			remark,delete_flag,version,
+			exception_code,line_group_code,create_emp,create_time
+	</sql>
+	<insert id="insertExceptionReport"  parameterType="cn.uce.suc.bkg.entity.datamain.ExceptionManager">
+			insert into t_suc_bkg_exception_manager(
+			<include refid="exception_Base_Column_List"></include>
+			)
+			values(
+			<choose>
+				<when test="appSrage != null">#{appSrage},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="exceptionStatus != null">#{exceptionStatus},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="startTrunkCode != null">#{startTrunkCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="reason != null">#{reason},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="endTime != null">#{endTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="addvice != null">#{addvice},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="jobEmp != null">#{jobEmp},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="endReason != null">#{endReason},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			
+			<choose>
+				<when test="excepType != null">#{excepType},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="blowVolume != null">#{blowVolume},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="lng != null">#{lng},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="lat != null">#{lat},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="excepSitesName != null">#{excepSitesName},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="excepSitesCode != null">#{excepSitesCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="remark != null">#{remark},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="deleteFlag != null">#{deleteFlag},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="version != null">#{version},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="exceptionCode != null">#{exceptionCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			
+			<choose>
+				<when test="lineGroupCode != null">#{lineGroupCode},</when>
+				<otherwise>null</otherwise>
+			</choose>
+			<choose>
+				<when test="createEmp != null">#{createEmp},</when>
+				<otherwise>null</otherwise>
+			</choose>
+			<choose>
+				<when test="createTime != null">#{createTime}</when>
+				<otherwise>null</otherwise>
+			</choose>
+			)
+	</insert>
+    <select id="queryDirvingPlanDetail" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlanDetail">
+		SELECT
+			pd.*
+		FROM
+			t_suc_bkg_dirving_plan_detail pd
+		LEFT JOIN t_suc_bkg_dirving_plan p ON p.driving_plan_code = pd.driving_plan_code
+		AND (
+			p.delete_falg != '1'
+			OR p.delete_falg IS NULL
+		)
+		WHERE
+			pd.driving_plan_code = #{drivingPlanCode}
+		and (
+			pd.delete_flag != '1'
+			OR pd.delete_flag IS NULL
+		)
+		order by  pd.sort 
+	</select>
+    <select id="queryDriverStatus" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo">
+		SELECT
+			oe1.lng as startOrgLng,
+			oe1.lat as startOrgLat,
+			oe2.lng as endEndLng,
+			oe2.lat as endEndLat,
+			te.distance as dirverDistance,
+			ct.lng AS longitude,
+	        ct.lat AS latitude,
+			dp.*
+		FROM
+			t_suc_bkg_dirving_plan dp
+		LEFT JOIN t_suc_comm_org_extend oe1 ON oe1.base_org_code = dp.start_org_code
+		AND (
+			oe1.delete_flag != '1'
+			OR oe1.delete_flag IS NULL
+		)
+		LEFT JOIN t_suc_comm_org_extend oe2 ON oe2.base_org_code = dp.end_org_code
+		AND (
+			oe2.delete_flag != '1'
+			OR oe2.delete_flag IS NULL
+		)
+		LEFT JOIN t_suc_bkg_transport_effective te ON te.start_site_code = dp.start_org_code
+		AND te.end_site_code = dp.end_org_code
+		AND (
+			te.del_flag != '1'
+			OR te.del_flag IS NULL
+		)
+		LEFT JOIN t_suc_bkg_car_trace ct ON ct.plate_numbers = dp.plate_number
+		AND dp.driving_plan_code = ct.driving_plan_code
+		AND (
+			ct.delete_flag != '1'
+			OR ct.delete_flag IS NULL
+		)
+		WHERE
+			dp.driving_plan_code =#{drivingPlanCode}
+			AND (
+				dp.delete_falg != '1'
+				OR dp.delete_falg IS NULL
+			)
+	</select>
+	<select id="queryThroughLngLat" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo" resultType="cn.uce.suc.bkg.entity.operation.DirvingPlanDetail">
+		SELECT
+		oe.lng as lng,
+		oe.lat as lat,
+			dpd.*
+		FROM
+			t_suc_bkg_dirving_plan_detail dpd
+		LEFT JOIN t_suc_comm_org_extend oe ON oe.base_org_code = dpd.way_point_code
+		AND (
+			oe.delete_flag != '1'
+			OR oe.delete_flag IS NULL
+		)
+		where dpd.driving_plan_code=#{drivingPlanCode}
+		AND (
+			dpd.delete_flag != '1'
+			OR dpd.delete_flag IS NULL
+		)
+		order by dpd.create_time desc
+	</select>
+	<select id="queryDirvingPlanByOrgCode" parameterType="cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo" resultType="cn.uce.suc.bkg.vo.operation.DirvingPlanVo">
+		SELECT
+		  p.*
+		FROM t_suc_bkg_dirving_plan_detail pd
+		  LEFT JOIN t_suc_bkg_dirving_plan p
+		    ON pd.driving_plan_code = p.driving_plan_code
+		      AND p.status =#{status}
+		WHERE pd.way_point_code = #{wayPointCode} AND p.status IS NOT NULL 
+	</select>
+</mapper>

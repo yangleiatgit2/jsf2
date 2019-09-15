@@ -1,0 +1,557 @@
+package cn.uce.suc.common.vo;
+
+import cn.uce.base.vo.BaseVo;
+import cn.uce.suc.common.constants.SucConstants;
+
+import java.util.Date;
+
+/**
+ * @Description: app用户表Vo类
+ * @author liwei
+ * @date 2017年11月16日 下午11:47:04
+ */
+public class MobileuserVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 手机号码 
+	 */
+	private String mobilephone;
+    /** 
+	 * 密码 
+	 */
+	private String password;
+    /** 
+	 * 身份证号码 
+	 */
+	private String idCard;
+    /** 
+	 * 是否网点 
+	 */
+	private Boolean dotType;
+    /** 
+	 * 是否承运商 
+	 */
+	private Boolean dptType;
+    /** 
+	 * 认证标示(默认0无认证, 1已认证) 
+	 */
+	private Boolean certifiFlag;
+    /** 
+	 * 所属机构基准编码 
+	 */
+	private String baseOrgCode;
+    /** 
+	 * 所属机构名称 
+	 */
+	private String orgName;
+    /** 
+	 * tokenID 
+	 */
+	private String tokenid;
+    /** 
+	 * 姓名 
+	 */
+	private String userName;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 逻辑状态 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 创建部门 
+	 */
+	private String createOrg;
+    /** 
+	 * 修改人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 修改时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 修改部门 
+	 */
+	private String updateOrg;
+    /** 
+	 * 姓名 
+	 */
+	private String name;
+	/**
+	 * 用户类型
+	 */
+	private String userType;
+	/**
+	 * 
+	 */
+	private String captcha;
+	/**
+	 * 查询参数
+	 */
+	private String q;
+	/**
+	 * 所属分拨
+	 */
+	private String operateCenterCode;
+	
+	/**
+	 * 用户头像URL
+	 * 网点端查询司机信息 司机的头像url
+	 * 
+	 */
+	private String avatar;
+	/**
+	 * 司机的服务评分
+	 */
+	private Double driverScore;
+	/**
+	 * @return the driverScore
+	 */
+	public Double getDriverScore() {
+		return driverScore;
+	}
+
+	/**
+	 * @param driverScore the driverScore to set
+	 */
+	public void setDriverScore(Double driverScore) {
+		this.driverScore = driverScore;
+	}
+
+	/** 
+	 * @return avatar 
+	 */
+	public String getAvatar() {
+		return avatar;
+	}
+
+	/**
+	 * @param avatar the avatar to set
+	 */
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
+	}
+   
+	/** 
+	 * @return operateCenterCode 
+	 */
+	public String getOperateCenterCode() {
+		return operateCenterCode;
+	}
+
+	/**
+	 * @param operateCenterCode the operateCenterCode to set
+	 */
+	public void setOperateCenterCode(String operateCenterCode) {
+		this.operateCenterCode = operateCenterCode;
+	}
+
+	public String getCaptcha() {
+		return captcha;
+	}
+
+	public void setCaptcha(String captcha) {
+		this.captcha = captcha;
+	}
+
+	public String getUserType() {
+		return userType;
+	}
+
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 手机号码
+	 */
+	public String getMobilephone() {
+		return mobilephone;
+	}
+	
+	/**
+	 * 设置 手机号码
+	 */
+	public void setMobilephone(String mobilephone) {
+		this.mobilephone = mobilephone;
+	}
+
+	
+	/**
+	 * 获取 密码
+	 */
+	public String getPassword() {
+		return password;
+	}
+	
+	/**
+	 * 设置 密码
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	
+	/**
+	 * 获取 身份证号码
+	 */
+	public String getIdCard() {
+		return idCard;
+	}
+	
+	/**
+	 * 设置 身份证号码
+	 */
+	public void setIdCard(String idCard) {
+		this.idCard = idCard;
+	}
+
+	
+	/**
+	 * 获取 是否网点
+	 */
+	public Boolean getDotType() {
+		return dotType;
+	}
+	
+	/**
+	 * 设置 是否网点
+	 */
+	public void setDotType(Boolean dotType) {
+		if(null != dotType && dotType) this.setUserType(SucConstants.CAPTCH_PLATFROM_DOT);
+		this.dotType = dotType;
+	}
+
+	
+	/**
+	 * 获取 是否承运商
+	 */
+	public Boolean getDptType() {
+		return dptType;
+	}
+	
+	/**
+	 * 设置 是否承运商
+	 */
+	public void setDptType(Boolean dptType) {
+		if(null != dptType && dptType) this.setUserType(SucConstants.CAPTCH_PLATFORM_DPT);
+		this.dptType = dptType;
+	}
+
+	
+	/**
+	 * 获取 认证标示(默认0无认证, 1已认证)
+	 */
+	public Boolean getCertifiFlag() {
+		return certifiFlag;
+	}
+	
+	/**
+	 * 设置 认证标示(默认0无认证, 1已认证)
+	 */
+	public void setCertifiFlag(Boolean certifiFlag) {
+		this.certifiFlag = certifiFlag;
+	}
+
+	
+	/**
+	 * 获取 所属机构基准编码
+	 */
+	public String getBaseOrgCode() {
+		return baseOrgCode;
+	}
+	
+	/**
+	 * 设置 所属机构基准编码
+	 */
+	public void setBaseOrgCode(String baseOrgCode) {
+		this.baseOrgCode = baseOrgCode;
+	}
+
+	
+	/**
+	 * 获取 所属机构名称
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+	
+	/**
+	 * 设置 所属机构名称
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	
+	/**
+	 * 获取 tokenID
+	 */
+	public String getTokenid() {
+		return tokenid;
+	}
+	
+	/**
+	 * 设置 tokenID
+	 */
+	public void setTokenid(String tokenid) {
+		this.tokenid = tokenid;
+	}
+
+	
+	/**
+	 * 获取 姓名
+	 */
+	public String getUserName() {
+		return userName;
+	}
+	
+	/**
+	 * 设置 姓名
+	 */
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 逻辑状态
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 逻辑状态
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 创建部门
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建部门
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 修改人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 修改人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 修改时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 修改时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 修改部门
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 修改部门
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 姓名
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * 设置 姓名
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the q
+	 */
+	public String getQ() {
+		return q;
+	}
+
+	/**
+	 * @param q the q to set
+	 */
+	public void setQ(String q) {
+		this.q = q;
+	}
+
+	
+}

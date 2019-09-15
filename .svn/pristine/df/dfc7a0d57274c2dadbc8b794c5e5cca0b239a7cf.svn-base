@@ -1,0 +1,93 @@
+package cn.uce.suc.bkg.cache;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.core.cache.base.IKeyGenerator;
+import cn.uce.core.cache.base.ResultMap;
+import cn.uce.core.cache.storage.ICacheStorage;
+import cn.uce.suc.bkg.dao.operation.IIaConfDao;
+import cn.uce.suc.bkg.vo.operation.IaConfVo;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 算法参数缓存
+ * @author laizhendong
+ * @date 2017年11月2日 下午2:48:30
+ */
+public class IAConfCache extends CacheSupport<String> {
+
+	/**
+	 * 注入dao层
+	 */
+	@Resource
+	private IIaConfDao iaConfDao;
+
+	/**
+	 * 申明logger对象
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(IAConfCache.class);
+
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: doGet</p> 
+	* <p>Description: </p> 
+	* @param key
+	* @return
+	* @throws BusinessException 
+	* @see cn.uce.core.cache.base.CacheCallBack#doGet(java.lang.Object)
+	 */
+	@Override
+	public String doGet(String key) throws BusinessException {
+		IaConfVo search = new IaConfVo();
+		search.setOrgCode(key);
+		List<IaConfVo> iaConfVos = iaConfDao.findByCondition(search);
+		if (null != iaConfVos && !iaConfVos.isEmpty()) {
+			return JSON.toJSONString(iaConfVos);
+		}
+		return "";
+	}
+
+	
+	/** 启动时加载所有数据
+	* <p>Title: doInitialization</p> 
+	* <p>Description: </p> 
+	* @param generator
+	* @return
+	* @throws BusinessException 
+	* @see cn.uce.core.cache.CacheSupport#doInitialization(cn.uce.core.cache.base.IKeyGenerator) 
+	*/
+	/*@Override
+	public ResultMap<String, String> doInitialization(IKeyGenerator<String> generator) throws BusinessException {
+		List<IaConfVo> list = iaConfDao.findByCondition(null);
+		ResultMap<String, String> map = new ResultMap<String, String>(generator);
+		if (null != list && !list.isEmpty()) {
+			map.put("all", JSON.toJSONString(list));
+		}
+		return map;
+	}*/
+
+	/** cache名称 
+	* <p>Title: getCacheId</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see cn.uce.core.cache.base.ICache#getCacheId() 
+	*/
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+	
+	@Override
+	public ICacheStorage<String, String> getStorage(){
+		return super.getStorage();
+	}
+}

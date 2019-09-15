@@ -1,0 +1,134 @@
+package cn.uce.suc.common.control;
+
+import java.util.Date;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.biz.IMobileuserBiz;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.util.WebUtil;
+/**
+ * 
+ * @Description: 移动端用户 
+ * @author liwei
+ * @date 2017年11月16日 下午10:23:08
+ */
+@Controller
+@RequestMapping("/mobileuser")
+public class MobileuserController extends BaseController {
+	
+	
+	/**
+	 * 用户biz
+	 */
+	@Resource
+	private IMobileuserBiz mobileuserBiz;
+	/**
+	 * 
+	 * @Description: 页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/forward")
+	public String forward(HttpServletRequest request, HttpServletResponse response) {
+		return "common/mobileuser";
+	}
+	
+	/**
+	 * 
+	 * @Description: 页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/findByPagination")
+	@ResponseBody
+	public Map<String,Object> findByPagination(MobileuserVo mobileuserVo, Page page) {
+		mobileuserVo.setDptType(SucConstants.CAPTCH_PLATFORM_DPT.equals(mobileuserVo.getUserType()));
+		mobileuserVo.setDotType(SucConstants.CAPTCH_PLATFROM_DOT.equals(mobileuserVo.getUserType()));
+		return returnSuccess(mobileuserBiz.findByPagination(mobileuserVo, page));
+	}
+	
+	/**
+	 * 
+	 * @Description: 新增
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/addMobileuser")
+	@ResponseBody
+	public Map<String,Object> addMobileuser(MobileuserVo mobileuserVo) {
+		//获取当前登录用户
+		SucCurrentUser user=DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		mobileuserVo.setCreateEmp(user.getEmpName());
+		mobileuserVo.setCreateOrg(user.getCmsOrgName());
+		mobileuserVo.setCreateTime(new Date());
+		mobileuserBiz.addMobileuser(mobileuserVo);
+		return returnSuccess("common.save.success");
+	}
+	
+	/**
+	 * 
+	 * @Description: 新增
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/updateMobileuser")
+	@ResponseBody
+	public Map<String,Object> updateMobileuser(MobileuserVo mobileuserVo) {
+		// 获取当前登录用户
+		SucCurrentUser user = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		mobileuserVo.setUpdateEmp(user.getEmpName());
+		mobileuserVo.setUpdateOrg(user.getCmsOrgName());
+		mobileuserVo.setUpdateTime(new Date());
+		
+		mobileuserBiz.updateMobileuser(mobileuserVo);
+		return returnSuccess("common.update.success");
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据手机号和用户类型 校验用户唯一性 
+	 * @param mobileuserVo
+	 * @return true:不存在 false:存在
+	 * @author xiesonglin
+	 * @date 2017年12月28日 下午2:54:53
+	 */
+	@RequestMapping(value="/checkExistsByMobileAndUserType")
+	@ResponseBody
+	public Boolean checkExistsByMobileAndUserType(MobileuserVo mobileuserVo){
+		/*
+		 * 当用户类型参数 dpt dot 没有传值时 不做校验
+		 * */
+		if(mobileuserVo.getDotType()==null&&mobileuserVo.getDptType()==null){
+			return true;
+		}
+		MobileuserVo existsFlag=mobileuserBiz.checkExistsByMobileAndUserType(mobileuserVo);
+		return existsFlag==null?true:false;
+	}
+}
+

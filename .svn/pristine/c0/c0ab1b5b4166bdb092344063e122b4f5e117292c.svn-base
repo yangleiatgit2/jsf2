@@ -1,0 +1,41 @@
+package cn.uce.suc.common.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.NoticeRule;
+import cn.uce.suc.common.vo.NoticeRuleVo;
+
+/**
+ * @Description: 消息模板DAO接口类
+ * @author liwei
+ * @date 2017年10月30日 下午10:17:24
+ */
+@Repository("noticeRuleDao")
+public interface INoticeRuleDao extends IBaseDao<NoticeRule, Long> {
+	
+	/**
+	 * @Description: 分页查询消息模板
+	 * @param noticeRuleVo 消息模板
+	 * @param page 分页参数
+	 * @return 消息模板
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public Pagination<NoticeRule> findByPagination(NoticeRuleVo noticeRuleVo, Page page);
+	
+	
+	
+	/**
+	 * 
+	 * @Description: 根据消息规则code获取对应的规则
+	 * @param ruleCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:30:11
+	 */
+	public NoticeRule findByCode(String ruleCode);
+	
+}

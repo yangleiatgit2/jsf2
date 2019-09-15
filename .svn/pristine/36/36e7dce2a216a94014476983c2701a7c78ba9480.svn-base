@@ -1,0 +1,72 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import static org.junit.Assert.*;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.entity.operation.CarTrace;
+import cn.uce.suc.bkg.vo.operation.CarTraceVo;
+
+/**
+ * 
+ * @Description: 车辆运输轨迹单元测试
+ * @author liuhai
+ * @date 2017年12月07日 上午9:31:18
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class CarTraceBizTest extends AbstractJUnit4SpringContextTests{
+	private CarTrace carTrace;
+	@Resource
+	private CarTraceBiz carTraceBiz;
+	
+	@Before
+	public void setUp() throws Exception {
+		carTrace=new CarTrace();
+		carTrace.setDirverName("张三");
+		carTrace.setDrivingPlanCode("FC20171207000001");
+	}
+
+	@Test
+	public void testAddCarTrace() {
+		carTrace.setId(1L);
+		carTraceBiz.addCarTrace(carTrace);
+	}
+
+	@Test
+	public void testUpdateCarTrace() {
+		carTrace.setId(1L);
+		carTraceBiz.updateCarTrace(carTrace);
+	}
+
+	@Test
+	public void testDeleteCarTrace() {
+		carTraceBiz.deleteCarTrace(1L);
+	}
+
+	@Test
+	public void testFindById() {
+		carTraceBiz.findById(1L);
+	}
+
+	@Test
+	public void testFindByPagination() {
+		CarTraceVo carTraceVo=new CarTraceVo();
+		Page page=new Page();
+		page.setCurrentPage(0);
+		page.setPageSize(100);
+		page.setTotal(200);
+		carTraceBiz.findByPagination(carTraceVo, page);
+	}
+
+}

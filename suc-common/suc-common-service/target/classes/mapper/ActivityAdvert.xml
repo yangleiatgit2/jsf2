@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IActivityAdvertDao">
+	
+	<sql id="Base_Column_List">
+			id,length,width,app_type,name,plat_form,app_version,
+			proportion,image_url_original,image_url_samll,
+			image_url_middle,website,remark,
+			utf1,utf2,utf3,del_flag,version,effect_time,expire_time,status,
+			create_emp,create_time,create_org,
+			update_emp,update_time,update_org
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+		 <if test="appType != null  and  appType != ''">
+		and app_type = #{appType}
+		</if>
+		<if test="name != null  and  name != ''">
+		and name = #{name}
+		</if>
+		 <if test="platForm != null  and  platForm != ''">
+		and plat_form = #{platForm}
+		</if>
+		 <if test="appVersion != null  and  appVersion != ''">
+		and app_version = #{appVersion}
+		</if>
+		
+		
+	    <if test="length != null">
+		and length = #{length}
+		</if>
+	    <if test="width != null">
+		and width = #{width}
+		</if>
+	    <if test="proportion != null">
+		and proportion = #{proportion}
+		</if>
+	    <if test="imageUrlOriginal != null">
+		and image_url_original = #{imageUrlOriginal}
+		</if>
+	    <if test="imageUrlSamll != null">
+		and image_url_samll = #{imageUrlSamll}
+		</if>
+	    <if test="imageUrlMiddle != null">
+		and image_url_middle = #{imageUrlMiddle}
+		</if>
+	    <if test="website != null">
+		and website = #{website}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+		 <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+		 <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+		
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.ActivityAdvert">
+	UPDATE t_suc_bkg_activity_advert
+	<set>
+		<if test="length != null">
+		length = #{length},
+		</if>
+		<if test="name != null">
+		 name = #{name},
+		</if>
+		<if test="platForm != null">
+		 plat_form = #{platForm},
+		</if>
+		<if test="appVersion != null">
+		 app_version = #{appVersion},
+		</if>
+		<if test="appType != null">
+		app_type = #{appType},
+		</if>
+		<if test="width != null">
+		width = #{width},
+		</if>
+		<if test="proportion != null">
+		proportion = #{proportion},
+		</if>
+		<if test="imageUrlOriginal != null">
+		image_url_original = #{imageUrlOriginal},
+		</if>
+		<if test="imageUrlSamll != null">
+		image_url_samll = #{imageUrlSamll},
+		</if>
+		<if test="imageUrlMiddle != null">
+		image_url_middle = #{imageUrlMiddle},
+		</if>
+		<if test="website != null">
+		website = #{website},
+		</if>
+		<if test="status != null">
+		status = #{status},
+		</if>
+		<if test="effectTime != null">
+		effect_time = #{effectTime},
+		</if>
+		<if test="expireTime != null">
+		expire_time = #{expireTime},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+			 <if test="utf2 != null">
+		 utf2 = #{utf2},
+		</if>
+		 <if test="utf3 != null">
+		 utf3 = #{utf3},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.ActivityAdvertVo" resultType="cn.uce.suc.common.entity.ActivityAdvert">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_activity_advert
+	<where>
+	  1=1
+		<if test="name != null and name !=''">
+		AND name LIKE CONCAT(CONCAT('%', #{name}),'%')
+		</if>
+		<if test="appType != null and appType!=''">
+			and app_type = #{appType}
+		</if>
+		<if test="platForm != null and platForm!=''">
+			and plat_form = #{platForm}
+		</if>
+		<if test="appVersion != null and appVersion!=''">
+			and app_version = #{appVersion}
+		</if>
+	</where>
+	</select>
+		<select id="findByListByVo" parameterType="cn.uce.suc.common.vo.ActivityAdvertVo" resultType="cn.uce.suc.common.entity.ActivityAdvert">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_activity_advert
+		<where>
+			DATE_FORMAT(SYSDATE(), '%Y-%m-%d') BETWEEN effect_time AND expire_time
+			<!--
+			<if test="appType != null and appType!=''">
+				and app_type = #{appType}
+			</if>
+			<if test="platForm != null and platForm!=''">
+				and plat_form = #{platForm}
+			</if>
+			<if test="appVersion != null and appVersion!=''">
+				and app_version = #{appVersion}
+			</if>
+			-->
+			order by create_time desc
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,247 @@
+package cn.uce.suc.bkg.biz.impl.infomon;
+
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.suc.bkg.biz.infomon.IVisibleTransportBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanDetailBiz;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.common.biz.IOrgExtendBiz;
+import cn.uce.suc.common.entity.OmgCmsOrg;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.vo.CarPositioningVo;
+import cn.uce.suc.common.vo.OrgExtendVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * 
+ * @Description: 可视化运输单元测试
+ * @author liuhai
+ * @date 2017年11月21日 上午9:31:18
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class VisibleTransportBizTest extends AbstractJUnit4SpringContextTests{
+	@Resource
+	private IVisibleTransportBiz visibleTransportBiz;
+	@Resource
+    private IIdsWorker  redisIdsWorker;
+	private DirvingPlanVo dirvingPlanVo;
+	@Resource
+	private IDirvingPlanBiz dirvingPlanBiz;
+	@Resource
+	private IDirvingPlanDetailBiz dirvingPlanDetailBiz;
+	@Resource
+	private IOrgExtendBiz orgExtendBiz;
+	
+	@Before
+	public void setUp() throws Exception {
+		dirvingPlanVo=new DirvingPlanVo();
+		dirvingPlanVo.setLatitude("39.2522");
+		dirvingPlanVo.setLongitude("121.12312");
+		dirvingPlanVo.setDrivingPlanCode("FC17111700009");
+		dirvingPlanVo.setPlateNumber("皖A12345");
+		dirvingPlanVo.setDriverPhone("18729366575");
+		System.out.println("==========单元测试开始========");
+	}
+
+	@Test
+	public void testQueryDirvingPlan() {
+		dirvingPlanVo.setDrivingPlanCode("FC17111700009");
+		visibleTransportBiz.queryDirvingPlan(dirvingPlanVo);
+	}
+
+	@Test
+	public void testUpdateTransportTrail() {
+		dirvingPlanVo.setLngLatColleation("{\"longitude\":\"121.172731\"}");
+		dirvingPlanVo.setStatus("01");
+		visibleTransportBiz.updateTransportTrail(dirvingPlanVo);
+	}
+
+	@Test
+	public void testSearchCarInfo() {
+		CarManageVo carManageVo=new CarManageVo();
+		carManageVo.setCarOrg("UC010140");
+		visibleTransportBiz.searchCarInfo(carManageVo);
+	}
+
+	@Test
+	public void testSearchGroupCenterInfo() {
+		CarManageVo carManage=new CarManageVo();
+		carManage.setPlateNumbers("皖A12345");
+		carManage.setDirvingPlanCode("FC17111700009");
+		visibleTransportBiz.searchGroupCenterInfo(carManage);
+	}
+
+	@Test
+	public void testQueryExceptionInfo() {
+		visibleTransportBiz.queryExceptionInfo(dirvingPlanVo);
+	}
+
+	@Test
+	public void testQueryCarInfo() {
+		CarManageVo carManageVo=new CarManageVo();
+		carManageVo.setCarOrg("UC010140");
+		visibleTransportBiz.queryCarInfo(carManageVo);
+	}
+
+	@Test
+	public void testQueryExceptionCar() {
+		OmgCmsOrg omgCmsOrg=new OmgCmsOrg();
+		omgCmsOrg.setBaseOrgCode("UC010140");
+		visibleTransportBiz.queryExceptionCar(omgCmsOrg);
+	}
+
+	@Test
+	public void testQueryExceptionByDrivingPlanCode() {
+		visibleTransportBiz.queryExceptionByDrivingPlanCode(dirvingPlanVo);
+	}
+
+	@Test
+	public void testQueryDirvingPlanDetail() {
+		visibleTransportBiz.queryDirvingPlanDetail(dirvingPlanVo);
+	}
+
+	@Test
+	public void testUpdateDeparturePlan() {
+		SucCurrentUser userInfo =new SucCurrentUser();
+		userInfo.setEmpName("ykkk");
+		userInfo.setCmsOrgName("ee");
+		DirvingPlan dirvingPlan=new DirvingPlan(); 
+		dirvingPlan.setDriverPhone("13966741558");
+		dirvingPlan.setDrivingPlanCode("FC17111700009");
+		dirvingPlan.setDirverName("刘海");
+		dirvingPlan.setPlateNumber("皖A12345");
+		visibleTransportBiz.updateDeparturePlan(dirvingPlan, "FC17111700001",userInfo);
+	}
+
+	@Test
+	public void testQueryDriverStatus() {
+		visibleTransportBiz.queryDriverStatus(dirvingPlanVo);
+	}
+
+	@Test
+	public void testQueryThroughLngLat() {
+		visibleTransportBiz.queryThroughLngLat(dirvingPlanVo);
+	}
+	/**
+	 * 
+	 * @Description: testValidLatLng
+	 * @author liwei
+	 * @date 2017年12月3日 下午9:53:04
+	 */
+	@Test
+	public void testValidLatLng() {
+		
+		DirvingPlanVo dirvingPlanVo=new DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone("18729355646");
+		dirvingPlanVo.setLatitude("31.163348");
+		dirvingPlanVo.setLongitude("121.19424");
+		DirvingPlan dir=dirvingPlanBiz.findByrivingPlanCode("FC17111700005");
+		DirvingPlanVo dirvingPlanVonew=ObjectConvertUtil.convertObject(dir, DirvingPlanVo.class);
+		visibleTransportBiz.validLatLng(dirvingPlanVo);
+		CarPositioningVo carPositioningVo=new CarPositioningVo();
+		carPositioningVo.setBussessModule("1");
+		carPositioningVo.setArriveFlag(false);
+		carPositioningVo.setDistane(200D);
+		carPositioningVo.setDriverPlanCode(dir.getDrivingPlanCode());
+		carPositioningVo.setLat("31.163348");
+		carPositioningVo.setLng("121.19424");
+		carPositioningVo.setOrgType("30");
+		carPositioningVo.setPlanId(dir.getId());
+		carPositioningVo.setPlanDetailId(198L);
+		carPositioningVo.setStationCode("UC013827");
+		visibleTransportBiz.carExist(carPositioningVo, dirvingPlanVo);
+		visibleTransportBiz.carNotExist(dirvingPlanVonew);
+		visibleTransportBiz.sendOut(carPositioningVo);
+		visibleTransportBiz.getSitePhine("UC013827");
+		DirvingPlanDetail dirvingPlanDetail=dirvingPlanDetailBiz.findById(198L);
+		OrgExtendVo orgExtendVo=orgExtendBiz.findByBaseOrgCode("UC013827");
+		visibleTransportBiz.getdistance(orgExtendVo, dirvingPlanVonew, dirvingPlanDetail);
+	}
+
+	@Test
+	public void testStopLineGroup() {
+		visibleTransportBiz.stopLineGroup("BC17111400999", "FC17111700009");
+	}
+
+	@Test
+	public void testSaveReportException() {
+		ExceptionManager exceptionManager=new ExceptionManager();
+		exceptionManager.setStartTrunkCode("FC17111700009");
+		exceptionManager.setExcepType("02");
+		exceptionManager.setReason("liuhai");
+		SucCurrentUser userInfo =new SucCurrentUser();
+		userInfo.setEmpName("ykkk");
+		userInfo.setCmsOrgName("ee");
+		visibleTransportBiz.saveReportException(exceptionManager, redisIdsWorker.nextId(IdsPrefix.YC),userInfo);
+	}
+
+	@Test
+	public void testSaveLineGroupAndDrivePlan() {
+		String lineGroupStr="{\"lineGroupCode\":\"BC17111401001\",\"lineGroupName\":\"BC17111401001\",\"departTime\":\"1514325300000\",\"arrivalTime\":\"1514328840000\",\"totalTime\":\"\",\"lineGroupDistance\":\"36053\",\"startOrgName\":\"昆山十六部\",\"endOrgName\":\"上海分拨中心\",\"requiType\":\"1\",\"costPrice\":\"\",\"sellingPrice\":\"\",\"totalVolume\":\"10\",\"totalWeight\":\"\",\"integenceScheduleCode\":\"\",\"chargeStarttime\":\"\",\"chargeEndTime\":\"\",\"requiCombinCode\":\"XZ17111400009\",\"orderCombinCode\":\"\",\"drivingPlanCombinCode\":\"\",\"adjustType\":\"\",\"resource\":\"1\",\"carType\":\"1\",\"businessMode\":\"2\",\"loadFactor\":\"0.83\",\"lineGroupType\":\"\",\"remark\":\"\"}";
+		String drivePlanStr="{\"dirverName\":\"张飞\",\"driverPhone\":\"123456\",\"plateNumber\":\"京B04632\",\"drivingPlanCode\":\"FC00000001\"}";
+		String detailVos="[{\"id\":2859,\"createTime\":1510629091000,\"updateTime\":null,\"createEmp\":\"智能排班\",\"updateEmp\":null,\"lineGroupCode\":\"BC17111401001\",\"wayPointCode\":\"UC015346\",\"wayPointName\":\"昆山十六部\",\"wayPointZoneCode\":null,\"wayPointZoneName\":null,\"volume\":10,\"weight\":null,\"endTime\":1514324700000,\"loadUnloadTime\":10,\"distance\":0,\"runingTime\":0,\"nextWayDistance\":36053,\"version\":null,\"deleteFlag\":null,\"createOrg\":\"智能排班\",\"updateOrg\":null,\"sort\":1,\"requiCombinCode\":\"XZ17111400009\",\"orderCombinCode\":null},{\"id\":2860,\"createTime\":1510629091000,\"updateTime\":null,\"createEmp\":\"智能排班\",\"updateEmp\":null,\"lineGroupCode\":\"BC17111401001\",\"wayPointCode\":\"UC010140\",\"wayPointName\":\"上海分拨中心\",\"wayPointZoneCode\":null,\"wayPointZoneName\":null,\"volume\":0,\"weight\":null,\"endTime\":1514328840000,\"loadUnloadTime\":10,\"distance\":36053,\"runingTime\":59,\"nextWayDistance\":0,\"version\":null,\"deleteFlag\":null,\"createOrg\":\"智能排班\",\"updateOrg\":null,\"sort\":2,\"requiCombinCode\":null,\"orderCombinCode\":null}]";
+		SucCurrentUser userInfo =new SucCurrentUser();
+		userInfo.setEmpName("ykkk");
+		userInfo.setCmsOrgName("ee");
+		visibleTransportBiz.saveLineGroupAndDrivePlan(lineGroupStr, drivePlanStr, detailVos,userInfo);
+	}
+	/**
+	 * 
+	 * @Description: 刷新位置信息
+	 * @param dirvingPlanVo
+	 * @author liuhai
+	 * @date 2017年12月4日 下午8:04:05
+	 */
+	@Test
+	public void testRefreshPositionMethod(){
+		dirvingPlanVo.setLongitude("121.12312");
+		dirvingPlanVo.setDrivingPlanCode("FC17111700009");
+		dirvingPlanVo.setPlateNumber("皖A12345");
+		dirvingPlanVo.setDriverPhone("18729366575");
+		visibleTransportBiz.refreshPositionMethod(dirvingPlanVo);
+	}
+	@Test
+	public void testexceptionBack(){
+		visibleTransportBiz.exceptionBack("FC223333", "EC5555");
+	}
+	@Test
+	public void testexceptionConfirm(){
+		visibleTransportBiz.exceptionConfirm("FC2222", "YC234444");
+	}
+	@Test
+	public void teststopDrivePlan(){
+		visibleTransportBiz.stopDrivePlan("FC45555");
+	}
+	@Test
+	public void testqueryDirvingPlanByOrgCode(){
+		DirvingPlanDetailVo pvd=new DirvingPlanDetailVo();
+		pvd.setWayPointCode("ddd");
+		pvd.setStatus("04");
+		visibleTransportBiz.queryDirvingPlanByOrgCode(pvd);
+	}
+	@After
+	public void excuteEnd() {
+		System.out.println("==========单元测试结束========");
+	}
+	
+}

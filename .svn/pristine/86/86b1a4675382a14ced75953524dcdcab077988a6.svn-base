@@ -1,0 +1,241 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderCombineBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.WebUtil;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 订单组合管理
+ * @author liwei
+ * @date 2017年10月20日 上午11:22:31
+ */
+@Controller
+@RequestMapping("/freightOrderCombine")
+public class FreightOrderCombineController extends BaseController {
+	/**
+	 * 订单组合
+	 */
+	@Resource
+	private IFreightOrderCombineBiz freightOrderCombineBiz;
+	/**
+	 * 班次
+	 */
+	@Resource
+	private ILineGroupDetailBiz lineGroupDetailBiz;
+	/**
+	 * 班次
+	 */
+	@Resource
+	private ILineGroupBiz lineGroupBiz;
+	/**
+	 * 
+	 * @Description: 页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:09
+	 */
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/freightOrderCombine";
+	}
+	/**
+	 * 
+	 * @Description: 组合查询分页
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 下午1:50:59
+	 */
+	@RequestMapping(value  = "/findByPagination")
+	@ResponseBody
+	public Map<String, Object> findByPagination(FreightOrderCombineVo freightOrderCombineVo, Page page) {
+		
+		if(null !=freightOrderCombineVo && null != freightOrderCombineVo.getEndDate()){
+			freightOrderCombineVo.getEndDate().setDate((freightOrderCombineVo.getEndDate().getDate()+1));
+		}
+		Pagination<FreightOrderCombine> pagination = freightOrderCombineBiz.findByPagination(freightOrderCombineVo, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * @Description: 修改货运需求订单表
+	 * @param freightOrder 货运需求订单表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@RequestMapping(value  = "/updateFreightOrderCombine")
+	@ResponseBody
+	public  Map<String, Object> updateFreightOrderCombine(FreightOrderCombine freightOrderCombine) {
+		SucCurrentUser user = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		freightOrderCombine.setUpdateEmp(user.getEmpName());
+		freightOrderCombine.setUpdateOrg(user.getCmsOrgName());
+		freightOrderCombine.setUpdateTime(new Date());
+		freightOrderCombineBiz.updateFreightOrderCombine(freightOrderCombine);
+		return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+	
+		/**
+	 * @Description: 新增订单组合
+	 * @param freightOrder
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@RequestMapping(value  = "/addFreightOrderCombine")
+	@ResponseBody
+	public Map<String, Object> addFreightOrderCombine(FreightOrderCombine freightOrderCombine) {
+		SucCurrentUser user = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		freightOrderCombine.setCreateEmp(user.getEmpName());
+		freightOrderCombine.setCreateOrg(user.getCmsOrgName());
+		freightOrderCombine.setCreateTime(new Date());
+		 freightOrderCombineBiz.addFreightOrderCombine(freightOrderCombine);
+		 return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+	/**
+	 * @Description: 终止订单组合
+	 * @param freightOrder
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@RequestMapping(value  = "/stopFreightOrderCombine")
+	@ResponseBody
+	public Map<String, Object> stopFreightOrderCombine(FreightOrderCombine freightOrderCombine) {
+		//获取当前登录用户
+				SucCurrentUser user=DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+				// 获取当前登录用户
+		freightOrderCombine.setUpdateEmp(user.getEmpName());
+		freightOrderCombine.setUpdateOrg(user.getCmsOrgName());
+		freightOrderCombine.setUpdateTime(new Date());
+		freightOrderCombineBiz.stopFreightOrderCombine(freightOrderCombine);
+		return returnSuccess(Resources.getMessage("stop.order.combine.success"));
+	}
+	/**
+	 * 
+	 * @Description:获取未排班的班次路段--即班次编号为空
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月9日 上午12:18:00
+	 */
+	@RequestMapping(value  = "/findGroupCodeIsNull")
+	@ResponseBody
+	public List<LineGroupDetail> findGroupDetailByGroupCodeIsNull(LineGroupDetailVo lineGroupDetailVo){
+		return lineGroupDetailBiz.findGroupDetailByGroupcodeIsNull(lineGroupDetailVo);
+	}
+	/**
+	 * 
+	 * @Description: 删除班次 
+	 * @param lineGroupDetailVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月9日 下午5:24:01
+	 */
+	@RequestMapping(value  = "/deleteLineGroup")
+	@ResponseBody
+	public Map<String, Object>  deleteLineGroup(LineGroupVo lineGroupVo){
+		freightOrderCombineBiz.deleteLineGroup(lineGroupVo);
+		return returnSuccess(Resources.getMessage("common.delete.success"));
+	}
+	/**
+	 * 
+	 * @Description: 删除班次 
+	 * @param lineGroupDetailVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月9日 下午5:24:01
+	 */
+	@RequestMapping(value  = "/saveLineGroup")
+	@ResponseBody
+	public Map<String, Object>  saveLineGroup(Long lineGroupId,String lineGroupDetailIds){
+		SucCurrentUser sucCurrentUser=DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		freightOrderCombineBiz.saveLineGroup(lineGroupId, lineGroupDetailIds, sucCurrentUser);
+		return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+	/**
+	 * 
+	 * @Description: 删除班次 
+	 * @param lineGroupDetailVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月9日 下午5:24:01
+	 */
+	@RequestMapping(value  = "/addLineGroup")
+	@ResponseBody
+	public Map<String, Object>  addLineGroup(String orderCombineCode,String lindgroupdetals){
+		List<LineGroupDetail> lineGroupDetails=JSON.parseArray(lindgroupdetals,
+				LineGroupDetail.class);
+		SucCurrentUser sucCurrentUser=DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		freightOrderCombineBiz. addLineGroup(orderCombineCode,lineGroupDetails,sucCurrentUser);
+		//freightOrderCombineBiz.saveLineGroup(lineGroupId, lineGroupDetailIds, sucCurrentUser);
+		return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 根据选择的 定价规则编码  生成定价
+	 * @param data
+	 * @param demandStatus
+	 * @param request
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月1日 下午9:27:16
+	 */
+	@RequestMapping(value = "generateOrderQuotation")
+	@ResponseBody
+	public Map<String, Object> generateOrderQuotation(PricingRuleVo vo) {
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		vo.setUpdateEmp(userInfo.getEmpName());
+		vo.setUpdateOrg(userInfo.getCmsOrgName());
+		vo.setUpdateTime(new Date());
+		String res = freightOrderCombineBiz.generateOrderQuotation(vo);
+		return res.indexOf(Resources.getMessage("success")) > -1 ? returnSuccess(res) : returnError(res);
+	}
+	
+	/**
+	 * 
+	 * @Description:发送班次
+	 * @param orderCombineCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月28日 上午11:12:54
+	 */
+	@RequestMapping(value = "orderCombinSendPricing")
+	@ResponseBody
+	public Map<String,Object> orderCombinSendPricing(Long orderCombineId){
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		freightOrderCombineBiz.orderCombinSendPricing(orderCombineId, userInfo);
+		return returnSuccess(Resources.getMessage("send.group.success"));
+	}
+}

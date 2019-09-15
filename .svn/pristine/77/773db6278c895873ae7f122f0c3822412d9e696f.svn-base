@@ -1,0 +1,53 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import java.util.Date;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.FreightDemandCombine;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+
+/**
+ * @Description: 货运需求组合表DAO接口类
+ * @author UCE-lixueyuan
+ * @date 2017年10月19日 下午05:15:20
+ */
+@Repository("freightDemandCombineDao")
+public interface IFreightDemandCombineDao extends IBaseDao<FreightDemandCombine, Long> {
+	
+	/**
+	 * @Description: 分页查询货运需求组合表
+	 * @param freightDemandCombineVo 货运需求组合表
+	 * @param page 分页参数
+	 * @return 货运需求组合表
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月19日 下午05:15:20
+	 */
+	public Pagination<FreightDemandCombineVo> findByPagination(FreightDemandCombineVo freightDemandCombineVo, Page page);
+	
+	/**
+	 * 
+	 * @Description: 批量 根据 需求组合编码 更新 需求组合状态
+	 * @param freightDemandCombineVos
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月27日 上午9:26:59
+	 */
+	public int  batchUpdateCombineStatus( @Param("combineCodes") List<String> combineCodes, @Param("demandCombineStatus")String demandCombineStatus,
+			@Param("updateEmp")String updateEmp, @Param("updateOrg")String updateOrg,@Param("updateTime") Date updateTime);
+	
+	/**
+	 * 
+	 * @Description:根据条件查询需求组合
+	 * @param freightDemandCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月2日 下午7:37:18
+	 */
+	public List<FreightDemandCombineVo> findByCondition(FreightDemandCombineVo freightDemandCombineVo);
+}

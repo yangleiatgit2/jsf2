@@ -1,0 +1,189 @@
+package cn.uce.suc.app.control;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import cn.uce.suc.app.biz.IappRegisterbiz;
+import cn.uce.suc.app.util.PhoneFormatCheckUtils;
+import cn.uce.suc.app.vo.CaptchaVo;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.suc.common.util.SucAppConstants;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.utils.StringUtil;
+
+@RestController
+@RequestMapping("/AppRegister")
+public class AppRegisterController extends BaseAppController {
+	/** 注册服务 */
+	@Resource
+	private IappRegisterbiz appRegisterBiz;
+
+
+	/**
+	 * 获取验证码
+	 * */
+	// @RequestMapping(value = "/captcha")
+	@PostMapping(value = "/captcha")
+	public @ResponseBody Map<String,Object> getCaptcha(@RequestBody CaptchaVo Captchavo) {
+		
+		
+		String phoneNumber=Captchavo.getMobilePhone();
+		String userType=Captchavo.getUserType();
+		logger.info("参数列表-->telephone:" + phoneNumber + ",userType:" + userType);
+		// 1.校验非空参数
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("phoneNumber", phoneNumber);
+		map.put("userType", userType);
+
+		if (!valiedateParams(map)) {
+			logger.info("请检查参数是否正确，返回码：" + SucAppConstants.CODE_PARAMS_ERROR);
+			return initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "请检查参数是否正确", null);
+		}
+
+		if (!"dot".equalsIgnoreCase(userType) && !"dpt".equalsIgnoreCase(userType)) {
+			return initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "app平台类型不正确", null);
+		}
+/*
+		// 检查是否是中国手机号
+		if (!PhoneFormatCheckUtils.isPhoneLegal(phoneNumber)) {
+			return initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "请输入正确的手机号码", null);
+		}*/
+
+		return appRegisterBiz.getCaptcha(phoneNumber, userType);
+
+	}
+
+	/**
+	 * @Description: 确认注册
+	 * @param phoneNumber
+	 * @param userType
+	 * @param passWord
+	 * @param captcha
+	 * @return
+	 * @author renxu
+	 * @date 2017年10月15日 下午7:25:18
+	 */
+	@PostMapping(value = "/register")
+	public @ResponseBody Object register(@RequestBody MobileuserVo mobileuserVo) {
+
+		// 1.检查参数
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("phoneNumber", mobileuserVo.getMobilephone());
+		map.put("userType", mobileuserVo.getUserType());
+		map.put("passWord", mobileuserVo.getPassword());
+		map.put("captcha", mobileuserVo.getCaptcha());
+		// 检查参数不通过
+		if (!valiedateParams(map)) {
+			return initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "参数不合法", null);
+		}
+
+		// 2. 检查参数是否为app平台
+		if (!("dot").equalsIgnoreCase(mobileuserVo.getUserType()) && !"dpt".equalsIgnoreCase(mobileuserVo.getUserType())) {
+			return initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "app平台类型不正确", null);
+		}
+
+		return appRegisterBiz.register(mobileuserVo.getMobilephone(), mobileuserVo.getUserType(), mobileuserVo.getPassword(), mobileuserVo.getCaptcha());
+	}
+
+
+	/**
+	 * 初始化返回
+	 * 
+	 * @param resultCode
+	 * @param reason
+	 * @param data
+	 * @return
+	 */
+	public Map<String,Object> initResultEntity(String resultCode, String reason, Object data) {
+		Map<String,Object> map=new HashMap<String, Object>();
+        map.put("resultFlag", resultCode);
+       
+		// 设置原因
+		if (null != reason) {
+			 map.put("failureReason", reason);
+		}
+
+		// 设置数据对象
+		if (null != data) {
+			 map.put("result", data);
+		}
+		return map;
+	}
+
+
+	/**
+	 * @Description: 校验非空
+	 * @param map
+	 * @return
+	 * @author renxu
+	 * @date 2017年10月15日 下午7:12:44
+	 */
+	public boolean valiedateParams(Map<String, Object> map) {
+		boolean result = true;
+		if (null == map) {
+			result = false;
+			return result;
+		}
+
+		Collection<Object> values = (Collection<Object>) map.values();
+		Iterator<Object> it = values.iterator();
+		while (it.hasNext()) {
+			Object obj = it.next();
+			if (null == obj) {
+				result = false;
+				break;
+			}
+
+			if ((obj instanceof java.lang.String) && StringUtil.isBlank((String) obj)) {
+				result = false;
+				break;
+			}
+		}
+
+		return result;
+	}
+	/**
+	 * 获取验证码
+	 * */
+	@PostMapping(value = "/UpdateCaptcha")
+	public @ResponseBody Map<String,Object> UpdateCaptcha(@RequestBody CaptchaVo Captchavo) {
+		
+		
+		String phoneNumber=Captchavo.getMobilePhone();
+		String userType=Captchavo.getUserType();
+		logger.info("参数列表-->telephone:" + phoneNumber + ",userType:" + userType);
+		// 1.校验非空参数
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("phoneNumber", phoneNumber);
+		map.put("userType", userType);
+
+		if (!valiedateParams(map)) {
+			logger.info("请检查参数是否正确，返回码：" + SucAppConstants.CODE_PARAMS_ERROR);
+			return initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "请检查参数是否正确", null);
+		}
+
+		if (!"dot".equalsIgnoreCase(userType) && !"dpt".equalsIgnoreCase(userType)) {
+			return initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "app平台类型不正确", null);
+		}
+
+		// 检查是否是中国手机号
+		if (!PhoneFormatCheckUtils.isPhoneLegal(phoneNumber)) {
+			return initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "请输入正确的手机号码", null);
+		}
+
+		return appRegisterBiz.getCaptcha(phoneNumber, userType);
+
+	}
+
+	
+}

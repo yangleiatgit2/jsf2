@@ -1,0 +1,290 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+/**
+ * @Description: 智能算法参数维护Entity类
+ * @author laizhendong
+ * @date 2017年10月19日 下午08:41:03
+ */
+@Table("t_suc_bkg_ia_conf")
+public class IaConf extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 机构编号 
+	 */
+	private String orgCode;
+    /** 
+	 * 机构名称 
+	 */
+	private String orgName;
+    /** 
+	 * 满载率，如：0.85 
+	 */
+	private Double fullLoadRate;
+    /** 
+	 * 到达时间阈值 
+	 */
+	private Integer arrivalTimeThreshold;
+
+	/**
+	 * 并行到集货点最大时间单位:min
+	 */
+	private Integer maxParallelTimes;
+	
+	/**
+	 * 并行网点货量最大值（方）
+	 */
+	private Integer maxParallelVolume;
+	
+	/**
+	 * 集货点处理能力松弛系数
+	 */
+	private Double capacitySlack;
+	
+	/** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 逻辑状态 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 创建部门 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新部门 
+	 */
+	private String updateOrg;
+	
+	
+	/**
+	 * 获取 机构编号
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+	
+	/**
+	 * 设置 机构编号
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+	
+	/**
+	 * 获取 机构名称
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+	
+	/**
+	 * 设置 机构名称
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+	
+	/**
+	 * 获取 满载率，如：0.85
+	 */
+	public Double getFullLoadRate() {
+		return fullLoadRate;
+	}
+	
+	/**
+	 * 设置 满载率，如：0.85
+	 */
+	public void setFullLoadRate(Double fullLoadRate) {
+		this.fullLoadRate = fullLoadRate;
+	}
+	
+	/**
+	 * 获取 到达时间阈值
+	 */
+	public Integer getArrivalTimeThreshold() {
+		return arrivalTimeThreshold;
+	}
+	
+	/**
+	 * 设置 到达时间阈值
+	 */
+	public void setArrivalTimeThreshold(Integer arrivalTimeThreshold) {
+		this.arrivalTimeThreshold = arrivalTimeThreshold;
+	}
+	
+	/**
+	 * 获得并行到集货点最大时间单位:min
+	 */
+	public Integer getMaxParallelTimes() {
+		return maxParallelTimes;
+	}
+	/**
+	 * 设置 并行到集货点最大时间单位:min
+	 */
+	public void setMaxParallelTimes(Integer maxParallelTimes) {
+		this.maxParallelTimes = maxParallelTimes;
+	}
+	/**
+	 * 获得并行网点货量最大值（方）
+	 */
+	public Integer getMaxParallelVolume() {
+		return maxParallelVolume;
+	}
+	/**
+	 *设置并行网点货量最大值（方）
+	 */
+	public void setMaxParallelVolume(Integer maxParallelVolume) {
+		this.maxParallelVolume = maxParallelVolume;
+	}
+	
+	/**
+	 *获得集货点处理能力松弛系数
+	 */
+	public Double getCapacitySlack() {
+		return capacitySlack;
+	}
+	/**
+	 *设置集货点处理能力松弛系数
+	 */
+	public void setCapacitySlack(Double capacitySlack) {
+		this.capacitySlack = capacitySlack;
+	}
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获得 逻辑状态
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	/**
+	 * 设置 逻辑状态
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 创建部门
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建部门
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新部门
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新部门
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	
+}

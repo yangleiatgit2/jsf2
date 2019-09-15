@@ -1,0 +1,37 @@
+package cn.uce.suc.app.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.app.entity.Serviceevaluation;
+import cn.uce.suc.app.vo.ServiceevaluationVo;
+
+/**
+ * @Description: DAO接口类
+ * @author litianjian
+ * @date 2017年11月28日 上午11:26:53
+ */
+@Repository("tSucAppServiceevaluationDao")
+public interface IServiceevaluationDao extends IBaseDao<Serviceevaluation, Long> {
+	
+	/**
+	 * @Description: 分页查询
+	 * @param tSucAppServiceevaluationVo 
+	 * @param page 分页参数
+	 * @return 
+	 * @author litianjian
+	 * @date 2017年11月28日 上午11:26:53
+	 */
+	public Pagination<Serviceevaluation> findByPagination(ServiceevaluationVo tSucAppServiceevaluationVo, Page page);
+	
+	
+	/**
+	 * 根据手机号查询司机评分
+	 * @param mobliePhone
+	 * @return
+	 */
+	public Serviceevaluation  findScoreforDriver(String mobliePhone); 
+	
+}

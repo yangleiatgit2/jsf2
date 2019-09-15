@@ -1,0 +1,893 @@
+package cn.uce.suc.bkg.vo.operation;
+
+import cn.uce.base.vo.BaseVo;
+import cn.uce.suc.bkg.entity.operation.LineGroupRel;
+
+import java.util.Date;
+import java.util.List;
+
+/**
+ * @Description: 班次管理Vo类
+ * @author litianjian
+ * @date 2017年10月24日 下午08:12:56
+ */
+public class LineGroupVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 班次编码 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 班次名称 
+	 */
+	private String lineGroupName;
+    /** 
+	 * 出发时间 
+	 */
+	private Date departTime;
+    /** 
+	 * 到达时间 
+	 */
+	private Date arrivalTime;
+    /** 
+	 * 班次距离 
+	 */
+	private Double lineGroupDistance;
+    /** 
+	 * 开始站点编码 
+	 */
+	private String startOrgCode;
+    /** 
+	 * 开始站点名称 
+	 */
+	private String startOrgName;
+    /** 
+	 * 目的站点编码 
+	 */
+	private String endOrgCode;
+    /** 
+	 * 目的站点名称 
+	 */
+	private String endOrgName;
+    /** 
+	 * 成本价 
+	 */
+	private Double costPrice;
+    /** 
+	 * 报价 
+	 */
+	private Double sellingPrice;
+    /** 
+	 * 调整类型-重新排班，发车计划调整 
+	 */
+	private String adjustType;
+    /** 
+	 * 满载率 
+	 */
+	private Double loadFactor;
+    /** 
+	 * 车型 
+	 */
+	private String carType;
+    /** 
+	 * 班次类型-系统班次-手动班次 
+	 */
+	private String lineGroupType;
+    /** 
+	 * 调整后价格 
+	 */
+	private Double adjustPrice;
+    /** 
+	 * 班次总耗时 
+	 */
+	private Integer totalTime;
+    /** 
+	 * 班次总体积 
+	 */
+	private Double totalVolume;
+    /** 
+	 * 班次总质量 
+	 */
+	private Double totalWeight;
+    /** 
+	 * 计费时间起 
+	 */
+	private Date chargeStartTime;
+    /** 
+	 * 计费时间止 
+	 */
+	private Date chargeEndTime;
+    /** 
+	 * 需求类型 
+	 */
+	private Integer requiType;
+    /** 
+	 * 班次状态 
+	 */
+	private String status;
+    /** 
+	 * 班次来源 
+	 */
+	private String resource;
+    /** 
+	 * 需求组合编号 
+	 */
+	private String requiCombinCode;
+    /** 
+	 * 发车计划编号 
+	 */
+	private String drivingPlanCombinCode;
+    /** 
+	 * 订单组合编号 
+	 */
+	private String orderCombinCode;
+    /** 
+	 * 业务模式 
+	 */
+	private String businessMode;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	
+	
+	private String parameter;
+	private String carTypes[];
+	/**
+	 * 页面查询的标记
+	 */
+	private String pageQuery;
+	
+	/**
+	 * 页面查询的标记
+	 */
+	public String getPageQuery() {
+		return pageQuery;
+	}
+	/**
+	 * 页面查询的标记
+	 */
+	public void setPageQuery(String pageQuery) {
+		this.pageQuery = pageQuery;
+	}
+	/**
+	 * 路段集合
+	 */
+	private List<LineGroupDetailVo> lineGroupDetailVos;
+	
+	/**
+	 * 班次业务关系
+	 */
+	private List<LineGroupRel> lineGroupRels;
+	
+	
+	
+	public String getParameter() {
+		return parameter;
+	}
+
+	public void setParameter(String parameter) {
+		this.parameter = parameter;
+	}
+
+	/**
+	 * 明细json 字符串
+	 */
+	private String strJson;
+	
+	
+	
+	public String getStrJson() {
+		return strJson;
+	}
+
+	public void setStrJson(String strJson) {
+		this.strJson = strJson;
+	}
+	
+	public String[] getCarTypes() {
+		return carTypes;
+	}
+
+	public void setCarTypes(String[] carTypes) {
+		this.carTypes = carTypes;
+	}
+
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 班次编码
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 班次编码
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+
+	
+	/**
+	 * 获取 班次名称
+	 */
+	public String getLineGroupName() {
+		return lineGroupName;
+	}
+	
+	/**
+	 * 设置 班次名称
+	 */
+	public void setLineGroupName(String lineGroupName) {
+		this.lineGroupName = lineGroupName;
+	}
+
+	
+	/**
+	 * 获取 出发时间
+	 */
+	public Date getDepartTime() {
+		return departTime;
+	}
+	
+	/**
+	 * 设置 出发时间
+	 */
+	public void setDepartTime(Date departTime) {
+		this.departTime = departTime;
+	}
+
+	
+	/**
+	 * 获取 到达时间
+	 */
+	public Date getArrivalTime() {
+		return arrivalTime;
+	}
+	
+	/**
+	 * 设置 到达时间
+	 */
+	public void setArrivalTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+	
+	/**
+	 * 获取 班次距离
+	 */
+	public Double getLineGroupDistance() {
+		return lineGroupDistance;
+	}
+	
+	/**
+	 * 设置 班次距离
+	 */
+	public void setLineGroupDistance(Double lineGroupDistance) {
+		this.lineGroupDistance = lineGroupDistance;
+	}
+
+	
+	/**
+	 * 获取 开始站点编码
+	 */
+	public String getStartOrgCode() {
+		return startOrgCode;
+	}
+	
+	/**
+	 * 设置 开始站点编码
+	 */
+	public void setStartOrgCode(String startOrgCode) {
+		this.startOrgCode = startOrgCode;
+	}
+
+	
+	/**
+	 * 获取 开始站点名称
+	 */
+	public String getStartOrgName() {
+		return startOrgName;
+	}
+	
+	/**
+	 * 设置 开始站点名称
+	 */
+	public void setStartOrgName(String startOrgName) {
+		this.startOrgName = startOrgName;
+	}
+
+	
+	/**
+	 * 获取 目的站点编码
+	 */
+	public String getEndOrgCode() {
+		return endOrgCode;
+	}
+	
+	/**
+	 * 设置 目的站点编码
+	 */
+	public void setEndOrgCode(String endOrgCode) {
+		this.endOrgCode = endOrgCode;
+	}
+
+	
+	/**
+	 * 获取 目的站点名称
+	 */
+	public String getEndOrgName() {
+		return endOrgName;
+	}
+	
+	/**
+	 * 设置 目的站点名称
+	 */
+	public void setEndOrgName(String endOrgName) {
+		this.endOrgName = endOrgName;
+	}
+
+	
+	/**
+	 * 获取 成本价
+	 */
+	public Double getCostPrice() {
+		return costPrice;
+	}
+	
+	/**
+	 * 设置 成本价
+	 */
+	public void setCostPrice(Double costPrice) {
+		this.costPrice = costPrice;
+	}
+
+	
+	/**
+	 * 获取 报价
+	 */
+	public Double getSellingPrice() {
+		return sellingPrice;
+	}
+	
+	/**
+	 * 设置 报价
+	 */
+	public void setSellingPrice(Double sellingPrice) {
+		this.sellingPrice = sellingPrice;
+	}
+
+	
+	/**
+	 * 获取 调整类型-重新排班，发车计划调整
+	 */
+	public String getAdjustType() {
+		return adjustType;
+	}
+	
+	/**
+	 * 设置 调整类型-重新排班，发车计划调整
+	 */
+	public void setAdjustType(String adjustType) {
+		this.adjustType = adjustType;
+	}
+
+	
+	/**
+	 * 获取 满载率
+	 */
+	public Double getLoadFactor() {
+		return loadFactor;
+	}
+	
+	/**
+	 * 设置 满载率
+	 */
+	public void setLoadFactor(Double loadFactor) {
+		this.loadFactor = loadFactor;
+	}
+
+	
+	/**
+	 * 获取 车型
+	 */
+	public String getCarType() {
+		return carType;
+	}
+	
+	/**
+	 * 设置 车型
+	 */
+	public void setCarType(String carType) {
+		this.carType = carType;
+	}
+
+	
+	/**
+	 * 获取 班次类型-系统班次-手动班次
+	 */
+	public String getLineGroupType() {
+		return lineGroupType;
+	}
+	
+	/**
+	 * 设置 班次类型-系统班次-手动班次
+	 */
+	public void setLineGroupType(String lineGroupType) {
+		this.lineGroupType = lineGroupType;
+	}
+
+	
+	/**
+	 * 获取 调整后价格
+	 */
+	public Double getAdjustPrice() {
+		return adjustPrice;
+	}
+	
+	/**
+	 * 设置 调整后价格
+	 */
+	public void setAdjustPrice(Double adjustPrice) {
+		this.adjustPrice = adjustPrice;
+	}
+
+	
+	/**
+	 * 获取 班次总耗时
+	 */
+	public Integer getTotalTime() {
+		return totalTime;
+	}
+	
+	/**
+	 * 设置 班次总耗时
+	 */
+	public void setTotalTime(Integer totalTime) {
+		this.totalTime = totalTime;
+	}
+
+	
+	/**
+	 * 获取 班次总体积
+	 */
+	public Double getTotalVolume() {
+		return totalVolume;
+	}
+	
+	/**
+	 * 设置 班次总体积
+	 */
+	public void setTotalVolume(Double totalVolume) {
+		this.totalVolume = totalVolume;
+	}
+
+	
+	/**
+	 * 获取 班次总质量
+	 */
+	public Double getTotalWeight() {
+		return totalWeight;
+	}
+	
+	/**
+	 * 设置 班次总质量
+	 */
+	public void setTotalWeight(Double totalWeight) {
+		this.totalWeight = totalWeight;
+	}
+
+	
+	/**
+	 * 获取 计费时间起
+	 */
+	public Date getChargeStartTime() {
+		return chargeStartTime;
+	}
+	/**
+	 * 设置 计费时间起
+	 */
+	public void setChargeStartTime(Date chargeStartTime) {
+		this.chargeStartTime = chargeStartTime;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	/**
+	 * 获取 计费时间止
+	 */
+	public Date getChargeEndTime() {
+		return chargeEndTime;
+	}
+	
+	/**
+	 * 设置 计费时间止
+	 */
+	public void setChargeEndTime(Date chargeEndTime) {
+		this.chargeEndTime = chargeEndTime;
+	}
+
+	
+	/**
+	 * 获取 需求类型
+	 */
+	public Integer getRequiType() {
+		return requiType;
+	}
+	
+	/**
+	 * 设置 需求类型
+	 */
+	public void setRequiType(Integer requiType) {
+		this.requiType = requiType;
+	}
+
+	
+	/**
+	 * 获取 班次状态
+	 */
+	public String getStatus() {
+		return status;
+	}
+	
+	/**
+	 * 设置 班次状态
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	
+	/**
+	 * 获取 班次来源
+	 */
+	public String getResource() {
+		return resource;
+	}
+	
+	/**
+	 * 设置 班次来源
+	 */
+	public void setResource(String resource) {
+		this.resource = resource;
+	}
+
+	
+	/**
+	 * 获取 需求组合编号
+	 */
+	public String getRequiCombinCode() {
+		return requiCombinCode;
+	}
+	
+	/**
+	 * 设置 需求组合编号
+	 */
+	public void setRequiCombinCode(String requiCombinCode) {
+		this.requiCombinCode = requiCombinCode;
+	}
+
+	
+	/**
+	 * 获取 发车计划编号
+	 */
+	public String getDrivingPlanCombinCode() {
+		return drivingPlanCombinCode;
+	}
+	
+	/**
+	 * 设置 发车计划编号
+	 */
+	public void setDrivingPlanCombinCode(String drivingPlanCombinCode) {
+		this.drivingPlanCombinCode = drivingPlanCombinCode;
+	}
+
+	
+	/**
+	 * 获取 订单组合编号
+	 */
+	public String getOrderCombinCode() {
+		return orderCombinCode;
+	}
+	
+	/**
+	 * 设置 订单组合编号
+	 */
+	public void setOrderCombinCode(String orderCombinCode) {
+		this.orderCombinCode = orderCombinCode;
+	}
+
+	
+	/**
+	 * 获取 业务模式
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	
+	/**
+	 * 设置 业务模式
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/** 
+	 * @return lineGroupDetailVos 
+	 */
+	public List<LineGroupDetailVo> getLineGroupDetailVos() {
+		return lineGroupDetailVos;
+	}
+
+	/**
+	 * @param lineGroupDetailVos the lineGroupDetailVos to set
+	 */
+	public void setLineGroupDetailVos(List<LineGroupDetailVo> lineGroupDetailVos) {
+		this.lineGroupDetailVos = lineGroupDetailVos;
+	}
+
+	/** 
+	 * @return lineGroupRels 
+	 */
+	public List<LineGroupRel> getLineGroupRels() {
+		return lineGroupRels;
+	}
+
+	/**
+	 * @param lineGroupRels the lineGroupRels to set
+	 */
+	public void setLineGroupRels(List<LineGroupRel> lineGroupRels) {
+		this.lineGroupRels = lineGroupRels;
+	}
+
+	
+}

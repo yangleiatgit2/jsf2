@@ -1,0 +1,151 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.FreightOrder;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+
+/**
+ * @Description: 货运需求订单表DAO接口类
+ * @author liwei
+ * @date 2017年10月21日 上午10:45:42
+ */
+@Repository("freightOrderDao")
+public interface IFreightOrderDao extends IBaseDao<FreightOrder, Long> {
+	
+	/**
+	 * @Description: 分页查询货运需求订单表
+	 * @param freightOrderVo 货运需求订单表
+	 * @param page 分页参数
+	 * @return 货运需求订单表
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public Pagination<FreightOrder> findByPagination(FreightOrderVo freightOrderVo, Page page);
+	/**
+	 * 
+	 * @Description: 查询货运需求订单表 
+	 * @param freightOrderVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月25日 下午6:59:43
+	 */
+	public List<FreightOrder> findByCondtion(FreightOrderVo freightOrderVo);
+	/**
+	 * 
+	 * @Description: 根据订单编号进行更新
+	 * @param orderCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月25日 下午7:11:24
+	 */
+	public int updateByOrderCode(FreightOrder freightOrder);
+	
+	/**
+	 * 
+	 * @Description: 根据组合查询订单 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月27日 上午12:01:08
+	 */
+	public List<FreightOrderVo> findByCombine(FreightOrderVo freightOrderVo);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param freightOrderVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月31日 下午10:02:39
+	 */
+	public List<FreightOrderVo> findByVo(FreightOrderVo freightOrderVo);
+
+	/**
+	 * 
+	 * @Description: 出港
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月6日 上午9:41:41
+	 */
+    public List<String> findEndStationCode(FreightOrderVo freightOrderVo);
+	/**
+	 * 
+	 * @Description: 进港
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月6日 上午9:41:45
+	 */
+	public List<String> findbeginStationCode(FreightOrderVo freightOrderVo);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月4日 下午11:16:16
+	 */
+	public Pagination<FreightOrder> findCombineByPagination(FreightOrderVo freightOrderVo, Page page);
+	/**
+	 * 
+	 * @Description: TODO根据网点 查询网点的订单分页
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月9日 上午8:49:07
+	 */
+	public Pagination<FreightOrderVo> findByDemandSiteCodePagination(FreightOrderVo freightOrderVo, Page page);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param freightOrderVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月6日 上午9:37:36
+	 */
+	public int updateByOrderCombine(FreightOrderVo freightOrderVo);
+	
+	/**
+	 * 
+	 * @Description: 根据组合编号更新订单状态 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午2:10:27
+	 */
+	public int updStatusByCombineCode(FreightOrderVo freightOrderVo);
+	/**
+	 * 
+	 * @Description: 根据组号查询并根据订单时间倒序排序
+	 * @param freightOrderVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月1日 下午9:24:22
+	 */
+	public List<FreightOrderVo> findByOderNoTimeDesc(FreightOrderVo freightOrderVo);
+	
+	/**
+	 * 
+	 * @Description: 根据订单编号更新订单执行时间 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月16日 下午11:49:55
+	 */
+	public int updateTimeByOrderCode(List<FreightOrderVo>  freightOrderVo);
+	/**
+	 * 
+	 * @Description: 根据订单编号查询
+	 * @param orderCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月10日 下午4:24:03
+	 */
+	public FreightOrder findByOrderCode(String orderCode);
+}

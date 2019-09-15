@@ -1,0 +1,65 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.IOmgAreaBiz;
+import cn.uce.suc.common.entity.OmgArea;
+import cn.uce.suc.common.vo.OmgAreaVo;
+import cn.uce.suc.common.service.OmgAreaService;
+
+/**
+ * @Description: 地区BIZ实现类
+ * @author liwei
+ * @date 2017年11月08日 下午03:22:02
+ */
+@Service("omgAreaBiz")
+public class OmgAreaBiz implements IOmgAreaBiz {
+	
+	/**
+	 * 注入地区Service
+	 */
+	@Resource
+	private OmgAreaService omgAreaService;
+	
+	
+	
+	/**
+	 * @Description: 分页查询地区
+	 * @param omgAreaVo 地区
+	 * @param page 分页参数
+	 * @return 地区
+	 * @author liwei
+	 * @date 2017年11月08日 下午03:22:02
+	 */
+	public Pagination<OmgArea> findByPagination(OmgAreaVo omgAreaVo, Page page) {
+		Pagination<OmgArea> pagination = omgAreaService.findByPagination(omgAreaVo, page);
+		return pagination;
+	}
+	/**
+	 * @Description: 查询地区
+	 * @param omgAreaVo 地区
+	 * @return 地区
+	 * @author liwei
+	 * @date 2017年11月08日 下午03:22:02
+	 */
+	public List<OmgArea> findBycondition(OmgAreaVo omgAreaVo){
+		return omgAreaService.findBycondition(omgAreaVo);
+	}
+	/**
+	 * 
+	 * @Description: 通过区/县编码查询省市编码及名称
+	 * @param omgAreaVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月19日 下午6:15:56
+	 */
+	public OmgAreaVo queryAreaByRegion(OmgAreaVo omgAreaVo){
+		return omgAreaService.queryAreaByRegion(omgAreaVo);
+	}
+}

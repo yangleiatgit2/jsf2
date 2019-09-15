@@ -1,0 +1,24 @@
+package cn.uce.suc.common.util;
+
+/**
+ * 
+ * @Description: 自定义运行异常 
+ * @author wangzhijun
+ * @date 2017年11月29日 下午1:03:18
+ */
+public class SucRuntimeException extends RuntimeException {
+
+	/**
+	 * 序列化
+	 */
+	private static final long serialVersionUID = 2330080738956359049L;
+	
+	/**
+	 * 构造函数
+	 * @param cause
+	 */
+	public SucRuntimeException(Throwable cause) {
+		super(cause);
+	}
+
+}

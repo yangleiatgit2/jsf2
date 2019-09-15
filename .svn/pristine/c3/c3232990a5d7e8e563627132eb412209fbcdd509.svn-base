@@ -1,0 +1,202 @@
+package cn.uce.suc.bkg.entity.datamain;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import java.util.Date;
+
+/**
+ * @Description: 运力缺口管理Entity类
+ * @author yanglei
+ * @date 2017年10月25日 下午03:24:55
+ */
+@Table("t_suc_bkg_capacity_gap_management")
+public class CapacityGapManagement extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 需求组合编号 
+	 */
+	private String combinaationCode;
+    /** 
+	 * 车辆需要的时间 
+	 */
+	private Date workDate;
+    /** 
+	 * 预计需求车辆数量 
+	 */
+	private Integer expectNeed;
+    /** 
+	 * 实际应有的车辆数量 
+	 */
+	private Integer actualNeed;
+    /** 
+	 * 车辆信息(根据车辆的长度来分类的) 
+	 */
+	private String truckType;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 删除标识.1表示已删除，默认为0 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+	
+	
+	/**
+	 * 获取 需求组合编号
+	 */
+	public String getCombinaationCode() {
+		return combinaationCode;
+	}
+	
+	/**
+	 * 设置 需求组合编号
+	 */
+	public void setCombinaationCode(String combinaationCode) {
+		this.combinaationCode = combinaationCode;
+	}
+	
+	/**
+	 * 获取 车辆需要的时间
+	 */
+	public Date getWorkDate() {
+		return workDate;
+	}
+	
+	/**
+	 * 设置 车辆需要的时间
+	 */
+	public void setWorkDate(Date workDate) {
+		this.workDate = workDate;
+	}
+	
+	/**
+	 * 获取 预计需求车辆数量
+	 */
+	public Integer getExpectNeed() {
+		return expectNeed;
+	}
+	
+	/**
+	 * 设置 预计需求车辆数量
+	 */
+	public void setExpectNeed(Integer expectNeed) {
+		this.expectNeed = expectNeed;
+	}
+	
+	/**
+	 * 获取 实际应有的车辆数量
+	 */
+	public Integer getActualNeed() {
+		return actualNeed;
+	}
+	
+	/**
+	 * 设置 实际应有的车辆数量
+	 */
+	public void setActualNeed(Integer actualNeed) {
+		this.actualNeed = actualNeed;
+	}
+	
+	/**
+	 * 获取 车辆信息(根据车辆的长度来分类的)
+	 */
+	public String getTruckType() {
+		return truckType;
+	}
+	
+	/**
+	 * 设置 车辆信息(根据车辆的长度来分类的)
+	 */
+	public void setTruckType(String truckType) {
+		this.truckType = truckType;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 删除标识.1表示已删除，默认为0
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标识.1表示已删除，默认为0
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	
+}

@@ -1,0 +1,174 @@
+package cn.uce.suc.bkg.biz.price;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.price.PricingRule;
+import cn.uce.suc.bkg.vo.ia.FreigtCombineVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+
+/**
+ * @Description: 定价规则BIZ接口类
+ * @author laizhendong
+ * @date 2017年11月01日 下午09:05:18
+ */
+public interface IPricingRuleBiz {
+	
+	/**
+	 * @Description: 新增定价规则
+	 * @param pricingRule
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public int addPricingRule(PricingRule pricingRule);
+	
+	/**
+	 * @Description: 修改定价规则
+	 * @param pricingRule 定价规则
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public int updatePricingRule(PricingRuleVo pricingRuleVo);
+	
+	/**
+	 * @Description: 删除定价规则
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public int deletePricingRule(Long id);
+	
+	/**
+	 * @Description: 根据ID查询定价规则
+	 * @param id 主键
+	 * @return 定价规则
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public PricingRule findById(Long id);
+	
+	/**
+	 * @Description: 分页查询定价规则
+	 * @param pricingRuleVo 定价规则
+	 * @param page 分页参数
+	 * @return 定价规则
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public Pagination<PricingRuleVo> findByPagination(PricingRuleVo pricingRuleVo, Page page);
+	
+	/**
+	 * 
+	 * @Description: 批量添加定价分类规则 
+	 * @param pricingRuleVos
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 上午2:04:02
+	 */
+	public int addPricingRule(List<PricingRuleVo> pricingRuleVos);
+	
+	/**
+	 * 
+	 * @Description: 更新详情
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午6:22:54
+	 */
+	public int batchUpdateDetail(PricingRuleVo pricingRuleVo);
+	
+	/**
+	 * 
+	 * @Description: 版本升级 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午9:26:09
+	 */
+	public int upgrade(PricingRuleVo pricingRuleVo);
+	
+	/**
+	 * 
+	 * @Description: 设置通用规则 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午5:01:58
+	 */
+	public int setGeneralRule(PricingRuleVo pricingRuleVo);
+	
+	/**
+	 * 
+	 * @Description: 批量审核
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月5日 下午3:32:48
+	 */
+	public int auditPricingRule(List<PricingRuleVo> pricingRuleVo);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询报价 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午1:47:22
+	 */
+	public List<PricingRuleVo> findPriceByCondtion(PricingRuleVo pricingRuleVo);
+	
+	/**
+	 * 
+	 * @Description: 查询选择报价 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午4:36:06
+	 */
+	public List<PricingRuleVo> findSelectPrice(PricingRuleVo pricingRuleVo);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午7:42:58
+	 */
+	public List<PricingRuleVo> findByCondition(PricingRuleVo pricingRuleVo);
+	
+	/**
+	 * 
+	 * @Description: 当修改车型成本或者定价分类时重新计算报价
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 下午3:58:18
+	 */
+	public int reCalcPrice(PricingRuleVo pricingRuleVo,int type);
+	
+	/**
+	 * 
+	 * @Description: 如果由于用户未维护定价分类，这里重新根据组合编号计算报价 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月18日 下午8:46:21
+	 */
+	public int reCalcPrice(PricingRuleVo pricingRuleVo);
+	
+	/**
+	 * 
+	 * @Description: 计算报价
+	 * @param datelineGroupVosMap
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 下午5:10:03
+	 */
+	public int calcPrice(List<LineGroupVo> lineGroupVos,FreigtCombineVo freigtCombineVo);
+}

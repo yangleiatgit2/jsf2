@@ -1,0 +1,239 @@
+package cn.uce.suc.bkg.control.datamain;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.excel.entity.vo.NormalExcelConstants;
+import cn.uce.core.poi.excel.entity.ExportParams;
+import cn.uce.suc.bkg.biz.datamain.IDirverBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.entity.datamain.Dirver;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.vo.datamain.DirverVo;
+import cn.uce.suc.common.biz.IMobileuserBiz;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.util.WebUtil;
+/**
+ * 
+ * @Description: 司机管理controller
+ * @author zhangqiang
+ * @date 2017年10月30日 下午6:37:23
+ */
+@Controller
+@RequestMapping("/driverManage")
+public class DriverManageController extends BaseController {
+	/**
+	 * 车辆管理biz
+	 */
+	@Resource
+	private IDirverBiz dirverBiz;
+	/**
+	 * 注入发车计划biz
+	 */
+	@Resource
+	private IDirvingPlanBiz dirvingPlanBiz;
+	/**
+	 * 注入手机用户biz
+	 */
+	@Resource
+	private IMobileuserBiz mobileuserBiz;
+	/**
+	 * 
+	 * @Description: 跳转到主页面
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 上午9:53:18
+	 */
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/driverManage";
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询司机
+	 * @param dirverVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 上午9:51:11
+	 */
+	@RequestMapping(value = "findByCondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(DirverVo dirverVo, Page page){
+		Pagination<Dirver> drivers = dirverBiz.findByCondition(dirverVo,page);
+		return returnSuccess(drivers);
+	}
+	/**
+	 * 
+	 * @Description: 添加车辆
+	 * @param dirver
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 上午10:23:19
+	 */
+	@RequestMapping(value = "addDriver")
+	@ResponseBody
+	public Map<String, Object> addDriver(Dirver dirver){
+		int row = dirverBiz.addDirver(dirver);
+		return returnSuccess(row);
+	}
+	/**
+	 * 
+	 * @Description: 修改车辆
+	 * @param dirver
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 上午10:23:19
+	 */
+	@RequestMapping(value = "updateDriver")
+	@ResponseBody
+	public Map<String, Object> updateDriver(Dirver dirver){
+		int row = dirverBiz.updateDirver(dirver);
+		return returnSuccess(row);
+	}
+	/**
+	 * 
+	 * @Description: 修改车辆
+	 * @param dirver
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 上午10:23:19
+	 */
+	@RequestMapping(value = "findById")
+	@ResponseBody
+	public Map<String, Object> findById(Long id){
+		Dirver dirver = dirverBiz.findById(id);
+		return returnSuccess(dirver);
+	}
+	/**
+	 * 
+	 * @Description: 导出司机信息
+	 * @param carManageVo
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 下午2:45:03
+	 */
+	@RequestMapping("exportXls")
+	public String exportXls(DirverVo dirverVo, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		List<DirverVo> cars = dirverBiz.findByExport(dirverVo);
+		map.put(NormalExcelConstants.FILE_NAME, "司机信息");
+		//List<CarExportVo> usersVos = ObjectConvertUtil.convertList(pageUsers.getData(), CarExportVo.class);
+		map.put(NormalExcelConstants.CLASS, DirverVo.class);
+		map.put(NormalExcelConstants.PARAMS, new ExportParams("司机", "导出人:"+ DataConversionUtil.getUserInfo(WebUtil.getCurrentUser()).getEmpName() , "导出信息"));
+		map.put(NormalExcelConstants.DATA_LIST, cars);
+		return NormalExcelConstants.JEECG_EXCEL_VIEW;
+	}
+	/**
+	 * 
+	 * @Description: 司机控件下拉方法
+	 * @param q
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 下午2:44:04
+	 */
+	@RequestMapping(value = "/findDriverByCmbgd")
+	@ResponseBody
+	public Map<String, Object> findCarByCmbgd(String q,Page page){
+		DirverVo dv = new DirverVo();
+		if (!StringUtil.isEmpty(q)) {
+			dv.setQ(q.trim());
+		}
+		Pagination<Dirver> cars = dirverBiz.findDriverByCmbgd(dv,page);
+		return returnSuccess(cars);
+	}
+	/**
+	 * 
+	 * @Description: 根据驾驶证查询司机是否绑定车辆
+	 * @param drivingNumber
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月5日 上午10:58:05
+	 */
+	@RequestMapping(value = "/findByDrivingNum")
+	@ResponseBody
+	public Map<String,Object> findByDrivingNum(String drivingNumber){
+		List<Dirver> list = dirverBiz.findByDrivingNum(drivingNumber);
+		return returnSuccess(list);
+	}
+	/**
+	 * 
+	 * @Description: 生成司机用户
+	 * @param user
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月10日 上午10:20:53
+	 */
+	@RequestMapping(value = "/createDriver")
+	@ResponseBody
+	public Map<String,Object> createDriver(MobileuserVo mobileuserVo){
+		 dirverBiz.createDriverUser(mobileuserVo);
+		return returnSuccess();
+	}
+	
+	/**
+	 * 
+	 * @Description: 查询手机号是否已经生成 
+	 * @param mobilephone
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月10日 下午5:13:35
+	 */
+	@RequestMapping(value = "/findCountByMobilephone")
+	@ResponseBody
+	public Map<String,Object> findCountByMobilephone(String mobilephone){
+		Integer count = mobileuserBiz.findCountByMobilephone(mobilephone);
+		return returnSuccess(count);
+	}
+	/**
+	 * 
+	 * @Description: 查询司机执行的发车计划
+	 * @param mobilephone
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月21日 上午10:13:57
+	 */
+	@RequestMapping(value = "/findPlaneByTelphone")
+	@ResponseBody
+	public Map<String,Object> findPlaneByTelphone(String mobilephone){
+		List<DirvingPlan> list = dirvingPlanBiz.findPlaneByTelphone(mobilephone);
+		return returnSuccess(list);
+	}
+	
+	/**#############重写手机号校验#############*/
+	
+	/**
+	 * 
+	 * @Description: 通过手机号和用户类型dot/dpt 校验是否用户唯一 
+	 * @param mobileuserVo
+	 * @return true:不存在 false:存在
+	 * @author xiesonglin
+	 * @date 2017年12月28日 下午1:25:42
+	 */
+	@Deprecated
+	@RequestMapping(value="/checkExistsMobileAndUserType")
+	@ResponseBody
+	public Boolean checkExistsMobileAndUserType(MobileuserVo mobileuserVo){
+		MobileuserVo existsFlag=mobileuserBiz.checkExistsByMobileAndUserType(mobileuserVo);
+		return existsFlag==null?true:false;
+	}
+}

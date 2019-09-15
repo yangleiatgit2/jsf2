@@ -1,0 +1,48 @@
+package cn.uce.suc.common.cache;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年12月3日 下午6:25:14
+ */
+
+import cn.uce.suc.common.entity.LoginEntity;
+
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class AppLoginToKenCacheTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * token
+	 */
+	@Resource(name = "appLoginToKenCache")
+	private AppLoginToKenCache appLoginToKenCache;
+	private LoginEntity loginEntity;
+	@Before
+	public void before(){
+		loginEntity=new LoginEntity();
+		loginEntity.setCreateOrg("dadad");
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @author liwei
+	 * @date 2017年12月3日 下午6:25:41
+	 */
+	@Test
+	public void testPro(){
+		appLoginToKenCache.remove("198277637", "dot");
+		appLoginToKenCache.set("1982882", "dot", loginEntity);
+		System.out.println(appLoginToKenCache.getToken("1982882", "dot"));
+	}
+}

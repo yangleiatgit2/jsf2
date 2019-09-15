@@ -1,0 +1,308 @@
+package cn.uce.suc.bkg.vo.ia;
+
+import cn.uce.base.vo.BaseVo;
+
+/**
+ * 注:
+ * @Description: 组合货物信息(webService参数)
+ * @author laizhendong
+ * @date 2017年10月26日 下午3:38:18
+ */
+public class WsSiteFreightInfoVo extends BaseVo {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 流水号
+	 */
+	private Long id;
+	
+	/**
+	 * 网点编号
+	 */
+	private String orgCode;
+	
+	/**
+	 * 网点名称
+	 */
+	private String orgName;
+	
+	/**
+	 * 网点到货量（方数）
+	 */
+	private Double LongTerm_ArriveVolume;
+	
+	/**
+	 * 网点发货量（方数）
+	 */
+	private Double LongTerm_SendVolume;
+	
+	/**
+	 * 可接受最晚到货时间
+	 */
+	private String DCToNode_LatestArriveTime_Str;
+	
+	/**
+	 * 可接受最早发货时间
+	 */
+	private String NodeToDC_EarliestArriveTime_Str;
+	
+	/**
+	 * 到货时的卸货时间
+	 */
+	private Integer UnloadMinutes;
+	
+	/**
+	 * 发货时的装货时间
+	 */
+	private Integer LoadMinutes;
+	
+	/**
+	 * 是否拼车
+	 */
+	private Boolean IfCarpool;
+	
+	/**
+	 * 所属集货点编号，若无，则为空
+	 */
+	private String AssignedSubDCID;
+	
+	/**
+	 * 意向串车对象编号，若无，则为空
+	 */
+	private String[] CarpoolNodesID;
+	
+	/**
+	 * 发货时的限行车型 
+	 */
+	private String[] NodeToDC_BanTrucks;
+	
+	/**
+	 * 到货时的限行车型
+	 */
+	private String[] DCToNode_BanTrucks;
+	
+	 /** 
+	 * 业务编号，订单，需求，组合等编号 
+	 */
+	private String businessCode;
+	
+
+	/** 
+	 * @return id 
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/** 
+	 * 获得网点到货量（方数）
+	 */
+	public Double getLongTerm_ArriveVolume() {
+		return LongTerm_ArriveVolume;
+	}
+
+	/**
+	 * 设置 网点到货量（方数）
+	 */
+	public void setLongTerm_ArriveVolume(Double longTerm_ArriveVolume) {
+		LongTerm_ArriveVolume = longTerm_ArriveVolume;
+	}
+
+	/** 
+	 * 获得网点发货量（方数）
+	 */
+	public Double getLongTerm_SendVolume() {
+		return LongTerm_SendVolume;
+	}
+
+	/**
+	 * 设置网点发货量（方数）
+	 */
+	public void setLongTerm_SendVolume(Double longTerm_SendVolume) {
+		LongTerm_SendVolume = longTerm_SendVolume;
+	}
+
+	
+
+	/** 
+	 * @return dCToNode_LatestArriveTime_Str 
+	 */
+	public String getDCToNode_LatestArriveTime_Str() {
+		return DCToNode_LatestArriveTime_Str;
+	}
+
+	/**
+	 * @param dCToNode_LatestArriveTime_Str the dCToNode_LatestArriveTime_Str to set
+	 */
+	public void setDCToNode_LatestArriveTime_Str(String dCToNode_LatestArriveTime_Str) {
+		DCToNode_LatestArriveTime_Str = dCToNode_LatestArriveTime_Str;
+	}
+
+	/** 
+	 * @return nodeToDC_EarliestArriveTime_Str 
+	 */
+	public String getNodeToDC_EarliestArriveTime_Str() {
+		return NodeToDC_EarliestArriveTime_Str;
+	}
+
+	/**
+	 * @param nodeToDC_EarliestArriveTime_Str the nodeToDC_EarliestArriveTime_Str to set
+	 */
+	public void setNodeToDC_EarliestArriveTime_Str(String nodeToDC_EarliestArriveTime_Str) {
+		NodeToDC_EarliestArriveTime_Str = nodeToDC_EarliestArriveTime_Str;
+	}
+
+	/** 
+	 * @return unloadMinutes 
+	 */
+	public Integer getUnloadMinutes() {
+		return UnloadMinutes;
+	}
+
+	/**
+	 * @param unloadMinutes the unloadMinutes to set
+	 */
+	public void setUnloadMinutes(Integer unloadMinutes) {
+		UnloadMinutes = unloadMinutes;
+	}
+
+	/** 
+	 * @return loadMinutes 
+	 */
+	public Integer getLoadMinutes() {
+		return LoadMinutes;
+	}
+
+	/**
+	 * @param loadMinutes the loadMinutes to set
+	 */
+	public void setLoadMinutes(Integer loadMinutes) {
+		LoadMinutes = loadMinutes;
+	}
+
+	/** 
+	 * 获得是否发车
+	 */
+	public Boolean getIfCarpool() {
+		return IfCarpool;
+	}
+
+	/**
+	 * 设置是否发车
+	 */
+	public void setIfCarpool(Boolean ifCarpool) {
+		IfCarpool = ifCarpool;
+	}
+
+	/** 
+	 * 获得所属集货点编号，若无，则为空
+	 */
+	public String getAssignedSubDCID() {
+		return AssignedSubDCID;
+	}
+
+	/**
+	 * 设置所属集货点编号，若无，则为空
+	 */
+	public void setAssignedSubDCID(String assignedSubDCID) {
+		AssignedSubDCID = assignedSubDCID;
+	}
+
+	/**
+	 * 设置意向串车对象编号，若无，则为空
+	 */
+	public String[] getCarpoolNodesID() {
+		return CarpoolNodesID;
+	}
+	
+	/** 
+	 * 获得意向串车对象编号，若无，则为空 
+	 */
+	public void setCarpoolNodesID(String[] carpoolNodesID) {
+		CarpoolNodesID = carpoolNodesID;
+	}
+	
+	/**
+	 * 设置发货时的限行车型 
+	 */
+	 
+	public String[] getNodeToDC_BanTrucks() {
+		return NodeToDC_BanTrucks;
+	}
+
+
+	/**
+	 * @param nodeToDC_BanTrucks the nodeToDC_BanTrucks to set
+	 */
+	public void setNodeToDC_BanTrucks(String[] nodeToDC_BanTrucks) {
+		NodeToDC_BanTrucks = nodeToDC_BanTrucks;
+	}
+
+	/** 
+	 * @return dCToNode_BanTrucks 
+	 */
+	public String[] getDCToNode_BanTrucks() {
+		return DCToNode_BanTrucks;
+	}
+
+	/**
+	 * @param dCToNode_BanTrucks the dCToNode_BanTrucks to set
+	 */
+	public void setDCToNode_BanTrucks(String[] dCToNode_BanTrucks) {
+		DCToNode_BanTrucks = dCToNode_BanTrucks;
+	}
+
+	/** 
+	 * @return orgCode 
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	/**
+	 * @param orgCode the orgCode to set
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	/** 
+	 * @return businessCode 
+	 */
+	public String getBusinessCode() {
+		return businessCode;
+	}
+
+	/**
+	 * @param businessCode the businessCode to set
+	 */
+	public void setBusinessCode(String businessCode) {
+		this.businessCode = businessCode;
+	}
+
+	/** 
+	 * @return orgName 
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+
+	/**
+	 * @param orgName the orgName to set
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+}

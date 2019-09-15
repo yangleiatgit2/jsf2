@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IVersionDao">
+	
+	<sql id="Base_Column_List">
+			id,froce_flag,title,
+			contents,url,utf3,
+			app_type,update_scope,update_type,
+			platfrom,update_time,update_org,
+			utf1,utf2,remark,
+			version,del_flag,create_emp,
+			create_time,create_org,update_emp,effect_time,status
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+		1=1
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="froceFlag != null">
+		and froce_flag = #{froceFlag}
+		</if>
+		 <if test="effectTime != null">
+		and effect_time = #{effectTime}
+		</if>
+		 <if test="status != null">
+		and status = #{status}
+		</if>
+	    <if test="title != null">
+		and title = #{title}
+		</if>
+	    <if test="contents != null">
+		and contents = #{contents}
+		</if>
+	    <if test="url != null">
+		and url = #{url}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	   <if test="appType != null and appType != ''">
+		and app_type = #{appType}
+		</if>
+	    <if test="updateScope != null">
+		and update_scope = #{updateScope}
+		</if>
+	    <if test="updateType != null  and  updateType != ''">
+		and update_type = #{updateType}
+		</if>
+	    <if test="platfrom != null and platfrom != ''">
+		and platfrom = #{platfrom}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.Version">
+	UPDATE t_suc_comm_version
+	<set>
+		<if test="froceFlag != null">
+		froce_flag = #{froceFlag},
+		</if>
+		 <if test="effectTime != null">
+		effect_time = #{effectTime},
+		</if>
+		 <if test="status != null">
+		status = #{status},
+		</if>
+		<if test="title != null">
+		title = #{title},
+		</if>
+		<if test="contents != null">
+		contents = #{contents},
+		</if>
+		<if test="url != null">
+		url = #{url},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		 <if test="appType != null">
+		app_type = #{appType},
+		</if>
+		<if test="updateScope != null">
+		update_scope = #{updateScope},
+		</if>
+		<if test="updateType != null">
+		update_type = #{updateType},
+		</if>
+		<if test="platfrom != null">
+		platfrom = #{platfrom},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByListByVo" parameterType="cn.uce.suc.common.vo.VersionVo" resultType="cn.uce.suc.common.entity.Version">
+		select <include refid="Base_Column_List" /> from t_suc_comm_version
+		<where>
+		   1=1
+			<if test="appType != null">
+				and app_type = #{appType}
+			</if>
+			<if test="platfrom != null">
+				and platfrom = #{platfrom}
+			</if>
+			<if test="version != null">
+				and version = #{version}
+			</if>
+		</where>
+	</select>
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.VersionVo" resultType="cn.uce.suc.common.entity.Version">
+		select <include refid="Base_Column_List" /> from t_suc_comm_version
+		<include refid="Base_Column_Where"></include>
+	</select>
+	
+	<!-- 版本校验 -->
+	<select id="versionCheck" parameterType="cn.uce.suc.common.vo.VersionVo" resultType="cn.uce.suc.common.entity.Version">
+	select <include refid="Base_Column_List" /> from t_suc_comm_version <where>
+	<if test="appType != null">
+		and app_type = #{appType}
+	</if>
+	<if test="platfrom != null">
+		and platfrom = #{platfrom}
+	</if>
+	<if test = "1==1">
+	and SYSDATE() > effect_time 
+	</if>
+	</where>
+	ORDER BY version desc  LIMIT 1
+	</select>
+</mapper>

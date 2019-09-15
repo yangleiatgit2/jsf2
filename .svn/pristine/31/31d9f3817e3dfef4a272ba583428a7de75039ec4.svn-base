@@ -1,0 +1,119 @@
+package cn.uce.suc.common.biz;
+
+import java.text.MessageFormat;
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.biz.imp.NoticeRuleBiz;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.NoticeDetail;
+import cn.uce.suc.common.entity.NoticeRule;
+import cn.uce.suc.common.service.NoticeDetailService;
+import cn.uce.suc.common.service.NoticeRuleService;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.suc.common.vo.NoticeRuleVo;
+
+/**
+ * 
+ * @Description: 组织机构单元测试
+ * @author liwei
+ * @date 2017年10月19日 下午11:34:06
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class NoticeRuleBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 消息规则服务器
+	 */
+	@Resource
+	private NoticeRuleService noticeRuleService;
+	/**
+	 * 消息规则biz
+	 */
+	@Resource
+	private NoticeRuleBiz noticeRuleBiz;
+	/**
+	 * 消息详情
+	 */
+	@Resource
+	private NoticeDetailService noticeDetailService;
+	/**
+	 * 消息明细biz
+	 */
+	@Resource
+	private INoticeDetailBiz noticeDetailBiz;
+	/**
+	 * 
+	 * @Description: 1,获取消息规则，2根据模板封装消息 
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:42:23
+	 */
+
+	/**
+	 * 
+	 * @Description: 消息写入测试
+	 * @author liwei
+	 * @date 2017年10月31日 下午1:14:28
+	 */
+	@Test
+	public void generateMessage(){
+		NoticeDetailVo noticeDetailVo=new NoticeDetailVo();
+		noticeDetailVo.setNoticeRuleCode("TEST_02");
+		String[] titleExtends = new String[]{"青浦一部"};
+		noticeDetailVo.setTitleExtends(titleExtends);
+		String[] contendsExtends = new String[]{"青浦一部","LW"};
+		noticeDetailVo.setContendsExtends(contendsExtends);
+		noticeDetailVo.setCreateEmp("LW");
+		noticeDetailVo.setCreateOrg("TEST01");
+		noticeDetailVo.setCreateTime(new Date());
+		noticeDetailVo.setJpushAlia("dpt13402068345");
+		noticeDetailVo.setUserPhone("13402068345");
+		noticeDetailVo.setBusinessType(SucConstants.CAPACITY_SHARE);
+		noticeDetailVo.setBusinessId(100L);
+		noticeDetailVo.setPlatform(SucConstants.PLATFORM_DOT);
+
+			noticeDetailBiz.generateMessage(noticeDetailVo,noticeDetailVo);
+
+	}
+	/**
+	 * 
+	 * @Description: 单元测试
+	 * @author liwei
+	 * @date 2017年11月29日 下午7:55:13
+	 */
+	@Test
+	public void tetNoticeRule(){
+		/**
+		 * 1,新增，获取id 
+		 * 2,更新，按照ID更新
+		 * 3,查询，按照ID查询
+		 * 4,删除，根据ID删除
+		 */
+		NoticeRule noticeRule=new NoticeRule();
+		noticeRule.setContents("TESt");
+		noticeRule.setDisplayWays("09");
+		noticeRule.setNewsType("T");
+		noticeRule.setPlatform("01");
+		noticeRule.setRuleCode("TEST");
+		noticeRule.setTitle("TEST");
+		Integer id =noticeRuleBiz.addNoticeRule(noticeRule);
+		noticeRuleBiz.findById(id.longValue());
+		noticeRuleBiz.updateNoticeRule(noticeRule);
+		noticeRuleBiz.deleteNoticeRule(id.longValue());
+		NoticeRuleVo noticeRuleVo=new NoticeRuleVo();
+		Page page=new Page();
+		noticeRuleBiz.findByPagination(noticeRuleVo, page);
+		
+	}
+	
+}

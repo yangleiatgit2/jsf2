@@ -1,0 +1,482 @@
+package cn.uce.suc.bkg.entity.datamain;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import cn.uce.core.db.annotion.Transient;
+
+import java.util.Date;
+
+/**
+ * @Description: 运输异常管理Entity类
+ * @author yanglei
+ * @date 2017年10月31日 下午03:48:43
+ */
+@Table("t_suc_bkg_exception_manager")
+public class ExceptionManager extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+   /** 
+	 * 异常编号
+	 */
+	private String exceptionCode;
+   /** 
+	 * 班次编号
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 应用平台（根据对应的数字获取相应的平台） 
+	 */
+	private String appSrage;
+    /** 
+	 * 异常状态（1，2，3，4）
+	 */
+	private String exceptionStatus;
+	/**
+	 * 异常状态（待确认 已确认  已处理  已终止）
+	 */
+	@Transient
+	private String exceptionStatusName;
+    /** 
+	 * 发车计划号 
+	 */
+	private String startTrunkCode;
+    /** 
+	 * 异常原因 
+	 */
+	private String reason;
+    /** 
+	 * 异常处理完毕时间 
+	 */
+	private Date endTime;
+    /** 
+	 * 异常处理建议 
+	 */
+	private String addvice;
+    /** 
+	 * 异常处理人 
+	 */
+	private String jobEmp;
+    /** 
+	 * 异常终止的原因 
+	 */
+	private String endReason;
+    /** 
+	 * 异常类型 
+	 */
+	private String excepType;
+	/**
+	 * 异常类型 名称
+	 */
+	@Transient
+	private String exceptionTypeName;
+    /** 
+	 * 爆仓方数 
+	 */
+	private Double blowVolume;
+    /** 
+	 * 经度 
+	 */
+	private Double lng;
+    /** 
+	 * 纬度 
+	 */
+	private Double lat;
+    /** 
+	 * 异常关联节点名称 
+	 */
+	private String excepSitesName;
+    /** 
+	 * 异常关联节点编码 
+	 */
+	private String excepSitesCode;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 逻辑删除删除标识。1表示删除，默认为0 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+	/**
+	 * 发车计划状态名称
+	 */
+	@Transient
+	private String driverPlanStatusName;
+	
+	
+	public String getExceptionCode() {
+		return exceptionCode;
+	}
+
+	public void setExceptionCode(String exceptionCode) {
+		this.exceptionCode = exceptionCode;
+	}
+
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+
+	/**
+	 * 获取 应用平台（根据对应的数字获取相应的平台）
+	 */
+	public String getAppSrage() {
+		return appSrage;
+	}
+	
+	/**
+	 * 设置 应用平台（根据对应的数字获取相应的平台）
+	 */
+	public void setAppSrage(String appSrage) {
+		this.appSrage = appSrage;
+	}
+	
+	/**
+	 * 获取 异常状态（0异常处理中/1异常结束
+	 */
+	public String getExceptionStatus() {
+		return exceptionStatus;
+	}
+	
+	/**
+	 * 设置 异常状态（0异常处理中/1异常结束
+	 */
+	public void setExceptionStatus(String exceptionStatus) {
+		this.exceptionStatus = exceptionStatus;
+	}
+	
+	/**
+	 * 获取 发车计划号
+	 */
+	public String getStartTrunkCode() {
+		return startTrunkCode;
+	}
+	
+	/**
+	 * 设置 发车计划号
+	 */
+	public void setStartTrunkCode(String startTrunkCode) {
+		this.startTrunkCode = startTrunkCode;
+	}
+	
+	/**
+	 * 获取 异常原因
+	 */
+	public String getReason() {
+		return reason;
+	}
+	
+	/**
+	 * 设置 异常原因
+	 */
+	public void setReason(String reason) {
+		this.reason = reason;
+	}
+	
+	/**
+	 * 获取 异常处理完毕时间
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+	
+	/**
+	 * 设置 异常处理完毕时间
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+	
+	/**
+	 * 获取 异常处理建议
+	 */
+	public String getAddvice() {
+		return addvice;
+	}
+	
+	/**
+	 * 设置 异常处理建议
+	 */
+	public void setAddvice(String addvice) {
+		this.addvice = addvice;
+	}
+	
+	/**
+	 * 获取 异常处理人
+	 */
+	public String getJobEmp() {
+		return jobEmp;
+	}
+	
+	/**
+	 * 设置 异常处理人
+	 */
+	public void setJobEmp(String jobEmp) {
+		this.jobEmp = jobEmp;
+	}
+	
+	/**
+	 * 获取 异常终止的原因
+	 */
+	public String getEndReason() {
+		return endReason;
+	}
+	
+	/**
+	 * 设置 异常终止的原因
+	 */
+	public void setEndReason(String endReason) {
+		this.endReason = endReason;
+	}
+	
+	/**
+	 * 获取 异常类型
+	 */
+	public String getExcepType() {
+		return excepType;
+	}
+	
+	/**
+	 * 设置 异常类型
+	 */
+	public void setExcepType(String excepType) {
+		this.excepType = excepType;
+	}
+	
+	/**
+	 * 获取 爆仓方数
+	 */
+	public Double getBlowVolume() {
+		return blowVolume;
+	}
+	
+	/**
+	 * 设置 爆仓方数
+	 */
+	public void setBlowVolume(Double blowVolume) {
+		this.blowVolume = blowVolume;
+	}
+	
+	/**
+	 * 获取 经度
+	 */
+	public Double getLng() {
+		return lng;
+	}
+	
+	/**
+	 * 设置 经度
+	 */
+	public void setLng(Double lng) {
+		this.lng = lng;
+	}
+	
+	/**
+	 * 获取 纬度
+	 */
+	public Double getLat() {
+		return lat;
+	}
+	
+	/**
+	 * 设置 纬度
+	 */
+	public void setLat(Double lat) {
+		this.lat = lat;
+	}
+	
+	/**
+	 * 获取 异常关联节点名称
+	 */
+	public String getExcepSitesName() {
+		return excepSitesName;
+	}
+	
+	/**
+	 * 设置 异常关联节点名称
+	 */
+	public void setExcepSitesName(String excepSitesName) {
+		this.excepSitesName = excepSitesName;
+	}
+	
+	/**
+	 * 获取 异常关联节点编码
+	 */
+	public String getExcepSitesCode() {
+		return excepSitesCode;
+	}
+	
+	/**
+	 * 设置 异常关联节点编码
+	 */
+	public void setExcepSitesCode(String excepSitesCode) {
+		this.excepSitesCode = excepSitesCode;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 逻辑删除删除标识。1表示删除，默认为0
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 逻辑删除删除标识。1表示删除，默认为0
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	public String getExceptionStatusName() {
+		return exceptionStatusName;
+	}
+
+	public void setExceptionStatusName(String exceptionStatusName) {
+		this.exceptionStatusName = exceptionStatusName;
+	}
+
+	public String getExceptionTypeName() {
+		return exceptionTypeName;
+	}
+
+	public void setExceptionTypeName(String exceptionTypeName) {
+		this.exceptionTypeName = exceptionTypeName;
+	}
+
+	public String getDriverPlanStatusName() {
+		return driverPlanStatusName;
+	}
+
+	public void setDriverPlanStatusName(String driverPlanStatusName) {
+		this.driverPlanStatusName = driverPlanStatusName;
+	}
+	
+	
+}

@@ -1,0 +1,292 @@
+package cn.uce.suc.app.biz.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.suc.app.biz.IappRegisterbiz;
+import cn.uce.suc.app.cache.CaptchaCache;
+import cn.uce.suc.app.entity.Captcha;
+import cn.uce.suc.app.service.AppRegisterService;
+import cn.uce.suc.app.service.CaptchaService;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.biz.IOrgExtendBiz;
+import cn.uce.suc.common.cache.AppLoginToKenCache;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.service.NoticePushService;
+import cn.uce.suc.common.util.SucAppConstants;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.OrgExtendVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月3日 下午1:41:20
+ */
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+@Service("appRegisterBiz")
+public class AppRegisterBiz implements IappRegisterbiz {
+	/**
+	 * 注册
+	 */
+		@Resource
+	private AppRegisterService appRegisterService;
+		/**
+		 * 短信发送
+		 */
+		@Resource
+	private NoticePushService	noticePushService;
+	/**
+	 * 组织机构
+	 */
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz;
+	
+	/**
+	 * 机构扩展
+	 */
+	@Resource
+	private IOrgExtendBiz orgExtendBiz;
+	/**
+	 * 用户
+	 */
+	@Resource
+	private MobileuserService mobileuserService;
+	/**
+	 * 验证码
+	 */
+	@Resource
+	private CaptchaService captchaService;
+	/**
+	 * 验证码，缓存--
+	 */
+	@Resource(name = "captchaCache")
+	private CaptchaCache captchaCache;
+	/**
+	 * token
+	 */
+	@Resource(name = "appLoginToKenCache")
+	private AppLoginToKenCache appLoginToKenCache;
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: getCaptcha</p> 
+	* <p>Description: </p> 
+	* @param telephone
+	* @param userType
+	* @return 
+	* @see cn.uce.suc.app.biz.IappRegisterbiz#getCaptcha(java.lang.String, java.lang.String)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public Map<String, Object> getCaptcha(String telephone, String userType) {
+
+		return appRegisterService.getCaptcha(telephone, userType);
+	}
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: register</p> 
+	* <p>Description: </p> 
+	* @param phoneNumber
+	* @param userType
+	* @param passWrod
+	* @param captcha
+	* @return 
+	* @see cn.uce.suc.app.biz.IappRegisterbiz#register(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Map<String, Object> register(String phoneNumber, String userType, String passWrod, String captcha) {
+
+		return appRegisterService.register(phoneNumber, userType, passWrod, captcha);
+	}
+	/**
+	 * 
+	 * @Description: 用户获取验证码--用户认证 
+	 * @author liwei
+	 * @date 2017年11月30日 下午6:29:42
+	 */
+	@Override
+	public Map<String,Object> userAuthenticationCapch(MobileuserVo mobileuserVo) {
+		//参数校验
+		if (null == mobileuserVo || StringUtil.isBlank(mobileuserVo.getMobilephone())
+				|| StringUtil.isBlank(mobileuserVo.getUserType()) || StringUtil.isBlank(mobileuserVo.getBaseOrgCode())) {
+			return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "请求参数不正确",null);
+		}
+		//手机号
+		String mobilePhine=mobileuserVo.getMobilephone();
+		/**用户类型*/
+		String usertype=mobileuserVo.getUserType();
+		/**
+		 * 验证码
+		 */
+		String baseOrgCode=mobileuserVo.getBaseOrgCode();
+		/**
+		 * 1，校验用户是否存在； 2，校验网点是否存在； 3，校验网点是否维护扩展组织 4，获取手机号，发送验证码
+		 */
+		MobileuserVo mobileuserVoCondition = new MobileuserVo();
+		//校验用户账号类型
+		if (usertype.equals(SucConstants.CAPTCH_PLATFROM_DOT)) {
+			mobileuserVoCondition.setDotType(true);
+			mobileuserVoCondition.setDptType(false);
+		} else if (usertype.equals(SucConstants.CAPTCH_PLATFORM_DPT)) {
+			mobileuserVoCondition.setDotType(false);
+			mobileuserVoCondition.setDptType(true);
+		}
+		//设置电话
+		mobileuserVoCondition.setMobilephone(mobilePhine);
+		//查询
+		List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVoCondition);
+		//校验非空
+		if(null == mobileuserVos || mobileuserVos.size()==0){
+			return  noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "用户不存在",null);
+		}
+		OmgCmsOrgVo omgCmsOrgVo=omgCmsOrgBiz.findByBaseOrgCode(mobileuserVo.getBaseOrgCode());
+		//校验--非空，及状态
+		if(null == omgCmsOrgVo || omgCmsOrgVo.getStatus().equals(BkgConstants.NOT_ENABLED)){
+			return  noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "机构不存在或者已停用",null);
+		}
+		//查询基础信息
+		OrgExtendVo orgExtendVo=orgExtendBiz.findByBaseOrgCode(mobileuserVo.getBaseOrgCode());
+		//校验
+		if(null == orgExtendVo || StringUtil.isBlank(orgExtendVo.getSiteChargePhine())){
+			return  noticePushService.initResultEntity(SucAppConstants.ORG_NOT_EXIST.value(), "该机构未维护网点负责人信息",null);
+		}
+		// 2. 生成验证码
+				// 初始化验证码实体类
+		Captcha captcha = captchaService.initCaptchaEntity(mobilePhine, mobileuserVo.getUserType());
+		String captchastr = captcha.getContent();
+		//以用户机构作为key存储
+		captchaCache.authset(baseOrgCode, usertype, captchastr, 30);
+		//初始化请求参数
+		String requeParams=noticePushService.initParams(SucConstants.CAPTCH_USER_AUTH, captcha, orgExtendVo.getSiteChargePhine(), SucConstants.CAPTCH_PLATFROM_DOT);
+		Map<String, Object> resultEntity = noticePushService.sendMessageToPhone(requeParams);
+		String sendFlag = (String) resultEntity.get("resultFlag");
+
+		if (SucAppConstants.OK.value() == sendFlag) {
+			// 发送成功
+			captchaService.addCaptcha(captcha);
+		}
+		return resultEntity;
+
+	}
+	/**
+	 * 
+	 * @Description: 用户认证
+	 * @param mobileuserVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月30日 下午8:15:36
+	 */
+	@Override
+	public Map<String, Object> userAuthentication(MobileuserVo mobileuserVo) {
+		// 参数校验
+		if (null == mobileuserVo || StringUtil.isBlank(mobileuserVo.getMobilephone())
+				|| StringUtil.isBlank(mobileuserVo.getUserType()) || StringUtil.isBlank(mobileuserVo.getBaseOrgCode())
+				|| StringUtil.isBlank(mobileuserVo.getCaptcha())) {
+			return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "请求参数不正确", null);
+		}
+		// 手机号
+		String mobilePhine = mobileuserVo.getMobilephone();
+		/** 用户类型 */
+		String usertype = mobileuserVo.getUserType();
+		/**
+		 * 输入的验证码
+		 */
+		String capch = mobileuserVo.getCaptcha();
+		/**
+		 * 验证码
+		 */
+		String baseOrgCode = mobileuserVo.getBaseOrgCode();
+		/**
+		 * 1，校验用户是否存在； 2，校验网点是否存在； 3，校验网点是否维护扩展组织 4，获取手机号，发送验证码
+		 */
+		MobileuserVo mobileuserVoCondition = new MobileuserVo();
+		/* 校验账号类型**/
+		/**网点*/
+		if (usertype.equals(SucConstants.CAPTCH_PLATFROM_DOT)) {
+			mobileuserVoCondition.setDotType(true);
+			mobileuserVoCondition.setDptType(false);
+			/**司机*/
+		} else if (usertype.equals(SucConstants.CAPTCH_PLATFORM_DPT)) {
+			mobileuserVoCondition.setDotType(false);
+			mobileuserVoCondition.setDptType(true);
+		} else {
+			/**不满足条件-返回值*/
+			return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "类型不匹配", null);
+		}
+		// 设置电话
+		mobileuserVoCondition.setMobilephone(mobilePhine);
+		// 查询
+		List<MobileuserVo> mobileuserVos = mobileuserService.findByCondition(mobileuserVoCondition);
+		// 校验非空
+		if (null == mobileuserVos || mobileuserVos.size() == 0) {
+			return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "用户不存在", null);
+		}
+		// 验证码校验
+		String capchOld = captchaCache.getauth(baseOrgCode, usertype);
+		if (!capch.equals(capchOld)) {
+			return noticePushService.initResultEntity(SucAppConstants.CAPTCHA_IS_ERROR.value(), "验证码输入错误", null);
+		}
+		// 校验统一组织机构下是否存在多个用户
+		MobileuserVo mobileuserVoConditionnew = new MobileuserVo();
+		mobileuserVoConditionnew.setBaseOrgCode(baseOrgCode);
+		// 查询
+		List<MobileuserVo> mobileuserVoBases = mobileuserService.findByCondition(mobileuserVoConditionnew);
+		if (null != mobileuserVoBases && mobileuserVoBases.size() > 0) {
+			return noticePushService.initResultEntity(SucAppConstants.ORG_NOT_EXIST.value(), "同一机构下只允许绑定一个用户", null);
+		}
+		/** 设置绑定机构编码 */
+		mobileuserVoCondition.setBaseOrgCode(baseOrgCode);
+		/** 用户 */
+		MobileuserVo mobileuserVoNew = mobileuserVos.get(0);
+		/** 实体转换 */
+		Mobileuser mobileuser = ObjectConvertUtil.convertObject(mobileuserVoNew, Mobileuser.class);
+		OmgCmsOrgVo omgCmsOrgVo = omgCmsOrgBiz.findByBaseOrgCode(baseOrgCode);
+		// 校验--非空，及状态
+		if (null == omgCmsOrgVo || omgCmsOrgVo.getStatus().equals(BkgConstants.NOT_ENABLED)) {
+			return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "机构不存在或者已停用", null);
+		}
+		// 校验网点端绑定网点，司机端绑定分拨
+		if (mobileuserVoCondition.getDotType() && omgCmsOrgVo.getOrgType() != BkgConstants.ORG_TYPE_SITE) {
+			return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "网点端只允许绑定网点", null);
+		} else if (mobileuserVoCondition.getDptType()
+				&& omgCmsOrgVo.getOrgType() != BkgConstants.ORG_TYPE_OPERATE_CENTER) {
+			return noticePushService.initResultEntity(SucAppConstants.CODE_PARAMS_ERROR.value(), "司机端只允许绑定分拨", null);
+		}
+		//设置组织机构编码
+		mobileuser.setBaseOrgCode(baseOrgCode);
+		//设置名称
+		mobileuser.setOrgName(omgCmsOrgVo.getOrgName());
+		//设置为已认证
+		mobileuser.setCertifiFlag(true);
+		//更新要户
+		mobileuserService.updateById(mobileuser);
+		//去除验证码
+		captchaCache.removeauth(baseOrgCode, usertype);
+		//从缓存获取对应的用户
+		LoginEntity  loginEntity=appLoginToKenCache.getToken(mobilePhine, usertype);
+		//非空
+		if(null != loginEntity){
+			//对象转义
+			mobileuserVoNew=ObjectConvertUtil.convertObject(mobileuser, MobileuserVo.class);
+			//设置新的用户
+			loginEntity.setMobileuserVo(mobileuserVoNew);
+			//刷新缓存
+			appLoginToKenCache.set(mobilePhine, usertype, loginEntity);
+			
+		}
+		return noticePushService.initResultEntity(SucAppConstants.OK.value(), null, loginEntity);
+	}
+	
+}

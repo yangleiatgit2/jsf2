@@ -1,0 +1,166 @@
+package cn.uce.suc.bkg.service.operation;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.dao.operation.IFreightOrderCombineDao;
+
+/**
+ * @Description: 订单组合信息Service类
+ * @author liwei
+ * @date 2017年10月21日 下午05:28:57
+ */
+@Service("freightOrderCombineService")
+public class FreightOrderCombineService {
+	
+	/**
+	 * 注入订单组合信息Dao
+	 */
+	@Resource
+	private IFreightOrderCombineDao freightOrderCombineDao;
+	
+	/**
+	 * @Description: 新增订单组合信息
+	 * @param freightOrderCombine 订单组合信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public int addFreightOrderCombine(FreightOrderCombine freightOrderCombine) {
+		return freightOrderCombineDao.insert(freightOrderCombine);
+	}
+	
+	/**
+	 * @Description: 修改订单组合信息
+	 * @param freightOrderCombine 订单组合信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public int updateById(FreightOrderCombine freightOrderCombine) {
+		return freightOrderCombineDao.updateById(freightOrderCombine);
+	}
+	
+	/**
+	 * @Description: 删除订单组合信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public int deleteById(Long id) {
+		return freightOrderCombineDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询订单组合信息
+	 * @param id 主键
+	 * @return 订单组合信息
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public FreightOrderCombine findById(Long id) {
+		return freightOrderCombineDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询订单组合信息
+	 * @param freightOrderCombineVo 订单组合信息
+	 * @param page 分页参数
+	 * @return 订单组合信息
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public Pagination<FreightOrderCombine> findByPagination(FreightOrderCombineVo freightOrderCombineVo, Page page) {
+		Pagination<FreightOrderCombine> paginationFreightOrderCombine = freightOrderCombineDao.findByPagination(freightOrderCombineVo, page);
+		return paginationFreightOrderCombine;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询订单组合详情
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 下午10:15:45
+	 */
+	public List<FreightOrderCombineVo> findByCondition(FreightOrderCombineVo freightOrderCombineVo){
+		return freightOrderCombineDao.findByCondition(freightOrderCombineVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据组合编号更新订单组合状态 
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午2:17:58
+	 */
+	public int updStatusByCombineCode(FreightOrderCombineVo freightOrderCombineVo){
+		return freightOrderCombineDao.updStatusByCombineCode(freightOrderCombineVo);
+	}
+	/**
+	 * 
+	 * @Description: T根据订单组合号查询
+	 * @param orderCombineCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月12日 上午11:24:52
+	 */
+	public FreightOrderCombineVo findByOrderCombineCode(String orderCombineCode){
+		return freightOrderCombineDao.findByOrderCombineCode(orderCombineCode);
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询订单组合详情
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月14日 下午10:15:45
+	 */
+	public List<FreightOrderCombineVo> findByConditionMultiCombineType(FreightOrderCombineVo freightOrderCombineVo, Page page){
+		return freightOrderCombineDao.findByConditionMultiCombineType(freightOrderCombineVo,page);
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询订单组合详情
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月16日 下午10:15:45
+	 */
+	public List<FreightOrderCombineVo> findByConditionMultiCombineType(FreightOrderCombineVo freightOrderCombineVo){
+		return freightOrderCombineDao.findListByMultiCombineType(freightOrderCombineVo);
+	}
+	/**
+	 * @Description: 根据分拨编号和业务类型，业务模式等查询订单组合的数量
+	 * @param demandSiteCode  
+	 * @param  orderCombineType
+	 * @param  businessMode
+	 * @return count
+	 * @author yanglei
+	 * @date 2017年11月19日 下午03:24:55
+	 */
+	public int getOrderCombineVoCount(FreightOrderCombineVo freightOrderCombineVo){
+		return freightOrderCombineDao.getOrderCombineVoCount(freightOrderCombineVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询订单组合列表
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月14日 下午10:15:45
+	 */
+	public List<FreightOrderCombineVo> findByOrderCombineMultiCombineType(String[] orderCombineTypes, String[] orderCombineStatuses,String operStationCode, String businessMode,String orderCombineCode, Page page){
+		return freightOrderCombineDao.findByOrderCombineMultiCombineType(orderCombineTypes, orderCombineStatuses, operStationCode, businessMode, orderCombineCode, page);
+	}
+	
+}

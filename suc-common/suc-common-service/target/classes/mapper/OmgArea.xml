@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IOmgAreaDao">
+	
+	<sql id="Base_Column_List">
+			ID,CMS_AREA_ID,AREA_CODE,
+			AREA_NAME,AREA_NAME_TW,AREA_NAME_EN,
+			AREA_FULL_CODE,AREA_TYPE,PARENT_AREA,
+			PARENT_AREA_CODE,FINANCE_CENTER,FINANCE_CENTER_CODE,
+			ZIP_CODE,TEL_CODE,ENABLED,
+			NAME_PY,NAME_SPY,REMARK,
+			DELETE_FLAG,VERSION,CREATE_EMP,
+			CREATE_ORG,CREATE_TIME,UPDATE_EMP,
+			UPDATE_ORG,UPDATE_TIME,sync_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and ID = #{id}
+		</if>
+	    <if test="cmsAreaId != null">
+		and CMS_AREA_ID = #{cmsAreaId}
+		</if>
+	    <if test="areaCode != null">
+		and AREA_CODE = #{areaCode}
+		</if>
+	    <if test="areaName != null">
+		and AREA_NAME = #{areaName}
+		</if>
+	    <if test="areaNameTw != null">
+		and AREA_NAME_TW = #{areaNameTw}
+		</if>
+	    <if test="areaNameEn != null">
+		and AREA_NAME_EN = #{areaNameEn}
+		</if>
+	    <if test="areaFullCode != null">
+		and AREA_FULL_CODE = #{areaFullCode}
+		</if>
+	    <if test="areaType != null">
+		and AREA_TYPE = #{areaType}
+		</if>
+	    <if test="parentArea != null">
+		and PARENT_AREA = #{parentArea}
+		</if>
+	    <if test="parentAreaCode != null">
+		and PARENT_AREA_CODE = #{parentAreaCode}
+		</if>
+	    <if test="financeCenter != null">
+		and FINANCE_CENTER = #{financeCenter}
+		</if>
+	    <if test="financeCenterCode != null">
+		and FINANCE_CENTER_CODE = #{financeCenterCode}
+		</if>
+	    <if test="zipCode != null">
+		and ZIP_CODE = #{zipCode}
+		</if>
+	    <if test="telCode != null">
+		and TEL_CODE = #{telCode}
+		</if>
+	    <if test="enabled != null">
+		and ENABLED = #{enabled}
+		</if>
+	    <if test="namePy != null">
+		and NAME_PY = #{namePy}
+		</if>
+	    <if test="nameSpy != null">
+		and NAME_SPY = #{nameSpy}
+		</if>
+	    <if test="remark != null">
+		and REMARK = #{remark}
+		</if>
+	    <if test="deleteFlag != null">
+		and DELETE_FLAG = #{deleteFlag}
+		</if>
+	    <if test="version != null">
+		and VERSION = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and CREATE_EMP = #{createEmp}
+		</if>
+	    <if test="createOrg != null">
+		and CREATE_ORG = #{createOrg}
+		</if>
+	    <if test="createTime != null">
+		and CREATE_TIME = #{createTime}
+		</if>
+	    <if test="updateEmp != null">
+		and UPDATE_EMP = #{updateEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and UPDATE_ORG = #{updateOrg}
+		</if>
+	    <if test="updateTime != null">
+		and UPDATE_TIME = #{updateTime}
+		</if>
+	    <if test="syncTime != null">
+		and sync_time = #{syncTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.OmgArea">
+	UPDATE omg_area
+	<set>
+		<if test="cmsAreaId != null">
+		CMS_AREA_ID = #{cmsAreaId},
+		</if>
+		<if test="areaCode != null">
+		AREA_CODE = #{areaCode},
+		</if>
+		<if test="areaName != null">
+		AREA_NAME = #{areaName},
+		</if>
+		<if test="areaNameTw != null">
+		AREA_NAME_TW = #{areaNameTw},
+		</if>
+		<if test="areaNameEn != null">
+		AREA_NAME_EN = #{areaNameEn},
+		</if>
+		<if test="areaFullCode != null">
+		AREA_FULL_CODE = #{areaFullCode},
+		</if>
+		<if test="areaType != null">
+		AREA_TYPE = #{areaType},
+		</if>
+		<if test="parentArea != null">
+		PARENT_AREA = #{parentArea},
+		</if>
+		<if test="parentAreaCode != null">
+		PARENT_AREA_CODE = #{parentAreaCode},
+		</if>
+		<if test="financeCenter != null">
+		FINANCE_CENTER = #{financeCenter},
+		</if>
+		<if test="financeCenterCode != null">
+		FINANCE_CENTER_CODE = #{financeCenterCode},
+		</if>
+		<if test="zipCode != null">
+		ZIP_CODE = #{zipCode},
+		</if>
+		<if test="telCode != null">
+		TEL_CODE = #{telCode},
+		</if>
+		<if test="enabled != null">
+		ENABLED = #{enabled},
+		</if>
+		<if test="namePy != null">
+		NAME_PY = #{namePy},
+		</if>
+		<if test="nameSpy != null">
+		NAME_SPY = #{nameSpy},
+		</if>
+		<if test="remark != null">
+		REMARK = #{remark},
+		</if>
+		<if test="deleteFlag != null">
+		DELETE_FLAG = #{deleteFlag},
+		</if>
+		<if test="version != null">
+		VERSION = #{version},
+		</if>
+		<if test="createEmp != null">
+		CREATE_EMP = #{createEmp},
+		</if>
+		<if test="createOrg != null">
+		CREATE_ORG = #{createOrg},
+		</if>
+		<if test="createTime != null">
+		CREATE_TIME = #{createTime},
+		</if>
+		<if test="updateEmp != null">
+		UPDATE_EMP = #{updateEmp},
+		</if>
+		<if test="updateOrg != null">
+		UPDATE_ORG = #{updateOrg},
+		</if>
+		<if test="updateTime != null">
+		UPDATE_TIME = #{updateTime},
+		</if>
+		<if test="syncTime != null">
+		sync_time = #{syncTime},
+		</if>
+	</set>
+	WHERE ID = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.OmgAreaVo" resultType="cn.uce.suc.common.entity.OmgArea">
+	select <include refid="Base_Column_List" /> from omg_area
+	</select>
+	<!-- 组合查询 -->
+	<select id="findBycondition" parameterType="cn.uce.suc.common.vo.OmgAreaVo" resultType="cn.uce.suc.common.entity.OmgArea">
+	select <include refid="Base_Column_List" /> from omg_area <include refid="Base_Column_Where" />
+	</select>
+	<select id="queryAreaByRegion" parameterType="cn.uce.suc.common.vo.OmgAreaVo" resultType="cn.uce.suc.common.vo.OmgAreaVo">
+		SELECT
+		  t5.AREA_CODE as provinceCode,
+		  t5.AREA_NAME as province,
+		  t4.cityCode as cityCode,
+		  t4.city as city,
+		  t4.regionCode as regionCode,
+		  t4.region as region
+		FROM
+			(
+				SELECT
+		      t3.AREA_CODE as cityCode,
+					t3.AREA_NAME AS city,
+					t3.PARENT_AREA_CODE,
+					t2.AREA_CODE as regionCode,
+					t2.AREA_NAME AS region
+				FROM
+					(
+						SELECT
+							t1.PARENT_AREA_CODE,
+							t1.AREA_CODE,
+							t1.AREA_NAME
+						FROM
+							omg_area t1
+						WHERE
+							t1.AREA_CODE = #{areaCode}
+					) t2,
+					omg_area t3
+				WHERE
+					t2.PARENT_AREA_CODE = t3.AREA_CODE
+			) t4,
+			omg_area t5
+		WHERE
+			t5.AREA_CODE = t4.PARENT_AREA_CODE
+	</select>
+</mapper>

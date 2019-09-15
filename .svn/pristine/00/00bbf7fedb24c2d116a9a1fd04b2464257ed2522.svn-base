@@ -1,0 +1,150 @@
+package cn.uce.suc.bkg.vo.price;
+
+import cn.uce.base.vo.BaseVo;
+
+/**
+ * @Description: 定价规则Vo类
+ * @author laizhendong
+ * @date 2017年11月01日 下午09:05:18
+ */
+public class SitePriceVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+   
+	/**
+	 * 网点机构编号
+	 */
+	private String orgCode;
+	
+	/**
+	 * 该班次网点的固定成本
+	 */
+	private Double fiexdCost;
+	/**
+	 * 该班次网点的可变
+	 */
+	private Double changeCost;
+	
+	/**
+	 * 该班次网点的货量
+	 */
+	private Double volume;
+	
+	/**
+	 * 网点到中心距离
+	 */
+	private Double distance;
+	
+	/**
+	 * 班次编号
+	 */
+	private String lineGroupCode;
+
+	/** 
+	 * @return id 
+	 */
+	public Long getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	/** 
+	 * @return orgCode 
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	/**
+	 * @param orgCode the orgCode to set
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	/** 
+	 * @return fiexdCost 
+	 */
+	public Double getFiexdCost() {
+		return fiexdCost;
+	}
+
+	/**
+	 * @param fiexdCost the fiexdCost to set
+	 */
+	public void setFiexdCost(Double fiexdCost) {
+		this.fiexdCost = fiexdCost;
+	}
+
+	/** 
+	 * @return changeCost 
+	 */
+	public Double getChangeCost() {
+		return changeCost;
+	}
+
+	/**
+	 * @param changeCost the changeCost to set
+	 */
+	public void setChangeCost(Double changeCost) {
+		this.changeCost = changeCost;
+	}
+
+	/** 
+	 * @return volume 
+	 */
+	public Double getVolume() {
+		return volume;
+	}
+
+	/**
+	 * @param volume the volume to set
+	 */
+	public void setVolume(Double volume) {
+		this.volume = volume;
+	}
+
+	/** 
+	 * @return distance 
+	 */
+	public Double getDistance() {
+		return distance;
+	}
+
+	/**
+	 * @param distance the distance to set
+	 */
+	public void setDistance(Double distance) {
+		this.distance = distance;
+	}
+
+	/** 
+	 * @return lineGroupCode 
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+
+	/**
+	 * @param lineGroupCode the lineGroupCode to set
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+	
+	
+	
+}

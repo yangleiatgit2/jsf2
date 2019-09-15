@@ -1,0 +1,928 @@
+package cn.uce.suc.bkg.control.datamain;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.ICarManageBiz;
+import cn.uce.suc.bkg.biz.datamain.IDirverBiz;
+import cn.uce.suc.bkg.biz.datamain.IExceptionManagerBiz;
+import cn.uce.suc.bkg.biz.datamain.IExceptionTraceBiz;
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanDetailBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.entity.datamain.Dirver;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.datamain.ExceptionTrace;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.entity.operation.LineGroup;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.service.datamain.CarManageService;
+import cn.uce.suc.bkg.service.operation.DirvingPlanDetailService;
+import cn.uce.suc.bkg.service.operation.DirvingPlanService;
+import cn.uce.suc.bkg.service.operation.LineGroupService;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.datamain.ExceptionManagerVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.common.biz.INoticeDetailBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.service.TruckCostManagementService;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.suc.common.vo.TruckCostManagementVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.ObjectConvertUtil;
+import cn.uce.web.common.util.WebUtil;
+
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+/**
+ * 
+ * @Description: 异常管理控制器
+ * @author yanglei
+ * @date 2017年10月20日 上午10:09:27
+ */
+@Controller
+@RequestMapping("/exceptionManager")
+public class ExceptionManagerController extends BaseController{
+	
+	/**
+	 * 注入IExceptionBiz对象
+	 */
+	@Resource
+	private IExceptionManagerBiz exceptionBiz;
+	@Resource
+	private IDirverBiz dirverBiz;
+	@Resource
+	private IExceptionTraceBiz exceptionTraceBiz;
+	@Resource
+	private IDirvingPlanBiz dirvingPlanBiz;
+	@Resource
+	private LineGroupService lineGroupService;
+	@Resource
+	private CarManageService carManageService;
+	@Resource
+	private TruckCostManagementService truckCostManagementService;
+	@Resource
+	private DirvingPlanService dirvingPlanService;
+	@Resource
+	private DirvingPlanDetailBiz dirvingPlanDetailBiz;
+	@Resource
+	private DirvingPlanDetailService dirvingPlanDetailService;
+	@Resource
+	private MobileuserService mobileuserService;
+	@Resource
+	private ILineGroupBiz lineGroupBiz;
+	@Resource
+	private ILineGroupDetailBiz lineGroupDetailBiz;
+	@Resource
+	private ICarManageBiz carManageBiz;
+	@Resource
+	private INoticeDetailBiz noticeDetailBiz;
+    @Resource
+    private IIdsWorker  redisIdsWorker;
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/exceptionManager";
+	}
+	
+	@RequestMapping(value = "/findBycondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(ExceptionManagerVo exceptionVo, Page page) {
+		Pagination<ExceptionManagerVo> pagination=exceptionBiz.findByPagination(exceptionVo, page);
+		List<ExceptionManagerVo> exList=pagination.getData();
+		if(CollectionUtils.isNotEmpty(exList)){
+			for(ExceptionManagerVo ex: exList){
+				if(null!=ex.getLng()&& null!=ex.getLat()){
+					ex.setUtf2(ex.getLng()+","+ex.getLat());
+				}
+				String excptionCode=ex.getExceptionCode();
+				if(StringUtils.isNotBlank(excptionCode)){
+					List<ExceptionTrace> traceList=exceptionTraceBiz.findByExceptionCode(excptionCode);
+					if(CollectionUtils.isNotEmpty(traceList)){
+						ExceptionTrace trace=traceList.get(0);
+						ex.setSolveSolution(trace.getSolveSolution());
+						ex.setSolveEmp(trace.getSolveEmp());
+						ex.setUpdateTime(trace.getCreateTime());
+					}
+				}
+				String startTrunkCode=ex.getStartTrunkCode();
+				if(StringUtil.isNotBlank(startTrunkCode)){
+					DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+					if(plan !=null){
+						//get plan and status
+						ex.setDirvingPlanStatus(plan.getStatus());
+						String lineGroupCode=plan.getLineGroupCode();
+						if(StringUtils.isNotBlank(lineGroupCode)){
+							LineGroup line= lineGroupBiz.findByLineGroupCode(lineGroupCode);
+							if(line!=null){
+								//get lineGroup and status
+								ex.setLineGroupStatus(line.getStatus());
+								ex.setExcepSitesName(line.getCarType());
+							}
+						} 
+					}
+				}
+			}
+		}
+		return returnSuccess(pagination);
+	}
+	/**
+	 * 
+	 * @Description: 保存班次，路段，发车信息
+	 * @param page
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月5日 下午3:11:00
+	 */
+	@RequestMapping(value = "/saveLineGroupAndDrivePlan")
+	@ResponseBody
+	public Map<String, Object> saveLineGroupAndDrivePlan(String exId,String lineGroupStr, String drivePlanStr, String detailVos,  HttpServletRequest request) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(exId));
+		String startTrunkCode=ex.getStartTrunkCode();
+		LineGroup lineGroupFront=JSONObject.parseObject(lineGroupStr,LineGroup.class);
+		DirvingPlan dirvingPlanFront=JSONObject.parseObject(drivePlanStr,DirvingPlan.class);
+		List<LineGroupDetail> lineGroupDetails=(List<LineGroupDetail>)JSONArray.parseArray(detailVos, LineGroupDetail.class);
+		String lineGroupCode="";
+		String deparTurePlan="";
+		LineGroup lineGroup=new LineGroup();
+		
+		CarManageVo carManageVo=new CarManageVo();
+		carManageVo.setCarNumber(dirvingPlanFront.getCarCode());//传过来的是车辆编码
+		//通过车辆编码查询车辆信息
+		List<CarManageVo> cmList=carManageService.findByVo(carManageVo);
+		String plateNumber="";
+		String carType="";
+		double value= 1L;
+		if(CollectionUtils.isNotEmpty(cmList)){
+			plateNumber=cmList.get(0).getPlateNumbers();
+			carType=cmList.get(0).getCarType();
+		}
+		TruckCostManagementVo truckCostManagementVo=new TruckCostManagementVo();
+		
+		if(lineGroupFront!=null){
+			 lineGroupCode = lineGroupFront.getLineGroupCode();
+			if (StringUtils.isNotBlank(lineGroupCode)) {
+				lineGroup=lineGroupBiz.findByLineGroupCode(lineGroupCode);
+				lineGroup.setStatus(BkgConstants.LINE_GROUP_STATUS_PLAN_STOP);
+				lineGroupBiz.updateLineGroup(lineGroup);//把 原来的状态设置为已终止并保存起来
+				
+				LineGroupVo temp=new LineGroupVo();
+				if(lineGroupCode.contains("_")){
+					lineGroupCode=lineGroupCode.substring(0, lineGroupCode.indexOf("_"));
+				}
+				temp.setLineGroupCode(lineGroupCode);
+				int count=lineGroupBiz.countByLineGroupVo(temp);
+				lineGroupCode=lineGroupCode+"_"+count;
+				lineGroup.setLineGroupCode(lineGroupCode);//新生成班次单号可在原班次单号基础上加特殊标识(如_1)来识别该班次为重新生成的班次。
+				lineGroup.setLineGroupName(lineGroupCode);
+			}else{
+				lineGroupCode = redisIdsWorker.nextId(IdsPrefix.BC);
+				lineGroup.setLineGroupCode(lineGroupCode);
+				lineGroup.setLineGroupName(lineGroupCode);
+			}
+			lineGroup.setDepartTime(lineGroupFront.getDepartTime());
+			lineGroup.setArrivalTime(lineGroupFront.getArrivalTime());
+			lineGroup.setTotalTime(lineGroupFront.getTotalTime());
+			lineGroup.setCarType(carType);
+			lineGroup.setRemark(lineGroupFront.getRemark());
+			lineGroup.setRequiType(2);//临时需求
+			lineGroup.setAdjustType("01");//发车计划调整
+			lineGroup.setLineGroupType("00");//手工班次
+		}
+		Date date=new Date();
+		SucCurrentUser userInfo=new SucCurrentUser();
+		DirvingPlan plan=new DirvingPlan();
+		if(dirvingPlanFront!=null){
+			//新增发车计划主信息
+			userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+			deparTurePlan=dirvingPlanFront.getDrivingPlanCode();
+				if(StringUtil.isBlank(startTrunkCode)){
+					return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+				}
+				 plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+				if(plan ==null){
+					return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+				}
+				//BeanUtils.copyProperties(dirvingPlanFront, plan);
+				plan.setStatus(BkgConstants.PLAN_CODE_FINISH);
+				dirvingPlanBiz.updateDirvingPlan(plan);//把 原来的发车计划状态设置为已终止并保存起来
+				
+				DirvingPlanVo temp=new DirvingPlanVo();
+				if(startTrunkCode.contains("_")){
+					startTrunkCode=startTrunkCode.substring(0, startTrunkCode.indexOf("_"));
+				}
+				temp.setDrivingPlanCode(startTrunkCode);
+				int count=dirvingPlanBiz.getUncomfirmDrivingPlanNum(temp);
+				startTrunkCode=startTrunkCode+"_"+count;
+				plan.setDrivingPlanCode(startTrunkCode);
+
+			Dirver dirver = dirverBiz.findById(Long.parseLong(dirvingPlanFront.getDriverPhone()));
+			if(dirver!=null){
+				plan.setDriverPhone(dirver.getMobilePhone());
+				plan.setDirverName(dirver.getDriverName());
+			}
+			plan.setPlateNumber(dirvingPlanFront.getPlateNumber());
+			plan.setCarCode(dirvingPlanFront.getCarCode());
+			plan.setDrivingPlanName(plan.getDrivingPlanCode());
+			plan.setLineGroupCode(lineGroupCode);
+			plan.setStatus(BkgConstants.PLAN_CODE_UNCONFIRMED);//把 新的发车计划状态设置为司机未确认
+			plan.setCreateTime(date);
+			plan.setCreateEmp(userInfo.getEmpName());
+			plan.setVersion(0);
+			
+			plan.setCreateOrg(userInfo.getCmsOrgName());
+			if(lineGroupFront!=null){
+				plan.setRemark(lineGroupFront.getRemark());
+				plan.setCarType(carType);
+				plan.setArrivalTime(lineGroupFront.getArrivalTime());
+				plan.setDepartTime(lineGroupFront.getDepartTime());
+			}
+			plan.setAbnormalState("");//把是否有异常置为否  01
+			//dirvingPlanBiz.updateDirvingPlan(plan);
+			plan.setId(null);
+			
+			if("1".equals(plan.getBusinessMode())){
+				truckCostManagementVo.setBelongSiteCode(plan.getStartOrgCode());	
+			}else if("2".equals(plan.getBusinessMode())){
+				truckCostManagementVo.setBelongSiteCode(plan.getEndOrgCode());	
+			}
+			truckCostManagementVo.setTruckType(plan.getDemandType());
+			truckCostManagementVo.setTruckConcrete(carType);
+			List<TruckCostManagementVo> tmList=truckCostManagementService.findByCondition(truckCostManagementVo);
+			if(CollectionUtils.isNotEmpty(tmList)){
+				value=tmList.get(0).getTruckVolume()-tmList.get(0).getBufferVolume();
+			}
+			plan.setLoadingRate(value<plan.getLineGroupTotalVolume()?1L:(plan.getLineGroupTotalVolume()/(value<0?1L:value)));//重新计算满载率
+			
+			dirvingPlanBiz.addDirvingPlan(plan);
+			sendNotice("SYSTEN_DRIVERPLAN_CONFIRM_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);//新建发车计划待确认    发送给司机端
+		}
+		if(CollectionUtils.isNotEmpty(lineGroupDetails)){
+			for(LineGroupDetail detail : lineGroupDetails){
+				detail.setId(null);
+				detail.setLineGroupCode(lineGroupCode);
+				lineGroupDetailBiz.addLineGroupDetail(detail);
+				
+				//新增发车计划子信息
+				DirvingPlanDetail dirvingPlanDetail = new DirvingPlanDetail();
+				BeanUtils.copyProperties(detail, dirvingPlanDetail);
+				dirvingPlanDetail.setDrivingPlanCode(startTrunkCode);
+				dirvingPlanDetail.setForecastVolume(detail.getVolume());
+				dirvingPlanDetail.setForecastWeight(detail.getWeight());
+				dirvingPlanDetail.setForecastEndTime(detail.getEndTime());
+				dirvingPlanDetail.setForecastRuningTime(detail.getRuningTime());
+				dirvingPlanDetail.setForecastLoadUnloadTine(detail.getLoadUnloadTime());
+				dirvingPlanDetail.setForecastDistance(detail.getDistance());
+				dirvingPlanDetail.setCreateTime(date);
+				dirvingPlanDetail.setCreateEmp(userInfo.getEmpName());
+				dirvingPlanDetail.setVersion(0);
+				dirvingPlanDetail.setCreateOrg(userInfo.getCmsOrgName());
+				dirvingPlanDetail.setId(null);
+				if(1==dirvingPlanDetail.getSort()){
+					dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_CONFIRM_WAIT);//把sort 等于1的司机状态改为 待确认
+				}
+				dirvingPlanDetailBiz.addDirvingPlanDetail(dirvingPlanDetail);
+				
+				String phoneNum=getSitePhine(dirvingPlanDetail.getWayPointCode());
+				plan.setDriverPhone(phoneNum);
+				sendNotice("SYSTEN_DRIVERPLAN_CONFIRM_DOT",plan,dirvingPlanDetail.getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);//发送给网点端
+			}
+		}
+		
+		lineGroup.setId(null);
+		lineGroup.setStatus(BkgConstants.LINE_GROUP_STATUS_PLAN_CREATE);//班次状态-已生成发车计划  02 
+		lineGroup.setDrivingPlanCombinCode(deparTurePlan);
+		lineGroup.setCreateTime(date);
+		lineGroup.setUpdateTime(date);
+		lineGroup.setCreateEmp(userInfo.getEmpName());
+		lineGroup.setLoadFactor(value<lineGroup.getTotalVolume()?1L:(lineGroup.getTotalVolume()/(value<0?1L:value)));
+		lineGroupBiz.addLineGroup(lineGroup);	
+		
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END);//已终止
+		//ex.setLineGroupCode(lineGroupCode);
+		//ex.setStartTrunkCode(startTrunkCode);
+		ex.setUpdateTime(new Date());
+		if(ex.getCreateTime()==null){
+			ex.setCreateTime(date);
+		}
+		ex.setUpdateEmp(userInfo.getEmpName());
+		if(StringUtils.isBlank(ex.getCreateEmp())){
+			ex.setCreateEmp(userInfo.getEmpName());	
+		}
+		ex.setUpdateOrg(userInfo.getCmsOrgName());
+		exceptionBiz.updateException(ex);
+//		if(StringUtils.isNotBlank(plan.getDriverPhone())){
+//			sendNotice("SYSTEN_DRIVERPLAN_CONFIRM_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);//新建发车计划待确认    发送给司机端
+//			sendNotice("SYSTEN_DRIVERPLAN_CONFIRM_DOT",plan,plan.getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);//新建发车计划待确认   发送给网点端 
+//		}
+		
+		return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+	
+	/**
+	 * 
+	 * @Description: 确认异常
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "confirmException", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> confirmException(String id) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(id));
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_CONFIRM);
+		exceptionBiz.updateException(ex);
+		//发送消息
+
+		String startTrunkCode=ex.getStartTrunkCode();
+		if(StringUtil.isBlank(startTrunkCode)){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+		if(plan ==null){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+//		if(StringUtils.isNotBlank(plan.getDriverPhone())){
+//			sendNotice("SYSTEN_EXCEPTION_CONFIRM_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);//发送给司机端
+//			sendNotice("SYSTEN_EXCEPTION_CONFIRM_DOT",plan,plan.getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);//发送给网点端 
+//		}
+		
+		List<DirvingPlanDetail> pcDetail= dirvingPlanDetailService.findByDrivePlanCode(startTrunkCode);
+		if(CollectionUtils.isNotEmpty(pcDetail)){
+			if(StringUtils.isNotBlank(plan.getDriverPhone())){
+				sendNotice("SYSTEN_EXCEPTION_CONFIRM_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);//发送给司机端
+			}
+			for(int j=0;j<pcDetail.size();j++){
+				String phoneNum=getSitePhine(pcDetail.get(j).getWayPointCode());
+				plan.setDriverPhone(phoneNum);
+				sendNotice("SYSTEN_EXCEPTION_CONFIRM_DOT",plan,pcDetail.get(j).getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);//发送给网点端
+			}
+		}
+		
+		return returnSuccess(Resources.getMessage("common.update.success"));
+	}
+	/**
+	 * 
+	 * @Description: 根据机构编码获取网点老板手机号
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月16日 下午3:47:58
+	 */
+	public String getSitePhine(String baseOrgCode){
+		MobileuserVo mobileuserVo=new MobileuserVo();
+		
+		mobileuserVo.setBaseOrgCode(baseOrgCode);
+		mobileuserVo.setDotType(true);
+		
+		List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVo);
+		if(null == mobileuserVos || mobileuserVos.size()==0){
+			return null;
+		}
+		mobileuserVo=mobileuserVos.get(0);
+		if(null==mobileuserVo){
+			return null;
+		}
+		return mobileuserVo.getMobilephone();	
+	}
+	/**
+	 * 
+	 * @Description: 终止异常
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "stopException", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> stopException(String id) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(id));
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END);
+		//ex.setDeleteFlag(true);
+		exceptionBiz.updateException(ex);
+		//终止异常发送消息
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(ex.getStartTrunkCode());
+		if(plan !=null){
+			if(StringUtils.isNotBlank(plan.getDriverPhone())){
+				sendNotice("SYSTEN_EXCEPTION_END_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);//发送给司机端
+				//sendNotice("SYSTEN_EXCEPTION_END_DOT",plan,plan.getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);//发送给网点端 
+				sendNoticeToSiteBoss("SYSTEN_EXCEPTION_END_DOT",plan);//发送消息给该发车计划未执行的网点 
+			}
+		}
+		return returnSuccess(Resources.getMessage("common.update.success"));
+	}
+	
+
+	/**
+	 * @Description:异常发送消息到该发车计划未执行的网点,比如1号站点发生异常，给接下来的 2，3，4 站点发送提醒消息
+	 * @param drivingPlan 发车计划号
+	 * @author yanglei
+	 * @date 2017年12月29日 下午13:37:13
+	 */
+	public void sendNoticeToSiteBoss(String noticeRuleCode,DirvingPlan plan) {
+		//发送消息到      PC、司机、该发车计划未执行的网点
+		/**获得发车计划计划 所有的站点 order by sort desc */
+		String nextStationCode=plan.getNextStationCode();
+		DirvingPlanDetailVo dirvingPlanDetailVo = new DirvingPlanDetailVo(); 
+		dirvingPlanDetailVo.setDrivingPlanCode(plan.getDrivingPlanCode());
+		//dirvingPlanDetailVo.setWayPointCode(nextStationCode);
+		//根据发车计划编号找到他所有的 详情列表
+		List<DirvingPlanDetailVo> list = dirvingPlanDetailService.findByCodeAsc(dirvingPlanDetailVo);
+		/*
+		 * 构建需要发送消息的 接下来的网点编号
+		 * 判断为接下来的网点的标识为:sort  1 2 3 4
+		 * 
+		 */
+		//添加启动标识
+		boolean enableFlag=false;
+		List<String> siteCodes=new ArrayList<String>();
+		if(CollectionUtils.isNotEmpty(list)){
+			for(DirvingPlanDetailVo detailVo:list){
+				//此处应确保sort 已按照升序排序
+				if(StringUtil.isNotBlank(detailVo.getWayPointCode())){
+					if(detailVo.getWayPointCode().equals(nextStationCode))
+						enableFlag=true;
+				}
+				if(enableFlag){
+					//发车计划下一站已经匹配上详情中的网点,下一步则是将网点添加至 siteCodes 待发送消息的网点集合
+					String pointCode=detailVo.getWayPointCode();
+					if(StringUtils.isNotBlank(pointCode)){
+						siteCodes.add(pointCode);
+					}
+				}
+			}
+		}
+		if(CollectionUtils.isNotEmpty(siteCodes)){
+			//发送消息到    该发车计划未执行的网点
+			List<Mobileuser> userList= mobileuserService.findUserByBaseOrgCode(siteCodes);
+			//给网点老板发送信息
+			if(CollectionUtils.isNotEmpty(userList)){
+				//循环需要发送短信的手机号
+				  for (Mobileuser mobileuser : userList) {
+					  if(Boolean.TRUE==mobileuser.getDotType()){
+						  plan.setDriverPhone(mobileuser.getMobilephone());
+				            String bossStationCode=mobileuser.getBaseOrgCode();
+				            for (DirvingPlanDetailVo detail : list) {
+				              String wayPoinCode=detail.getWayPointCode();
+				              if(StringUtils.isNotBlank(bossStationCode) && StringUtils.isNotBlank(wayPoinCode) && wayPoinCode.equals(bossStationCode)){
+				                //给受到影响的网点老板发送关于该发车计划消息
+				                sendNotice(noticeRuleCode, plan, detail.getId(), BkgConstants.APP_DRIVING_PLAN_DETAIL);
+				              }
+				            }
+					   }
+			          }
+			}
+		}
+	}
+	/**
+	 * 
+	 * @Description: 根据异常获取相应的班次 lineGroup 信息包括路段lineGroupDetail 信息
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "getLineGroup", method=RequestMethod.GET)
+	@ResponseBody
+	public Map<String, Object> getLineGroup(String exceptionId) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(exceptionId));
+		String startTrunkCode=ex.getStartTrunkCode();
+		if(StringUtil.isBlank(startTrunkCode)){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+		if(plan ==null){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		String lineGroupCode=plan.getLineGroupCode();
+		if(StringUtils.isNotBlank(lineGroupCode)){
+			LineGroup line= lineGroupBiz.findByLineGroupCode(lineGroupCode);
+			if(line!=null){
+				Map map=new HashMap <String,Object>();
+				map.put("lineGroup", line);
+				return map;
+			}
+		}else{
+			return returnError(Resources.getMessage("没有找到相关班次"));
+		}
+		return null;
+	}
+	/**
+	 * 
+	 * @Description: 根据异常id查询班次详情
+	 * @param page
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月3日 下午3:11:00
+	 */
+	@RequestMapping(value = "/findLineGroupDetailByExceptionId")
+	@ResponseBody
+	public Map<String, Object> findLineGroupDetailByExceptionId(String exId,String detailids, Page page) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(exId));
+		String lineGroupCode= ex.getLineGroupCode();
+		if(StringUtil.isBlank(lineGroupCode)){
+			DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(ex.getStartTrunkCode());
+			if(plan ==null){
+				return new HashMap<String,Object>();
+			}
+			 lineGroupCode=plan.getLineGroupCode();
+		}
+		Pagination pagination=lineGroupDetailBiz.findPageByPagination(lineGroupCode, page);
+		if(StringUtil.isNotBlank(detailids)){
+			List<LineGroupDetail> list=pagination.getData();
+			List<LineGroupDetail> listTemp=new ArrayList<LineGroupDetail>();
+			listTemp.addAll(list);
+			if(CollectionUtils.isNotEmpty(list)){
+				for(LineGroupDetail detail:list){
+					if(detailids.contains(detail.getId()+"")){
+						listTemp.remove(detail);
+					}
+				}
+			}
+			pagination.setData(listTemp);
+		}
+		return returnSuccess(pagination);
+	}
+	/**
+	 * 
+	 * @Description: 终止班次
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "stopLineGroup", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> stopLineGroup(String id) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(id));
+		String startTrunkCode=ex.getStartTrunkCode();
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+		if(plan ==null){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		plan.setStatus(BkgConstants.PLAN_CODE_FINISH);//该发车计划后把状态置为 -已终止
+		dirvingPlanBiz.updateDirvingPlan(plan);
+		String lineGroupCode=ex.getLineGroupCode();
+		if(StringUtils.isNotBlank(lineGroupCode)){
+			LineGroup lineGroup= lineGroupBiz.findByLineGroupCode(lineGroupCode);
+			if(lineGroup !=null){
+				lineGroup.setStatus(BkgConstants.LINE_GROUP_STATUS_PLAN_STOP);//班次状态-00 已终止
+				lineGroupBiz.updateLineGroup(lineGroup);
+			}
+//			List<LineGroupDetail> details=lineGroupDetailBiz.findByLineGroupCode(lineGroupCode);//将该班次下面的路段信息lineGroupCode 置为空
+//			if(CollectionUtils.isNotEmpty(details)){
+//				for(LineGroupDetail det:details){
+//					det.setLineGroupCode(null);
+//					lineGroupDetailBiz.updateLineGroupDetail(det);
+//				}
+//			}
+		}
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END);
+		ex.setDeleteFlag(true);
+		exceptionBiz.updateException(ex);
+		
+		//终止异常发送消息
+		if(StringUtils.isNotBlank(plan.getDriverPhone())){
+			sendNotice("SYSTEN_EXCEPTION_END_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);//发送给司机端
+			//sendNotice("SYSTEN_EXCEPTION_END_DOT",plan,plan.getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);//发送给网点端 
+			sendNoticeToSiteBoss("SYSTEN_EXCEPTION_END_DOT",plan);//发送消息给该发车计划未执行的网点 
+		}
+		return returnSuccess(Resources.getMessage("common.update.success"));
+	}
+	/**
+	 * 
+	 * @Description: 终止车次
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "disableCar", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> disableCar(String id) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(id));
+		String startTrunkCode=ex.getStartTrunkCode();
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+		if(plan ==null){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		String carCode=plan.getCarCode(); 
+		CarManageVo carManageVo=new CarManageVo();
+		carManageVo.setCarNumber(carCode);
+		List<CarManageVo> list=carManageBiz.findByVo(carManageVo);
+		if(CollectionUtils.isNotEmpty(list)){
+			CarManage carManage;
+			for(CarManageVo vo: list){
+				carManage =ObjectConvertUtil.convertObject(vo, CarManage.class);
+				carManage.setCarStatus("0");//停用
+				carManageBiz.updateCarManage(carManage);
+			}
+		}
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END);
+		exceptionBiz.updateException(ex);
+		return returnSuccess(Resources.getMessage("common.update.success"));
+	}
+	/**
+	 * @Description: 重绑发车计划
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "reBindDrivePlan", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> reBindDrivePlan(String exId , String drivePlanStr) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(exId));
+		String startTrunkCode=ex.getStartTrunkCode();
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+		if(plan ==null){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		plan.setStatus(BkgConstants.PLAN_CODE_FINISH);//把原发车计划状态设已终止
+		dirvingPlanBiz.updateDirvingPlan(plan);
+		
+		DirvingPlan dirvingPlan=JSONObject.parseObject(drivePlanStr,DirvingPlan.class);
+		plan.setPlateNumber(dirvingPlan.getPlateNumber());
+		plan.setCarCode(dirvingPlan.getCarCode());
+		
+		Dirver dirver = dirverBiz.findById(Long.parseLong(dirvingPlan.getDriverPhone()));
+		if(dirver!=null){
+			plan.setDriverPhone(dirver.getMobilePhone());
+			plan.setDirverName(dirver.getDriverName());
+		}
+		plan.setAbnormalState("");//把是否有异常置为否  01
+		plan.setStatus(BkgConstants.PLAN_CODE_UNCONFIRMED);//把 新的发车计划状态设置为司机未确认
+		plan.setId(null);
+		DirvingPlanVo temp=new DirvingPlanVo();
+		
+		if(startTrunkCode.contains("_")){
+			startTrunkCode=startTrunkCode.substring(0, startTrunkCode.indexOf("_"));
+		}
+		temp.setDrivingPlanCode(startTrunkCode);
+		int count=dirvingPlanBiz.getUncomfirmDrivingPlanNum(temp);
+		startTrunkCode=startTrunkCode+"_"+count;
+		plan.setDrivingPlanCode(startTrunkCode);
+		
+		CarManageVo carManageVo=new CarManageVo();
+		carManageVo.setCarNumber(dirvingPlan.getCarCode());//传过来的是车辆编码
+		//通过车辆编码查询车辆信息
+		List<CarManageVo> cmList=carManageService.findByVo(carManageVo);
+		String plateNumber="";
+		String carType="";
+		if(CollectionUtils.isNotEmpty(cmList)){
+			plateNumber=cmList.get(0).getPlateNumbers();
+			carType=cmList.get(0).getCarType();
+		}
+		TruckCostManagementVo truckCostManagementVo=new TruckCostManagementVo();
+		if("1".equals(plan.getBusinessMode())){
+			truckCostManagementVo.setBelongSiteCode(plan.getStartOrgCode());	
+		}else if("2".equals(plan.getBusinessMode())){
+			truckCostManagementVo.setBelongSiteCode(plan.getEndOrgCode());	
+		}
+		truckCostManagementVo.setTruckType(plan.getDemandType());
+		truckCostManagementVo.setTruckConcrete(carType);
+		List<TruckCostManagementVo> tmList=truckCostManagementService.findByCondition(truckCostManagementVo);
+		double value= 0L;
+		if(CollectionUtils.isNotEmpty(tmList)){
+			value=tmList.get(0).getTruckVolume()-tmList.get(0).getBufferVolume();
+		}
+		plan.setLoadingRate(plan.getLineGroupTotalVolume()/value);//重新计算满载率
+		plan.setCarType(carType);
+		dirvingPlanBiz.addDirvingPlan(plan);
+		//查询班次
+		LineGroup lineGroup= lineGroupService.queryById(plan.getLineGroupCode());
+		if(lineGroup !=null){
+			lineGroup.setStatus(BkgConstants.LINE_GROUP_STATUS_PLAN_CREATE);//班次状态变为：已生成发车计划
+			lineGroup.setLoadFactor(lineGroup.getTotalVolume()/(value<0?1:value));
+			//更新班次
+			lineGroupService.updateById(lineGroup);
+		}
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		//List<DirvingPlanDetail> list=dirvingPlanDetailBiz.findAllDetailByCode(ex.getStartTrunkCode());
+		List<DirvingPlanDetail> list = dirvingPlanDetailService.findByDrivePlanCode(ex.getStartTrunkCode());
+		for(DirvingPlanDetail detail : list){
+			DirvingPlanDetail dirvingPlanDetail = new DirvingPlanDetail();
+			BeanUtils.copyProperties(detail, dirvingPlanDetail);
+			dirvingPlanDetail.setDrivingPlanCode(startTrunkCode);
+			dirvingPlanDetail.setCreateTime(new Date());
+			dirvingPlanDetail.setCreateEmp(userInfo.getEmpName());
+			dirvingPlanDetail.setVersion(0);
+			dirvingPlanDetail.setCreateOrg(userInfo.getCmsOrgName());
+			dirvingPlanDetail.setId(null);
+			if(1==dirvingPlanDetail.getSort()){
+				dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_CONFIRM_WAIT);//把sort 等于1的司机状态改为 待确认
+			}
+			dirvingPlanDetailBiz.addDirvingPlanDetail(dirvingPlanDetail);
+		}
+		if(StringUtils.isNotBlank(plan.getDriverPhone())){
+			sendNotice("SYSTEN_DRIVERPLAN_CONFIRM_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);// 重绑发车计划待确认    发送给司机端
+			//sendNotice("SYSTEN_DRIVERPLAN_CONFIRM_DOT",plan,plan.getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);// 重绑发车计划待确认   发送给网点端 
+			sendNoticeToSiteBoss("SYSTEN_DRIVERPLAN_CONFIRM_DOT",plan);//发送消息给该发车计划未执行的网点 
+		}
+		return returnSuccess(Resources.getMessage("common.update.success"));
+	}
+	
+	/**
+	 * @Description: 发送消息
+	 * @param DirvingPlan plan
+	 * @return
+	 * @author yanglei
+	 * @date 2017年12月13日 下午9:58:07
+	 */
+	private int sendNotice(String noticeRuleCode,DirvingPlan plan,Long businessId,String businessType) {
+		NoticeDetailVo noticeDetailVo=new NoticeDetailVo();
+		noticeDetailVo.setNoticeRuleCode(noticeRuleCode);
+		noticeDetailVo.setCreateEmp(plan.getUpdateEmp());
+		noticeDetailVo.setCreateOrg(plan.getUpdateOrg());
+		noticeDetailVo.setCreateTime(plan.getUpdateTime());
+		noticeDetailVo.setUserPhone(plan.getDriverPhone());
+		noticeDetailVo.setBusinessId(businessId);
+		noticeDetailVo.setBusinessType(businessType);
+		noticeDetailVo.setDisplayWays(BkgConstants.DISPLAY_WAYS_HOME+","+BkgConstants.DISPLAY_WAYS_NOTICE+","+BkgConstants.DISPLAY_WAYS_NEWS);
+		int noticeDetailRes =noticeDetailBiz.generateMessage(plan, noticeDetailVo);
+		return noticeDetailRes;
+	}
+	
+	
+	
+	/**
+	 * 
+	 * @Description: 终止发车计划
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "stopDrivePlan", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> stopDrivePlan(String id) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(id));
+		String startTrunkCode=ex.getStartTrunkCode();
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+		if(plan ==null){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		plan.setStatus(BkgConstants.PLAN_CODE_FINISH);//把状态置为 -已终止
+		dirvingPlanBiz.updateDirvingPlan(plan);
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END); //把该异常状态置为-已终止
+		exceptionBiz.updateException(ex);
+		
+		List<DirvingPlanDetail> pcDetail= dirvingPlanDetailService.findByDrivePlanCode(startTrunkCode);
+		if(CollectionUtils.isNotEmpty(pcDetail)){
+			if(StringUtils.isNotBlank(plan.getDriverPhone())){
+				sendNotice("DRIVER_PLAN_END_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);//发送给司机端
+			}
+			for(int j=0;j<pcDetail.size();j++){
+				String phoneNum=getSitePhine(pcDetail.get(j).getWayPointCode());
+				plan.setDriverPhone(phoneNum);
+				sendNotice("DRIVER_PLAN_END_DOT",plan,pcDetail.get(j).getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);//发送给网点端
+			}
+		}
+		
+		return returnSuccess(Resources.getMessage("common.update.success"));
+	}
+	
+	/**
+	 * 
+	 * @Description: 异常打回
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "repulseException", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> repulseException(String id) {
+		ExceptionManager ex=exceptionBiz.findById(Long.parseLong(id));
+		//相应发车计划的子状态需返回到异常上报时的状态。
+		//TODO
+		String startTrunkCode=ex.getStartTrunkCode();
+		DirvingPlan plan=dirvingPlanBiz.findByrivingPlanCode(startTrunkCode);
+		if(plan ==null){
+			return returnError(Resources.getMessage("error.bkg.biz.Drivingplan.not.find"));
+		}
+		
+//		plan.setStatus("7");//把状态置为 -发车计划的子状态需返回到异常上报时的状态。
+		plan.setAbnormalState("");//把是否有异常置为否  01
+		dirvingPlanBiz.updateDirvingPlan(plan);
+//		String drivingPlanCode=plan.getDrivingPlanCode();
+		List<DirvingPlanDetail> dpList=dirvingPlanDetailBiz.findByDrivePlanCode(startTrunkCode);
+	    if(CollectionUtils.isNotEmpty(dpList)){
+	    	if(StringUtils.isNotBlank(plan.getDriverPhone())){
+	    		sendNotice("SYSTEN_EXCEPTION_END_DPT",plan,plan.getId(),BkgConstants.APP_DRIVER_TASK);//发送给司机端
+			}
+	        for(int j=0;j<dpList.size();j++){
+	          //目前utf3存的是上报异常前的状态
+	        	String phoneNum=getSitePhine(dpList.get(j).getWayPointCode());
+				plan.setDriverPhone(phoneNum);
+				sendNotice("SYSTEN_EXCEPTION_END_DOT",plan,dpList.get(j).getId(),BkgConstants.APP_DRIVING_PLAN_DETAIL);//发送给网点端
+				
+	          if(BkgConstants.DRIVER_STATUS_SEND_ERROR.equals(dpList.get(j).getPlanDriverStatus())){
+	            DirvingPlanDetail dirvingPlanDetail=new DirvingPlanDetail();
+	            dirvingPlanDetail.setId(dpList.get(j).getId());
+	            dirvingPlanDetail.setPlanDriverStatus(dpList.get(j).getUtf3());
+	            //相应发车计划的子状态需返回到异常上报时的状态（暂未实现）。
+	            dirvingPlanDetailService.updateById(dirvingPlanDetail);
+	            //break;
+	          }
+	        }
+	      }
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END); //把该异常状态置为-已终止
+		exceptionBiz.updateException(ex);
+		return returnSuccess(Resources.getMessage("common.update.success"));
+	}
+	/**
+	 * 
+	 * @Description:  异常小结
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "exceptionSummary", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> exceptionSummary(ExceptionManagerVo exceptionVo, HttpServletRequest request) {
+		ExceptionManager ex=exceptionBiz.findById(exceptionVo.getId());
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END);
+		ex.setUtf1(exceptionVo.getUtf1());//utf1 暂存放 异常小结字段
+		exceptionBiz.updateException(ex);
+		ExceptionTrace trace=new ExceptionTrace();
+		BeanUtils.copyProperties(ex, trace);
+		trace.setId(null);
+		trace.setSolveSolution(exceptionVo.getUtf1());
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		trace.setSolveEmp(userInfo.getEmpName());
+		trace.setUpdateTime(new Date());
+		exceptionTraceBiz.addExceptionTrace(trace);
+		return returnSuccess(Resources.getMessage("common.update.success"));
+	}
+	/**
+	 * 
+	 * @Description:  异常解决
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月2日 下午9:58:07
+	 */
+	@RequestMapping(value = "handleException", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> handleException(ExceptionManagerVo exceptionVo, HttpServletRequest request) {
+		ExceptionManager ex=exceptionBiz.findById(exceptionVo.getId());
+		ex.setExceptionStatus(BkgConstants.EXCEPTION_HAS_END);
+		int res =exceptionBiz.updateException(ex);
+		ExceptionTrace trace=new ExceptionTrace();
+		BeanUtils.copyProperties(ex, trace);
+		trace.setId(null);
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		trace.setSolveEmp(userInfo.getEmpName());
+		trace.setSolveSolution(exceptionVo.getUtf1());
+		res=exceptionTraceBiz.addExceptionTrace(trace);
+		if (res > 0) {
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}else{
+			return returnError(Resources.getMessage("common.save.fail"));
+		}
+	}
+	
+}

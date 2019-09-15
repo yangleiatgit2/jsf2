@@ -1,0 +1,61 @@
+package cn.uce.suc.bkg.biz.price;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.price.PricingRuleDetailRel;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailRelVo;
+
+/**
+ * @Description: 定价规则详情与网点关系表BIZ接口类
+ * @author laizhendong
+ * @date 2017年11月05日 下午01:41:44
+ */
+public interface IPricingRuleDetailRelBiz {
+	
+	/**
+	 * @Description: 新增定价规则详情与网点关系表
+	 * @param pricingRuleDetailRel
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月05日 下午01:41:44
+	 */
+	public int addPricingRuleDetailRel(PricingRuleDetailRel pricingRuleDetailRel);
+	
+	/**
+	 * @Description: 修改定价规则详情与网点关系表
+	 * @param pricingRuleDetailRel 定价规则详情与网点关系表
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月05日 下午01:41:44
+	 */
+	public int updatePricingRuleDetailRel(PricingRuleDetailRel pricingRuleDetailRel);
+	
+	/**
+	 * @Description: 删除定价规则详情与网点关系表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月05日 下午01:41:44
+	 */
+	public int deletePricingRuleDetailRel(Long id);
+	
+	/**
+	 * @Description: 根据ID查询定价规则详情与网点关系表
+	 * @param id 主键
+	 * @return 定价规则详情与网点关系表
+	 * @author laizhendong
+	 * @date 2017年11月05日 下午01:41:44
+	 */
+	public PricingRuleDetailRel findById(Long id);
+	
+	/**
+	 * @Description: 分页查询定价规则详情与网点关系表
+	 * @param pricingRuleDetailRelVo 定价规则详情与网点关系表
+	 * @param page 分页参数
+	 * @return 定价规则详情与网点关系表
+	 * @author laizhendong
+	 * @date 2017年11月05日 下午01:41:44
+	 */
+	public Pagination<PricingRuleDetailRelVo> findByPagination(PricingRuleDetailRelVo pricingRuleDetailRelVo, Page page);
+	
+}

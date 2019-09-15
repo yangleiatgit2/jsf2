@@ -1,0 +1,57 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+/**
+ * 
+ * @Description: 单元测试
+ * @author liwei
+ * @date 2017年12月13日 下午2:50:12
+ */
+public class DirvingPlanBizTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	private DirvingPlanBiz dirvingPlanBiz;
+
+	private LineGroupVo groupVo;
+	private DirvingPlan dirvingPlan;
+
+	/**
+	 * 
+	 * @Description: 单元测试前执行
+	 * @author liwei
+	 * @date 2017年12月13日 下午2:56:30
+	 */
+	@Before
+	public void before() {
+		groupVo = new LineGroupVo();
+		groupVo.setLineGroupCode("BC17111401019");
+		dirvingPlan = new DirvingPlan();
+		dirvingPlan.setId(71l);
+	}
+
+	/**
+	 * 
+	 * @Description: 单元测试
+	 * @author liwei
+	 * @date 2017年12月13日 下午2:56:41
+	 */
+	@Test
+	public void test() {
+		dirvingPlanBiz.stopDirverDlan(groupVo);
+		dirvingPlanBiz.stopDirverDlanPushMessage(dirvingPlan);
+	}
+}

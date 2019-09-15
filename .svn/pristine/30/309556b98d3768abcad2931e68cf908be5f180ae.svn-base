@@ -1,0 +1,115 @@
+package cn.uce.suc.common.constants;
+/**
+ * 
+ * @Description: 速速货拼系统级常量 
+ * @author liwei
+ * @date 2017年10月19日 下午8:56:47
+ */
+public interface SucConstants {
+	/*--------------------------自定义异常常量----------------------------*/
+	/**自定义异常错误码 */
+	String NOS_EXCEPTION_SECONDE_STATUS = "SECO0001";
+	
+	/**系统异常错误码 */
+	String NOS_EXCEPTION_BASE_STATUS = "EXCE0001";
+	
+	/**技术平台登录用户转换失败错误码*/
+	String NOS_CONVERSION_DATA_STATUS = "CONV0001";
+	
+	/**系统异常错误码 */
+	String NOS_EXCEPTION_BASE_TIGS = "系统异常，请重试！";
+	
+	/**功能类别---维护时，请参考权限管理中权限编码begin*/
+	/**运力管理*/
+	String CAPACITY_SHARE="capacity_share";
+	int ZERO = 0;
+	int ONE = 1;
+	/***短信注册 begin*/
+	/***网点*/
+	String CAPTCH_PLATFROM_DOT="dot";
+	/**司机*/
+	String CAPTCH_PLATFORM_DPT="dpt";
+	/***短信注册 end*/
+	/**消息推送指向平台--begin*/
+	String PLATFORM_BKG="04";
+	/**司机端*/
+	String PLATFORM_DPT="02";
+	/**网点端*/
+	String PLATFORM_DOT="03";
+	/**平台*/
+	String PLATFORM_BKG_STR="bkg";
+	/**司机端 别名前缀*/
+	String PLATFORM_DOT_STR="dot";
+	/*String PLATFORM_DOT_STR="point";*/
+	/**网点端别名前缀*/
+/*	String PLATFORM_DPT_STR="point";*/
+	String PLATFORM_DPT_STR="dpt";
+	/**消息推送指向平台--end*/
+	/**推送消息状态-初始值*/
+	String JPUSH_CREATE="0";
+	/**推送消息状态-成功*/
+	String JPUSH_YES="1";
+	/**推送消息状态-失败*/
+	String JPUSH_NO="2";
+	/**车辆编号前缀*/
+	String CAR_NUMBER_PREFIX = "CL";
+	/**司机编号前缀*/
+	String DRIVER_NUMBER_PREFIX = "SJ";
+	
+	/**http请求字符集*begin*/
+	String CHAR_SET="UTF-8";
+	/**http请求字符集*end*/
+	/**获取验证码方式--begin*/
+	/**注册账号--注册账号*/
+	String CAPTCH_REGIST_ACCOUNT="create";
+	/**注册账号--忘记密码*/
+	String CAPTCH_UPDATE_PASSWORD="update";
+	/**用户认证*/
+	String CAPTCH_USER_AUTH="auth";
+	/**生成司机用户*/
+	String CAPTCH_USER_ADD="add";
+	/**获取验证码方式--end*/
+	
+	/**验证码模板 begin**/
+	/**网点端注册码*/
+	String CAPTCH_REGIST_DOT="REGIST_DOT_CAPTCH";
+	/**司机端注册码*/
+	String CAPTCH_REGIST_DPT="REGIST_DPT_CAPTCH";
+	/**司机端修改密码**/
+	String CAPTCH_UPDATE_DPT="UPDATE_DPT_CAPTCH";
+	/**网点端修改密码*/
+	String CAPTCH_UPDATE_DOT="UPDATE_DOT_CAPTCH";
+	/**用户认证*/
+	String CAPTCH_USER_AUTH_DOT="CAPTCH_USER_AUTH_DOT";
+	/**生成用户-司机*/
+	String CAPTCH_USER_ADD_DPT="CAPTCH_USER_ADD_DPT";
+	/**验证码模板 end**/
+	/**手机平台 begin*/
+	/**安卓*/
+	String PLATFORM_ANDROID="android";
+	/**评估*/
+	String PLATFORM_IOS="IOS";
+	/**手机平台 end*/
+	/**消息模板的code*****start*/
+	/**异常上报平台端消息模板*/
+	String PLATFORM_SEND_ERROR="PLATFORM_SEND_ERROR";
+	/**异常上报司机端消息模板*/
+	String DRIVER_SEND_ERROR="DRIVER_SEND_ERROR";
+	/**中心卸货网点信息模板*/
+	String PLATFORM_CENTER_OUT_CONFIRM="PLATFORM_CENTER_OUT_CONFIRM";
+	/**中心卸货平台信息模板*/
+	String PC_CENTER_OUT_CONFIRM="PC_CENTER_OUT_CONFIRM";
+	/**中心装货网点信息模板*/
+	String PLATFORM_CENTER_LOAD_CONFIRM="PLATFORM_CENTER_LOAD_CONFIRM";
+	/**中心装货平台信息模板*/
+	String PC_CENTER_LOAD_CONFIRM="PC_CENTER_LOAD_CONFIRM";
+	/**网点卸货网点信息模板*/
+	String PLATFORM_OUT_CONFIRM="PLATFORM_OUT_CONFIRM";
+	/**网点卸货平台信息模板*/
+	String PC_OUT_CONFIRM="PC_OUT_CONFIRM";
+	/**网点装货网点信息模板*/
+	String PLATFORM_LOAD_CONFIRM="PLATFORM_LOAD_CONFIRM";
+	/**网点装货平台信息模板*/
+	String PC_LOAD_CONFIRM="PC_LOAD_CONFIRM";
+	/**消息模板的code*****end*/
+}

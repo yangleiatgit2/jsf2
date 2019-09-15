@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.price.IPricingRuleTypeDetailDao">
+
+	<sql id="Base_Column_List">
+		id,rule_type_code,pricing_type, site_code,site_name,area_code, area_name,total,delete_flag,
+		utf1,utf2,utf3, version,remark,create_org,
+		create_emp,create_time,update_org, update_emp,update_time
+	</sql>
+
+	<sql id="Base_Column_Where">
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="ruleTypeId != null">
+				and rule_type_id = #{ruleTypeId}
+			</if>
+			<if test="ruleTypeCode != null">
+				and rule_type_code = #{ruleTypeCode}
+			</if>
+			<if test="pricingType != null">
+				and pricing_type = #{pricingType}
+			</if>
+			<if test="siteCode != null">
+				and site_code = #{siteCode}
+			</if>
+			<if test="siteName != null">
+				and site_name = #{siteName}
+			</if>
+			<if test="areaCode != null">
+				and area_code = #{areaCode}
+			</if>
+			<if test="areaName != null">
+				and area_name = #{areaName}
+			</if>
+			<if test="total != null">
+				and total = #{total}
+			</if>
+			<if test="deleteFlag != null">
+				and delete_flag = #{deleteFlag}
+			</if>
+			<if test="utf1 != null">
+				and utf1 = #{utf1}
+			</if>
+			<if test="utf2 != null">
+				and utf2 = #{utf2}
+			</if>
+			<if test="utf3 != null">
+				and utf3 = #{utf3}
+			</if>
+			<if test="version != null">
+				and version = #{version}
+			</if>
+			<if test="remark != null">
+				and remark = #{remark}
+			</if>
+			<if test="createOrg != null">
+				and create_org = #{createOrg}
+			</if>
+			<if test="createEmp != null">
+				and create_emp = #{createEmp}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="updateOrg != null">
+				and update_org = #{updateOrg}
+			</if>
+			<if test="updateEmp != null">
+				and update_emp = #{updateEmp}
+			</if>
+			<if test="updateTime != null">
+				and update_time = #{updateTime}
+			</if>
+		</where>
+	</sql>
+
+	<update id="updateById" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo">
+		UPDATE t_suc_bkg_pricing_rule_type_detail
+		<set>
+			<if test="ruleTypeCode != null">
+				rule_type_code = #{ruleTypeCode},
+			</if>
+			<if test="pricingType != null">
+				pricing_type = #{pricingType},
+			</if>
+			<if test="siteCode != null">
+				site_code = #{siteCode},
+			</if>
+			<if test="siteName != null">
+				site_name = #{siteName},
+			</if>
+			<if test="areaCode != null">
+				area_code = #{areaCode},
+			</if>
+			<if test="areaName != null">
+				area_name = #{areaName},
+			</if>
+			<if test="total != null">
+				total = #{total},
+			</if>
+			<if test="deleteFlag != null">
+				delete_flag = #{deleteFlag},
+			</if>
+			<if test="utf1 != null">
+				utf1 = #{utf1},
+			</if>
+			<if test="utf2 != null">
+				utf2 = #{utf2},
+			</if>
+			<if test="utf3 != null">
+				utf3 = #{utf3},
+			</if>
+			<if test="version != null">
+				version = #{version},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="createOrg != null">
+				create_org = #{createOrg},
+			</if>
+			<if test="createEmp != null">
+				create_emp = #{createEmp},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="updateOrg != null">
+				update_org = #{updateOrg},
+			</if>
+			<if test="updateEmp != null">
+				update_emp = #{updateEmp},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo"
+		resultType="cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo">
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_pricing_rule_type_detail
+	</select>
+
+	<!-- 主数据没有删除功能，明细删除建议用物理删除 -->
+	<delete id="deleteByRuleCode" parameterType="java.lang.String">
+		DELETE FROM t_suc_bkg_pricing_rule_type_detail WHERE
+		rule_type_code = #{ruleTypeCode};
+	</delete>
+
+	<select id="getGroupByCondition" parameterType="java.lang.String"
+		resultType="cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo">
+		SELECT
+		pricing_type,
+		COUNT(pricing_type) total,
+		GROUP_CONCAT(site_code) utf1,
+		GROUP_CONCAT(site_name) utf2,
+		create_emp,
+		create_time
+		FROM
+		t_suc_bkg_pricing_rule_type_detail
+		<include refid="Base_Column_Where"></include>
+		GROUP BY
+		pricing_type
+	</select>
+	
+	<select id="findByRuleCode"  parameterType="cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo" resultType="cn.uce.suc.bkg.entity.price.PricingRuleTypeDetail">
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_pricing_rule_type_detail
+		<include refid="Base_Column_Where"></include>
+	</select>
+</mapper>

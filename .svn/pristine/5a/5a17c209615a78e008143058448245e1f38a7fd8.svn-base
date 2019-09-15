@@ -1,0 +1,896 @@
+package cn.uce.suc.bkg.entity.datamain;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import cn.uce.core.db.annotion.Transient;
+
+import java.util.Date;
+
+/**
+ * @Description: 承运商信息Entity类
+ * @author liwei
+ * @date 2017年11月01日 上午09:46:05
+ */
+@Table("t_suc_bkg_carrier_info")
+public class CarrierInfo extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 车数量
+	 */
+	@Transient
+	private Integer carNum;
+	/**
+	 * 司机数量
+	 */
+	@Transient
+	private Integer dirverNum;
+    public Integer getCarNum() {
+		return carNum;
+	}
+
+	public void setCarNum(Integer carNum) {
+		this.carNum = carNum;
+	}
+
+	public Integer getDirverNum() {
+		return dirverNum;
+	}
+
+	public void setDirverNum(Integer dirverNum) {
+		this.dirverNum = dirverNum;
+	}
+
+	/** 
+	 * 公司简称 
+	 */
+	private String companySimpleName;
+    /** 
+	 * 公司全称 
+	 */
+	private String companyFullName;
+    /** 
+	 * 企业性质 
+	 */
+	private String companyNature;
+    /** 
+	 * 营业执照有效期 
+	 */
+	private Date companyValidity;
+    /** 
+	 * 税号 
+	 */
+	private String taxNo;
+    /** 
+	 * 组织机构代码 
+	 */
+	private String orgCode;
+    /** 
+	 * 公司电话 
+	 */
+	private String companyPhone;
+    /** 
+	 * 传真 
+	 */
+	private String fax;
+    /** 
+	 * 承运商类型 
+	 */
+	private String carrierType;
+    /** 
+	 * 自有车辆 
+	 */
+	private String selfCar;
+    /** 
+	 * 公司法人姓名 
+	 */
+	private String legalPersonName;
+    /** 
+	 * 公司法人身份证号 
+	 */
+	private String legalPersonNumber;
+    /** 
+	 * 法人手机号 
+	 */
+	private String legalPersonMobile;
+    /** 
+	 * 联系人姓名 
+	 */
+	private String contactsName;
+    /** 
+	 * 联系人手机号 
+	 */
+	private String contactsMobile;
+    /** 
+	 * 联系人职位 
+	 */
+	private String contactsPosition;
+    /** 
+	 * 联系人身份证 
+	 */
+	private String contactsNumber;
+    /** 
+	 * 邮政编码 
+	 */
+	private String postcode;
+    /** 
+	 * 注册资金 
+	 */
+	private Double registeredCapital;
+    /** 
+	 * 公司成立时间 
+	 */
+	private Date companyBeginTime;
+    /** 
+	 * 公司经营范围 
+	 */
+	private String businessScope;
+    /** 
+	 * 注册省编码 
+	 */
+	private String registerProvinceCode;
+    /** 
+	 * 注册市编码 
+	 */
+	private String registerCityCode;
+    /** 
+	 * 注册区编码 
+	 */
+	private String registerAreaCode;
+    /** 
+	 * 注册详细地址 
+	 */
+	private String registerAddress;
+    /** 
+	 * 经营省编码 
+	 */
+	private String actualProvinceCode;
+    /** 
+	 * 经营市编码 
+	 */
+	private String actualCityCode;
+    /** 
+	 * 经营区编码 
+	 */
+	private String actualAreaCode;
+    /** 
+	 * 经营详细地址 
+	 */
+	private String actualAddress;
+    /** 
+	 * 营业执照附件 
+	 */
+	private String licensePhoto;
+    /** 
+	 * 信用代码附件 
+	 */
+	private String creditCodePhoto;
+    /** 
+	 * 道路运输资格证附件 
+	 */
+	private String qualificationsPhoto;
+    /** 
+	 * 组织机构代码证附件 
+	 */
+	private String orgPhoto;
+    /** 
+	 * 税务登记证 
+	 */
+	private String taxPhoto;
+    /** 
+	 * 法人身份证附件 
+	 */
+	private String legalPersonPhoto;
+    /** 
+	 * 第三方法人代表授权书 
+	 */
+	private String legalPersonAuthPhoto;
+    /** 
+	 * 联系人身份证附件 
+	 */
+	private String contactsPhoto;
+    /** 
+	 * 停用原因 
+	 */
+	private String disabledReason;
+    /** 
+	 * 供应商状态 
+	 */
+	private String status;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 审批意见 
+	 */
+	private String remark;
+    /** 
+	 * 删除标识(删除:1,默认0) 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+	
+	
+	/**
+	 * 获取 公司简称
+	 */
+	public String getCompanySimpleName() {
+		return companySimpleName;
+	}
+	
+	/**
+	 * 设置 公司简称
+	 */
+	public void setCompanySimpleName(String companySimpleName) {
+		this.companySimpleName = companySimpleName;
+	}
+	
+	/**
+	 * 获取 公司全称
+	 */
+	public String getCompanyFullName() {
+		return companyFullName;
+	}
+	
+	/**
+	 * 设置 公司全称
+	 */
+	public void setCompanyFullName(String companyFullName) {
+		this.companyFullName = companyFullName;
+	}
+	
+	/**
+	 * 获取 企业性质
+	 */
+	public String getCompanyNature() {
+		return companyNature;
+	}
+	
+	/**
+	 * 设置 企业性质
+	 */
+	public void setCompanyNature(String companyNature) {
+		this.companyNature = companyNature;
+	}
+	
+	/**
+	 * 获取 营业执照有效期
+	 */
+	public Date getCompanyValidity() {
+		return companyValidity;
+	}
+	
+	/**
+	 * 设置 营业执照有效期
+	 */
+	public void setCompanyValidity(Date companyValidity) {
+		this.companyValidity = companyValidity;
+	}
+	
+	/**
+	 * 获取 税号
+	 */
+	public String getTaxNo() {
+		return taxNo;
+	}
+	
+	/**
+	 * 设置 税号
+	 */
+	public void setTaxNo(String taxNo) {
+		this.taxNo = taxNo;
+	}
+	
+	/**
+	 * 获取 组织机构代码
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+	
+	/**
+	 * 设置 组织机构代码
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+	
+	/**
+	 * 获取 公司电话
+	 */
+	public String getCompanyPhone() {
+		return companyPhone;
+	}
+	
+	/**
+	 * 设置 公司电话
+	 */
+	public void setCompanyPhone(String companyPhone) {
+		this.companyPhone = companyPhone;
+	}
+	
+	/**
+	 * 获取 传真
+	 */
+	public String getFax() {
+		return fax;
+	}
+	
+	/**
+	 * 设置 传真
+	 */
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+	
+	/**
+	 * 获取 承运商类型
+	 */
+	public String getCarrierType() {
+		return carrierType;
+	}
+	
+	/**
+	 * 设置 承运商类型
+	 */
+	public void setCarrierType(String carrierType) {
+		this.carrierType = carrierType;
+	}
+	
+	/**
+	 * 获取 自有车辆
+	 */
+	public String getSelfCar() {
+		return selfCar;
+	}
+	
+	/**
+	 * 设置 自有车辆
+	 */
+	public void setSelfCar(String selfCar) {
+		this.selfCar = selfCar;
+	}
+	
+	/**
+	 * 获取 公司法人姓名
+	 */
+	public String getLegalPersonName() {
+		return legalPersonName;
+	}
+	
+	/**
+	 * 设置 公司法人姓名
+	 */
+	public void setLegalPersonName(String legalPersonName) {
+		this.legalPersonName = legalPersonName;
+	}
+	
+	/**
+	 * 获取 公司法人身份证号
+	 */
+	public String getLegalPersonNumber() {
+		return legalPersonNumber;
+	}
+	
+	/**
+	 * 设置 公司法人身份证号
+	 */
+	public void setLegalPersonNumber(String legalPersonNumber) {
+		this.legalPersonNumber = legalPersonNumber;
+	}
+	
+	/**
+	 * 获取 法人手机号
+	 */
+	public String getLegalPersonMobile() {
+		return legalPersonMobile;
+	}
+	
+	/**
+	 * 设置 法人手机号
+	 */
+	public void setLegalPersonMobile(String legalPersonMobile) {
+		this.legalPersonMobile = legalPersonMobile;
+	}
+	
+	/**
+	 * 获取 联系人姓名
+	 */
+	public String getContactsName() {
+		return contactsName;
+	}
+	
+	/**
+	 * 设置 联系人姓名
+	 */
+	public void setContactsName(String contactsName) {
+		this.contactsName = contactsName;
+	}
+	
+	/**
+	 * 获取 联系人手机号
+	 */
+	public String getContactsMobile() {
+		return contactsMobile;
+	}
+	
+	/**
+	 * 设置 联系人手机号
+	 */
+	public void setContactsMobile(String contactsMobile) {
+		this.contactsMobile = contactsMobile;
+	}
+	
+	/**
+	 * 获取 联系人职位
+	 */
+	public String getContactsPosition() {
+		return contactsPosition;
+	}
+	
+	/**
+	 * 设置 联系人职位
+	 */
+	public void setContactsPosition(String contactsPosition) {
+		this.contactsPosition = contactsPosition;
+	}
+	
+	/**
+	 * 获取 联系人身份证
+	 */
+	public String getContactsNumber() {
+		return contactsNumber;
+	}
+	
+	/**
+	 * 设置 联系人身份证
+	 */
+	public void setContactsNumber(String contactsNumber) {
+		this.contactsNumber = contactsNumber;
+	}
+	
+	/**
+	 * 获取 邮政编码
+	 */
+	public String getPostcode() {
+		return postcode;
+	}
+	
+	/**
+	 * 设置 邮政编码
+	 */
+	public void setPostcode(String postcode) {
+		this.postcode = postcode;
+	}
+	
+	/**
+	 * 获取 注册资金
+	 */
+	public Double getRegisteredCapital() {
+		return registeredCapital;
+	}
+	
+	/**
+	 * 设置 注册资金
+	 */
+	public void setRegisteredCapital(Double registeredCapital) {
+		this.registeredCapital = registeredCapital;
+	}
+	
+	/**
+	 * 获取 公司成立时间
+	 */
+	public Date getCompanyBeginTime() {
+		return companyBeginTime;
+	}
+	
+	/**
+	 * 设置 公司成立时间
+	 */
+	public void setCompanyBeginTime(Date companyBeginTime) {
+		this.companyBeginTime = companyBeginTime;
+	}
+	
+	/**
+	 * 获取 公司经营范围
+	 */
+	public String getBusinessScope() {
+		return businessScope;
+	}
+	
+	/**
+	 * 设置 公司经营范围
+	 */
+	public void setBusinessScope(String businessScope) {
+		this.businessScope = businessScope;
+	}
+	
+	/**
+	 * 获取 注册省编码
+	 */
+	public String getRegisterProvinceCode() {
+		return registerProvinceCode;
+	}
+	
+	/**
+	 * 设置 注册省编码
+	 */
+	public void setRegisterProvinceCode(String registerProvinceCode) {
+		this.registerProvinceCode = registerProvinceCode;
+	}
+	
+	/**
+	 * 获取 注册市编码
+	 */
+	public String getRegisterCityCode() {
+		return registerCityCode;
+	}
+	
+	/**
+	 * 设置 注册市编码
+	 */
+	public void setRegisterCityCode(String registerCityCode) {
+		this.registerCityCode = registerCityCode;
+	}
+	
+	/**
+	 * 获取 注册区编码
+	 */
+	public String getRegisterAreaCode() {
+		return registerAreaCode;
+	}
+	
+	/**
+	 * 设置 注册区编码
+	 */
+	public void setRegisterAreaCode(String registerAreaCode) {
+		this.registerAreaCode = registerAreaCode;
+	}
+	
+	/**
+	 * 获取 注册详细地址
+	 */
+	public String getRegisterAddress() {
+		return registerAddress;
+	}
+	
+	/**
+	 * 设置 注册详细地址
+	 */
+	public void setRegisterAddress(String registerAddress) {
+		this.registerAddress = registerAddress;
+	}
+	
+	/**
+	 * 获取 经营省编码
+	 */
+	public String getActualProvinceCode() {
+		return actualProvinceCode;
+	}
+	
+	/**
+	 * 设置 经营省编码
+	 */
+	public void setActualProvinceCode(String actualProvinceCode) {
+		this.actualProvinceCode = actualProvinceCode;
+	}
+	
+	/**
+	 * 获取 经营市编码
+	 */
+	public String getActualCityCode() {
+		return actualCityCode;
+	}
+	
+	/**
+	 * 设置 经营市编码
+	 */
+	public void setActualCityCode(String actualCityCode) {
+		this.actualCityCode = actualCityCode;
+	}
+	
+	/**
+	 * 获取 经营区编码
+	 */
+	public String getActualAreaCode() {
+		return actualAreaCode;
+	}
+	
+	/**
+	 * 设置 经营区编码
+	 */
+	public void setActualAreaCode(String actualAreaCode) {
+		this.actualAreaCode = actualAreaCode;
+	}
+	
+	/**
+	 * 获取 经营详细地址
+	 */
+	public String getActualAddress() {
+		return actualAddress;
+	}
+	
+	/**
+	 * 设置 经营详细地址
+	 */
+	public void setActualAddress(String actualAddress) {
+		this.actualAddress = actualAddress;
+	}
+	
+	/**
+	 * 获取 营业执照附件
+	 */
+	public String getLicensePhoto() {
+		return licensePhoto;
+	}
+	
+	/**
+	 * 设置 营业执照附件
+	 */
+	public void setLicensePhoto(String licensePhoto) {
+		this.licensePhoto = licensePhoto;
+	}
+	
+	/**
+	 * 获取 信用代码附件
+	 */
+	public String getCreditCodePhoto() {
+		return creditCodePhoto;
+	}
+	
+	/**
+	 * 设置 信用代码附件
+	 */
+	public void setCreditCodePhoto(String creditCodePhoto) {
+		this.creditCodePhoto = creditCodePhoto;
+	}
+	
+	/**
+	 * 获取 道路运输资格证附件
+	 */
+	public String getQualificationsPhoto() {
+		return qualificationsPhoto;
+	}
+	
+	/**
+	 * 设置 道路运输资格证附件
+	 */
+	public void setQualificationsPhoto(String qualificationsPhoto) {
+		this.qualificationsPhoto = qualificationsPhoto;
+	}
+	
+	/**
+	 * 获取 组织机构代码证附件
+	 */
+	public String getOrgPhoto() {
+		return orgPhoto;
+	}
+	
+	/**
+	 * 设置 组织机构代码证附件
+	 */
+	public void setOrgPhoto(String orgPhoto) {
+		this.orgPhoto = orgPhoto;
+	}
+	
+	/**
+	 * 获取 税务登记证
+	 */
+	public String getTaxPhoto() {
+		return taxPhoto;
+	}
+	
+	/**
+	 * 设置 税务登记证
+	 */
+	public void setTaxPhoto(String taxPhoto) {
+		this.taxPhoto = taxPhoto;
+	}
+	
+	/**
+	 * 获取 法人身份证附件
+	 */
+	public String getLegalPersonPhoto() {
+		return legalPersonPhoto;
+	}
+	
+	/**
+	 * 设置 法人身份证附件
+	 */
+	public void setLegalPersonPhoto(String legalPersonPhoto) {
+		this.legalPersonPhoto = legalPersonPhoto;
+	}
+	
+	/**
+	 * 获取 第三方法人代表授权书
+	 */
+	public String getLegalPersonAuthPhoto() {
+		return legalPersonAuthPhoto;
+	}
+	
+	/**
+	 * 设置 第三方法人代表授权书
+	 */
+	public void setLegalPersonAuthPhoto(String legalPersonAuthPhoto) {
+		this.legalPersonAuthPhoto = legalPersonAuthPhoto;
+	}
+	
+	/**
+	 * 获取 联系人身份证附件
+	 */
+	public String getContactsPhoto() {
+		return contactsPhoto;
+	}
+	
+	/**
+	 * 设置 联系人身份证附件
+	 */
+	public void setContactsPhoto(String contactsPhoto) {
+		this.contactsPhoto = contactsPhoto;
+	}
+	
+	/**
+	 * 获取 停用原因
+	 */
+	public String getDisabledReason() {
+		return disabledReason;
+	}
+	
+	/**
+	 * 设置 停用原因
+	 */
+	public void setDisabledReason(String disabledReason) {
+		this.disabledReason = disabledReason;
+	}
+	
+	/**
+	 * 获取 供应商状态
+	 */
+	public String getStatus() {
+		return status;
+	}
+	
+	/**
+	 * 设置 供应商状态
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+	
+	/**
+	 * 获取 审批意见
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 审批意见
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 删除标识(删除:1,默认0)
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 删除标识(删除:1,默认0)
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	
+}

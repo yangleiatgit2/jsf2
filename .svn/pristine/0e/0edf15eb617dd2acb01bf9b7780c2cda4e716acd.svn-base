@@ -1,0 +1,64 @@
+package cn.uce.suc.common.util;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.suc.common.util.SqlConnection;
+
+/**
+ * s
+ * 
+ * @Description: jdbc 执行方法
+ * @author wangzhijun
+ * @date 2017年11月23日 上午9:43:05
+ */
+public class JdbcUtils {
+
+	private final static Logger logger = LoggerFactory.getLogger(JdbcUtils.class);
+
+	private static String name = "com.mysql.jdbc.Driver";
+
+	/**
+	 * 
+	 * @Description: 执行插入或更新语句
+	 * @param sql
+	 * @return
+	 * @author wangzhijun
+	 * @throws SQLException
+	 * @date 2017年11月23日 上午9:47:01
+	 */
+	public static int executeUpdate(String sql, SqlConnection sqlConnection) {
+		int result;
+		try {
+			Connection conn = null;
+			Statement statement = null;
+			// 加载驱动
+			Class.forName(name);
+			// 创建链接
+			conn = DriverManager.getConnection(sqlConnection.getUrl(), sqlConnection.getUsername(),
+					sqlConnection.getPassword());
+			// Statement里面带有很多方法，比如executeUpdate可以实现插入，更新和删除等
+			statement = conn.createStatement();
+			// 执行脚本
+			result = statement.executeUpdate(sql);
+			conn.close();
+			statement.close();
+			return result;
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+			// throw new RuntimeException(e);
+			throw new SucRuntimeException(e);
+			// throw new BusinessException(e.getMessage());
+			// result = 0;
+		} finally {
+			logger.info("method end");
+		}
+		// return result;
+	}
+}

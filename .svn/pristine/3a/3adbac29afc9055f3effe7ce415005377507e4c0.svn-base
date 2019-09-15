@@ -1,0 +1,88 @@
+package cn.uce.suc.common.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.OmgCmsOrg;
+import cn.uce.suc.common.vo.ComboOrgVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.OrgVo;
+import cn.uce.suc.common.vo.ZTreeVo;
+
+/**
+ * @Description: 乾坤机构DAO接口类
+ * @author liwei
+ * @date 2017年10月15日 下午09:57:58
+ */
+@Repository("omgCmsOrgDao")
+public interface IOmgCmsOrgDao extends IBaseDao<OmgCmsOrg, Long> {
+	
+	/**
+	 * @Description: 分页查询乾坤机构
+	 * @param omgCmsOrgVo 乾坤机构
+	 * @param page 分页参数
+	 * @return 乾坤机构
+	 * @author liwei
+	 * @date 2017年10月15日 下午09:57:58
+	 */
+	public Pagination<OmgCmsOrg> findByPagination(OmgCmsOrgVo omgCmsOrgVo, Page page);
+	/**
+	 * 
+	 * @Description: 前端控件获取 
+	 * @param omgCmsOrgVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午10:17:41
+	 */
+	public Pagination<ComboOrgVo> findByCombox(OmgCmsOrgVo omgCmsOrgVo, Page page);
+	/**
+	 * 
+	 * @Description: 根据baseOrgCode获取组织机构对象
+	 * @param baseOrgCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午11:24:29
+	 */
+	public OmgCmsOrgVo findByBaseOrgCode(String baseOrgCode);
+	/**
+	 * 
+	 * @Description: 根据omgCmsOrgVo获取其对应所有的组织机构对象
+	 * @param omgCmsOrgVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月9日 下午15:24:29
+	 */
+	public List<OmgCmsOrg> findOperationByVo(OmgCmsOrgVo omgCmsOrgVo);
+	/**
+	 * 
+	 * @Description: 获取所有的分拨中心数量
+	 * @param status,orgType
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月17日 下午15:24:29
+	 */
+	public int getAllOperationCount (OmgCmsOrgVo omgCmsOrgVo);
+
+
+	/**
+	 * @Description: (查询子营运机构列表) 
+	 * @param orgVo
+	 * @return
+	 * @author XJ
+	 * @date 2017年7月20日 下午5:55:50
+	 */
+	public List<ZTreeVo> findChildNosOrgList(OrgVo orgVo);
+	/**
+	 * @Description: (根据orgCode查询虚拟机构) 
+	 * @param orgCode
+	 * @return
+	 * @author XJ
+	 * @date 2017年7月20日 下午8:59:04
+	 */
+	public OrgVo findVirtualOrgByCode(String orgCode);
+}

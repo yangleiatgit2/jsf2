@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datamain.IDeliveryRelationDao">
+	
+	<sql id="Base_Column_List">
+			id,site_code,site_name,
+			workcenter_code,workcenter_name,delete_flag,
+			utf1,utf2,utf3,
+			version,remark,create_org,
+			create_emp,create_time,update_org,
+			update_emp,update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="siteCode != null and siteCode != ''">
+		and site_code = #{siteCode}
+		</if>
+	    <if test="siteName != null and siteName != ''">
+		and site_name = #{siteName}
+		</if>
+	    <if test="workcenterCode != null and workcenterCode != ''">
+		and workcenter_code = #{workcenterCode}
+		</if>
+	    <if test="workcenterName != null">
+		and workcenter_name = #{workcenterName}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.datamain.DeliveryRelation">
+	UPDATE t_suc_bkg_delivery_relation
+	<set>
+		<if test="siteCode != null">
+		site_code = #{siteCode},
+		</if>
+		<if test="siteName != null">
+		site_name = #{siteName},
+		</if>
+		<if test="workcenterCode != null">
+		workcenter_code = #{workcenterCode},
+		</if>
+		<if test="workcenterName != null">
+		workcenter_name = #{workcenterName},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.datamain.DeliveryRelationVo" resultType="cn.uce.suc.bkg.entity.datamain.DeliveryRelation">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_delivery_relation 
+	<include refid="Base_Column_Where"></include>
+	ORDER BY create_time DESC 
+	</select>
+	
+	<delete id="deleteBatch" parameterType="cn.uce.suc.bkg.vo.datamain.DeliveryRelationVo">
+	delete from t_suc_bkg_delivery_relation where id in 
+		<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+		#{item} 
+		</foreach>
+	</delete>
+	
+	<!-- 根据条件查询交货关系 -->
+	<select id="findByCondition" parameterType="cn.uce.suc.bkg.vo.datamain.DeliveryRelationVo" resultType="cn.uce.suc.bkg.vo.datamain.DeliveryRelationVo">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_delivery_relation 
+		<where>
+			<if test="siteCode != null and siteCode != ''">
+				AND site_code = #{siteCode}
+			</if>
+			<if test="siteName != null and siteName != ''">
+				AND site_name = #{siteName}
+			</if>
+			<if test="workcenterCode != null and workcenterCode != ''">
+				AND workcenter_code = #{workcenterCode}
+			</if>
+			<if test="workcenterName != null and workcenterName != ''">
+				AND workcenter_name = #{workcenterName}
+			</if>
+		</where>
+	</select>
+	
+</mapper>

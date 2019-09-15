@@ -1,0 +1,399 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import java.util.Date;
+
+import cn.uce.base.entity.BaseEntity;
+
+public class DeparPlanForApp extends BaseEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private Long detailId;
+
+	/**
+	 * 发车计划编号
+	 */
+	private String drivingPlanCode;
+
+	/**
+	 * 始发站点名称
+	 */
+	private String startOrgName;
+
+	/**
+	 * 目的站点名称
+	 */
+	private String endOrgName;
+
+	/**
+	 * 途径站点名称
+	 */
+	private String wayPointName;
+	/**
+	 * 途径站点编码
+	 */
+	private String wayPointCode;
+
+	/**
+	 * 司机手机号码
+	 */
+	private String driverPhone;
+
+	/**
+	 * 车牌号
+	 */
+	private String plateNumber;
+
+	/**
+	 * 司机名称
+	 */
+	private String dirverName;
+
+	/**
+	 * 預計始发时间
+	 */
+	private Date departTime;
+	/**
+	 * 預計达发时间
+	 */
+	private Date arrivalTime;
+
+	/**
+	 * 发车计划状态
+	 */
+	private String status;
+	/**
+	 * 发车计划已生成状态
+	 */
+	private String generateStatus;
+	/**
+	 * 发车计划 司机未确认状态
+	 */
+	private String unconfirmStaus;
+
+	/**
+	 * 业务模式
+	 */
+	private String businessMode;
+
+	/**
+	 * 预报方数
+	 */
+	private Double forecastVolume;
+	/**
+	 *预报重量
+	 */
+	private Double forecastWeight;
+	/**
+	 * 实际重量
+	 */
+	private Double actualWeight;
+	/**
+	 * 实际方数
+	 */
+	private Double actualVolume;
+	/**
+	 * 实际件数
+	 */
+	private Integer actualNumber;
+	/** 
+	 * 司机端-实际方数 
+	 */
+	private Double driverActualVolume;
+	/** 
+	 * 司机端-实际重量 
+	 */
+	private Double driverActualWeight;
+	/**
+	 * 
+	 * 司机端-实际件数
+	 */
+	private Integer driverActualNumber;
+	/**
+	 * 下一站名称
+	 */
+	private String nextStation;
+	/**
+	 * 下一站编码
+	 */
+	private String nextStationCode;
+	/**
+	 * 网点端状态
+	 */
+	private String   planSiteStatus;
+    /** 
+	 * 站点评价标签 
+	 */
+	private String stationEvalJudge;
+    /** 
+	 * 站点评价星级 
+	 */
+	private String stationEvalLever;
+	/**
+	 * 评价时间
+	 */
+	private Date appraiseTime;
+
+	/**
+	 * 网点端 提示语
+	 */
+	private String planSitePrompt;
+	
+	
+	/** 
+	 * @return actualWeight 
+	 */
+	public Double getActualWeight() {
+		return actualWeight;
+	}
+	/**
+	 * @param actualWeight the actualWeight to set
+	 */
+	public void setActualWeight(Double actualWeight) {
+		this.actualWeight = actualWeight;
+	}
+	/** 
+	 * @return actualVolume 
+	 */
+	public Double getActualVolume() {
+		return actualVolume;
+	}
+	/**
+	 * @param actualVolume the actualVolume to set
+	 */
+	public void setActualVolume(Double actualVolume) {
+		this.actualVolume = actualVolume;
+	}
+	/** 
+	 * @return actualNumber 
+	 */
+	public Integer getActualNumber() {
+		return actualNumber;
+	}
+	/**
+	 * @param actualNumber the actualNumber to set
+	 */
+	public void setActualNumber(Integer actualNumber) {
+		this.actualNumber = actualNumber;
+	}
+	
+	public String getStationEvalJudge() {
+		return stationEvalJudge;
+	}
+	public void setStationEvalJudge(String stationEvalJudge) {
+		this.stationEvalJudge = stationEvalJudge;
+	}
+	public String getStationEvalLever() {
+		return stationEvalLever;
+	}
+	public void setStationEvalLever(String stationEvalLever) {
+		this.stationEvalLever = stationEvalLever;
+	}
+	public String getPlanSiteStatus() {
+		return planSiteStatus;
+	}
+	public void setPlanSiteStatus(String planSiteStatus) {
+		this.planSiteStatus = planSiteStatus;
+	}
+	public String getNextStation() {
+		return nextStation;
+	}
+	public void setNextStation(String nextStation) {
+		this.nextStation = nextStation;
+	}
+	public String getWayPointCode() {
+		return wayPointCode;
+	}
+	public void setWayPointCode(String wayPointCode) {
+		this.wayPointCode = wayPointCode;
+	}
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+	public String getStartOrgName() {
+		return startOrgName;
+	}
+	public void setStartOrgName(String startOrgName) {
+		this.startOrgName = startOrgName;
+	}
+	public String getEndOrgName() {
+		return endOrgName;
+	}
+	public void setEndOrgName(String endOrgName) {
+		this.endOrgName = endOrgName;
+	}
+	public String getWayPointName() {
+		return wayPointName;
+	}
+	public void setWayPointName(String wayPointName) {
+		this.wayPointName = wayPointName;
+	}
+	public String getDriverPhone() {
+		return driverPhone;
+	}
+	public void setDriverPhone(String driverPhone) {
+		this.driverPhone = driverPhone;
+	}
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+	public String getDirverName() {
+		return dirverName;
+	}
+	public void setDirverName(String dirverName) {
+		this.dirverName = dirverName;
+	}
+	public Date getDepartTime() {
+		return departTime;
+	}
+	public void setDepartTime(Date departTime) {
+		this.departTime = departTime;
+	}
+	public Date getArrivalTime() {
+		return arrivalTime;
+	}
+	public void setArrivalTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+	public Double getForecastVolume() {
+		return forecastVolume;
+	}
+	public void setForecastVolume(Double forecastVolume) {
+		this.forecastVolume = forecastVolume;
+	}
+	public Double getForecastWeight() {
+		return forecastWeight;
+	}
+	public void setForecastWeight(Double forecastWeight) {
+		this.forecastWeight = forecastWeight;
+	}
+	/** 
+	 * @return appraiseTime 
+	 */
+	public Date getAppraiseTime() {
+		return appraiseTime;
+	}
+	/**
+	 * @param appraiseTime the appraiseTime to set
+	 */
+	public void setAppraiseTime(Date appraiseTime) {
+		this.appraiseTime = appraiseTime;
+	}
+	/** 
+	 * @return planSitePrompt 
+	 */
+	public String getPlanSitePrompt() {
+		return planSitePrompt;
+	}
+	/**
+	 * @param planSitePrompt the planSitePrompt to set
+	 */
+	public void setPlanSitePrompt(String planSitePrompt) {
+		this.planSitePrompt = planSitePrompt;
+	}
+	/** 
+	* @return nextStationCode 
+	*/
+	public String getNextStationCode() {
+		return nextStationCode;
+	}
+	/**
+	 * @param nextStationCode the nextStationCode to set
+	 */
+	public void setNextStationCode(String nextStationCode) {
+		this.nextStationCode = nextStationCode;
+	}
+	/** 
+	* @return detailId 
+	*/
+	public Long getDetailId() {
+		return detailId;
+	}
+	/**
+	 * @param detailId the detailId to set
+	 */
+	public void setDetailId(Long detailId) {
+		this.detailId = detailId;
+	}
+	/** 
+	 * @return generateStatus 
+	 */
+	public String getGenerateStatus() {
+		return generateStatus;
+	}
+	/**
+	 * @param generateStatus the generateStatus to set
+	 */
+	public void setGenerateStatus(String generateStatus) {
+		this.generateStatus = generateStatus;
+	}
+	/** 
+	 * @return unconfirmStaus 
+	 */
+	public String getUnconfirmStaus() {
+		return unconfirmStaus;
+	}
+	/**
+	 * @param unconfirmStaus the unconfirmStaus to set
+	 */
+	public void setUnconfirmStaus(String unconfirmStaus) {
+		this.unconfirmStaus = unconfirmStaus;
+	}
+	/** 
+	 * @return driverActualVolume 
+	 */
+	public Double getDriverActualVolume() {
+		return driverActualVolume;
+	}
+	/**
+	 * @param driverActualVolume the driverActualVolume to set
+	 */
+	public void setDriverActualVolume(Double driverActualVolume) {
+		this.driverActualVolume = driverActualVolume;
+	}
+	/** 
+	 * @return driverActualWeight 
+	 */
+	public Double getDriverActualWeight() {
+		return driverActualWeight;
+	}
+	/**
+	 * @param driverActualWeight the driverActualWeight to set
+	 */
+	public void setDriverActualWeight(Double driverActualWeight) {
+		this.driverActualWeight = driverActualWeight;
+	}
+	/** 
+	 * @return driverActualNumber 
+	 */
+	public Integer getDriverActualNumber() {
+		return driverActualNumber;
+	}
+	/**
+	 * @param driverActualNumber the driverActualNumber to set
+	 */
+	public void setDriverActualNumber(Integer driverActualNumber) {
+		this.driverActualNumber = driverActualNumber;
+	}
+}

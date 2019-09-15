@@ -1,0 +1,60 @@
+package cn.uce.suc.bkg.dao.datamain;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.datamain.CarrierInfo;
+import cn.uce.suc.bkg.vo.datamain.CarrierInfoVo;
+
+/**
+ * @Description: 承运商信息DAO接口类
+ * @author liwei
+ * @date 2017年11月01日 上午09:46:05
+ */
+@Repository("carrierInfoDao")
+public interface ICarrierInfoDao extends IBaseDao<CarrierInfo, Long> {
+	
+	/**
+	 * @Description: 分页查询承运商信息
+	 * @param carrierInfoVo 承运商信息
+	 * @param page 分页参数
+	 * @return 承运商信息
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	public Pagination<CarrierInfo> findByPagination(CarrierInfoVo carrierInfoVo, Page page);
+	/**
+	 * 
+	 * @Description: 承运商下拉
+	 * @param carrierInfoVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月7日 下午5:49:41
+	 */
+	public Pagination<CarrierInfo> findCarrierByCmb(CarrierInfoVo carrierInfoVo, Page page);
+	/**
+	 * 
+	 * @Description: 根据承运商名称查询该承运商
+	 * @param companyFullName
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月23日 下午5:33:26
+	 */
+	public List<CarrierInfo> findByCompanyFullName(String companyFullName);
+	
+	/**
+	 * 
+	 * @Description: 根据承运商名称做唯一校验
+	 * @param carrierInfoVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月28日 上午11:07:59
+	 */
+	public List<CarrierInfoVo> checkExistsByCompanyFullName(CarrierInfoVo carrierInfoVo);
+	
+}

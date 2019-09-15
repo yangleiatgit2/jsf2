@@ -1,0 +1,97 @@
+package cn.uce.suc.app.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.app.entity.Captcha;
+import cn.uce.suc.app.vo.CaptchaVo;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.vo.MobileuserVo;
+
+/**
+ * 
+ * @Description: 单元测试
+ * @author liwei
+ * @date 2017年11月23日 下午8:58:32
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class CaptchaBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 注入
+	 */
+	@Resource
+	private ICaptchaBiz captchaBiz;
+	private LoginEntity loginEntity;
+	private MobileuserVo mobileuserVo;
+	private Captcha captcha;
+
+	@Before
+	public void before() {
+		loginEntity = new LoginEntity();
+		loginEntity.setMobilePhone("13777777777");
+		loginEntity.setType("dot");
+		loginEntity.setPassword("sdada");
+		mobileuserVo = new MobileuserVo();
+		captcha = new Captcha();
+		mobileuserVo.setMobilephone("13777777777");
+		mobileuserVo.setUserType("dot");
+		mobileuserVo.setPassword("sasa");
+		mobileuserVo.setCaptcha("54545");
+		captcha.setContent("989282");
+		
+	}
+/**
+ * 
+ * @Description: 单元测试
+ * @author liwei
+ * @date 2017年12月4日 下午11:24:54
+ */
+	@Test
+	public void testProLog() {
+		captchaBiz.login(loginEntity);
+		captchaBiz.logout(loginEntity);
+		captchaBiz.updateCapch(loginEntity);
+		captchaBiz.addCaptcha(captcha);
+		captchaBiz.getCaptcha("13777777779", "dot");
+	}
+	/**
+	 * 
+	 * @Description: 单元测试
+	 * @author liwei
+	 * @date 2017年12月4日 下午11:24:54
+	 */
+	@Test
+	public void testproMo() {
+		captchaBiz.updatepassWord(mobileuserVo);
+	}
+	/**
+	 * 
+	 * @Description: 单元测试
+	 * @author liwei
+	 * @date 2017年12月4日 下午11:24:54
+	 */
+	@Test
+	public void testproCap(){
+		captchaBiz.addCaptcha(captcha);
+		captchaBiz.deleteCaptcha(1L);
+		captchaBiz.findById(1L);
+		CaptchaVo captchaVo=new CaptchaVo();
+		Page page=new Page();
+		captchaBiz.findByPagination(captchaVo, page);
+		captchaBiz.getCaptch(captchaVo);
+		captchaBiz.updateCaptcha(captcha);
+	}
+}

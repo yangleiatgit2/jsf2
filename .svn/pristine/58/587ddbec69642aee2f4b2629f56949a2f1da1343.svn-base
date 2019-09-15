@@ -1,0 +1,123 @@
+package cn.uce.suc.common.control;
+
+import java.util.Date;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.suc.common.vo.SystemConfigVo;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.WebUtil;
+
+/**
+ * 
+ * @Description: 全局系统配置表
+ * @author wangzhijun
+ * @date 2017年11月2日 上午10:11:35
+ */
+@Controller
+@RequestMapping("/systemConfig")
+public class SystemConfigController extends BaseController {
+
+	/**
+	 * 注入biz对象
+	 */
+	@Resource
+	ISystemConfigBiz systemConfigBiz;
+
+	/**
+	 * 
+	 * @Description: 页面入口 
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年12月7日 上午11:15:25
+	 */
+	@RequestMapping("/forward")
+	public String forward() {
+		return "/common/systemConfig";
+	}
+
+	/**
+	 * 
+	 * @Description: 查询页面
+	 * @param page
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 上午10:15:57
+	 */
+	@RequestMapping(value = "/findAll")
+	@ResponseBody
+	public Map<String, Object> findByPagination(SystemConfigVo systemConfigVo, Page page) {
+		Pagination<SystemConfig> pagination = systemConfigBiz.findByPagination(systemConfigVo, page);
+		return returnSuccess(pagination);
+	}
+
+	/**
+	 * 
+	 * @Description: 新增配置信息
+	 * @param systemConfigvo
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 上午10:14:34
+	 */
+	@RequestMapping(value = "/addSystemConfig")
+	@ResponseBody
+	public Map<String, Object> addSystemConfig(SystemConfig systemConfig) {
+		SucCurrentUser currentUser = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		systemConfig.setCreateEmp(currentUser.getEmpName());
+		systemConfig.setVersion(SucConstants.ONE);
+		systemConfig.setCreateTime(new Date());
+		int result = systemConfigBiz.addSystemConfig(systemConfig);
+		return result > 0 ? returnSuccess(Resources.getMessage("common.save.success")) : returnError(Resources
+				.getMessage("common.save.fail"));
+
+	}
+
+	/**
+	 * 
+	 * @Description: 更新系统配置
+	 * @param systemConfig
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 上午10:27:17
+	 */
+	@RequestMapping(value = "/updateSystemConfig")
+	@ResponseBody
+	public Map<String, Object> updateSystemConfig(SystemConfig systemConfig) {
+		SucCurrentUser currentUser = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		systemConfig.setUpdateEmp(currentUser.getEmpName());
+		systemConfig.setVersion(systemConfig.getVersion() + 1);
+		systemConfig.setUpdateTime(new Date());
+		int result = systemConfigBiz.updateSystemConfig(systemConfig);
+		return result > 0 ? returnSuccess(Resources.getMessage("common.update.success")) : returnError(Resources
+				.getMessage("common.update.fail"));
+	}
+
+	/**
+	 * 
+	 * @Description: 删除系统配置
+	 * @param id
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月2日 上午10:27:57
+	 */
+	@RequestMapping(value = "/deleteSystemConfig")
+	@ResponseBody
+	public Map<String, Object> deleteSystemConfig(Long id) {
+		int result = systemConfigBiz.deleteSystemConfig(id);
+		return result > 0 ? returnSuccess(Resources.getMessage("common.delete.success")) : returnError(Resources
+				.getMessage("common.delete.fail"));
+	}
+}

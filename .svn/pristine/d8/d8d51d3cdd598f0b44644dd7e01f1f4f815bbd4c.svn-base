@@ -1,0 +1,171 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.cache.OmgCmsOrgCache;
+import cn.uce.suc.common.entity.OmgCmsOrg;
+import cn.uce.suc.common.vo.ComboOrgVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.OrgVo;
+import cn.uce.suc.common.vo.ZTreeVo;
+import cn.uce.suc.common.service.OmgCmsOrgService;
+
+/**
+ * @Description: 乾坤机构BIZ实现类
+ * @author liwei
+ * @date 2017年10月15日 下午09:57:58
+ */
+@Service("omgCmsOrgBiz")
+public class OmgCmsOrgBiz implements IOmgCmsOrgBiz {
+	
+	/**
+	 * 注入乾坤机构Service
+	 */
+	@Resource
+	private OmgCmsOrgService omgCmsOrgService;
+	/**
+	 * 组织机构缓存
+	 */
+	@Resource(name = "omgCmsOrgCache")
+	OmgCmsOrgCache omgCmsOrgCache;
+	
+	
+	
+	
+	/**
+	 * @Description: 分页查询乾坤机构
+	 * @param omgCmsOrgVo 乾坤机构
+	 * @param page 分页参数
+	 * @return 乾坤机构
+	 * @author liwei
+	 * @date 2017年10月15日 下午09:57:58
+	 */
+	@Override
+	public Pagination<OmgCmsOrg> findByPagination(OmgCmsOrgVo omgCmsOrgVo, Page page) {
+		Pagination<OmgCmsOrg> pagination = omgCmsOrgService.findByPagination(omgCmsOrgVo, page);
+		return pagination;
+	}
+	/**
+	 * 
+	 * @Description: 前端查询乾坤组织机构
+	 * @param omgCmsOrgVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午10:18:38
+	 */
+	@Override
+	public Pagination<ComboOrgVo> findByCombox(OmgCmsOrgVo omgCmsOrgVo, Page page){
+		return omgCmsOrgService.findByCombox(omgCmsOrgVo, page);
+	}
+	/**
+	 * 
+	 * @Description: 根据baseOrgCode获取组织机构对象
+	 * @param baseOrgCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月19日 下午11:24:29
+	 */
+	@Override
+	public OmgCmsOrgVo findByBaseOrgCode(String baseOrgCode) {
+		return omgCmsOrgCache.get(baseOrgCode);
+	}
+
+	/**
+	 * 
+	 * @Description: 根据parentOrg,typeCode获取其下面所有的组织机构对象
+	 * @param parentOrg,typeCode
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月9日 下午15:24:29
+	 */
+	@Override
+	public List<OmgCmsOrg> findOperationByVo(OmgCmsOrgVo omgCmsOrgVo) {
+		return omgCmsOrgService.findOperationByVo(omgCmsOrgVo);
+	}
+	/**
+	 * 
+	 * @Description: 获取所有的分拨中心数量
+	 * @param status,orgType
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月17日 下午15:24:29
+	 */
+	public int getAllOperationCount (OmgCmsOrgVo omgCmsOrgVo){
+		return omgCmsOrgService.getAllOperationCount(omgCmsOrgVo);
+	}
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: findChildOrgList</p> 
+	* <p>Description: </p> 
+	* @param orgVo
+	* @return 
+	* @see cn.uce.suc.common.biz.IOmgCmsOrgBiz#findChildOrgList(cn.uce.suc.common.vo.OrgVo)
+	 */
+	@Override
+	public List<ZTreeVo> findChildOrgList(OrgVo orgVo) {
+		OrgVo orgVoResult = null;
+		
+		
+		OmgCmsOrgVo omgCmsOrgVo = this.findByBaseOrgCode(orgVo.getOrgCode());
+		if(null != omgCmsOrgVo){
+			orgVoResult = new OrgVo();
+			orgVoResult.setOrgCode(omgCmsOrgVo.getBaseOrgCode());
+			orgVoResult.setOrgType(omgCmsOrgVo.getOrgType());
+		}
+		
+		if (orgVoResult == null) {
+			// 没查到，再查虚拟机构
+			orgVoResult = omgCmsOrgService.findVirtualOrgByCode(orgVo.getOrgCode());
+		}
+		// 查询营运机构
+		if (orgVoResult != null) {
+			orgVoResult.setIself(orgVo.getIself());
+			orgVoResult.setQ(orgVo.getQ());
+			long start = System.currentTimeMillis();
+			List<ZTreeVo> zTreeVoList = omgCmsOrgService.findChildNosOrgList(orgVoResult);
+			System.out.println(System.currentTimeMillis() - start);
+			if (zTreeVoList.size() == 0) {
+				ZTreeVo zTreeVo = new ZTreeVo();
+				zTreeVoList.add(zTreeVo);
+				return zTreeVoList;
+			}
+			// 过滤条件不为空，执行遍历过滤
+			if ((orgVo.getOrgTypeList() != null && !orgVo.getOrgTypeList().isEmpty())
+					|| (orgVo.getOrgStatusList() != null && !orgVo.getOrgStatusList().isEmpty())) {
+				List<ZTreeVo> zTreeVoResult = new ArrayList<ZTreeVo>();
+				for (ZTreeVo zTreeVo : zTreeVoList) {
+					boolean flagType = false;
+					boolean flagStatus = false;
+					if (orgVo.getOrgTypeList() == null
+							|| orgVo.getOrgTypeList().isEmpty()
+							|| (orgVo.getOrgTypeList() != null && !orgVo.getOrgTypeList().isEmpty() && orgVo
+									.getOrgTypeList().contains(zTreeVo.getType()))) {
+						flagType = true;
+					}
+					if (orgVo.getOrgStatusList() == null
+							|| orgVo.getOrgStatusList().isEmpty()
+							|| (orgVo.getOrgStatusList() != null && !orgVo.getOrgStatusList().isEmpty() && orgVo
+									.getOrgStatusList().contains(zTreeVo.getStatus()))) {
+						flagStatus = true;
+					}
+					if (flagType && flagStatus) {
+						zTreeVoResult.add(zTreeVo);
+					}
+				}
+				return zTreeVoResult;
+			}
+			return zTreeVoList;
+		}
+		return null;
+	}
+
+}

@@ -1,0 +1,429 @@
+package cn.uce.suc.dpt.control;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+
+
+
+
+
+
+
+
+
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+
+
+
+
+
+
+
+
+
+
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.vo.operation.AppDriverPlanVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.suc.common.util.CalendarUtil;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.i18n.Resources;
+/**
+ * 
+ * @Description: 发车计划号
+ * @author liwei
+ * @date 2017年11月11日 上午10:57:31
+ */
+@Controller
+@RequestMapping("/dpt/drivingPlan")
+public class DptDrivingPlanController extends BaseAppController{
+	/**
+	 * 注入发车计划号的biz
+	 * */
+	@Resource
+	IDirvingPlanBiz  dirvingPlanBiz;
+	
+	
+	/**
+	 * @Description: 分页获取司机的所有发车计划号
+	 * @param driverPhone 司机电话号码
+	 * @param dirverName 司机姓名
+	 * @param currentPage 第几页
+	 * @param pageSize 页面展示数量
+	 * @return  DrivingPlan 条件查询出来消息分页
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	@RequestMapping(value = "/findByWhere")
+	public @ResponseBody Map<String, Object> findByCondition(
+			String driverPhone,
+			String dirverName,
+			int  currentPage,
+			int pageSize
+			 ) {
+		if(StringUtil.isBlank(driverPhone) || StringUtil.isBlank(dirverName) || 0>currentPage || 0>pageSize ){
+			return returnError("303","参数错误,");
+		}
+		if(!driverPhone.matches("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$")){
+			return returnError("302","手机号码格式不正确！");
+		}
+		DirvingPlanVo dirvingPlanVo = new  DirvingPlanVo();
+		dirvingPlanVo.setDirverName(dirverName);
+		dirvingPlanVo.setDriverPhone(driverPhone);
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		Pagination<DirvingPlan> pagination=dirvingPlanBiz.findByPagination(dirvingPlanVo, page);   
+		return returnSuccess(pagination);
+	}
+	
+	/**
+	 * 格式化时间,截取掉时间的时分秒
+	 * */
+	public Date farmatDate(Date date){
+		Date dd = new Date();
+		dd.setYear(date.getYear());
+		dd.setMonth(date.getMonth());
+		dd.setDate(date.getDate());
+		dd.setHours(0);
+		dd.setMinutes(0);
+		dd.setSeconds(0);
+		
+		return dd;
+	}
+	/**
+	 * @Description: 司机获取某天某个类型的的发车计划号
+	 * @param DrivingPlanVo 发车计划号的条件
+	 * @return  DrivingPlan 条件查询出来消息List
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	@PostMapping(value = "/findByDepartTimeAndType")
+	public @ResponseBody Map<String, Object> findByDepartTimeAndType(
+			@RequestBody DirvingPlanVo dirvingPlanVo
+			){
+		if( StringUtil.isBlank(dirvingPlanVo.getDriverPhone())){
+			return returnError("301","电话号码不能为空");
+		}/*if(!dirvingPlanVo.getDriverPhone().matches("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$")){
+			//log.error("司机："+dirverName+"手机号="+driverPhone+"手机格式不正确");
+			return returnError("302","手机号码格式不正确！");
+		}*/
+		if(StringUtil.isBlank(dirvingPlanVo.getStatus())){
+			return returnError("302","请确定你需要查询的发车计划号的类型");
+		}
+		if(dirvingPlanVo.getArrivalTime()!=null){
+			dirvingPlanVo.setArrivalTime(farmatDate(dirvingPlanVo.getArrivalTime()));
+		}
+		if(dirvingPlanVo.getDepartTime()!=null){
+			dirvingPlanVo.setDepartTime(farmatDate(dirvingPlanVo.getDepartTime()));
+		}
+		List<DirvingPlan> DirvingPlans= dirvingPlanBiz.findByDepartTimeAndType(dirvingPlanVo);
+		if(DirvingPlans!=null){
+			return returnSuccess(DirvingPlans);
+		}
+		return returnError("303", "未查询到你的发车计划号！");
+	}
+
+
+	/**
+	 * @Description: 发车计划号司机确认
+	 * @param DrivingPlan 发车计划号
+	 * @return  修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	@PostMapping(value = "/startConfirmByCode")
+	public @ResponseBody Map<String, Object> updateStatusById (@RequestBody DirvingPlanVo dirvingPlanVo){
+		
+		//判断页面接收的参数中是否存发车计划号和状态吗？
+		if( StringUtil.isBlank(dirvingPlanVo.getDrivingPlanCode()) ){
+			return returnError();
+		}
+		DirvingPlan RdirvingPlan =dirvingPlanBiz.findByrivingPlanCode(dirvingPlanVo.getDrivingPlanCode());
+		if(RdirvingPlan==null ||  StringUtil.isBlank(RdirvingPlan.getStatus()) ){
+			return returnError();
+		}else if(RdirvingPlan.getStatus().equals(BkgConstants.PLAN_CODE_CONFIRM)){
+			return returnError("301","此次发车计划您已经确认过了！");
+		}else if(!RdirvingPlan.getStatus().equals(BkgConstants.PLAN_CODE_UNCONFIRMED) ){
+			return returnError("302","发车计划确认失败！");
+		}
+		
+		//为发车计划号设置状态(司机已确认)
+		RdirvingPlan.setStatus(BkgConstants.PLAN_CODE_CONFIRM);
+		RdirvingPlan.setUpdateTime(new Date());
+		int val=dirvingPlanBiz.startConfirmById(RdirvingPlan);
+		if(val>0){
+			return returnSuccess();
+		}else{
+			return returnError();
+		}
+		
+	}
+	/**
+	 * @Description: 司机获取所有的未确认的 任务
+	 * @param driverPhone  手机号
+	 * @param currentPage 	第几页
+	 * @param pagesize 	 页面显示的数量
+	 * @param status    状态 
+	 * @return  Pagination<DirvingPlan>  该状态下的发车计划号
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	@RequestMapping(value = "/getUnconfirm/{driverPhone}/{status}/{currentPage}/{pageSize}")
+	public @ResponseBody Map<String, Object> getUnconfirm(
+			@PathVariable("driverPhone")String driverPhone,
+			@PathVariable("status")String status,
+			@PathVariable("currentPage")int currentPage,
+			@PathVariable("pageSize")int pageSize
+			){
+		/*if(!driverPhone.matches("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$")){
+			return returnError("302","手机号码格式不正确！");
+		}*/
+		Page page = new  Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		DirvingPlanVo dirvingPlanVo = new  DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone(driverPhone);
+		dirvingPlanVo.setStatus(status);
+		Pagination<AppDriverPlanVo> findByPagination = dirvingPlanBiz.getUnconfirm(dirvingPlanVo, page);
+		return  returnSuccess(findByPagination);
+	}
+	/**
+	 * @Description: 司机获取某天所有的发车计划号
+	 * @param driverPhone  手机号
+	 * @param currentPage 	第几页
+	 * @param pagesize 	 页面显示的数量
+	 * @param  date     时间
+	 * @return  Pagination<DirvingPlan>  该状态下的发车计划号
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	@RequestMapping(value = "/getAllPlan/{driverPhone}/{date}/{currentPage}/{pageSize}")
+	public @ResponseBody Map<String, Object> getPlanByDate(
+			@PathVariable("driverPhone")String driverPhone,
+			@PathVariable("date")Date date,
+			@PathVariable("currentPage")int currentPage,
+			@PathVariable("pageSize")int pageSize
+			){
+		
+		Page page = new  Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		DirvingPlanVo dirvingPlanVo = new  DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone(driverPhone);
+		/**
+		 * 司机可以查看未确认/已确认/执行中/未执行/已终止的发车计划,不可查看已生成的,故添加 筛选标识 已生成
+		 */
+		dirvingPlanVo.setGeneratedStatusFlag(BkgConstants.PLAN_CODE_GENERATED);//状态:已生成
+		if(date!=null){
+			   
+			dirvingPlanVo.setDepartTime(date);
+	        
+	   
+	        Date tomorrow = CalendarUtil.getTomorrow(date);
+	        dirvingPlanVo.setArrivalTime(tomorrow);
+		}
+		 Pagination<AppDriverPlanVo> unconfirm = dirvingPlanBiz.getUnconfirm(dirvingPlanVo, page);
+		return returnSuccess(unconfirm);
+	}
+	
+	/**
+	 * @Description: 司机获取所有未确认发车计划号的数量
+	 * @param driverPhone  手机号
+	 * @return  Int  未确认的发车计划号的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	@RequestMapping(value = "/comfirmDrivingPlan/{driverPhone}")
+	public  @ResponseBody Map<String, Object>  getUncomfirmDrivingPlanNum(
+			@PathVariable("driverPhone")String driverPhone
+			){
+		
+		
+		DirvingPlanVo dirvingPlanVo = new DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone(driverPhone);
+		dirvingPlanVo.setStatus(BkgConstants.PLAN_CODE_UNCONFIRMED);
+		Integer num=dirvingPlanBiz.getUncomfirmDrivingPlanNum(dirvingPlanVo);
+		return  returnSuccess(num);
+	}
+	/******************************代码重构开始**********************************/
+	/**
+	 * @Description: 发车计划号司机确认
+	 * @param DrivingPlan 发车计划号
+	 * @return  修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	@PostMapping(value = "/comfirmDrivingPlan")
+	public @ResponseBody Map<String, Object> comfirmDrivingPlan (@RequestBody DirvingPlan dirvingPlan){
+		/**
+		 * 实体类中的发车计划号如果为空，确认失败
+		 */
+		if( StringUtil.isBlank(dirvingPlan.getDrivingPlanCode()) ){
+			
+		}
+		int val=dirvingPlanBiz.comfirmDrivingPlan(dirvingPlan);
+		/**
+		 * val=0.....确认失败
+		 */
+		if(val==0){
+			return returnError(String.valueOf(val), Resources.getMessage("drivingPlan.confirm.error"));
+		/**
+		 * 发车计划号不存在
+		 */
+		}else if(val == -1){
+			return returnError(String.valueOf(val), Resources.getMessage("drivingPlan.isnone"));
+		/**
+		 * 发车计划号状态不对
+		 */
+		}else if(val==-2){
+			return returnError(String.valueOf(val), Resources.getMessage("drivingPlan.status.error"));
+		}else if(val >0){
+			return returnSuccess();
+		}else{
+			return returnError();
+		}
+		
+		
+	
+	}
+	/**
+	 * @Description: 通过发车计划号的id查询所有的发车计划号详情
+	 * @param id 发车计划号id
+	 * @return  对应的发车计划详情
+	 * @author UCE-haizhou
+	 * @date 2017年12月17日 下午13:37:13
+	 */
+	@RequestMapping(value="/getAllDetailByIdBak/{id}")
+	public @ResponseBody Map<String, Object> getAllDetailByIdBak(
+			@PathVariable("id")long id
+			){
+		List<DirvingPlanDetail> dirvingPlanDetails = dirvingPlanBiz.findDetailById(id);
+		if(dirvingPlanDetails==null){
+			return returnError();
+		}
+		return returnSuccess(dirvingPlanDetails);
+	
+	}
+	/**
+	 * @Description: 分页获取司机的发车计划号
+	 * @param driverPhone 司机手机号
+	 * @param currentPage 第几页
+	 * @param pageSize 页面最大数量
+	 * @return  对应的发车计划号的集合
+	 * @author UCE-haizhou
+	 * @date 2017年12月17日 下午13:37:13
+	 */
+	@RequestMapping(value="/getDrivingPlanByPhone/{driverPhone}/{currentPage}/{pageSize}")
+	public @ResponseBody Map<String, Object> getDrivingPlanByPhone(
+			@PathVariable("driverPhone") String driverPhone,
+			@PathVariable("currentPage") int currentPage,
+			@PathVariable("pageSize") int pageSize
+			){
+		DirvingPlanVo dirvingPlanVo = new  DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone(driverPhone);
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		Pagination<DirvingPlan> pagination=dirvingPlanBiz.findByPagination(dirvingPlanVo, page);
+		if(pagination==null ){
+			return returnError();
+		}
+		return  returnSuccess(pagination);
+	}
+	/**
+	 * @Description: 获取司机某个类型的发车计划号
+	 * @param driverPhone 司机手机号
+	 * @param currentPage 第几页
+	 * @param pageSize 页面最大数量
+	 * @return  对应的发车计划号的集合
+	 * @author UCE-haizhou
+	 * @date 2017年12月17日 下午13:37:13
+	 */
+	@RequestMapping(value="/getDrivingPlanByPhoneAndStatus/{driverPhone}/{status}/{currentPage}/{pageSize}")
+	public @ResponseBody Map<String, Object> getDrivingPlanByPhoneAndStatus(
+			@PathVariable("driverPhone") String driverPhone,
+			@PathVariable("status") String status,
+			@PathVariable("currentPage") int currentPage,
+			@PathVariable("pageSize") int pageSize
+			){
+		DirvingPlanVo dirvingPlanVo = new  DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone(driverPhone);
+		dirvingPlanVo.setStatus(status);
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		Pagination<DirvingPlan> pagination=dirvingPlanBiz.findByPagination(dirvingPlanVo, page);
+		if(pagination==null){
+			return returnError();
+		}
+		return  returnSuccess(pagination);
+	}
+	/**
+	 * @Description: 获取司机某天的发车计划
+	 * @param driverPhone 司机手机号
+	 * @param departTime 执行时间
+	 * @return  对应的发车计划号的集合
+	 * @author UCE-haizhou
+	 * @date 2017年12月17日 下午13:37:13
+	 */
+	@RequestMapping(value="getDrivingPlanByPhoneAndTime/{driverPhone}/{departTime}")
+	public @ResponseBody Map<String, Object> getDrivingPlanByPhoneAndTime(
+			@PathVariable("driverPhone") String driverPhone,
+			@PathVariable("departTime") Date departTime
+			){
+		DirvingPlanVo dirvingPlanVo = new DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone(driverPhone);
+		dirvingPlanVo.setDepartTime(departTime);
+		dirvingPlanVo.setArrivalTime(CalendarUtil.getTomorrow(departTime));
+		List<DirvingPlan> dirvingPlans = dirvingPlanBiz.findByDepartTimeAndType(dirvingPlanVo);
+		if(dirvingPlans==null){
+			return returnError();
+		}
+		return  returnSuccess(dirvingPlans);
+	}
+/*	@RequestMapping(value="getDrivingPlanIndex/{driverPhone}/{departTime}/{currentPage}/{pageSize}")
+	public @ResponseBody Map<String, Object> getDrivingPlanIndex(
+			@PathVariable("driverPhone") String driverPhone,
+			@PathVariable("departTime") Date departTime,
+			@PathVariable("currentPage") int currentPage,
+			@PathVariable("pageSize") int pageSize
+			
+			){
+		DirvingPlanVo dirvingPlanVo = new DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone(driverPhone);
+		dirvingPlanVo.setDepartTime(departTime);
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		Pagination<AppDriverPlanVo> dirvingPlanVos = dirvingPlanBiz.getUnconfirm(dirvingPlanVo, page);
+		if(dirvingPlanVos== null){
+			return returnError();
+		}
+		return  returnSuccess(dirvingPlanVos);
+	}*/
+	/******************************代码重构结束**********************************/
+	
+	
+}
+	
+

@@ -1,0 +1,190 @@
+package cn.uce.suc.dot.control;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.IFreightDemandOftenBiz;
+import cn.uce.suc.common.entity.FreightDemandOften;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.suc.common.vo.FreightDemandOftenVo;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+/**
+ * 
+ * @Description: 货运需求网点保存的线路时效常用信息控制器
+ * @author yanglei
+ * @date 2017年12月1日 上午10:09:27
+ */
+@RestController
+@RequestMapping("/app/freightDemandOften/")
+public class DotFreightDemandOftenController extends BaseAppController{
+	
+
+	/**
+	 * 注入IFreightDemandOftenBiz对象
+	 */
+	@Resource
+	private IFreightDemandOftenBiz freightDemandOftenBiz;
+	
+	/**
+	 * 注入mobileUserService
+	 */
+	@Resource
+	private MobileuserService mobileUserService;
+	/**
+	 * 
+	 * @Description:  常用信息的增加
+	 * @param vo
+	 * @return
+	 * @author yanglei
+     * @date 2017年12月1日 上午10:09:27
+	 */
+	@PostMapping(value="add")
+	@ResponseBody
+	public  Map<String, Object> addFreightDemandften(@ModelAttribute("loginUser") MobileuserVo loginUser,@RequestBody FreightDemandOftenVo vo ){
+		//客户端也要做判断，防止必填项没填就访问后端造成数据缺失，如果后期能保证客户端严格校验了可以把这段代码注释掉加快后台处理效率
+		if(vo.getBusinessMode()==null||vo.getArrivalTime()==null||StringUtil.isBlank(vo.getRemark())||StringUtil.isBlank(vo.getBeginStation())||StringUtil.isBlank(vo.getBeginStationCode())||StringUtil.isBlank(vo.getEndStation())||StringUtil.isBlank(vo.getEndStationCode())||null==vo.getDepartureTime()||vo.getLayTime()==0){
+			//return returnError("msg","业务模型,起点,终点,拼车站点,到达起点时间，到达终点时间，装卸货时间，常用信息名称都为必填项!");
+			return returnError("msg","common.save.fail");
+		}
+		if(null==vo.getIsCarpool()||false==vo.getIsCarpool()){
+//			often.setIsCarpool(false);
+//			often.setCarpoolSites("");
+//			often.setCarpoolSitesCodes("");
+		}else{
+			if(StringUtils.isBlank(vo.getCarpoolSites())||StringUtils.isBlank(vo.getCarpoolSitesCodes())){
+				return returnError("msg","common.save.fail");
+			}
+		}
+		FreightDemandOften often = ObjectConvertUtil.convertObject(vo, FreightDemandOften.class);
+		often.setCreateTime(new Date());
+		often.setBelongStationCode(loginUser.getBaseOrgCode());
+		int addFreightDemand = freightDemandOftenBiz.addFreightDemandOften(often);
+		if(addFreightDemand==1){
+			return returnSuccess();
+		}else{
+			return returnError();
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description:  修改常用信息
+	 * @param FreightDemandOftenVo vo
+	 * @return
+	 * @author yanglei
+     * @date 2017年12月1日 上午10:09:27
+	 */
+	@PostMapping(value = "update")
+	@ResponseBody 
+	public Map<String, Object> UpdateFreightDemandOften(@RequestBody FreightDemandOftenVo vo){
+		if(vo.getBusinessMode()==null||vo.getId()==null||vo.getId()==0||vo.getArrivalTime()==null||StringUtil.isBlank(vo.getRemark())||StringUtil.isBlank(vo.getBeginStation())||StringUtil.isBlank(vo.getBeginStationCode())||StringUtil.isBlank(vo.getEndStation())||StringUtil.isBlank(vo.getEndStationCode())||null==vo.getDepartureTime()||vo.getLayTime()==0){
+			//return returnError("msg","常用信息id,业务模型,起点,终点,拼车站点,到达起点时间，到达终点时间，装卸货时间，常用信息名称都为必填项!");
+			return returnError("msg","common.save.fail!");
+		}
+		FreightDemandOften often=freightDemandOftenBiz.findById(vo.getId());
+		if(often!=null){
+			BeanUtils.copyProperties(vo, often);
+			if(null==vo.getIsCarpool()||false==vo.getIsCarpool()){
+				often.setIsCarpool(false);
+				often.setCarpoolSites("");
+				often.setCarpoolSitesCodes("");
+			}else{
+				if(StringUtils.isBlank(often.getCarpoolSites())||StringUtils.isBlank(often.getCarpoolSitesCodes())){
+					return returnError("msg","common.save.fail");
+				}
+			}
+			int res = freightDemandOftenBiz.updateFreightDemandOften(often);
+			if(res>0){
+					//return returnSuccess("修改常用信息成功!");
+					return returnSuccess("common.update.success");
+				
+			}else{
+					//return returnError("msg","修改常用信息失败!");
+					return returnError("msg","common.save.fail");
+				
+			}
+		}
+		//return returnError("msg","没找到相关常用信息!");
+		return returnError("msg","common.save.fail");
+	}
+	/**
+	 * 
+	 * @Description: 根据ID删除常用信息
+	 * @param id
+	 * @return
+     * @author yanglei
+     * @date 2017年12月1日 上午10:09:27
+	 */
+	@DeleteMapping(value = "delete")
+	@ResponseBody
+	public  Map<String, Object> deleteById(@RequestParam(value="id", required=true) String id){
+		int res = freightDemandOftenBiz.deleteFreightDemandOften( Long.valueOf(id));
+		if(res>0){
+			return returnSuccess();
+		}
+		return returnError();
+	}
+	/**
+	 * 
+	 * @Description: 分页 查询 网点以往保存的线路时效常用信息列表
+	 * @param mobilePhone  网点手机号
+	 * @param page 分页参数
+	 * @return
+	 * @author yanglei
+	 * @date 2017年12月1日 下午1:24:58
+	 */
+	@GetMapping(value = "list")
+	@ResponseBody
+	public  Map<String, Object> list(@ModelAttribute("loginUser") MobileuserVo loginUser,int currentPage,int pageSize){
+		FreightDemandOftenVo vo = new FreightDemandOftenVo();
+		vo.setBelongStationCode(loginUser.getBaseOrgCode());
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		Pagination<FreightDemandOften> pagination = freightDemandOftenBiz.findByPagination(vo, page);
+		return returnSuccess(pagination);
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据ID查询 常用信息
+	 * @param id
+	 * @return
+     * @author yanglei
+     * @date 2017年12月1日 上午10:09:27
+	 */
+	@GetMapping(value = "findById")
+	@ResponseBody
+	public  Map<String, Object> findById(@RequestParam(value="id", required=true) String id){
+		FreightDemandOften FreightDemandOften = freightDemandOftenBiz.findById( Long.valueOf(id));
+		if(FreightDemandOften==null){
+			//return returnError("msg","查询常用信息失败!");
+			return returnError("msg","common.get.fail");
+		}
+		return returnSuccess(FreightDemandOften);
+	}
+	
+	
+}

@@ -1,0 +1,44 @@
+package cn.uce.suc.common.cache;
+
+import javax.annotation.Resource;
+
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.suc.common.dao.IOrgExtendDao;
+import cn.uce.suc.common.vo.OrgExtendVo;
+/**
+ * 
+ * @Description: 组织机构扩展缓存 
+ * @author liwei
+ * @date 2017年11月13日 下午2:17:45
+ */
+public class OrgExtendCache extends CacheSupport<OrgExtendVo>{
+	/**
+	 * 注入biz层
+	 */
+	@Resource
+	private IOrgExtendDao orgExtendDao;
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: doGet</p> 
+	* <p>Description: </p> 
+	* @param key
+	* @return 
+	* @see cn.uce.core.cache.base.CacheCallBack#doGet(java.lang.Object)
+	 */
+	@Override
+	public OrgExtendVo doGet(String key){
+		return orgExtendDao.findByBaseOrgCode(key);
+	}
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: getCacheId</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see cn.uce.core.cache.base.ICache#getCacheId()
+	 */
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+
+}

@@ -1,0 +1,47 @@
+package cn.uce.suc.app.service;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.entity.Logininfo;
+import cn.uce.suc.app.vo.LogininfoVo;
+import cn.uce.suc.app.dao.ILogininfoDao;
+
+/**
+ * @Description: Service类
+ * @author liwei
+ * @date 2017年10月11日 下午05:55:14
+ */
+@Service("logininfoService")
+public class LogininfoService {
+	
+	/**
+	 * 注入Dao
+	 */
+	@Resource
+	private ILogininfoDao logininfoDao;
+	
+	/**
+	 * @Description: 新增
+	 * @param logininfo 
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月11日 下午05:55:14
+	 */
+	public int addLogininfo(Logininfo logininfo) {
+		return logininfoDao.insert(logininfo);
+	}
+	
+	   /**
+     * 注销登陆
+     * @param mobilephone
+     * @return
+     */
+   public  int updateById(String  mobilephone){
+	return logininfoDao.updateById(mobilephone);	   
+   }
+	
+}

@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.ITruckCostManagementDao">
+	
+	<sql id="Base_Column_List">
+			id,truck_manage_code,truck_cost_name,
+			belong_site_name,belong_site_code,truck_type,
+			truck_concrete,details_status,cost_coefficient,
+			handling_charges,fixed_charges,version,
+			delete_flag,create_org,create_emp,
+			create_time,update_org,update_emp,
+			update_time,truck_volume,buffer_volume,
+			utf1,utf2,utf3
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="truckManageCode != null">
+		and truck_manage_code = #{truckManageCode}
+		</if>
+	    <if test="truckCostName != null">
+		and truck_cost_name = #{truckCostName}
+		</if>
+	    <if test="belongSiteName != null">
+		and belong_site_name = #{belongSiteName}
+		</if>
+	    <if test="belongSiteCode != null">
+		and belong_site_code = #{belongSiteCode}
+		</if>
+	    <if test="truckType != null">
+		and truck_type = #{truckType}
+		</if>
+	    <if test="truckConcrete != null">
+		and truck_concrete = #{truckConcrete}
+		</if>
+	    <if test="detailsStatus != null">
+		and details_status = #{detailsStatus}
+		</if>
+	    <if test="costCoefficient != null">
+		and cost_coefficient = #{costCoefficient}
+		</if>
+	    <if test="handlingCharges != null">
+		and handling_charges = #{handlingCharges}
+		</if>
+	    <if test="fixedCharges != null">
+		and fixed_charges = #{fixedCharges}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="truckVolume != null">
+		and truck_volume = #{truckVolume}
+		</if>
+	    <if test="bufferVolume != null">
+		and buffer_volume = #{bufferVolume}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.TruckCostManagement">
+	UPDATE t_suc_bkg_truck_cost_management
+	<set>
+		<if test="truckManageCode != null">
+		truck_manage_code = #{truckManageCode},
+		</if>
+		<if test="truckCostName != null and truckCostName !=''">
+		truck_cost_name = #{truckCostName},
+		</if>
+		<if test="belongSiteName != null">
+		belong_site_name = #{belongSiteName},
+		</if>
+		<if test="belongSiteCode != null">
+		belong_site_code = #{belongSiteCode},
+		</if>
+		<if test="truckType != null and truckType !=''">
+		truck_type = #{truckType},
+		</if>
+		<if test="truckConcrete != null and truckConcrete!=''">
+		truck_concrete = #{truckConcrete},
+		</if>
+		<if test="detailsStatus != null">
+		details_status = #{detailsStatus},
+		</if>
+		<if test="costCoefficient != null">
+		cost_coefficient = #{costCoefficient},
+		</if>
+		<if test="handlingCharges != null">
+		handling_charges = #{handlingCharges},
+		</if>
+		<if test="fixedCharges != null">
+		fixed_charges = #{fixedCharges},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="truckVolume != null">
+		truck_volume = #{truckVolume},
+		</if>
+		<if test="bufferVolume != null">
+		buffer_volume = #{bufferVolume},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.TruckCostManagementVo" resultType="cn.uce.suc.common.entity.TruckCostManagement">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_truck_cost_management
+		<where>
+			<if test="truckManageCode != null and truckManageCode !=''">
+				AND truck_manage_code like "%"#{truckManageCode}"%"
+			</if>
+			<if test="truckCostName != null and truckCostName !=''">
+				AND truck_cost_name like "%"#{truckCostName}"%"
+			</if>
+			<if test="truckType != null and truckType !=''">
+				and truck_type =#{truckType}
+			</if>
+			<if test="belongSiteCode != null and belongSiteCode !=''">
+				and belong_site_code =#{belongSiteCode}
+			</if>
+			<if test="truckConcrete != null and  truckConcrete !=''">
+				and truck_concrete =#{truckConcrete}
+			</if>
+			<if test="detailsStatus != null and detailsStatus !=''">
+				and details_status =#{detailsStatus}
+			</if>
+			<if test="deleteFlag != null ">
+				and delete_flag =#{deleteFlag}
+			</if>
+		
+		</where>
+		order by  create_time desc, version desc 
+	
+	</select>
+	<select id="findByCombine" parameterType="cn.uce.suc.common.vo.TruckCostManagementVo" resultType="cn.uce.suc.common.vo.TruckCostManagementVo">
+    	SELECT DISTINCT(tcm.truck_manage_code),tcm.truck_cost_name,tcm.truck_type,tcm.truck_concrete,tcm.truck_volume,tcm.cost_coefficient,tcm.handling_charges,
+    	tcm.fixed_charges,tcm.buffer_volume
+    	FROM t_suc_bkg_truck_cost_management tcm
+	    <where>
+	      tcm.delete_flag != '1'
+	      <if test="detailsStatus != null and detailsStatus != ''">
+	        AND tcm.details_status = #{detailsStatus}
+	      </if>
+	      <if test="truckType != null and truckType != ''">
+	      	AND tcm.truck_type = #{truckType}
+	      </if>
+	      <if test="belongSiteCode != null and belongSiteCode != ''">
+	      	AND tcm.belong_site_code = #{belongSiteCode}
+	      </if>
+	    </where>
+	  </select>
+	<!--查询所有 当前 网点所属分拨的 临时需求的 车型成本-->
+	<select id="findByBelongSiteCode" parameterType="cn.uce.suc.common.vo.TruckCostManagementVo" resultType="cn.uce.suc.common.vo.TruckCostManagementVo">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_truck_cost_management 
+		<where>
+			 delete_flag =0 and truck_type='2' 
+			<if test="belongSiteCode != null and belongSiteCode != ''">
+		      	AND belong_site_code = #{belongSiteCode}
+	      	</if>
+		</where>
+	</select>
+  <select id="findByCondition" parameterType="cn.uce.suc.common.vo.TruckCostManagementVo" resultType="cn.uce.suc.common.vo.TruckCostManagementVo">
+  	SELECT tcm.truck_manage_code,tcm.truck_cost_name,tcm.truck_type,tcm.truck_concrete,tcm.truck_volume,tcm.cost_coefficient,tcm.handling_charges,
+    tcm.fixed_charges,tcm.buffer_volume
+    FROM t_suc_bkg_truck_cost_management tcm
+	  <where>
+	      tcm.delete_flag != '1'
+	      <if test="detailsStatus != null and detailsStatus != ''">
+	        AND tcm.details_status = #{detailsStatus}
+	      </if>
+	      <if test="truckType != null and truckType != ''">
+	      	AND tcm.truck_type = #{truckType}
+	      </if>
+	      <if test="belongSiteCode != null and belongSiteCode != ''">
+	      	AND tcm.belong_site_code = #{belongSiteCode}
+	      </if>
+	      <if test="truckConcrete != null and truckConcrete != ''">
+	      	AND tcm.truck_concrete = #{truckConcrete}
+	      </if>
+	    </where>
+	    
+  </select>
+
+	<!-- 车型车本名称下拉 -->
+	<select id="getByTruckCostName" parameterType="cn.uce.suc.common.vo.TruckCostManagementVo" resultType="cn.uce.suc.common.entity.TruckCostManagement">
+		select tcm.id,tcm.truck_manage_code,  tcm.truck_cost_name from t_suc_bkg_truck_cost_management tcm
+		<where>
+		
+		<if test="truckManageCode != null and  '' != truckManageCode">
+			AND tcm.truck_manage_code like "%"#{truckManageCode}"%"
+		</if>
+		<if test="truckCostName != null and '' != truckCostName">
+			AND tcm.truck_cost_name like "%"#{truckCostName}"%"
+		</if>
+		</where>
+	</select>
+	
+</mapper>

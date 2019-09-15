@@ -1,0 +1,64 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanTraceBiz;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanTrace;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanTraceVo;
+
+/**
+ * 
+ * @Description: 订单管理biz单元测试
+ * @author liwei
+ * @date 2017年10月21日 下午4:31:18
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class DirvingPlanTraceTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	private IDirvingPlanTraceBiz dirvingPlanTraceBiz;
+	private DirvingPlanTrace dirvingPlanTrace;
+
+	/**
+	 * 
+	 * @Description: 单元测试
+	 * @author liwei
+	 * @date 2017年12月6日 下午7:37:36
+	 */
+	@Test
+	public void before() {
+		dirvingPlanTrace = new DirvingPlanTrace();
+		dirvingPlanTrace.setId(1L);
+		dirvingPlanTrace.setDrivingPlanCode("FC20171207000001");
+		dirvingPlanTrace.setCreateOrg("da");
+	}
+
+	/**
+	 * 
+	 * @Description: 单元测试
+	 * @author liwei
+	 * @date 2017年12月6日 下午7:37:41
+	 */
+	@Test
+	public void testpro() {
+		//dirvingPlanTraceBiz.addDirvingPlanTrace(dirvingPlanTrace);
+		dirvingPlanTraceBiz.deleteDirvingPlanTrace(1L);
+		dirvingPlanTraceBiz.findById(1L);
+		DirvingPlanTraceVo dirvingPlanTraceVo=new DirvingPlanTraceVo();
+		Page page=new Page();
+		dirvingPlanTraceBiz.findByPagination(dirvingPlanTraceVo, page);
+		dirvingPlanTrace = new DirvingPlanTrace();
+		dirvingPlanTrace.setId(1l);
+		dirvingPlanTraceBiz.updateDirvingPlanTrace(dirvingPlanTrace);
+	}
+	
+}

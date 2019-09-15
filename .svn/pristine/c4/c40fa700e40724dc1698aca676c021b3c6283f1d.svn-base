@@ -1,0 +1,131 @@
+package cn.uce.suc.common.vo;
+
+
+
+/**
+ * 
+ * @Description: 获取技术平台登录用户数据解码
+ * @author liwei
+ * @date 2017年10月19日 下午8:52:05
+ */
+public class SucCurrentUser {
+	//员工编号
+	private String empCode;
+	//员工姓名
+	private String empName;
+	//乾坤机构ID
+	private String cmsOrgId;
+	//乾坤机构编码
+	private String cmsOrgCode;
+	//乾坤机构类型
+	private Integer cmsOrgType;
+	//基准编号
+	private String cmsBaseOrgCode;
+	//乾坤机构名称
+	private String cmsOrgName;
+	
+	//构造函数
+	public SucCurrentUser(){
+		
+	}
+
+	/** 
+	 * @return cmsOrgName 
+	 */
+	public String getCmsOrgName() {
+		return cmsOrgName;
+	}
+
+	/**
+	 * @param cmsOrgName the cmsOrgName to set
+	 */
+	public void setCmsOrgName(String cmsOrgName) {
+		this.cmsOrgName = cmsOrgName;
+	}
+
+	/** 
+	 * @return cmsBaseOrgCode 
+	 */
+	public String getCmsBaseOrgCode() {
+		return cmsBaseOrgCode;
+	}
+
+	/**
+	 * @param cmsBaseOrgCode the cmsBaseOrgCode to set
+	 */
+	public void setCmsBaseOrgCode(String cmsBaseOrgCode) {
+		this.cmsBaseOrgCode = cmsBaseOrgCode;
+	}
+
+	/** 
+	 * @return empCode 
+	 */
+	public String getEmpCode() {
+		return empCode;
+	}
+
+	/** 
+	 * @return empName 
+	 */
+	public String getEmpName() {
+		return empName;
+	}
+
+	/** 
+	 * @return cmsOrgId 
+	 */
+	public String getCmsOrgId() {
+		return cmsOrgId;
+	}
+
+	/** 
+	 * @return cmsOrgCode 
+	 */
+	public String getCmsOrgCode() {
+		return cmsOrgCode;
+	}
+
+	/** 
+	 * @return cmsOrgType 
+	 */
+	public Integer getCmsOrgType() {
+		return cmsOrgType;
+	}
+
+	/**
+	 * @param empCode the empCode to set
+	 */
+	public void setEmpCode(String empCode) {
+		this.empCode = empCode;
+	}
+
+	/**
+	 * @param empName the empName to set
+	 */
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+
+	/**
+	 * @param cmsOrgId the cmsOrgId to set
+	 */
+	public void setCmsOrgId(String cmsOrgId) {
+		this.cmsOrgId = cmsOrgId;
+	}
+
+	/**
+	 * @param cmsOrgCode the cmsOrgCode to set
+	 */
+	public void setCmsOrgCode(String cmsOrgCode) {
+		this.cmsOrgCode = cmsOrgCode;
+	}
+
+	/**
+	 * @param cmsOrgType the cmsOrgType to set
+	 */
+	public void setCmsOrgType(Integer cmsOrgType) {
+		this.cmsOrgType = cmsOrgType;
+	}
+
+	
+}

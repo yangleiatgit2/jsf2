@@ -1,0 +1,175 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandBiz;
+import cn.uce.suc.bkg.service.operation.FreightDemandService;
+import cn.uce.suc.bkg.vo.operation.FreightDemandVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+
+
+/**
+ * 
+ * @Description: 货运需求
+ * @author liwei
+ * @date 2017年10月19日 下午2:50:04
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml"})
+public class FreightDemandBizTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	IFreightDemandBiz freightDemandBiz;
+	@Resource
+	FreightDemandService freightDemandService;
+	@Resource
+	IOmgCmsOrgBiz omgCmsOrgBiz;
+	
+	FreightDemandVo freightDemandVo;
+	
+	@After
+	public void excuteEnd() {
+		System.out.println("==========单元测试结束========");
+	}
+	@Before
+	public void before(){
+		System.out.println("==========单元测试开始========");
+		freightDemandVo = new FreightDemandVo();
+		freightDemandVo.setDemandType("1");
+		freightDemandVo.setDemandStatus("11");
+		freightDemandVo.setDemandSite("都匀平塘二部");
+		freightDemandVo.setDemandSiteCode("UC059547");
+		freightDemandVo.setDepartureTime(new Date());
+		freightDemandVo.setArrivalTime(new Date());
+		freightDemandVo.setBeginStation("深圳操作中心");
+		freightDemandVo.setBeginStationCode("UC000002");
+		freightDemandVo.setEndStation("都匀平塘二部");
+		freightDemandVo.setEndStationCode("UC059547");
+		freightDemandVo.setArrivalTime(new Date());
+		freightDemandVo.setArrivalTime(new Date());
+		freightDemandVo.setIsCarpool(true);
+		freightDemandVo.setPrice(1.00);
+		freightDemandVo.setCreateEmp("雪元Create");
+		freightDemandVo.setCreateOrg("雪元Create");
+		freightDemandVo.setCreateTime(new Date());
+	}
+	@Test
+	public void addFreightDemand(){      
+//		freightDemandBiz.addFreightDemand(freightDemandVo);
+//		
+//		freightDemandVo = new FreightDemandVo();
+//		freightDemandVo.setDemandType("2");
+//		freightDemandVo.setDemandStatus("5");
+//		freightDemandVo.setDemandSite("都匀平塘二部");
+//		freightDemandVo.setDemandSiteCode("UC059547");
+//		freightDemandVo.setDepartureTime(new Date());
+//		freightDemandVo.setArrivalTime(new Date());
+//		freightDemandVo.setBeginStation("深圳操作中心");
+//		freightDemandVo.setBeginStationCode("UC000002");
+//		freightDemandVo.setEndStation("都匀平塘二部");
+//		freightDemandVo.setEndStationCode("UC059547");
+//		freightDemandVo.setArrivalTime(new Date());
+//		freightDemandVo.setArrivalTime(new Date());
+//		freightDemandVo.setIsCarpool(true);
+//		freightDemandVo.setPrice(1.00);
+//		freightDemandVo.setCreateEmp("雪元Create");
+//		freightDemandVo.setCreateOrg("雪元Create");
+//		freightDemandVo.setCreateTime(new Date());
+//		freightDemandBiz.addFreightDemand(freightDemandVo);
+//		
+//		freightDemandVo = new FreightDemandVo();
+//		freightDemandVo.setDemandType("1");
+//		freightDemandVo.setDemandStatus("5");
+//		freightDemandVo.setDemandSite("都匀平塘二部");
+//		freightDemandVo.setDemandSiteCode("UC059547");
+//		freightDemandVo.setDepartureTime(new Date());
+//		freightDemandVo.setArrivalTime(new Date());
+//		freightDemandVo.setBeginStation("深圳操作中心");
+//		freightDemandVo.setBeginStationCode("UC000002");
+//		freightDemandVo.setEndStation("都匀平塘二部");
+//		freightDemandVo.setEndStationCode("UC059547");
+//		freightDemandVo.setArrivalTime(new Date());
+//		freightDemandVo.setArrivalTime(new Date());
+//		freightDemandVo.setIsCarpool(true);
+//		freightDemandVo.setPrice(1.00);
+//		freightDemandVo.setCreateEmp("雪元Create");
+//		freightDemandVo.setCreateOrg("雪元Create");
+//		freightDemandVo.setCreateTime(new Date());
+//		freightDemandBiz.addFreightDemand(freightDemandVo);
+		
+		FreightDemandVo vo = new FreightDemandVo();
+		freightDemandBiz.findByPagination(vo, new Page());
+		vo.setDemandStatus("6");
+		List<FreightDemandVo> list = freightDemandBiz.findByCondition(vo);
+		if(null !=list &&!list.isEmpty()){
+			for(	FreightDemandVo v:list){
+				v.setUpdateEmp("雪元update");
+				v.setUpdateOrg("雪元update");
+				v.setUpdateTime(new Date());
+				freightDemandBiz.updateFreightDemand(v);
+				v.setVersion(v.getVersion()+1);
+			}
+			freightDemandBiz.updateBatchDemandStatus(list);
+		}
+	}
+/*	@Test
+	public void testdemand(){
+		OmgCmsOrgVo omgCmsOrgVo= new OmgCmsOrgVo();
+		omgCmsOrgVo.setOrgType(21);
+		List<OmgCmsOrg> omgCmsOrgs=omgCmsOrgBiz.findOperationByVo(omgCmsOrgVo);
+		FreightDemand freightDemand= freightDemandService.findById(143L);
+		for (OmgCmsOrg omgCmsOrg : omgCmsOrgs) {
+			processdeman(omgCmsOrg,freightDemand);
+		}
+	}
+	int n=0;*/
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param omgCmsOrg
+	 * @author liwei
+	 * @date 2017年11月12日 上午7:13:03
+	 */
+	/*private void processdeman(OmgCmsOrg omgCmsOrg,FreightDemand freightDemand){
+		
+		OmgCmsOrgVo omgCmsOrgVo= new OmgCmsOrgVo();
+		omgCmsOrgVo.setOrgType(30);
+		omgCmsOrgVo.setParentOrgCode(omgCmsOrg.getBaseOrgCode());
+		List<OmgCmsOrg> omgCmsOrgs=omgCmsOrgBiz.findOperationByVo(omgCmsOrgVo);
+		for (OmgCmsOrg omgCmsOrg2 : omgCmsOrgs) {
+			n++;
+			freightDemand.setDemandSite(omgCmsOrg2.getOrgName());
+			freightDemand.setDemandSiteCode(omgCmsOrg2.getBaseOrgCode());
+			freightDemand.setDepartureTime(new Date());
+			freightDemand.setArrivalTime(new Date());
+			freightDemand.setBeginStation(omgCmsOrg.getOrgName());
+			freightDemand.setBeginStationCode(omgCmsOrg.getBaseOrgCode());
+			freightDemand.setEndStation(omgCmsOrg2.getOrgName());
+			freightDemand.setEndStationCode(omgCmsOrg2.getBaseOrgCode());
+			freightDemand.setId(null);
+			freightDemand.setBusinessMode("2");
+			freightDemand.setDemandStatus("1");
+			FreightDemandVo demandVo =ObjectConvertUtil.convertObject(freightDemand, FreightDemandVo.class);
+			freightDemandBiz.addFreightDemand(demandVo);
+			System.out.println(n);
+			if(n>100) break;
+		}
+		
+		
+		
+	}*/
+	
+}

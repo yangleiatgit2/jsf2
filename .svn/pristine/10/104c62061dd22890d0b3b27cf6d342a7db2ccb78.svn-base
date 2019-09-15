@@ -1,0 +1,131 @@
+package cn.uce.suc.bkg.service.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.datamain.ICarrierInfoDao;
+import cn.uce.suc.bkg.entity.datamain.CarrierInfo;
+import cn.uce.suc.bkg.vo.datamain.CarrierInfoVo;
+
+/**
+ * @Description: 承运商信息Service类
+ * @author liwei
+ * @date 2017年11月01日 上午09:46:05
+ */
+@Service("carrierInfoService")
+public class CarrierInfoService {
+	
+	/**
+	 * 注入承运商信息Dao
+	 */
+	@Resource
+	private ICarrierInfoDao carrierInfoDao;
+	
+	/**
+	 * @Description: 新增承运商信息
+	 * @param carrierInfo 承运商信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	public int addCarrierInfo(CarrierInfo carrierInfo) {
+		return carrierInfoDao.insert(carrierInfo);
+	}
+	
+	/**
+	 * @Description: 修改承运商信息
+	 * @param carrierInfo 承运商信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	public int updateById(CarrierInfo carrierInfo) {
+		return carrierInfoDao.updateById(carrierInfo);
+	}
+	
+	/**
+	 * @Description: 删除承运商信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	public int deleteById(Long id) {
+		return carrierInfoDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询承运商信息
+	 * @param id 主键
+	 * @return 承运商信息
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	public CarrierInfo findById(Long id) {
+		return carrierInfoDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询承运商信息
+	 * @param carrierInfoVo 承运商信息
+	 * @param page 分页参数
+	 * @return 承运商信息
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	public Pagination<CarrierInfo> findByPagination(CarrierInfoVo carrierInfoVo, Page page) {
+		Pagination<CarrierInfo> paginationCarrierInfo = carrierInfoDao.findByPagination(carrierInfoVo, page);
+		return paginationCarrierInfo;
+	}
+	/**
+	 * @Description: 批量修改承运商状态
+	 * @param ids 承运商信息
+	 * @param status 分页参数
+	 * @return 受影响行数
+	 * @author haizhou
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	public int updateStatusByids(List<CarrierInfo> carrierInfos) {
+		return carrierInfoDao.updateById(carrierInfos);
+	}
+	/**
+	 * 
+	 * @Description: 承运商下拉
+	 * @param carrierInfoVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月7日 下午5:49:41
+	 */
+	public Pagination<CarrierInfo> findCarrierByCmb(CarrierInfoVo carrierInfoVo, Page page){
+		return carrierInfoDao.findCarrierByCmb(carrierInfoVo, page);
+	}
+	/**
+	 * 
+	 * @Description: 根据承运商名称查询该承运商
+	 * @param companyFullName
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月23日 下午5:33:26
+	 */
+	public List<CarrierInfo> findByCompanyFullName(String companyFullName){
+		return carrierInfoDao.findByCompanyFullName(companyFullName);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据承运商名称做唯一校验
+	 * @param carrierInfoVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月28日 上午11:09:18
+	 */
+	public List<CarrierInfoVo> checkExistsByCompanyFullName(CarrierInfoVo carrierInfoVo){
+		return carrierInfoDao.checkExistsByCompanyFullName(carrierInfoVo);
+	}
+}

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IFreightDemandOftenDao">
+	
+	<sql id="Base_Column_List">
+			id,is_carpool,begin_station,business_mode,belong_station_code,belong_station,
+			begin_station_code,end_station,end_station_code,
+			carpool_sites,carpool_sites_codes,departure_time,
+			arrival_time,lay_time,remark,
+			del_flag,version,create_emp,
+			create_time,create_org,update_emp,
+			update_time,update_org
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+		
+		
+		 <if test="belongStationCode != null">
+		and belong_station_code = #{belongStationCode}
+		</if>
+		
+	    <if test="isCarpool != null">
+		and is_carpool = #{isCarpool}
+		</if>
+		<if test="businessMode != null">
+		and business_mode = #{businessMode}
+		</if>
+	    <if test="beginStation != null">
+		and begin_station = #{beginStation}
+		</if>
+	    <if test="beginStationCode != null">
+		and begin_station_code = #{beginStationCode}
+		</if>
+	    <if test="endStation != null">
+		and end_station = #{endStation}
+		</if>
+	    <if test="endStationCode != null">
+		and end_station_code = #{endStationCode}
+		</if>
+	    <if test="carpoolSites != null">
+		and carpool_sites = #{carpoolSites}
+		</if>
+	    <if test="carpoolSitesCodes != null">
+		and carpool_sites_codes = #{carpoolSitesCodes}
+		</if>
+	    <if test="departureTime != null">
+		and departure_time = #{departureTime}
+		</if>
+	    <if test="arrivalTime != null">
+		and arrival_time = #{arrivalTime}
+		</if>
+	    <if test="layTime != null">
+		and lay_time = #{layTime}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.FreightDemandOften">
+	UPDATE t_suc_bkg_freight_demand_often
+	<set>
+		<if test="isCarpool != null">
+		is_carpool = #{isCarpool},
+		carpool_sites = #{carpoolSites},
+		carpool_sites_codes = #{carpoolSitesCodes},
+		</if>
+		<if test="businessMode != null">
+		 business_mode = #{businessMode},
+		</if>
+		
+		 <if test="belongStationCode != null">
+		 belong_station_code = #{belongStationCode}
+		</if>
+		
+		
+		<if test="beginStation != null">
+		begin_station = #{beginStation},
+		</if>
+		<if test="beginStationCode != null">
+		begin_station_code = #{beginStationCode},
+		</if>
+		<if test="endStation != null">
+		end_station = #{endStation},
+		</if>
+		<if test="endStationCode != null">
+		end_station_code = #{endStationCode},
+		</if>
+		<!-- <if test="carpoolSites != null">
+		carpool_sites = #{carpoolSites},
+		</if> -->
+		<!-- <if test="carpoolSitesCodes != null">
+		carpool_sites_codes = #{carpoolSitesCodes},
+		</if> -->
+		
+		<if test="departureTime != null">
+		departure_time = #{departureTime},
+		</if>
+		<if test="arrivalTime != null">
+		arrival_time = #{arrivalTime},
+		</if>
+		<if test="layTime != null">
+		lay_time = #{layTime},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.FreightDemandOftenVo" resultType="cn.uce.suc.common.entity.FreightDemandOften">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_freight_demand_often
+	<include refid="Base_Column_Where" />
+	</select>
+	
+</mapper>

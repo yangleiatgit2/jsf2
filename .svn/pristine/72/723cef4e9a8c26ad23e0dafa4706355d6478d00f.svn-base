@@ -1,0 +1,115 @@
+package cn.uce.suc.bkg.cache;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.core.cache.base.IKeyGenerator;
+import cn.uce.core.cache.base.ResultMap;
+import cn.uce.core.cache.storage.ICacheStorage;
+import cn.uce.suc.bkg.dao.datamain.ITransportEffectiveDao;
+import cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 算法时效缓存
+ * @author laizhendong
+ * @date 2017年11月2日 下午2:48:30
+ */
+public class IATransportEffectiveCache extends CacheSupport<String> {
+
+	/**
+	 * 注入biz层
+	 */
+	@Resource
+	private ITransportEffectiveDao transportEffectiveDao;
+
+	/**
+	 * 申明logger对象
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(IATransportEffectiveCache.class);
+
+	/**
+	 * @Description: 刷新时效
+	 * @param 
+	 * @return 
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午2:48:30
+	 */
+	@Override
+	public String doGet(String key) throws BusinessException {
+		//根据key查找属于该key下的时效
+		TransportEffectiveVo search = new TransportEffectiveVo();
+		search.setParentOrgCode(key);
+		List<TransportEffectiveVo> list = transportEffectiveDao.findByCombine(search);
+		if (null != list && !list.isEmpty()) {
+			return JSON.toJSONString(list);
+		}
+		return "";
+	}
+
+	
+	/**
+	 * @Description: 初始化用于算法时效缓存，存储方式以key(中心编号)-value(中心下扥各网点的时效list)
+	 * @param 
+	 * @return 
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午2:48:30
+	 */
+	/*@Override
+	public ResultMap<String,String> doInitialization(IKeyGenerator<String> generator) throws BusinessException {
+		List<TransportEffectiveVo> list = transportEffectiveDao.findByCondition(null);
+		ResultMap<String, String> map = new ResultMap<String,String>(generator);
+		if (null != list && !list.isEmpty()) {
+			//遍历所有时效
+			Map<String, Set<TransportEffectiveVo>> transportEffectiveMap = new HashMap<String, Set<TransportEffectiveVo>>();
+			for (TransportEffectiveVo transportEffectiveVo : list) {
+				String startParentCode = transportEffectiveVo.getStartParentCode();
+				Set<TransportEffectiveVo>  transportEffectiveSet = transportEffectiveMap.get(startParentCode);
+				if (null == transportEffectiveSet) {
+					transportEffectiveSet = new HashSet<TransportEffectiveVo>();
+				}
+				transportEffectiveSet.add(transportEffectiveVo);
+				transportEffectiveMap.put(startParentCode, transportEffectiveSet);
+			}
+			//已中心为key，存放关于该中心下各网点之间的时效
+			if (!transportEffectiveMap.isEmpty()) {
+				for (String key : transportEffectiveMap.keySet()) {
+					Set<TransportEffectiveVo> transportEffectiveSet = transportEffectiveMap.get(key);
+					if (null != transportEffectiveSet && !transportEffectiveSet.isEmpty()) {
+						map.put(key, JSON.toJSONString(new ArrayList<TransportEffectiveVo>(transportEffectiveSet)));
+					}
+				}
+			}
+		}
+		return map;
+	}*/
+
+	/** cache名称 
+	* <p>Title: getCacheId</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see cn.uce.core.cache.base.ICache#getCacheId() 
+	*/
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+	
+	@Override
+	public ICacheStorage<String,String> getStorage(){
+		return super.getStorage();
+	}
+}

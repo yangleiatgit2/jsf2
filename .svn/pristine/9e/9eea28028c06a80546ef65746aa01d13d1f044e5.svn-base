@@ -1,0 +1,436 @@
+package cn.uce.suc.common.entity;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import java.util.Date;
+
+/**
+ * @Description: 消息详情--Entity类
+ * @author liwei
+ * @date 2017年10月30日 下午10:46:47
+ */
+@Table("t_suc_comm_notice_detail")
+public class NoticeDetail extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 内容 
+	 */
+	private String contents;
+    /** 
+	 * 极光别名（推送给极光推送时使用） 
+	 */
+	private String jpushAlia;
+    /** 
+	 * 手机号 
+	 */
+	private String userPhone;
+    /** 
+	 * 已读标示 
+	 */
+	private Boolean readFlag;
+    /** 
+	 * 标题 
+	 */
+	private String title;
+    /** 
+	 * 指向平台 
+	 */
+	private String platform;
+    /** 
+	 * 消息类型 
+	 */
+	private String newsType;
+    /** 
+	 * 业务模块标示 
+	 */
+	private String businessType;
+    /** 
+	 * 置顶标示 
+	 */
+	private Boolean topTrue;
+    /** 
+	 * 业务数据id(用于标示此消息对应的具体业务数据) 
+	 */
+	private Long businessId;
+    /** 
+	 * 推送标示 
+	 */
+	private String jpushFlag;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 接收时间 
+	 */
+	private Date receivedTime;
+    /** 
+	 * app首页任务展示 
+	 */
+	private String displayWays;
+	/**
+	 * 推送次数
+	 */
+	private Integer JpushNum;
+	/**
+	 * 推送次数
+	 */
+	private Date JpushTime;
+	
+	
+	/** 
+	 * @return jpushNum 
+	 */
+	public Integer getJpushNum() {
+		return JpushNum;
+	}
+
+	/**
+	 * @param jpushNum the jpushNum to set
+	 */
+	public void setJpushNum(Integer jpushNum) {
+		JpushNum = jpushNum;
+	}
+
+	/** 
+	 * @return jpushTime 
+	 */
+	public Date getJpushTime() {
+		return JpushTime;
+	}
+
+	/**
+	 * @param jpushTime the jpushTime to set
+	 */
+	public void setJpushTime(Date jpushTime) {
+		JpushTime = jpushTime;
+	}
+
+	/**
+	 * 获取 内容
+	 */
+	public String getContents() {
+		return contents;
+	}
+	
+	/**
+	 * 设置 内容
+	 */
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+	
+	/**
+	 * 获取 极光别名（推送给极光推送时使用）
+	 */
+	public String getJpushAlia() {
+		return jpushAlia;
+	}
+	
+	/**
+	 * 设置 极光别名（推送给极光推送时使用）
+	 */
+	public void setJpushAlia(String jpushAlia) {
+		this.jpushAlia = jpushAlia;
+	}
+	
+	/**
+	 * 获取 手机号
+	 */
+	public String getUserPhone() {
+		return userPhone;
+	}
+	
+	/**
+	 * 设置 手机号
+	 */
+	public void setUserPhone(String userPhone) {
+		this.userPhone = userPhone;
+	}
+	
+	/**
+	 * 获取 已读标示
+	 */
+	public Boolean getReadFlag() {
+		return readFlag;
+	}
+	
+	/**
+	 * 设置 已读标示
+	 */
+	public void setReadFlag(Boolean readFlag) {
+		this.readFlag = readFlag;
+	}
+	
+	/**
+	 * 获取 标题
+	 */
+	public String getTitle() {
+		return title;
+	}
+	
+	/**
+	 * 设置 标题
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	
+	/**
+	 * 获取 指向平台
+	 */
+	public String getPlatform() {
+		return platform;
+	}
+	
+	/**
+	 * 设置 指向平台
+	 */
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+	
+	/**
+	 * 获取 消息类型
+	 */
+	public String getNewsType() {
+		return newsType;
+	}
+	
+	/**
+	 * 设置 消息类型
+	 */
+	public void setNewsType(String newsType) {
+		this.newsType = newsType;
+	}
+	
+	/**
+	 * 获取 业务模块标示
+	 */
+	public String getBusinessType() {
+		return businessType;
+	}
+	
+	/**
+	 * 设置 业务模块标示
+	 */
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
+	}
+	
+	/**
+	 * 获取 置顶标示
+	 */
+	public Boolean getTopTrue() {
+		return topTrue;
+	}
+	
+	/**
+	 * 设置 置顶标示
+	 */
+	public void setTopTrue(Boolean topTrue) {
+		this.topTrue = topTrue;
+	}
+	
+	/**
+	 * 获取 业务数据id(用于标示此消息对应的具体业务数据)
+	 */
+	public Long getBusinessId() {
+		return businessId;
+	}
+	
+	/**
+	 * 设置 业务数据id(用于标示此消息对应的具体业务数据)
+	 */
+	public void setBusinessId(Long businessId) {
+		this.businessId = businessId;
+	}
+	
+	/**
+	 * 获取 推送标示
+	 */
+	public String getJpushFlag() {
+		return jpushFlag;
+	}
+	
+	/**
+	 * 设置 推送标示
+	 */
+	public void setJpushFlag(String jpushFlag) {
+		this.jpushFlag = jpushFlag;
+	}
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	/**
+	 * 获取 接收时间
+	 */
+	public Date getReceivedTime() {
+		return receivedTime;
+	}
+	
+	/**
+	 * 设置 接收时间
+	 */
+	public void setReceivedTime(Date receivedTime) {
+		this.receivedTime = receivedTime;
+	}
+	
+	/**
+	 * 获取 app首页任务展示
+	 */
+	public String getDisplayWays() {
+		return displayWays;
+	}
+	
+	/**
+	 * 设置 app首页任务展示
+	 */
+	public void setDisplayWays(String displayWays) {
+		this.displayWays = displayWays;
+	}
+	
+	
+}

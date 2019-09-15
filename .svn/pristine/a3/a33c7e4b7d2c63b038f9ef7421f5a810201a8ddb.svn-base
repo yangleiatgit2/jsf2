@@ -1,0 +1,225 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.entity.operation.LineGroup;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.service.operation.LineGroupDetailService;
+import cn.uce.suc.bkg.service.operation.LineGroupService;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * @Description: 班次管理BIZ实现类
+ * @author litianjian
+ * @date 2017年10月24日 下午08:12:56
+ */
+@Service("lineGroupBiz")
+public class LineGroupBiz implements ILineGroupBiz {
+	
+	/**
+	 * 注入班次管理Service
+	 */
+	@Resource
+	private LineGroupService lineGroupService;
+	
+	/**
+	 * 注入班次详情lineGroupDetailService
+	 */
+	@Resource
+	private LineGroupDetailService lineGroupDetailService;
+	
+	/**
+	 * redis流水号生成
+	 */
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	
+	/**日志*/
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass()); 
+	
+	
+	/**
+	 * @Description: 新增班次管理
+	 * @param lineGroup
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int addLineGroup(LineGroup lineGroup) {
+		return lineGroupService.addLineGroup(lineGroup);
+	}
+	
+	/**
+	 * @Description: 修改班次管理
+	 * @param lineGroup 班次管理
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int updateLineGroup(LineGroup lineGroup) {
+		return lineGroupService.updateById(lineGroup);
+	}
+	
+	/**
+	 * @Description: 删除班次管理
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public int deleteLineGroup(Long id) {
+		return lineGroupService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询班次管理
+	 * @param id 主键
+	 * @return 班次管理
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	@Override
+	public LineGroup findById(Long id) {
+		return lineGroupService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询班次管理
+	 * @param lineGroupVo 班次管理
+	 * @param page 分页参数
+	 * @return 班次管理
+	 * @author litianjian
+	 * @date 2017年10月24日 下午08:12:56
+	 */
+	public Pagination<LineGroupVo> findByPagination(LineGroupVo lineGroupVo, Page page) {
+		Pagination<LineGroupVo> pagination = lineGroupService.findByPagination(lineGroupVo, page);
+		return pagination;
+	}
+	
+	/**
+	 * 根据班次编码查询班次明细
+	 * @return
+	 */
+	public LineGroup queryById(String lineGroupCode){
+		LineGroup lineGroup = lineGroupService.queryById(lineGroupCode);
+		return lineGroup;
+	}
+
+	@Override
+	public List<LineGroup> findByLineGroupVo(LineGroupVo vo) {
+		// TODO Auto-generated method stub
+		return lineGroupService.findByLineGroupVo(vo);
+	}
+	/**
+	 * @Description: 根据组织号和时间区间以及车型查询班次数量做统计用
+	 * @param lineGroupVo 班次管理
+	 * @param page 分页参数
+	 * @return 班次管理
+	 * @author yanglei
+	 * @date 2017年10月30日 下午04:27:08
+	 */
+	@Override
+	public int countByLineGroupVo(LineGroupVo vo) {
+		// TODO Auto-generated method stub
+		return lineGroupService.countByLineGroupVo(vo);
+	}
+	/**
+	 * @Description: 根据lineGroupCode查询班次管理
+	 * @param lineGroupCode
+	 * @return 班次管理
+	 * @author yanglei
+	 * @date 2017年11月2日 下午08:12:56
+	 */
+	@Override
+	public LineGroup findByLineGroupCode(String lineGroupCode) {
+		// TODO Auto-generated method stub
+		return lineGroupService.queryById(lineGroupCode);
+	}
+	
+	/**
+	 * 
+	 * @Description: 批量添加班次 
+	 * @param lineGroupVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 上午11:27:02
+	 */
+	public int addLineGroup(List<LineGroupVo> lineGroupVos){
+		if (null == lineGroupVos  || lineGroupVos.isEmpty()) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("addPricingRule错误，非法参数！");
+			}
+		}
+		int count = 0;
+		if (null != lineGroupVos && !lineGroupVos.isEmpty()) {
+			for (LineGroupVo lineGroupVo : lineGroupVos) {
+				String lineGroupCode = lineGroupVo.getLineGroupCode();
+				//自动生成班次编号
+				if (StringUtil.isBlank(lineGroupCode)) {
+					lineGroupCode = redisIdsWorker.nextId(IdsPrefix.BC);
+				}
+				//一起保存的创建时间设为一致
+				Date createTime = new Date();
+				//保存班次详情
+				List<LineGroupDetailVo> lineGroupDetailVos = lineGroupVo.getLineGroupDetailVos();
+				if (null != lineGroupDetailVos && !lineGroupDetailVos.isEmpty()) {
+					for (LineGroupDetailVo lineGroupDetailVo : lineGroupDetailVos) {
+						LineGroupDetail lineGroupDetail = ObjectConvertUtil.convertObject(lineGroupDetailVo,LineGroupDetail.class);
+						if (StringUtil.isBlank(lineGroupDetail.getLineGroupCode())) {
+							lineGroupDetailVo.setLineGroupCode(lineGroupCode);
+						}
+						lineGroupDetailVo.setCreateTime(createTime);
+						count += lineGroupDetailService.addLineGroupDetail(lineGroupDetail);
+						
+					}
+					
+				}
+				LineGroup lineGroup = ObjectConvertUtil.convertObject(lineGroupVo, LineGroup.class);
+				lineGroup.setLineGroupCode(lineGroupCode);
+				lineGroup.setCreateTime(createTime);
+				//保存班次
+				count += lineGroupService.addLineGroup(lineGroup);
+			}
+		}
+		return count;
+	}
+
+	/**
+	 * 
+	 * @Description: 根据条件查询班次及班次详情 
+	 * @param lineGroupVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月9日 下午10:49:07
+	 */
+	public List<LineGroupVo> findLineGroupAndDetail(LineGroupVo lineGroupVo){
+		return lineGroupService.findLineGroupAndDetail(lineGroupVo);
+	}
+
+	@Override
+	public List<LineGroupVo> findByCombineOrder(LineGroupVo lineGroupVo) {
+		// TODO Auto-generated method stub
+		return lineGroupService.findByCombineOrder(lineGroupVo);
+	}
+
+	@Override
+	public List<LineGroupVo> findComplexByCombineOrder(LineGroupVo lineGroupVo) {
+		// TODO Auto-generated method stub
+		return lineGroupService.findComplexByCombineOrder(lineGroupVo);
+	}
+}

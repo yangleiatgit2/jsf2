@@ -1,0 +1,651 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IOmgCmsOrgDao">
+
+	<sql id="Base_Column_List">
+		ORG_ID,CMS_ORG_ID,ORG_CODE,
+		BASE_ORG_CODE,ORG_NAME,ORG_NAME_TW, ORG_NAME_EN,NAME_PY,NAME_SPY,
+		ORG_TYPE,ORG_FULL_CODE,PARENT_ORG,
+		OPERATE_CENTER,FINANCE_CENTER,MANAGE_CENTER,
+		ACC_ORG,PARENT_ORG_CODE,OPERATE_CENTER_CODE,
+		FINANCE_CENTER_CODE,MANAGE_CENTER_CODE,ACC_ORG_CODE,
+		CURRENCY,STATUS,ORG_PROPERTY, EFFECT_TIME,EXPIRE_TIME,REMARK,
+		DELETE_FLAG,VERSION,CREATE_EMP, CREATE_ORG,CREATE_TIME,UPDATE_EMP,
+		UPDATE_ORG,UPDATE_TIME,STATUS_UPDATE_DESC,
+		STATUS_UPDATE_TIME,sync_time
+	</sql>
+
+	<sql id="Base_Column_Where">
+		<where>
+			<if test="orgId != null">
+				and ORG_ID = #{orgId}
+			</if>
+			<if test="cmsOrgId != null">
+				and CMS_ORG_ID = #{cmsOrgId}
+			</if>
+			<if test="orgCode != null">
+				and ORG_CODE = #{orgCode}
+			</if>
+			<if test="baseOrgCode != null">
+				and BASE_ORG_CODE = #{baseOrgCode}
+			</if>
+			<if test="orgName != null">
+				and ORG_NAME = #{orgName}
+			</if>
+			<if test="orgNameTw != null">
+				and ORG_NAME_TW = #{orgNameTw}
+			</if>
+			<if test="orgNameEn != null">
+				and ORG_NAME_EN = #{orgNameEn}
+			</if>
+			<if test="namePy != null">
+				and NAME_PY = #{namePy}
+			</if>
+			<if test="nameSpy != null">
+				and NAME_SPY = #{nameSpy}
+			</if>
+			<if test="orgType != null">
+				and ORG_TYPE = #{orgType}
+			</if>
+			<if test="orgFullCode != null">
+				and ORG_FULL_CODE = #{orgFullCode}
+			</if>
+			<if test="parentOrg != null">
+				and PARENT_ORG = #{parentOrg}
+			</if>
+			<if test="operateCenter != null">
+				and OPERATE_CENTER = #{operateCenter}
+			</if>
+			<if test="financeCenter != null">
+				and FINANCE_CENTER = #{financeCenter}
+			</if>
+			<if test="manageCenter != null">
+				and MANAGE_CENTER = #{manageCenter}
+			</if>
+			<if test="accOrg != null">
+				and ACC_ORG = #{accOrg}
+			</if>
+			<if test="parentOrgCode != null">
+				and PARENT_ORG_CODE = #{parentOrgCode}
+			</if>
+			<if test="operateCenterCode != null">
+				and OPERATE_CENTER_CODE = #{operateCenterCode}
+			</if>
+			<if test="financeCenterCode != null">
+				and FINANCE_CENTER_CODE = #{financeCenterCode}
+			</if>
+			<if test="manageCenterCode != null">
+				and MANAGE_CENTER_CODE = #{manageCenterCode}
+			</if>
+			<if test="accOrgCode != null">
+				and ACC_ORG_CODE = #{accOrgCode}
+			</if>
+			<if test="currency != null">
+				and CURRENCY = #{currency}
+			</if>
+			<if test="status != null">
+				and STATUS = #{status}
+			</if>
+			<if test="orgProperty != null">
+				and ORG_PROPERTY = #{orgProperty}
+			</if>
+			<if test="effectTime != null">
+				and EFFECT_TIME = #{effectTime}
+			</if>
+			<if test="expireTime != null">
+				and EXPIRE_TIME = #{expireTime}
+			</if>
+			<if test="remark != null">
+				and REMARK = #{remark}
+			</if>
+			<if test="deleteFlag != null">
+				and DELETE_FLAG = #{deleteFlag}
+			</if>
+			<if test="version != null">
+				and VERSION = #{version}
+			</if>
+			<if test="createEmp != null">
+				and CREATE_EMP = #{createEmp}
+			</if>
+			<if test="createOrg != null">
+				and CREATE_ORG = #{createOrg}
+			</if>
+			<if test="createTime != null">
+				and CREATE_TIME = #{createTime}
+			</if>
+			<if test="updateEmp != null">
+				and UPDATE_EMP = #{updateEmp}
+			</if>
+			<if test="updateOrg != null">
+				and UPDATE_ORG = #{updateOrg}
+			</if>
+			<if test="updateTime != null">
+				and UPDATE_TIME = #{updateTime}
+			</if>
+			<if test="statusUpdateDesc != null">
+				and STATUS_UPDATE_DESC = #{statusUpdateDesc}
+			</if>
+			<if test="statusUpdateTime != null">
+				and STATUS_UPDATE_TIME = #{statusUpdateTime}
+			</if>
+			<if test="syncTime != null">
+				and sync_time = #{syncTime}
+			</if>
+		</where>
+	</sql>
+
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.OmgCmsOrg">
+		UPDATE omg_cms_org
+		<set>
+			<if test="cmsOrgId != null">
+				CMS_ORG_ID = #{cmsOrgId},
+			</if>
+			<if test="orgCode != null">
+				ORG_CODE = #{orgCode},
+			</if>
+			<if test="baseOrgCode != null">
+				BASE_ORG_CODE = #{baseOrgCode},
+			</if>
+			<if test="orgName != null">
+				ORG_NAME = #{orgName},
+			</if>
+			<if test="orgNameTw != null">
+				ORG_NAME_TW = #{orgNameTw},
+			</if>
+			<if test="orgNameEn != null">
+				ORG_NAME_EN = #{orgNameEn},
+			</if>
+			<if test="namePy != null">
+				NAME_PY = #{namePy},
+			</if>
+			<if test="nameSpy != null">
+				NAME_SPY = #{nameSpy},
+			</if>
+			<if test="orgType != null">
+				ORG_TYPE = #{orgType},
+			</if>
+			<if test="orgFullCode != null">
+				ORG_FULL_CODE = #{orgFullCode},
+			</if>
+			<if test="parentOrg != null">
+				PARENT_ORG = #{parentOrg},
+			</if>
+			<if test="operateCenter != null">
+				OPERATE_CENTER = #{operateCenter},
+			</if>
+			<if test="financeCenter != null">
+				FINANCE_CENTER = #{financeCenter},
+			</if>
+			<if test="manageCenter != null">
+				MANAGE_CENTER = #{manageCenter},
+			</if>
+			<if test="accOrg != null">
+				ACC_ORG = #{accOrg},
+			</if>
+			<if test="parentOrgCode != null">
+				PARENT_ORG_CODE = #{parentOrgCode},
+			</if>
+			<if test="operateCenterCode != null">
+				OPERATE_CENTER_CODE = #{operateCenterCode},
+			</if>
+			<if test="financeCenterCode != null">
+				FINANCE_CENTER_CODE = #{financeCenterCode},
+			</if>
+			<if test="manageCenterCode != null">
+				MANAGE_CENTER_CODE = #{manageCenterCode},
+			</if>
+			<if test="accOrgCode != null">
+				ACC_ORG_CODE = #{accOrgCode},
+			</if>
+			<if test="currency != null">
+				CURRENCY = #{currency},
+			</if>
+			<if test="status != null">
+				STATUS = #{status},
+			</if>
+			<if test="orgProperty != null">
+				ORG_PROPERTY = #{orgProperty},
+			</if>
+			<if test="effectTime != null">
+				EFFECT_TIME = #{effectTime},
+			</if>
+			<if test="expireTime != null">
+				EXPIRE_TIME = #{expireTime},
+			</if>
+			<if test="remark != null">
+				REMARK = #{remark},
+			</if>
+			<if test="deleteFlag != null">
+				DELETE_FLAG = #{deleteFlag},
+			</if>
+			<if test="version != null">
+				VERSION = #{version},
+			</if>
+			<if test="createEmp != null">
+				CREATE_EMP = #{createEmp},
+			</if>
+			<if test="createOrg != null">
+				CREATE_ORG = #{createOrg},
+			</if>
+			<if test="createTime != null">
+				CREATE_TIME = #{createTime},
+			</if>
+			<if test="updateEmp != null">
+				UPDATE_EMP = #{updateEmp},
+			</if>
+			<if test="updateOrg != null">
+				UPDATE_ORG = #{updateOrg},
+			</if>
+			<if test="updateTime != null">
+				UPDATE_TIME = #{updateTime},
+			</if>
+			<if test="statusUpdateDesc != null">
+				STATUS_UPDATE_DESC = #{statusUpdateDesc},
+			</if>
+			<if test="statusUpdateTime != null">
+				STATUS_UPDATE_TIME = #{statusUpdateTime},
+			</if>
+			<if test="syncTime != null">
+				sync_time = #{syncTime},
+			</if>
+		</set>
+		WHERE ORG_ID = #{orgId}
+	</update>
+
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.OmgCmsOrgVo"
+		resultType="cn.uce.suc.common.entity.OmgCmsOrg">
+		select
+		<include refid="Base_Column_List" />
+		from omg_cms_org
+	</select>
+	<select id="findByCombox" parameterType="cn.uce.suc.common.vo.OmgCmsOrgVo"
+		resultType="cn.uce.suc.common.vo.ComboOrgVo">
+		select
+			ORG_ID,BASE_ORG_CODE,ORG_NAME,ORG_TYPE
+		from omg_cms_org o
+		<where>
+			<if test="q != null and '' != q">
+				AND (ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+			</if>
+			<if test="orgTypes != null  ">
+				and o.ORG_TYPE in
+				<foreach collection="orgTypes" index="index" item="type"
+					open="(" separator="," close=")">
+					#{type}
+				</foreach>
+			</if>
+			<if test="orgStatus != null ">
+				and o.STATUS in
+				<foreach collection="orgStatus" index="index" item="status"
+					open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+			<if test="parentOrgCode != null and parentOrgCode != ''">
+				and o.PARENT_ORG_CODE = #{parentOrgCode}
+			</if>
+		</where>
+	</select>
+	
+	<select id="getAllOperationCount" parameterType="java.lang.Integer"
+		resultType="java.lang.Integer">
+		select count(*)
+		from omg_cms_org o
+		<where>
+			<if test="orgTypes != null  ">
+				and o.ORG_TYPE in
+				<foreach collection="orgTypes" index="index" item="type"
+					open="(" separator="," close=")">
+					#{type}
+				</foreach>
+			</if>
+			<if test="orgStatus != null ">
+				and o.STATUS in
+				<foreach collection="orgStatus" index="index" item="status"
+					open="(" separator="," close=")">
+					#{status}
+				</foreach>
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByBaseOrgCode" parameterType="java.lang.String"
+		resultType="cn.uce.suc.common.vo.OmgCmsOrgVo">
+		select
+		<include refid="Base_Column_List" />
+		from omg_cms_org where 
+		
+		BASE_ORG_CODE = #{baseOrgCode} and DELETE_FLAG = 0
+	</select>
+	
+	<select id="findOperationByVo" parameterType="cn.uce.suc.common.vo.OmgCmsOrgVo"
+		resultType="cn.uce.suc.common.entity.OmgCmsOrg">
+		select
+			<include refid="Base_Column_List" />
+		from omg_cms_org o
+		<where>
+			<if test="orgType != null  ">
+				and o.ORG_TYPE = #{orgType}
+			</if>
+			<if test="parentOrg != null and parentOrg != ''">
+				and o.PARENT_ORG = #{parentOrg}
+			</if>
+		</where>
+	</select>
+
+	
+		<!-- 根据orgCode查询虚拟机构 -->
+	<select id="findVirtualOrgByCode" parameterType="java.lang.String"
+		resultType="cn.uce.suc.common.vo.OrgVo">
+		SELECT
+		BASE_ORG_CODE as orgCode,
+		ORG_TYPE
+		FROM
+		OMG_VIRTUAL_ORG
+		WHERE
+		BASE_ORG_CODE =#{_parameter} AND DELETE_FLAG <![CDATA[ <> ]]>
+		1
+	</select>
+	
+	
+	
+	<!-- 查询子营运机构列表 -->
+	<select id="findChildNosOrgList" parameterType="cn.uce.suc.common.vo.OrgVo"
+		resultType="cn.uce.suc.common.vo.ZTreeVo">
+		<!-- 查询承包区 -->
+		<if test="orgType == 3001 or orgType == 10">
+			<!-- SELECT f.base_org_code as id,f.parent_org_code as pid,f.org_name 
+				as name,f.org_type as type,f.status as status FROM omg_cms_org f JOIN omg_cms_org 
+				e ON f.PARENT_ORG_CODE=e.BASE_ORG_CODE JOIN omg_cms_org d ON e.PARENT_ORG_CODE=d.BASE_ORG_CODE 
+				JOIN omg_virtual_org_ref_cms c ON d.BASE_ORG_CODE=c.cms_base_org_code JOIN 
+				omg_virtual_org b ON b.BASE_ORG_CODE=c.VIRTUAL_BASE_ORG_CODE JOIN omg_virtual_org 
+				a ON a.BASE_ORG_CODE=b.PARENT_ORG WHERE a.DELETE_FLAG <![CDATA[ <> ]]> 1 
+				AND b.DELETE_FLAG <![CDATA[ <> ]]> 1 AND c.DELETE_FLAG <![CDATA[ <> ]]> 1 
+				AND d.DELETE_FLAG <![CDATA[ <> ]]> 1 AND e.DELETE_FLAG <![CDATA[ <> ]]> 1 
+				AND f.DELETE_FLAG <![CDATA[ <> ]]> 1 AND <if test="q != null and '' != q"> 
+				(f.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%') OR f.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', 
+				#{q}),'%')) AND </if> <choose> <when test="orgType == 10">a.PARENT_ORG IS 
+				NULL</when> <otherwise>a.base_org_code = #{orgCode}</otherwise> </choose> 
+				查询网点 UNION ALL -->
+			SELECT e.base_org_code as id,e.parent_org_code as
+			pId,e.org_name as
+			name,e.org_type as type,e.status as status
+			FROM
+			omg_cms_org e
+			JOIN
+			omg_cms_org d ON e.PARENT_ORG_CODE=d.BASE_ORG_CODE
+			JOIN
+			omg_virtual_org_ref_cms c ON d.BASE_ORG_CODE=c.cms_base_org_code
+			JOIN
+			omg_virtual_org b ON b.BASE_ORG_CODE=c.VIRTUAL_BASE_ORG_CODE
+			JOIN
+			omg_virtual_org a ON a.BASE_ORG_CODE=b.PARENT_ORG WHERE
+			a.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			b.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			c.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			d.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			e.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			<if test="q != null and '' != q">
+				(e.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				e.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%')) AND
+			</if>
+			<choose>
+				<when test="orgType == 10">a.PARENT_ORG IS NULL</when>
+				<otherwise>a.base_org_code = #{orgCode}</otherwise>
+			</choose>
+			<!-- 分拨中心 -->
+			UNION ALL
+			SELECT d.base_org_code as id,c.virtual_base_org_code as
+			pId,d.org_name as name,d.org_type as type,d.status as status
+			FROM
+			omg_virtual_org a
+			JOIN omg_virtual_org b ON
+			a.BASE_ORG_CODE=b.parent_org
+			JOIN omg_virtual_org_ref_cms c ON
+			b.BASE_ORG_CODE=c.virtual_base_org_code
+			JOIN omg_cms_org d ON
+			c.CMS_BASE_ORG_CODE=d.BASE_ORG_CODE WHERE
+			a.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			b.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			c.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			d.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			<if test="q != null and '' != q">
+				(d.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				d.BASE_ORG_CODE LIKE
+				CONCAT(CONCAT('%', #{q}),'%')) AND
+			</if>
+			<choose>
+				<when test="orgType == 10">a.PARENT_ORG IS NULL</when>
+				<otherwise>a.base_org_code = #{orgCode}</otherwise>
+			</choose>
+			<!-- 省区 -->
+			UNION ALL
+			SELECT b.base_org_code as id,b.parent_org as pId,b.org_name
+			as name,b.org_type as type,b.status as status
+			FROM omg_virtual_org a
+			JOIN omg_virtual_org b ON
+			a.BASE_ORG_CODE=b.parent_org WHERE
+			a.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			b.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			<if test="q != null and '' != q">
+				(b.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				b.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%')) AND
+			</if>
+			<choose>
+				<when test="orgType == 10">a.PARENT_ORG IS NULL</when>
+				<otherwise>a.base_org_code = #{orgCode}</otherwise>
+			</choose>
+			<!-- 大区 -->
+			<if test="orgType == 10 or (orgType == 3001 and iself != false)">
+				UNION ALL
+				SELECT a.base_org_code as id,(SELECT BASE_ORG_CODE FROM
+				OMG_CMS_ORG WHERE
+				PARENT_ORG_CODE IS NULL AND DELETE_FLAG =0) as
+				pId,a.org_name as
+				name,a.org_type as type,a.status as status
+				FROM
+				omg_virtual_org a WHERE
+				a.DELETE_FLAG <![CDATA[ <> ]]>
+				1 AND
+				<if test="q != null and '' != q">
+					(a.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+					OR
+					a.BASE_ORG_CODE LIKE
+					CONCAT(CONCAT('%', #{q}),'%')) AND
+				</if>
+				<choose>
+					<when test="orgType == 10">a.PARENT_ORG IS NULL</when>
+					<otherwise>a.base_org_code = #{orgCode}</otherwise>
+				</choose>
+			</if>
+			<!-- 总部 -->
+			<if test="orgType == 10 and iself != false">
+				UNION ALL
+				SELECT a.base_org_code as id,a.parent_org as pId,a.org_name
+				as
+				name,a.org_type as type,a.status as status
+				FROM omg_cms_org a WHERE
+				a.DELETE_FLAG <![CDATA[ <> ]]>
+				1 AND
+				a.BASE_ORG_CODE =#{orgCode}
+				<if test="q != null and '' != q">
+					AND (a.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+					OR
+					a.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+				</if>
+			</if>
+		</if>
+
+		<if test="orgType == 4001">
+			<!-- 省区 -->
+			<if test="iself != false">
+				SELECT a.base_org_code as id,a.parent_org as pId,a.org_name as
+				name,a.org_type as type,a.status as status
+				FROM omg_virtual_org a
+				WHERE
+				a.DELETE_FLAG <![CDATA[ <> ]]>
+				1 AND
+				a.base_org_code = #{orgCode}
+				<if test="q != null and '' != q">
+					AND (a.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+					OR
+					a.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+				</if>
+				<!-- 分拨中心 -->
+				UNION ALL
+			</if>
+			SELECT c.base_org_code as id,b.virtual_base_org_code as
+			pId,c.org_name as name,c.org_type as type,c.status as status
+			FROM
+			omg_virtual_org a
+			JOIN omg_virtual_org_ref_cms b ON
+			a.BASE_ORG_CODE=b.virtual_base_org_code
+			JOIN omg_cms_org c ON
+			b.CMS_BASE_ORG_CODE=c.BASE_ORG_CODE WHERE
+			a.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			b.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			c.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			a.base_org_code = #{orgCode}
+			<if test="q != null and '' != q">
+				AND (c.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				c.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+			</if>
+			<!-- 网点 -->
+			UNION ALL
+			SELECT e.base_org_code as id,e.parent_org_code as
+			pId,e.org_name as name,e.org_type as type,e.status as status
+			FROM
+			omg_cms_org e
+			JOIN omg_cms_org d ON e.PARENT_ORG_CODE=d.BASE_ORG_CODE
+			JOIN omg_virtual_org_ref_cms c ON d.BASE_ORG_CODE=c.cms_base_org_code
+			JOIN omg_virtual_org b ON b.BASE_ORG_CODE=c.VIRTUAL_BASE_ORG_CODE
+			WHERE
+			b.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			c.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			d.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			e.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			b.base_org_code = #{orgCode}
+			<if test="q != null and '' != q">
+				AND (e.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				e.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+			</if>
+			<!-- 承包区 -->
+			UNION ALL
+			SELECT f.base_org_code as id,f.parent_org_code as
+			pid,f.org_name as name,f.org_type as type,f.status as status
+			FROM
+			omg_cms_org f
+			JOIN omg_cms_org e ON f.PARENT_ORG_CODE=e.BASE_ORG_CODE
+			JOIN omg_cms_org d ON e.PARENT_ORG_CODE=d.BASE_ORG_CODE
+			JOIN
+			omg_virtual_org_ref_cms c ON d.BASE_ORG_CODE=c.cms_base_org_code
+			JOIN
+			omg_virtual_org b ON b.BASE_ORG_CODE=c.VIRTUAL_BASE_ORG_CODE WHERE
+			b.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			c.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			d.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			e.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			f.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			b.base_org_code = #{orgCode}
+			<if test="q != null and '' != q">
+				AND (f.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				f.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+			</if>
+		</if>
+
+		<!-- 总部 -->
+		<if
+			test="iself != false and (orgType == 40 or orgType == 30 or orgType == 21)">
+			SELECT a.BASE_ORG_CODE as id,a.PARENT_ORG_CODE as pId,a.org_name as
+			name,a.ORG_TYPE as type,a.status as status
+			FROM
+			omg_cms_org a WHERE
+			a.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			a.BASE_ORG_CODE=#{orgCode}
+			<if test="q != null and '' != q">
+				AND (a.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				a.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+			</if>
+		</if>
+		<!-- 财务中心 -->
+		<if test="orgType == 30 or orgType == 21 ">
+			<if test="iself != false">
+				UNION ALL
+			</if>
+			SELECT b.BASE_ORG_CODE as id,b.PARENT_ORG_CODE as pId,b.org_name as
+			name,b.ORG_TYPE as type,b.status as status
+			FROM omg_cms_org a
+			JOIN
+			omg_cms_org b ON a.BASE_ORG_CODE=b.PARENT_ORG_CODE WHERE
+			b.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			a.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			a.BASE_ORG_CODE=#{orgCode}
+			<if test="q != null and '' != q">
+				AND (b.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				b.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+			</if>
+		</if>
+		<!-- 分拨中心 -->
+		<if test="orgType == 21">
+			UNION ALL
+			SELECT c.BASE_ORG_CODE as id,c.PARENT_ORG_CODE as
+			pId,c.org_name as
+			name,c.ORG_TYPE as type,c.status as status
+			FROM
+			omg_cms_org a
+			JOIN omg_cms_org b ON a.BASE_ORG_CODE=b.PARENT_ORG_CODE
+			JOIN omg_cms_org c ON b.BASE_ORG_CODE=c.PARENT_ORG_CODE WHERE
+			c.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			b.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			a.DELETE_FLAG <![CDATA[ <> ]]>
+			1 AND
+			a.BASE_ORG_CODE=#{orgCode}
+			<if test="q != null and '' != q">
+				AND (c.ORG_NAME LIKE CONCAT(CONCAT('%', #{q}),'%')
+				OR
+				c.BASE_ORG_CODE LIKE CONCAT(CONCAT('%', #{q}),'%'))
+			</if>
+		</if>
+
+	</select>
+</mapper>

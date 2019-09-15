@@ -1,0 +1,76 @@
+package cn.uce.suc.bkg.vo.ia;
+
+import java.util.Map;
+
+import cn.uce.base.vo.BaseVo;
+
+
+/**
+ * 
+ * @Description: 分拨中心时刻信息vo 
+ * @author laizhendong
+ * @date 2017年10月26日 下午3:40:29
+ */
+public class WsOperationTimeVo extends BaseVo{
+	
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	/**
+	 * 分拨中心编号
+	 */
+	private String orgCode;
+	
+	
+	private Map<String, String> EarliestDepartureTime_Str;
+	
+	private Map<String, String> LatestArriveTime_Str;
+
+	/** 
+	 * @return orgCode 
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	/**
+	 * @param orgCode the orgCode to set
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	/** 
+	 * @return latestArriveTime_Str 
+	 */
+	public Map<String, String> getLatestArriveTime_Str() {
+		return LatestArriveTime_Str;
+	}
+
+	/**
+	 * @param latestArriveTime_Str the latestArriveTime_Str to set
+	 */
+	public void setLatestArriveTime_Str(Map<String, String> latestArriveTime_Str) {
+		LatestArriveTime_Str = latestArriveTime_Str;
+	}
+
+	/** 
+	 * @return earliestDepartureTime_Str 
+	 */
+	public Map<String, String> getEarliestDepartureTime_Str() {
+		return EarliestDepartureTime_Str;
+	}
+
+	/**
+	 * @param earliestDepartureTime_Str the earliestDepartureTime_Str to set
+	 */
+	public void setEarliestDepartureTime_Str(Map<String, String> earliestDepartureTime_Str) {
+		EarliestDepartureTime_Str = earliestDepartureTime_Str;
+	}
+
+
+}

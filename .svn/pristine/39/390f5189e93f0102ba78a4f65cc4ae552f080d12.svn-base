@@ -1,0 +1,136 @@
+package cn.uce.suc.common.vo;
+
+import java.util.Date;
+
+public class AppNotice {
+	/**
+	 * 主键id
+	 */
+	private Long id;
+	/**
+	 * 消息类型
+	 */
+	private String newsType;
+	/**
+	 * 消息标题
+	 */
+	private String title;
+	/**
+	 * 消息创建时间
+	 */
+	private Date createTime;
+	/**
+	 * 消息的业务类型
+	 */
+	private String businessType;
+	/**
+	 * 消息的业务id 
+	 */
+	private Long businessId;
+	/**
+	 * 消息的内容
+	 */
+	private String contents;
+	/**
+	 * 是否已读
+	 */
+	private Boolean readFlag;
+	/**
+	 * 获取是否已读
+	 */
+	public Boolean getReadFlag() {
+		return readFlag;
+	}
+	/**
+	 * 设置是否已读
+	 */
+	public void setReadFlag(Boolean readFlag) {
+		this.readFlag = readFlag;
+	}
+	/**
+	 * 获取主键id
+	 */
+	public Long getId() {
+		return id;
+	}
+	/**
+	 * 设置主键id
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+	/**
+	 * 获取消息的类型
+	 */
+	public String getNewsType() {
+		return newsType;
+	}
+	/**
+	 * 设置消息的类型
+	 */
+	public void setNewsType(String newsType) {
+		this.newsType = newsType;
+	}
+	/**
+	 * 获取消息的标题
+	 */
+	public String getTitle() {
+		return title;
+	}
+	/**
+	 * 设置消息的标题
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	/**
+	 * 获取消息的创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	/**
+	 * 设置消息的创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	/**
+	 * 获取消息的业务类型
+	 */
+	public String getBusinessType() {
+		return businessType;
+	}
+	/**
+	 * 设置消息的业务类型
+	 */
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
+	}
+	/**
+	 * 获取消息的业务id 
+	 */
+	public Long getBusinessId() {
+		return businessId;
+	}
+	/**
+	 * 设置消息的业务id
+	 */
+	public void setBusinessId(Long businessId) {
+		this.businessId = businessId;
+	}
+	/**
+	 * 获取消息的内容
+	 */
+	public String getContents() {
+		return contents;
+	}
+	/**
+	 * 设置消息的内容
+	 */
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+	
+
+}

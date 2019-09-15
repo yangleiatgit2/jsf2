@@ -1,0 +1,121 @@
+package cn.uce.suc.bkg.control.datamain;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.ICapacityGapManagementBiz;
+import cn.uce.suc.bkg.biz.datamain.ICarManageBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandCombineBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderCombineBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz;
+import cn.uce.suc.bkg.vo.operation.CarVolumeVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.web.authorg.biz.IDictDataBiz;
+import cn.uce.web.common.base.BaseController;
+/**
+ * 
+ * @Description: 运力缺口管理控制器
+ * @author yanglei
+ * @date 2017年10月25日 上午10:09:27
+ */
+@Controller
+@RequestMapping("/capacityGapManagement")
+public class CapacityGapManagementController extends BaseController{
+	
+	/**
+	 * 注入ICapacityGapManagementBiz对象
+	 */
+	@Resource
+	private ICapacityGapManagementBiz capacityGapManagementBiz; //运力缺口biz
+	@Resource
+	private IFreightDemandBiz freightDemandBiz;   //运力需求biz
+	@Resource
+	private IFreightDemandCombineBiz freightDemandCombineBiz;  //需求组合biz
+	@Resource
+	private ILineGroupBiz lineGroupBiz;  //班次biz
+	@Resource
+	private ILineGroupDetailBiz lineGroupDetailBiz;  //班次详情biz  
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz; //乾坤机构 biz
+	@Resource
+	private  IDictDataBiz fspDictDataBiz; //数据词典biz
+	@Resource
+	private  IFreightOrderBiz freightOrderBiz; //订单 biz
+	@Resource
+	private  IFreightOrderCombineBiz  freightOrderCombineBiz; //订单组合biz
+	@Resource
+	private  ICarManageBiz  carManageBiz; //车辆信息biz
+	
+	
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/capacityGapManagement";
+	}
+	
+	@RequestMapping(value = "/findBycondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(FreightOrderVo freightOrderVo, Page page) {
+		Map<String, Object> map=capacityGapManagementBiz.getCarGapByComebine(freightOrderVo, page);
+		if(map==null){
+			return new HashMap<String,Object>();
+		}
+		List<CarVolumeVo> resList=(List<CarVolumeVo>) map.get("list");
+		Pagination<CarVolumeVo> pagination = new Pagination();
+		page.setTotal((Integer)map.get("count"));
+		pagination.setPage(page);
+		pagination.setData(resList);
+		return returnSuccess(pagination);	
+	}
+
+	/** 
+     * 根据日期对某一时间段内的运力需求进行拆解
+     * @param demandSiteCode
+     * @param beginDate 
+     * @param endDate 
+     * @return List 
+     */  
+	@RequestMapping(value = "/openCapacityGapByDay")
+	@ResponseBody
+	public  Map<String, Object>  openCapacityGapByDay(String  demandSiteCode,String demandSite,String timeSection,Page page) {
+        List<CarVolumeVo> resList=capacityGapManagementBiz.getCarGapByDay( demandSiteCode,demandSite, timeSection, page);
+		Pagination<CarVolumeVo> pagination = new Pagination();
+		page.setTotal(resList.size());
+		pagination.setPage(page);
+		pagination.setData(resList);
+		return returnSuccess(pagination);	
+	}
+	
+	/** 
+     * 以订单组合为纬度对运力需求详情进行查询，但不计算缺口值
+     * @param demandSiteCode
+     * @param beginDate 
+     * @param endDate 
+     * @return List 
+     */  
+	@RequestMapping(value = "/openCapacityGapByCombineOrder")
+	@ResponseBody
+	public Map<String, Object> openCapacityGapByCombineOrder(String  demandSiteCode,String demandSite,String timeSection,String orderCombinCodeArr,Page page) {
+		List<CarVolumeVo> resList=capacityGapManagementBiz.getCarVolumeVoByComebine(demandSiteCode, demandSite,timeSection, orderCombinCodeArr, page);
+		Pagination<CarVolumeVo> pagination = new Pagination();
+		page.setTotal(resList.size());
+		pagination.setPage(page);
+		pagination.setData(resList);
+		return returnSuccess(pagination);	
+	}
+	
+}

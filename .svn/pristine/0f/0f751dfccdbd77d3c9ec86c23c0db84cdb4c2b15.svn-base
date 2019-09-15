@@ -1,0 +1,204 @@
+package cn.uce.suc.bkg.control.datamain;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.alibaba.fastjson.JSONObject;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.excel.entity.vo.NormalExcelConstants;
+import cn.uce.core.poi.excel.entity.ExportParams;
+import cn.uce.suc.bkg.biz.datamain.ICarManageBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.util.WebUtil;
+/**
+ * 
+ * @Description: 车辆管理controller 
+ * @author zhangqiang
+ * @date 2017年10月25日 下午2:47:12
+ */
+@Controller
+@RequestMapping("/carManager")
+public class CarManagerCotroller extends BaseController {
+	/**
+	 * 车辆管理biz
+	 */
+	@Resource
+	private ICarManageBiz carManageBiz;
+	/**
+	 * 注入发车计划
+	 */
+	@Resource
+	private IDirvingPlanBiz dirvingPlanBiz;
+	/**
+	 * 
+	 * @Description: 跳转到页面
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月25日 下午9:58:07
+	 */
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/carManager";
+	}
+	/**
+	 * 
+	 * @Description: 根据input标签查询
+	 * @param page
+	 * @param carManageVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月25日 下午9:58:33
+	 */
+	@RequestMapping(value = "findByCondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(Page page,CarManageVo carManageVo){
+		Pagination<CarManage> cars = carManageBiz.findByCondition(carManageVo,page);
+		return returnSuccess(cars);
+	}
+	/**
+	 * 
+	 * @Description: 根据保险到期时间,查询保险到期
+	 * @param page
+	 * @param carManageVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月25日 下午9:58:57
+	 */
+	@RequestMapping(value = "findByInsurance")
+	@ResponseBody
+	public Map<String, Object> findByInsurance(Page page,CarManageVo carManageVo){
+		Pagination<CarManage> cars = carManageBiz.findByInsurance(carManageVo,page);
+		return returnSuccess(cars);
+	}
+	/**
+	 * 
+	 * @Description: 车辆添加
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月26日 上午11:10:46
+	 */
+	@RequestMapping(value = "addCar")
+	@ResponseBody
+	public Map<String, Object> addCar(CarManage carManage){
+		carManage.setDeleteFlag(false);
+		int row = carManageBiz.addCarManage(carManage);
+		return returnSuccess(row);
+	}
+	/**
+	 * 
+	 * @Description: 车辆修改
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月26日 上午11:10:46
+	 */
+	@RequestMapping(value = "updateCar")
+	@ResponseBody
+	public Map<String, Object> updateCar(CarManage carManage){
+		int row = carManageBiz.updateCarManage(carManage);
+		return returnSuccess(row);
+	}
+	/**
+	 * 
+	 * @Description: 根据id查询
+	 * @param id
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月27日 上午9:38:39
+	 */
+	@RequestMapping(value = "/findById")
+	@ResponseBody
+	public Map<String, Object> findById(Integer id){
+		CarManage car = carManageBiz.findById(id.longValue());
+		return returnSuccess(car);
+	}
+	/**
+	 * 
+	 * @Description: 导出查询信息
+	 * @param carManageVo
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月25日 下午10:35:13
+	 */
+	@RequestMapping("exportXls")
+	public String exportXls(CarManageVo carManageVo, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		List<CarManageVo> cars = carManageBiz.findByExport(carManageVo);
+		map.put(NormalExcelConstants.FILE_NAME, "车辆信息");
+		//List<CarExportVo> usersVos = ObjectConvertUtil.convertList(pageUsers.getData(), CarExportVo.class);
+		map.put(NormalExcelConstants.CLASS, CarManageVo.class);
+		map.put(NormalExcelConstants.PARAMS, new ExportParams("车辆", "导出人:"+DataConversionUtil.getUserInfo(WebUtil.getCurrentUser()).getEmpName(), "导出信息"));
+		map.put(NormalExcelConstants.DATA_LIST, cars);
+		return NormalExcelConstants.JEECG_EXCEL_VIEW;
+	}
+	/**
+	 * 
+	 * @Description: 车辆控件下拉方法
+	 * @param q
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 下午2:44:04
+	 */
+	@RequestMapping(value = "/findCarByCmbgd")
+	@ResponseBody
+	public Map<String, Object> findCarByCmbgd(String q,Page page,String carVolume){
+		CarManageVo paramVo= new CarManageVo();
+		if(carVolume!=null&&!"".equals(carVolume)&&!"undefined".equals(carVolume)){
+		paramVo.setCarVolume(Double.valueOf(carVolume));
+		}
+		if (!StringUtil.isEmpty(q)) {
+			paramVo.setQ(q.trim());
+		}
+		paramVo.setCarStatus("1");
+		Pagination<CarManage> cars = carManageBiz.findCarByCmbgd(paramVo,page);
+		return returnSuccess(cars);
+	}
+	/**
+	 * 
+	 * @Description: 根据车牌号查询发车计划
+	 * @param plateNumber
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月6日 下午4:16:49
+	 */
+	@RequestMapping(value = "/findPlanByPlateNumber")
+	@ResponseBody
+	public Map<String, Object> findPlanByPlateNumber(String plateNumber){
+		List<DirvingPlan> list = dirvingPlanBiz.findByPlageNumber(plateNumber);
+		return returnSuccess(list);
+	}
+	/**
+	 * @Description: 根据车牌号检查是否存在
+	 * @param plateNumber
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月26日 下午12:26:28
+	 */
+	@RequestMapping(value="/checkExistsByPlateNumber")
+	@ResponseBody
+	public Boolean checkExistsByPlateNumber(CarManageVo carManageVo){
+		CarManageVo carManageVo1=this.carManageBiz.checkeExistsByPlateNumber(carManageVo);
+		return carManageVo1==null?true:false;
+	}
+}

@@ -1,0 +1,21 @@
+package cn.uce.suc.bkg.biz.ia;
+
+import cn.uce.suc.bkg.vo.ia.FreigtCombineVo;
+
+/**
+ * 
+ * @Description: 异步执行组合生成班次，用于页面中的组合排班
+ * @author laizhendong
+ * @date 2017年11月30日 下午9:34:51
+ */
+public interface IIaSyncBiz {
+	/**
+	 * 
+	 * @Description: 智能排班
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月7日 下午3:24:52
+	 */
+	public void smartSchedule(FreigtCombineVo freigtCombineVo);
+}

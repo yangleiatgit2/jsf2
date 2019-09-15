@@ -1,0 +1,78 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.exception.ComModuleException;
+import cn.uce.suc.common.vo.MobileuserVo;
+
+/**
+ * 
+ * @Description: 组织机构单元测试
+ * @author liwei
+ * @date 2017年10月19日 下午11:34:06
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class MobileuserBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * vo
+	 */
+	private MobileuserVo mobileuserVo;
+	/**
+	 * biz
+	 */
+	@Resource
+	private IMobileuserBiz mobileuserBiz;
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年12月1日 下午3:59:43
+	 */
+	@Before
+	public void befor() {
+		mobileuserVo = new MobileuserVo();
+		//mobileuserVo.setBaseOrgCode("UC000006");
+		mobileuserVo.setUserType(SucConstants.CAPTCH_PLATFROM_DOT);
+		mobileuserVo.setCertifiFlag(false);
+		mobileuserVo.setMobilephone("18727272627");
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年12月1日 下午3:59:39
+	 */
+	@Test
+	public void testpro() {
+		Long id = mobileuserBiz.addMobileuser(mobileuserVo);
+		mobileuserVo.setId(id);
+		mobileuserBiz.updateMobileuser(mobileuserVo);
+		mobileuserBiz.findById(1L);
+		mobileuserBiz.deleteMobileuser(id);
+		Page page = new Page();
+		mobileuserBiz.findByPagination(mobileuserVo, page);
+		mobileuserBiz.findCountByMobilephone("18729255646");
+		LoginEntity loginEntity = new LoginEntity();
+		loginEntity.setMobilePhone("18729255466");
+		loginEntity.setType("dot");
+		loginEntity.setPassword("12345");
+		/*
+		 * mobileuserBiz.login(loginEntity); mobileuserBiz.logout(loginEntity);
+		 */
+	}
+}

@@ -1,0 +1,377 @@
+package cn.uce.suc.common.vo;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 消息模板Vo类
+ * @author liwei
+ * @date 2017年10月30日 下午10:17:24
+ */
+public class NoticeRuleVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 规则编码 
+	 */
+	private String ruleCode;
+    /** 
+	 * 消息类型 
+	 */
+	private String newsType;
+    /** 
+	 * 消息标题模板 
+	 */
+	private String title;
+    /** 
+	 * 消息内容模板 
+	 */
+	private String contents;
+    /** 
+	 * 触发条件 
+	 */
+	private String triggerCondition;
+    /** 
+	 * 业务场景 
+	 */
+	private String businessScenarios;
+    /** 
+	 * 触发类型 
+	 */
+	private String triggerType;
+    /** 
+	 * 发送通道 
+	 */
+	private String sendAisle;
+    /** 
+	 * 展示方式（首页任务栏+系统通知+消息展示） 
+	 */
+	private String displayWays;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	
+	/**
+	 * 指向平台
+	 */
+	private String platform;
+	/**
+	 * 指向平台
+	 */
+	public String getPlatform() {
+		return platform;
+	}
+	/**
+	 * 指向平台
+	 */
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 规则编码
+	 */
+	public String getRuleCode() {
+		return ruleCode;
+	}
+	
+	/**
+	 * 设置 规则编码
+	 */
+	public void setRuleCode(String ruleCode) {
+		this.ruleCode = ruleCode;
+	}
+
+	
+	/**
+	 * 获取 消息类型
+	 */
+	public String getNewsType() {
+		return newsType;
+	}
+	
+	/**
+	 * 设置 消息类型
+	 */
+	public void setNewsType(String newsType) {
+		this.newsType = newsType;
+	}
+
+	
+	/**
+	 * 获取 消息标题模板
+	 */
+	public String getTitle() {
+		return title;
+	}
+	
+	/**
+	 * 设置 消息标题模板
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	
+	/**
+	 * 获取 消息内容模板
+	 */
+	public String getContents() {
+		return contents;
+	}
+	
+	/**
+	 * 设置 消息内容模板
+	 */
+	public void setContents(String contents) {
+		this.contents = contents;
+	}
+
+	
+	/**
+	 * 获取 触发条件
+	 */
+	public String getTriggerCondition() {
+		return triggerCondition;
+	}
+	
+	/**
+	 * 设置 触发条件
+	 */
+	public void setTriggerCondition(String triggerCondition) {
+		this.triggerCondition = triggerCondition;
+	}
+
+	
+	/**
+	 * 获取 业务场景
+	 */
+	public String getBusinessScenarios() {
+		return businessScenarios;
+	}
+	
+	/**
+	 * 设置 业务场景
+	 */
+	public void setBusinessScenarios(String businessScenarios) {
+		this.businessScenarios = businessScenarios;
+	}
+
+	
+	/**
+	 * 获取 触发类型
+	 */
+	public String getTriggerType() {
+		return triggerType;
+	}
+	
+	/**
+	 * 设置 触发类型
+	 */
+	public void setTriggerType(String triggerType) {
+		this.triggerType = triggerType;
+	}
+
+	
+	/**
+	 * 获取 发送通道
+	 */
+	public String getSendAisle() {
+		return sendAisle;
+	}
+	
+	/**
+	 * 设置 发送通道
+	 */
+	public void setSendAisle(String sendAisle) {
+		this.sendAisle = sendAisle;
+	}
+
+	
+	/**
+	 * 获取 展示方式（首页任务栏+系统通知+消息展示）
+	 */
+	public String getDisplayWays() {
+		return displayWays;
+	}
+	
+	/**
+	 * 设置 展示方式（首页任务栏+系统通知+消息展示）
+	 */
+	public void setDisplayWays(String displayWays) {
+		this.displayWays = displayWays;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+}

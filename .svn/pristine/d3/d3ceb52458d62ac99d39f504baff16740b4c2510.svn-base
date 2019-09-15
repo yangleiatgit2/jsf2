@@ -1,0 +1,51 @@
+package cn.uce.suc.bkg.service.datastatis;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.datastatis.IDriverEvaluateReportDao;
+import cn.uce.suc.bkg.vo.datastatis.DriverEvaluateReportVo;
+
+/**
+ * 
+ * @Description: TODO 司机服务评价报表Service
+ * @author xiesonglin
+ * @date 2017年12月1日 下午12:16:50
+ */
+@Service("driverEvaluateReportService")
+public class DriverEvaluateReportService {
+	/**
+	 * dao注入
+	 */
+	@Resource
+	private IDriverEvaluateReportDao driverEvaluateReportDao;
+	
+	/**
+	 * 
+	 * @Description: TODO 
+	 * @param driverEvaluateReportVo
+	 * @param page
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月1日 下午12:16:41
+	 */
+	public Pagination<DriverEvaluateReportVo> findDriverEvaluateReportByPage(DriverEvaluateReportVo driverEvaluateReportVo,Page page){
+		return this.driverEvaluateReportDao.findDriverEvaluateReportByPage(driverEvaluateReportVo, page);
+	}
+	
+	/**
+	 * @Description: TODO 用于导出数据
+	 * @param driverEvaluateReportVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月4日 下午7:34:04
+	 */
+	public List<DriverEvaluateReportVo> findByExport(DriverEvaluateReportVo driverEvaluateReportVo){
+		return this.driverEvaluateReportDao.findByExport(driverEvaluateReportVo);
+	}
+}

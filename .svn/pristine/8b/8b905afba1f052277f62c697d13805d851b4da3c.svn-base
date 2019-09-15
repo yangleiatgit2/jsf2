@@ -1,0 +1,52 @@
+package cn.uce.suc.app.biz.impl;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.biz.ILogininfoBiz;
+import cn.uce.suc.app.entity.Logininfo;
+import cn.uce.suc.app.vo.LogininfoVo;
+import cn.uce.suc.app.service.LogininfoService;
+
+/**
+ * @Description: BIZ实现类
+ * @author liwei
+ * @date 2017年10月11日 下午05:55:14
+ */
+@Service("logininfoBiz")
+public class LogininfoBiz implements ILogininfoBiz {
+	
+	/**
+	 * 注入Service
+	 */
+	@Resource
+	private LogininfoService logininfoService;
+	
+	/**
+	 * @Description: 新增
+	 * @param logininfo
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月11日 下午05:55:14
+	 */
+	public int addLogininfo(Logininfo logininfo) {
+		return logininfoService.addLogininfo(logininfo);
+	}
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: updateById</p> 
+	* <p>Description: </p> 
+	* @param mobilephone
+	* @return 
+	* @see cn.uce.suc.app.biz.ILogininfoBiz#updateById(java.lang.String)
+	 */
+	@Override
+	public int updateById(String mobilephone) {
+		return logininfoService.updateById(mobilephone);
+	}
+
+
+}

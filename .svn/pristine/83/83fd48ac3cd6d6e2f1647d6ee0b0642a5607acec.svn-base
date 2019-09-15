@@ -1,0 +1,39 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.suc.common.service.PhoneFormatCheckService;
+
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author 李威
+ * @date 2017年11月6日 下午2:46:31
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class PhoneFormatCheckServiceTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 注入
+	 */
+	@Resource
+	private PhoneFormatCheckService phoneFormatCheckService;
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @author liwei
+	 * @date 2017年12月11日 下午2:48:04
+	 */
+	@Test
+	public void test(){
+		phoneFormatCheckService.isChinaPhoneLegal("18729255646");
+	}
+}

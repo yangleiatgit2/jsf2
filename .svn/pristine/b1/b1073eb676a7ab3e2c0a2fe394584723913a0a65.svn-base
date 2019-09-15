@@ -1,0 +1,200 @@
+package cn.uce.suc.common.ids;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.apache.shiro.util.Assert;
+import org.springframework.stereotype.Service;
+
+import redis.clients.jedis.Jedis;
+import cn.uce.core.cache.redis.RedisClient;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.ids.IdsConstants.NamesPrefix;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月3日 下午9:20:08
+ */
+@Service("redisIdsWorker")
+public class RedisIdsWorker implements IIdsWorker {
+	//缓存
+	@Resource
+	private RedisClient uceClient; 
+	/**
+	 * redis名标识前缀
+	 */
+	private static final String SUC_PREFIX = "suc_id_";
+	
+	
+	/**
+	 * 
+	 * @Description: 获取下一个流水号
+	 * @param prefix 枚举型前缀 如长期需求 CQ
+	 * @param format 格式 如：yyMMdd
+	 * @param length 流水号长度 如： 00001
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月25日 上午9:52:47
+	 */
+	@Override
+	public String nextId(IdsPrefix prefix, String format, int length) {
+		Assert.isTrue(null != prefix);
+		Jedis jedis = null;
+		String date = "";
+		//根据时间格式放设置
+		if (IdsConstants.YY_MM_DD.equals(format)) {
+			SimpleDateFormat sdf = new SimpleDateFormat(IdsConstants.YY_MM_DD); 
+			date = sdf.format(new Date());
+		}else{
+			throw new IllegalArgumentException("Illegal parameters");
+		}
+		String key = date + "_" + length;
+		String sequence = SUC_PREFIX + prefix.toString();
+		StringBuffer sb = new StringBuffer();
+		try {
+			//获取redis连接
+			jedis = uceClient.getResource();
+			String nextId = jedis.hget(sequence, key);
+			String stringFormat = "%0" + length +"d";
+			//没有则初始化为0
+			if(null == nextId){
+				jedis.hset(sequence, key, "0");
+				return sb.append(prefix.toString())
+						 .append(date).append(String.format(stringFormat,0)).toString();
+			} else {
+			//存在则流水号自增
+				return sb.append(prefix.toString())
+						 .append(date)
+						 .append(String.format(stringFormat,jedis.hincrBy(sequence, key, 1l))).toString();
+			}
+		} finally {
+			//释放redis连接
+			uceClient.returnResource(jedis);
+		}
+	}
+
+	
+	/**
+	 * 
+	 * @Description: 获取下一个流水号
+	 * @param prefix 枚举型前缀 如长期需求 CQ
+	 * @param operatorCode 分拨中心编码 如上海 SH
+	 * @param format 格式 如：yyMMdd
+	 * @param length 流水号长度 如： 00001
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月10日 上午9:52:47
+	 */
+	@Override
+	public String nextId(IdsPrefix prefix,String operatorCode, String format, int length) {
+		// XSSH201710090001
+		   //FC 20171107 00026
+		Assert.isTrue(null != prefix);
+		Jedis jedis = null;
+		String date = "";
+		//根据时间格式放设置
+		if (IdsConstants.YYYY_MM_DD.equals(format)) {
+			SimpleDateFormat sdf = new SimpleDateFormat(IdsConstants.YYYY_MM_DD); 
+			date = sdf.format(new Date());
+		}else{
+			throw new IllegalArgumentException("Illegal parameters");
+		}
+		String key =operatorCode+"_"+ date + "_" + length;
+		String sequence = SUC_PREFIX + prefix.toString();
+		StringBuffer sb = new StringBuffer();
+		try {
+			//获取redis连接
+			jedis = uceClient.getResource();
+			String nextId = jedis.hget(sequence, key);
+			String stringFormat = "%0" + length +"d";
+			//没有则初始化为0
+			if(null == nextId){
+				jedis.hset(sequence, key, "0");
+				return sb.append(prefix.toString())
+						 .append(operatorCode)
+						 .append(date).append(String.format(stringFormat,0)).toString();
+			} else {
+			//存在则流水号自增
+				return sb.append(prefix.toString())
+						 .append(operatorCode)
+						 .append(date)
+						 .append(String.format(stringFormat,jedis.hincrBy(sequence, key, 1l))).toString();
+			}
+		} finally {
+			//释放redis连接
+			uceClient.returnResource(jedis);
+		}
+	}
+	/**
+	  * 
+	  * @Description: 根据前缀获取下一个流水号，默认是格式是yyyyMMdd,长度是5位
+	  * @param prefix
+	  * @return
+	  * @author laizhendong
+	  * @date 2017年10月25日 上午9:54:19
+	  */
+	@Override
+	public String nextId(IdsPrefix prefix) {
+		return nextId(prefix,IdsConstants.YY_MM_DD,5);
+	}
+	/**
+	 命名规则生产
+	* <p>Title: nextName</p> 
+	* <p>Description: </p> 
+	* @param name
+	* @param prefix
+	* @return 
+	* @see cn.uce.suc.common.ids.IIdsWorker#nextName(java.lang.String, cn.uce.suc.common.ids.IdsConstants.IdsPrefix)
+	 */
+	@Override
+	public String nextName(String name, NamesPrefix prefix){
+		return nextName(name, prefix, IdsConstants.MM, 3);
+	}
+	/**
+	 命名规则生产
+	* <p>Title: nextName</p> 
+	* <p>Description: </p> 
+	* @param name
+	* @param prefix
+	* @return 
+	* @see cn.uce.suc.common.ids.IIdsWorker#nextName(java.lang.String, cn.uce.suc.common.ids.IdsConstants.IdsPrefix)
+	 */
+	public String nextName(String name, NamesPrefix prefix, String format, int length){
+		Assert.isTrue(null != prefix);
+		Jedis jedis = null;
+		String date = "";
+		//根据时间格式放设置
+		if (IdsConstants.MM.equals(format)) {
+			SimpleDateFormat sdf = new SimpleDateFormat("MM"); 
+			date = sdf.format(new Date());
+		}else{
+			throw new IllegalArgumentException("Illegal parameters");
+		}
+		String key = date + "_" + length;
+		String sequence = SUC_PREFIX + prefix.toString();
+		StringBuffer sb = new StringBuffer();
+		try {
+			//获取redis连接
+			jedis = uceClient.getResource();
+			String nextId = jedis.hget(sequence, key);
+			String stringFormat = "%0" + length +"d";
+			//没有则初始化为0
+			if(null == nextId){
+				jedis.hset(sequence, key, "0");
+				return sb.append(name)
+						 .append(date).append(String.format(stringFormat,0)).toString();
+			} else {
+			//存在则流水号自增
+				return sb.append(name)
+						 .append(date)
+						 .append(String.format(stringFormat,jedis.hincrBy(sequence, key, 1l))).toString();
+			}
+		} finally {
+			//释放redis连接
+			uceClient.returnResource(jedis);
+		}
+	}
+}

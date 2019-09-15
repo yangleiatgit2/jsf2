@@ -1,0 +1,171 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.util.Random;
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.datamain.CapacityManagement;
+import cn.uce.suc.bkg.vo.datamain.CapacityManagementVo;
+import cn.uce.suc.common.constants.BkgConstants;
+
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class CapacityManagementBizTest {
+
+	
+	@Resource
+	private CapacityManagementBiz capacityManagementBiz;
+	
+	String str;
+	
+	@Before
+	public void add(){
+		CapacityManagement capacityManagement = new CapacityManagement();
+		/**
+		 * 随机生成一个网点运力编号
+		 */
+		str=capacityManagementBiz.getCapacityCode();
+		/**
+		 * 设置运力编号
+		 */
+		capacityManagement.setCapacityCode(str);
+		/**
+		 * 设置车牌号
+		 */
+		Random rad=new Random();
+		String strbuilder="沪A";
+		for(int c=0;c<=4;c++){
+			strbuilder+=Math.abs(rad.nextInt(5)+1);
+		}
+		System.out.println(strbuilder);
+		
+		capacityManagement.setCarPlateNumber(strbuilder);
+		/**
+		 * 设置车辆所属网点编码
+		 */
+		capacityManagement.setBelongSiteCode("UC000033");
+		/**
+		 * 设置车辆所属网点名称
+		 */
+		capacityManagement.setBelongSiteName("烟台分拨中心");//所属站点的名字
+		/**
+		 * 设置车辆所属类型  (1:自有运力，2：网点运力，3：三方运力)
+		 */
+		capacityManagement.setCarBelong("1");
+		/**
+		 * 设置车辆类型
+		 */
+		capacityManagement.setCarType("01");
+		/**
+		 * 设置车辆长度
+		 */
+		capacityManagement.setLength(4.20);//长
+		/**
+		 * 设置车辆宽度
+		 */
+		capacityManagement.setWidth(2.1);//宽
+		/**
+		 * 设置车辆高度
+		 */
+		capacityManagement.setHight(2.5);//高
+		/**
+		 * 设置车辆最大载重
+		 */
+		capacityManagement.setLargestLoad(50.3);
+		/**
+		 * 设置司机姓名
+		 */
+		capacityManagement.setDriverName("张三");
+		/**
+		 * 设置司机手机号
+		 */
+		capacityManagement.setDriverPhone("13755296969");//司机手机号
+		/**
+		 * 设置采购价格
+		 */
+		capacityManagement.setPurchasePrice(565656.00);//采购价格
+		/**
+		 * 设置是否含有通行证
+		 */
+		capacityManagement.setPassFlag(true);
+		/**
+		 * 设置运力采购状态
+		 */
+		capacityManagement.setBuyStatus("01");//未报价
+		int val=capacityManagementBiz.addCapacityManagement(capacityManagement);
+		if(val>0){
+			System.out.println("新增数据"+val+"成功");
+		}
+//		capacityManagementBiz.appAddCapacityManagement(capacityManagement);
+//		capacityManagementBiz.appUpdateById(capacityManagement);
+	}
+	@Test
+	public void todo(){
+		CapacityManagementVo capacityManagementVo = new CapacityManagementVo();
+		capacityManagementVo.setCapacityCode(str);
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		Pagination<CapacityManagement> pagination=capacityManagementBiz.findByPagination(capacityManagementVo, page);
+		if(pagination.getData().size()==1){
+			CapacityManagement capacityManagement=pagination.getData().get(0);
+			capacityManagement.setCarPlateNumber("沪A00000");
+			int val = capacityManagementBiz.updateCapacityManagement(capacityManagement);
+			if(val>0){
+				System.out.println("修改成功");
+			}else{
+				System.out.println("修改失败");
+			}
+			CapacityManagement rcapacityManagement=capacityManagementBiz.findById(pagination.getData().get(0).getId());
+			//pc端发送报价
+			val=capacityManagementBiz.updateByIdsAndBuyStatus(rcapacityManagement.getId().toString(), BkgConstants.CAPACITY_STATUS_OFFER);
+			if(val>0){
+				System.out.println("pc端发送报价OK");
+			}else{
+				System.out.println("pc端发送报价失败");
+			}
+			//PC端确认报价
+			val=capacityManagementBiz.updateConfirmByIds(rcapacityManagement.getId().toString(),BkgConstants.CAPACITY_STATUS_PLATFORM_CONFIRM);
+			if(val>0){
+				System.out.println("PC端确认报价OK");
+			}else{
+				System.out.println("PC端确认报价失败");
+			}
+		}else{
+			System.out.println("你获取的运力有误");
+		}
+		
+	}
+	@After
+	public void end(){
+		/**
+		 * 扫描所有过期的运力，修改状态
+		 */
+		int num=capacityManagementBiz.updateTimeOver();
+		System.out.println("又有"+num+"条运力过期");
+		CapacityManagementVo capacityManagementVo = new CapacityManagementVo();
+		capacityManagementVo.setCapacityCode(str);
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		Pagination<CapacityManagement> pagination=capacityManagementBiz.findByPagination(capacityManagementVo, page);
+		if(pagination.getData().size()==1){
+			
+			int val=capacityManagementBiz.deleteCapacityManagement(pagination.getData().get(0).getId());
+			if(val==1){
+				System.out.println("删除成功");
+			}
+		}
+	}
+}

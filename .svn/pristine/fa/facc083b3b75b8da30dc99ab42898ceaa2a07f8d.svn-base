@@ -1,0 +1,512 @@
+package cn.uce.suc.common.constants;
+
+/**
+ * 
+ * @Description: 承运商平台常量
+ * @author liwei
+ * @date 2017年10月19日 下午10:10:07
+ */
+public interface BkgConstants {
+	/** ====================组织机构类型begin==================== */
+	/** 机构类型：总部 */
+	int ORG_TYPE_HQ = 10;
+	/** 机构类型：财务中心 */
+	int ORG_TYPE_FINANCE_CENTER = 20;
+	/** 机构类型：操作中心 */
+	int ORG_TYPE_OPERATE_CENTER = 21;
+	/** 机构类型：网点 */
+	int ORG_TYPE_SITE = 30;
+	/** 机构类型：承包区 */
+	int ORG_TYPE_CONTRACT = 40;
+	/** 机构类型：大区 */
+	int ORG_TYPE_LARGE_AREA = 3001;
+	/** 机构类型：省区区= */
+	int ORG_TYPE_PROVI_AREA = 4001;
+	/** ====================组织机构类型end==================== */
+	/** ====================组织机构状态begin================== */
+	/** 已启用 */
+	int ENABLED = 9901;
+	/** 暂停 */
+	int PAUSE = 9902;
+	/** 已停用 */
+	int NOT_ENABLED = 9903;
+	/** ====================组织机构状态end=================== */
+
+	/** 默认版本号 */
+	int DEFALUT_VERSION = 1;
+	
+	/**APP端 模块*/
+	/**我的运力详情*/
+	String APP_CAPACITY_DETAIL="mine_power_details";
+	/**我的运输需求详情 */
+	String APP_FREIGHT_DEMAND_DETAIL="mine_trans_details";
+	/**运输动态详情*/
+	String APP_DRIVING_PLAN_DETAIL="mine_trans_dynamic_details";
+	/**我的运输需求列表*/
+	String APP_FREIGHT_DEMAND="mine_trans_requests";
+	/**我的运输-订单列表 */
+	String APP_FREIGHT_ORDER="mine_trans_orders";
+	/**司机端-任务页面*/
+	String APP_DRIVER_TASK ="driver_task";
+	
+	
+
+	/** ====================来源start====== */
+	/** 需求 */
+	String COMBINE_SOURCE_TYPE_DEMAND = "1";
+	/** 订单 */
+	String COMBINE_SOURCE_TYPE_ORDER = "2";
+	/** ====================来源end====== */
+
+	/** =========业务模式start============= */
+	/** * 进港 */
+	String BUSINESS_MODE_IN = "1";
+	/*** 出港 */
+	String BUSINESS_MODE_OUT = "2";
+	/** =========业务模式end============= */
+	/** =========订单&需求常量==begin========= **/
+	/** 需求类型-长期 */
+	String DEMAND_TYPE_LONG = "1";
+	/** 需求类型-短期 */
+	String DEMAND_TYPE_TEMP = "2";
+	
+	/**需求状态-已提报*/
+	String DEMAND_STATUS_SUBMIT = "1";
+	/**需求状态-可报价*/
+	String DEMAND_STATUS_QUOTE_NO =  "2";
+	/**需求状态-已报价*/
+	String DEMAND_STATUS_QUOTE_YES  = "3";
+	/**需求状态-网点已确定*/
+	String DEMAND_STATUS_SITE_COMFIRM = "4";
+	/**需求状态-已核准*/
+	String DEMAND_STATUS_CHECKED = "5";
+	/**需求状态-已锁定*/
+	String DEMAND_STATUS_LOCKED = "6";
+	/**需求状态-已终止*/
+	String DEMAND_STATUS_END= "7";
+	/**需求状态-网点已取消*/
+	String DEMAND_STATUS_SITE_CANCALE= "8";
+	
+	
+	/** 需求组合类型-长期 */
+	String DEMAND_COMBINE_TYPE_LONG = "1";
+	/** 需求组合类型-短期 */
+	String DEMAND_COMBINE_TYPE_TEMP = "2";
+	
+	/** 需求组合状态-已生成 */
+	String DEMAND_COMBINE_STATUS_CREATE= "1";
+	/** 需求组合状态-已排班 */
+	String DEMAND_COMBINE_STATUS_SHIFT_YES = "2";
+	/** 需求组合状态-未报价 */
+	String DEMAND_COMBINE_STATUS_QUOT_NO = "3";
+	/** 需求组合状态-已报价 */
+	String DEMAND_COMBINE_STATUS_QUOT_YES = "4";
+	/** 需求组合状态-已终止 */
+	String DEMAND_COMBINE_STATUS_END = "5";
+	
+	/** 订单组合类型-长期 */
+	String ORDER_COMBINE_TYPE_LONG = "1";
+	/** 组合类型-短期 */
+	String ORDER_COMBINE_TYPE_TEMP = "2";
+	
+	/** 订单组合状态-已生成 */
+	String ORDER_COMBINE_STATUS_CREATE = "00";
+	/** 订单组合状态-已排班 */
+	String ORDER_COMBINE_STATUS_SHIFT_YES = "01";
+	
+	/** 订单组合状态-可报价 */
+	String ORDER_COMBINE_STATUS_QUOT_NO = "03";
+	/** 订单组合状态-已报价 */
+	String ORDER_COMBINE_STATUS_QUOT_YES = "04";
+	/** 订单组合状态-已终止 */
+	String ORDER_COMBINE_STATUS_END = "02";
+	/** 订单状态-已生成 */
+	String ORDER_STATUS_PERFORM = "00";
+	/** 订单状态-终止 */
+	String ORDER_STATUS_TERING = "01";
+	/**订单状态-可报价*/
+	String ORDER_STATUS_QUOT_NO= "02";
+	/**订单状态 - 已报价**/
+	String ORDER_STATUS_QUOT_YES= "03";
+	/**系统创建人*/
+	String SYSTEM_CREATE_ORG = "系统";
+	/** =========订单&需求常量==end========= **/
+	
+	/**消息类型 begin */
+	/**消息类型-公告*/
+	String NEWS_TYPE_NOTICE ="00";
+	/**消息类型-重要消息*/
+	String NEWS_TYPE_IMPORTANT ="01";
+	/**消息类型-待办事项*/
+	String NEWS_TYPE_TODO="02";
+	/**消息类型-普通消息*/
+	String NEWS_TYPE_COMMON ="03";
+	/**消息类型 end */
+	
+	/**展示方式 begin*/
+	/**展示方式-首页*/
+	String DISPLAY_WAYS_HOME ="01";
+	/**展示方式-系统公告*/
+	String DISPLAY_WAYS_NOTICE ="02";
+	/**展示方式-消息展示*/
+	String DISPLAY_WAYS_NEWS ="03";
+	/**展示方式 end*/
+	
+	/**消息 展示平台 begin------------*/
+	/**展示平台*/
+	String NEWS_PLATFORM_PERSON="01";
+	/**展示平台-调度台------------*/
+	String NEWS_PLATFORM_SCHEDULE="04";
+	/**展示平台-司机------------*/
+	String NEWS_PLATFORM_DRIVER="02";
+	/**展示平台-网点------------*/
+	String NEWS_PLATFORM_SITE="03";
+	/**消息 展示平台 end------------*/
+
+	/** =========定价规则分类常量 begin========= **/
+	/**已生成*/
+	String PRICING_RULE_STATUS_GENERATE = "01";
+	/**正式版本*/
+	String PRICING_RULE_STATUS_OFFICIAL = "02";
+	
+	/**规则自动升级*/
+	int UPGRADE_TYPE_RULE = 1;
+	/**规则类型升级*/
+	int UPGRADE_TYPE_RULE_TYPE = 2;
+	/**车型升级*/
+	int UPGRADE_TYPE_CAR = 3;
+	/** ==========定价规则分类常量end========= **/
+	
+	/** ==========智能排班常量start========= **/
+	/**智能排班创建*/
+	String ZN_CREATE_EMP = "智能排班";
+	/**智能排班创建*/
+	String ZN_CREATE_ORG = "智能排班";
+	
+	/**智能排班状态成功*/
+	String MONITOR_STATUS_SUCCESS = "10";
+	/**智能排班状态失败*/
+	String MONITOR_STATUS_FAIL = "20";
+	/**智能排班状态运行中*/
+	String MONITOR_STATUS_RUNNING = "30";
+	
+	/**基于规则调用*/
+	int ALGORITHM_TYPE_RULE = 1;
+	/**基于模型调用*/
+	int ALGORITHM_TYPE_MODEL = 2;
+	/**算法参数缓存常量*/
+	/**车型 中心_业务模式连接线*/
+	String UNDER_LINE = "_";
+	
+	/** ==========智能排班常量end========= **/
+	/**================发车计划号的状态Start============*/
+	/**已生成*/
+	String PLAN_CODE_GENERATED = "01"; 
+	/**司机已确认*/
+	String PLAN_CODE_CONFIRM = "02"; 
+	 /**司机未确认*/
+	String PLAN_CODE_UNCONFIRMED = "03"; 
+	/**执行中*/
+	String PLAN_CODE_EXECUTING = "04";  
+	/**已执行*/
+	String PLAN_CODE_EXECUTE = "05";  
+	 /**已终止*/
+	String PLAN_CODE_FINISH="06";  
+	/**================发车计划号的状态End============*/
+
+	/**=========发车计划详情的司机状态Start===============*/
+	/**待确认=*/
+	String DRIVER_STATUS_CONFIRM_WAIT= "01"; 
+	/**待执行=*/
+	String DRIVER_STATUS_EXECUTE_WAIT= "02";  
+	/**待装货=*/
+	String DRIVER_STATUS_LOAD_WAIT= "03";  
+	/**装货超时？*/
+	String DRIVER_STATUS_LOAD_TIMEOVER= "04"; 
+	/**装货确认=*/
+	String DRIVER_STATUS_LOAD_CONFIRM= "05"; 
+	/**装货完成=*/ 
+	String DRIVER_STATUS_LOADING_FINISH= "06";      // 取消
+	/**下一站？*/
+	String DRIVER_STATUS_NEXT_STATION= "07";  
+	/**待卸货=*/
+	String DRIVER_STATUS_CARGO_PENDING= "08";
+	/**卸货超时？*/
+	String DRIVER_STATUS_PENDING_TIMEOVER= "09";
+	 /**卸货确认=*/
+	String DRIVER_STATUS_PENDING_CONFIRM= "10"; 
+	/**卸货完成=*/
+	String DRIVER_STATUS_UNLOADING_COMPLETED = "11";    //取消
+	/**本站点已完成=*/
+	String DRIVER_STATUS_COMPLETED= "12"; 
+	/**异常上报=*/
+	String DRIVER_STATUS_SEND_ERROR= "13";  
+	/**运输异常=*/
+	String DRIVER_STATUS_TRANSPORT_ERROR= "14";  
+	/**已终止？*/
+	String DRIVER_STATUS_END= "15";  
+	
+	 /** ===========发车计划详情的司机状态End=========*/
+		
+	/**=========发车计划详情的网点状态Start===============*/
+	/**待执行*/
+	String SITE_STATUS_EXECUTORY ="01";
+	/**待装货*/
+	String SITE_STATUS_FOR_LOAD ="02";
+	/**装货确认*/
+	String SITE_STATUS_CONFIRM_LOAD ="03";
+	/**装货完成*/
+	String SITE_STATUS_LOAD  = "04";	
+	/**下一站*/
+	String SITE_STATUS_NEXT_STATION ="05";
+	/**待卸货*/
+	String SITE_STATUS_FOR_UNLOAD  = "06";	
+	/**卸货确认*/
+	String SITE_STATUS_CONFIRM_UNLOAD ="07";
+	/**卸货完成*/
+	String SITE_STATUS_UNLOAD ="08";
+	/**运输异常*/
+	String SITE_STATUS_TRANS_EXCEPTION = "09";
+	/**已终止*/
+	String SITE_STATUS_END= "10";  
+	/**
+	 * 网点端发送消息的规则
+	 *进港时 最后一个网点 卸货完成时 
+	 **/
+	/**非末端网点向自己发送 卸货消息 的规则*/
+	String RULE_CODE_SITE_TO_SITE_UNLOAD= "SITE_TO_SITE_UNLOAD";
+	/**非末端网点向自己发送 装货消息 的规则*/
+	String RULE_CODE_SITE_TO_SITE_LOAD= "SITE_TO_SITE_LOAD";
+	/**非末端网点向司机端发送 卸货消息 的规则*/
+	String RULE_CODE_SITE_TO_DRIVER_UNLOAD= "SITE_TO_DRIVER_UNLOAD";
+	/**非末端网点向司机端发送 装货消息 的规则*/
+	String RULE_CODE_SITE_TO_DRIVER_LOAD= "SITE_TO_DRIVER_LOAD";
+	/**末端网点向司机端发送 卸货消息 的规则*/
+	String RULE_CODE_END_SITE_TO_DRIVER_UNLOAD= "END_SITE_TO_DRIVER_UNLOAD";
+	/**末端网点向调度台发送 卸货消息 的规则*/
+	String RULE_CODE_END_SITE_TO_DISPATCH_UNLOAD= "END_SITE_TO_DISPATCH_UNLOAD";
+	
+	/**网点端提交新的运力后 向平台发送的 消息规则*/
+	String RULE_CODE_SUBMIT_CAPACITY_TO_DISPATCH="SITE_SUBMIT_CAPACITY";
+	/**网点端取消运力上报 向平台发送的 消息规则*/
+	String RULE_CODE_CANCEL_CAPACITY_TO_DISPATCH="SITE_CANCEL_CAPACITY";
+	/**网点端网点确认报价 的 消息规则*/
+	String RULE_CODE_CONFIRM_CAPACITY_TO_DISPATCH="SITE_CONFIRM_CAPACITY";
+	/**网点端提交货量后 向平台发送消息 的 消息规则*/
+	String RULE_CODE_SUBMIT_FREIGHT_TO_DISPATCH="SITE_SUBMIT_FREIGHT";
+	/**网点端取消运力上报 向平台发送的 消息规则*/
+	String RULE_CODE_CANCEL_FREIGHT_TO_DISPATCH="SITE_CANCEL_FREIGHT";
+	/**网点端网点确认报价 的 消息规则*/
+	String RULE_CODE_CONFIRM_FREIGHT_TO_DISPATCH="SITE_CONFIRM_FREIGHT";
+	
+	/** * 平台端 向 网点发送消息 begin */
+	/**平台向网点发送货运需求报价的 消息规则*/
+	String RULE_CODE_SEND_FREIGHT_QUOTE_TO_SITE="FREIGHT_QUOTE_TO_SITE";
+	/**平台向网点发送运力报价
+	String RULE_CODE_SEND_CAPACITY_QUOTE_TO_SITE="CAPACITY_QUOTE_TO_SITE";
+	 */
+	/** * 平台端 向 网点发送消息 end */
+	
+	/**=========发车计划详情的网点状态end===============*/
+	/**===========消息模板的规则开始================*/
+	/**发车计划确认给网点的消息模板规则*/
+	String NEWS_PLATFORM_PLAN_CONFIRM = "PLATFORM_PLAN_CONFIRM";
+	/**发车计划确认给平台发送的消息的模板*/
+	String NEWS_PC_PLAN_CONFIRM = "PC_PLAN_CONFIRM";
+	/**===========消息模板的规则结束================*/
+	
+	/**=========班次常量start===============*/
+	/** 已生成*/
+	String LINE_GROUP_STATUS_CREATE = "00";
+	/** 已定价*/
+	String LINE_GROUP_STATUS_QUOT_YES = "01";
+	/** 已生成发车计划*/
+	String LINE_GROUP_STATUS_PLAN_CREATE = "02";
+	/** 已终止*/
+	String LINE_GROUP_STATUS_PLAN_STOP = "03";
+	/**=========班次常量end===============*/
+	/**=========班次类型begin======***/
+	/**班次类型--手动*/
+	String LINE_GROUP_TYPE_OPER="00";
+	/**班次类型--自动*/
+	String LINE_GROUP_TYPE_AUTO="01";
+	/**=========班次类型end======***/
+	
+	/**运力状态 begin*/
+	/**未报价*/
+	String CAPACITY_STATUS_CREATE="01";
+	/**已报价*/
+	String CAPACITY_STATUS_OFFER="02";
+	/**网点已确认*/
+	String CAPACITY_STATUS_DOT_CONFIRM="03";
+	/**平台已确认*/
+	String CAPACITY_STATUS_PLATFORM_CONFIRM="04";
+	/**已过期*/
+	String CAPACITY_STATUS_TIME_OVER="05";
+	/**已终止*/
+	String CAPACITY_STATUS_END="06";
+	/**已取消*/
+	String CAPACITY_STATUS_CANCEL="07";   //不要
+	
+	/**运力状态 end*/
+	
+	/**运力 车辆所属类型*/
+	/**运力 车辆所属类型 网点运力*/
+	String CAR_BELONG_TYPE_SITE ="2";
+
+	/****************承运商的状态Start******************/
+	/**停用 */
+	String CARRIER_STOP="0";
+	/**启用*/
+	String CARRIER_START="1";
+	/****************承运商的状态End******************/
+
+	/**发车计划轨迹状态--start*/
+	/**发车轨迹--到达*/
+	Integer DIRVING_PLAN_TRACE_IN=1;
+	/**发车轨迹--离开*/
+	Integer DIRVING_PLAN_TRACE_OUT=2;
+	/**发车计划轨迹状态--end*/
+
+	/**已生成*/
+	String TRUCK_GENERATED="1";
+	/**正式版本*/
+	String TRUCK_START="2";
+
+
+	/**运力 车型 type_id */
+	String CAR_TYPE_ID_FOUR_DOT_TWO="1";
+	String CAR_TYPE_ID_SIX_DOT_EIGHT="2";
+	String CAR_TYPE_ID_SEVEN_DOT_SIX="3";
+	String CAR_TYPE_ID_NINE_DOT_SIX="4";
+	
+	/**运力 车型 type_code */
+	String CAR_TYPE_CODE_FOUR_DOT_TWO="01";
+	String CAR_TYPE_CODE_SIX_DOT_EIGHT="02";
+	String CAR_TYPE_CODE_SEVEN_DOT_SIX="03";
+	String CAR_TYPE_CODE_NINE_DOT_SIX="04";
+
+	/****************承运商的状态Start******************/
+	/**网点 */
+	String SITE_TYPE_SITE="01";
+	/**分拨*/
+	String SITE_TYPE_CENTER="02";
+	/**集货点*/
+	String SITE_TYPE_SUB="03";
+	/****************承运商的状态End******************/
+	/**进港分拨中心*/
+	String CENTER_MODE_IN="1";
+	/**出港分拨中心*/
+	String CENTER_MODE_OUT="2";
+	/**进港网点*/
+	String DOT_MODE_IN="3";
+	/**出港网点*/
+	String DOT_MODE_OUT="4";
+	
+	/****************异常状态begin******************/
+	/**待确认*/
+	String EXCEPTION_WAIT_CONFIRM="1";
+	/**已确认*/
+	String EXCEPTION_HAS_CONFIRM="2";
+	/**已终止*/
+	String EXCEPTION_HAS_END="3";
+	/**其他*/
+	String EXCEPTION_STATUS_OTHER="4";
+	/****************异常状态end******************/
+	/**************承运商类型***************/
+	/**
+	 * 承运商
+	 */
+	String CARRIER_GROUP="01";
+	/**
+	 * 个人
+	 */
+	String CARRIER_PERSION="02"; 
+	/************是否含有通行证*****************/
+	/**
+	 * 有通行证
+	 */
+	String  PASS_TRUE = "1";
+	/**
+	 * 没有通行证
+	 */
+	String  PASS_FALSE = "0";
+	/****************公告发布的状态开始*******************/
+	/**
+	 * 草稿
+	  */
+	String  NOTICE_STATUS_DRAFT="0";
+	/**
+	 * 正式版本
+	 */
+	String  NOTICE_STATUS_FORMAL="1";
+	/**消息指向个人*/
+	String NOTICE_TOSEND_PERSION="01";
+	/**消息指向司机端*/
+	String NOTICE_TOSEND_DPT="02";
+	/**消息指向网点端*/
+	String NOTICE_TOSEND_DOT="03";
+	/**消息指向网点端*/
+	String NOTICE_TOSEND_PC="04";
+	/****************公告发布的状态结束*******************/
+	
+	/****************是否有异常标志begin*******************/
+	/**有异常*/
+	String IS_EXCEPTION_IS="00";
+	/**无异常*/
+	String IS_EXCEPTION_NO="01";
+	/****************是否有异常标志end*******************/
+	
+	/****************应用平台begin*******************/
+	/**司机端*/
+	String APP_STAGE_DIVER="1";
+	/**网点*/
+	String APP_STAGE_POINT="2";
+	/**平台端*/
+	String APP_STAGE_PLAT="3";
+	/****************应用平台end*******************/
+	
+	
+//   String IMAGE_NAME_MIDDLE = "_middle";
+//   String IMAGE_NAME_SMALL = "_small";
+//   Integer IMAGE_WIDTH_ORIGINAL = 800;
+//   Integer IMAGE_HEIGHT_ORIGINAL = 480;
+//   Integer IMAGE_WIDTH_MIDDLE = 400;
+//   Integer IMAGE_HEIGHT_MIDDLE = 240;
+//   Integer IMAGE_WIDTH_SMALL = 95;
+//   Integer IMAGE_HEIGHT_SMALL = 95;
+	
+	/******************发车计划轨迹的状态start******************************/
+	/**发车计划确认*/
+	String PATHWAY_CONFIRM="10";
+	/**发车计划执行中*/
+	String PATHWAY_DOING="20";
+	/**司机到达电子围栏*/
+	String PATHWAY_TODO_REACH="21";
+	/**司机装货确认*/
+	String PATHWAY_TODO_DPT_LOAD="22";
+	/**网点装货确认*/
+	String PATHWAY_TODO_DOT_LOAD="23";
+	/**司机离开电子围栏*/
+	String PATHWAY_TODO_LEAVE="24";
+	/**司机卸货确认*/
+	String PATHWAY_TODO_DPT_UNLOAD="25";
+	/**网点卸货确认*/
+	String PATHWAY_TODO_DOT_UNLOAD="26";
+	/**发车计划已执行*/
+	String PATHWAY_EXECUTED="30";
+	/**发车计划终止*/
+	String PATHWAY_FINISH="40";
+	/**异常*/
+	String PATHWAY_ERROR="50";
+	/******************发车计划轨迹的状态end******************************/
+	
+	/*********************初始密码*******************************/
+	/**默认初始密码**/
+	String MOBILE_USER_CREATE_PASSWORD="suc20171120";
+	/**强制修改密码**/
+	String FORCE_MODIFY_PASSWORD_TRUE_FIRST="01";
+	/**修改密码完成**/
+	String FORCE_MODIFY_PASSWORD_FALSE="02";
+	/*********************初始密码*******************************/
+}

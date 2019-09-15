@@ -1,0 +1,32 @@
+package cn.uce.suc.app.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.app.entity.SucDictData;
+import cn.uce.suc.app.vo.SucDictDataVo;
+
+/**
+ * @Description: 系统类型DAO接口类
+ * @author liwei
+ * @date 2017年10月26日 下午10:38:52
+ */
+@Repository("sucDictDataDao")
+public interface ISucDictDataDao extends IBaseDao<SucDictData, Long> {
+	
+	
+	/**
+	 * 
+	 * @Description: 根据typeClassCode查询数据字典
+	 * @param typeClassCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月26日 下午10:48:08
+	 */
+	public List<SucDictDataVo> findListByTypeClassCode(String typeClassCode);
+	
+}

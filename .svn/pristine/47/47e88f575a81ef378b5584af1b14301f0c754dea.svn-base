@@ -1,0 +1,133 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.ids.IdsConstants.NamesPrefix;
+
+/**
+ * 
+ * @Description: 组织机构单元测试
+ * @author liwei
+ * @date 2017年10月19日 下午11:34:06
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class IdWorkTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	
+	@Test
+	public void testNextId(){
+		//System.out.println(redisIdsWorker.nextId(IdsPrefix.CQ));
+		//System.out.println(redisIdsWorker.nextId(IdsPrefix.OR));
+		
+		for (int i = 0; i < 50; i++) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for (int j = 0; j < 50; j++) {
+						System.out.println(redisIdsWorker.nextId(IdsPrefix.CQ));
+					}
+				}
+			}).start();
+		}
+		for (int i = 0; i < 50; i++) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for (int j = 0; j < 50; j++) {
+						System.out.println(redisIdsWorker.nextId(IdsPrefix.CQ,IdsConstants.YY_MM_DD,4));
+					}
+				}
+			}).start();
+		}
+		try {
+			Thread.sleep(5000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void testNextId2(){
+		for (int i = 0; i < 50; i++) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for (int j = 0; j < 50; j++) {
+						System.out.println(redisIdsWorker.nextId(IdsPrefix.CQ,IdsConstants.YY_MM_DD,4));
+					}
+				}
+			}).start();
+		}
+		try {
+			Thread.sleep(5000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void testNameId(){
+		//System.out.println(redisIdsWorker.nextId(IdsPrefix.CQ));
+		//System.out.println(redisIdsWorker.nextId(IdsPrefix.OR));
+		
+		for (int i = 0; i < 50; i++) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for (int j = 0; j < 50; j++) {
+						System.out.println(redisIdsWorker.nextName("LWTEST", NamesPrefix.BCNA));
+					}
+				}
+			}).start();
+		}
+		for (int i = 0; i < 50; i++) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for (int j = 0; j < 50; j++) {
+						System.out.println(redisIdsWorker.nextName("LWTEST", NamesPrefix.CLNA, IdsConstants.MM, 3));
+					}
+				}
+			}).start();
+		}
+		try {
+			Thread.sleep(5000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void testNameId2(){
+		for (int i = 0; i < 50; i++) {
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					for (int j = 0; j < 50; j++) {
+						System.out.println(redisIdsWorker.nextName("LWTWST", NamesPrefix.CLNA, IdsConstants.MM, 4));
+					}
+				}
+			}).start();
+		}
+		try {
+			Thread.sleep(5000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+}

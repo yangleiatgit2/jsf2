@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:reg="http://www.dangdang.com/schema/ddframe/reg"
+    xmlns:job="http://www.dangdang.com/schema/ddframe/job"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.dangdang.com/schema/ddframe/reg
+        http://www.dangdang.com/schema/ddframe/reg/reg.xsd
+        http://www.dangdang.com/schema/ddframe/job
+        http://www.dangdang.com/schema/ddframe/job/job.xsd">
+   <reg:zookeeper id="regCenter" 
+     	server-lists="${elasticJob.zkConnect}" 
+     	namespace="uce-omg-sync"
+     	base-sleep-time-milliseconds="${elasticJob.zkBaseSleepTimeMilliseconds}" 
+     	max-sleep-time-milliseconds="${elasticJob.zkMaxSleepTimeMilliseconds}" 
+     	max-retries="${elasticJob.zkMaxRetries}" />
+    
+    <bean id="mqErrorRetryTaskExecutor"
+		class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean" scope="prototype">
+		<property name="corePoolSize" value="${elastic.executor.corePoolSize}"></property>
+		<property name="maxPoolSize" value="${elastic.executor.maxPoolSize}"></property>
+		<property name="queueCapacity" value="${elastic.executor.queueCapacity}"></property>
+	</bean>
+    
+    <bean id="baseMqErrorRetryJobConfig" class="cn.uce.mq.rocket.exp.job.MqErrorRetryJobConfig" abstract="true">
+		<!-- 最多发送次数，默认3次 -->
+		<property name="maxConsumeNum" value="${mq.error.retry.maxConsumeNum}"></property>
+		<!-- 每次查询记录条数：默认5000 -->
+		<property name="fetchSize" value="${mq.error.retry.fetchSize}"></property>
+		<!-- 失败时，下次处理间隔基数，默认：300s -->
+		<property name="whenFailConsumeInterval" value="${mq.error.retry.whenFailConsumeInterval}"></property>
+		<property name="taskExecutor" ref="mqErrorRetryTaskExecutor"></property>
+		<property name="subscribeMap" ref="subscribeMap"></property>
+		<property name="allocateStrategy">
+			<bean class="cn.uce.core.mq.api.producer.HashAllocateStrategy"/>
+		</property>
+	</bean>
+    <!-- ##########start##########  -->
+    <job:dataflow id="syncRetryEmpErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryEmpErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.emp.cron}" 
+    	sharding-total-count="${elastic.exp.job.emp.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.emp.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.emp.disabled}"/>
+	
+	<bean id="syncRetryEmpErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_EMP"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryAreaErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryAreaErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.Area.cron}" 
+    	sharding-total-count="${elastic.exp.job.Area.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.Area.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.Area.disabled}"/>
+	
+	<bean id="syncRetryAreaErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_AREA"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryCollectAreaErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryCollectAreaErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.collect.Area.cron}" 
+    	sharding-total-count="${elastic.exp.job.collect.Area.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.collect.Area.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.collect.Area.disabled}"/>
+	
+	<bean id="syncRetryCollectAreaErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_COLLECTAREA"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryDictErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryDictErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.dict.cron}" 
+    	sharding-total-count="${elastic.exp.job.dict.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.dict.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.dict.disabled}"/>
+	
+	<bean id="syncRetryDictErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_DICT"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryGpCustomerErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryGpCustomerErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.gp.customer.cron}" 
+    	sharding-total-count="${elastic.exp.job.gp.customer.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.gp.customer.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.gp.customer.disabled}"/>
+	
+	<bean id="syncRetryGpCustomerErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_GP_CUSTOMER"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryNosOrgErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryNosOrgErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.nos.org.cron}" 
+    	sharding-total-count="${elastic.exp.job.nos.org.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.nos.org.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.nos.org.disabled}"/>
+	
+	<bean id="syncRetryNosOmgErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_NOS_ORG"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryOrgErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryOrgErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.org.cron}" 
+    	sharding-total-count="${elastic.exp.job.org.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.org.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.org.disabled}"/>
+	
+	<bean id="syncRetryOmgErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_ORG"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryOrgRelationErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryOrgRelationErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.org.relation.cron}" 
+    	sharding-total-count="${elastic.exp.job.org.relation.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.org.relation.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.org.relation.disabled}"/>
+	
+	<bean id="syncRetryOrgRelationErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_ORGRELATION"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryOrgServiceAreaErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryOrgServiceAreaErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.org.service.area.cron}" 
+    	sharding-total-count="${elastic.exp.job.org.service.area.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.org.service.area.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.org.service.area.disabled}"/>
+	
+	<bean id="syncRetryOrgServiceAreaErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_ORGSERVICEAREA"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryOtherEmpRelationErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryOtherEmpRelationErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.other.emp.relation.cron}" 
+    	sharding-total-count="${elastic.exp.job.other.emp.relation.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.other.emp.relation.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.other.emp.relation.disabled}"/>
+	
+	<bean id="syncRetryOtherEmpRelationErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_OTHEREMPRELATION"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryOtherOrgRelationErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryOtherOrgRelationErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.other.org.relation.cron}" 
+    	sharding-total-count="${elastic.exp.job.other.org.relation.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.other.org.relation.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.other.org.relation.disabled}"/>
+	
+	<bean id="syncRetryOtherOrgRelationErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_OTHERORGRELATION"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryPartnerErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryPartnerErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.partner.cron}" 
+    	sharding-total-count="${elastic.exp.job.partner.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.partner.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.partner.disabled}"/>
+	
+	<bean id="syncRetryPartnerErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_PARTNER"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryProductErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryProductErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.product.cron}" 
+    	sharding-total-count="${elastic.exp.job.product.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.product.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.product.disabled}"/>
+	
+	<bean id="syncRetryProductErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_PRODUCT"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryRoleErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryRoleErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.role.cron}" 
+    	sharding-total-count="${elastic.exp.job.role.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.role.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.role.disabled}"/>
+	
+	<bean id="syncRetryRoleErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_ROLE"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	<!-- ##########start##########  -->
+	<job:dataflow id="syncRetryUserErrorMsgJob" 
+    	class="cn.uce.omg.sync.job.SyncRetryUserErrorMsgJob" 
+    	registry-center-ref="regCenter" 
+    	cron="${elastic.exp.job.user.cron}" 
+    	sharding-total-count="${elastic.exp.job.user.shardingtotalcount}" 
+    	sharding-item-parameters="${elastic.exp.job.user.shardingitemparameters}" 
+    	overwrite="true" 
+    	streaming-process="true"
+    	disabled="${elastic.exp.job.user.disabled}"/>
+	
+	<bean id="syncRetryUserErrorMsgJobConfig" parent="baseMqErrorRetryJobConfig">
+		<property name="consumerId" value="CID_SUC_SYNC_OMG_USER"></property>
+	</bean>
+	<!-- ##########end##########  -->
+	
+	
+		<bean id="subscribeMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map>
+				<!-- 员工 -->
+				<entry key="omgEmpPush" value-ref="omgEmpSyncListener"/>
+				<entry key="omgEmpRepairPush" value-ref="omgEmpSyncListener"/>
+				<!-- 行政机构 -->
+				<entry key="omgOrgPush" value-ref="omgOrgSyncListener"/>
+				<entry key="omgOrgRepairPush" value-ref="omgOrgSyncListener"/>
+				<!-- 营运机构 -->
+				<entry key="omgNosOrgPush" value-ref="omgNosOrgSyncListener"/>
+				<entry key="omgNosOrgRepairPush" value-ref="omgNosOrgSyncListener"/>
+				<!-- 地区 -->
+				<entry key="omgAreaPush" value-ref="omgAreaSyncListener"/>
+				<entry key="omgAreaRepairPush" value-ref="omgAreaSyncListener"/>
+				<!--员工绑定关系 -->
+				<entry key="omgOtherEmpRelationPush" value-ref="omgOtherEmpRelationSyncListener"/>
+				<entry key="omgOtherEmpRelationRepairPush" value-ref="omgOtherEmpRelationSyncListener"/>
+				<!--机构绑定关系 -->
+				<entry key="omgOtherOrgRelationPush" value-ref="omgOtherOrgRelationSyncListener"/>
+				<entry key="omgOtherOrgRelationRepairPush" value-ref="omgOtherOrgRelationSyncListener"/>
+				<!--用户 -->
+				<entry key="omgUserPush" value-ref="omgUserSyncListener"/>
+				<entry key="omgUserRepairPush" value-ref="omgUserSyncListener"/>
+			</map>
+		</constructor-arg>
+	</bean>
+	
+</beans>

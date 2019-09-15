@@ -1,0 +1,62 @@
+package cn.uce.suc.common.ids;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月3日 下午9:19:47
+ */
+public interface IdsConstants {
+	
+	String YY_MM_DD = "yyMMdd";
+	String YYYY_MM = "yyyyMM";
+	String YYYY_MM_DD = "yyyyMMdd";
+	String MM = "MM";
+	
+	/**
+	 * 
+	 * @Description: 编号前缀枚举
+	 * @author laizhendong
+	 * @date 2017年10月25日 上午9:04:09
+	 */
+	public enum IdsPrefix {
+		/**长期需求申请单*/CQ,
+		/**零时需求申请单*/LS,
+		/**需求组合单*/XZ,
+		/**订单*/OR,
+		/**订单组合单*/OZ,
+		/**班次单号*/BC,
+		/**发车计划单号*/FC,
+		/**网点运力编号*/YL,
+		/**时效编号*/SX,
+		/**运输异常单号*/YC,
+		/**车辆编号*/CL,
+		/**司机编号*/SJ,
+		/**承运商编号*/CY,
+		/**定价分类编号*/DJFL,
+		/**定价规则号*/DJ,
+		/**车型成本*/CXCB,
+		/**智能排班*/ZN,
+		/**机构编码*/UC,
+	}
+	/**
+	 * 
+	 * @Description: 命名规则枚举
+	 * @author liwei
+	 * @date 2017年11月3日 上午9:44:14
+	 */
+	public enum NamesPrefix{
+		/**长期需求申请单*/CQNA,
+		/**零时需求申请单*/LSNA,
+		/**需求组合单*/XZNA,
+		/**订单*/ORNA,
+		/**订单组合单*/OZNA,
+		/**班次单号*/BCNA,
+		/**发车计划单号*/FCNA,
+		/**网点运力编号*/YLNA,
+		/**时效编号*/SXNA,
+		/**运输异常单号*/YCNA,
+		/**车辆编号*/CLNA,
+		/**司机编号*/SJNA,
+		/**承运商编号*/CYNA
+	}
+}

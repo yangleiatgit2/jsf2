@@ -1,0 +1,148 @@
+package cn.uce.suc.bkg.biz.operation;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.operation.FreightOrder;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+
+/**
+ * @Description: 货运需求订单表BIZ接口类
+ * @author liwei
+ * @date 2017年10月21日 上午10:45:42
+ */
+public interface IFreightOrderBiz {
+	
+	/**
+	 * @Description: 新增货运需求订单表
+	 * @param freightOrder
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public Long addFreightOrder(FreightOrderVo freightOrder);
+	
+	/**
+	 * @Description: 修改货运需求订单表
+	 * @param freightOrderVo 货运需求订单表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public int updateFreightOrder(FreightOrderVo freightOrderVo);
+	
+	/**
+	 * @Description: 删除货运需求订单表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public int deleteFreightOrder(Long id);
+	
+	/**
+	 * @Description: 根据ID查询货运需求订单表
+	 * @param id 主键
+	 * @return 货运需求订单表
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public FreightOrder findById(Long id);
+	
+	/**
+	 * @Description: 分页查询货运需求订单表
+	 * @param freightOrderVo 货运需求订单表
+	 * @param page 分页参数
+	 * @return 货运需求订单表
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public Pagination<FreightOrder> findByPagination(FreightOrderVo freightOrderVo, Page page);
+	/**
+	 * 
+	 * @Description: 处理
+	 * @param freightOrderVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月1日 下午9:24:22
+	 */
+	public List<FreightOrderVo> findByVo(FreightOrderVo freightOrderVo);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @author liwei
+	 * @date 2017年11月1日 下午9:24:43
+	 */
+	public void processLongTerm();
+	/**
+	 * 
+	 * @Description: 根据ID 进行更新
+	 * @param freightOrder
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月2日 下午9:44:04
+	 */
+	public int updateById(FreightOrder freightOrder);
+	/**
+	 * 
+	 * @Description: 查询不在订单组合的订单 
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月4日 下午11:13:55
+	 */
+	public Pagination<FreightOrder> findCombineByPagination(FreightOrderVo freightOrderVo, Page page);
+
+	void processtempTerm();
+	
+	/**
+	 * 
+	 * @Description: 根据组合查询订单 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月27日 上午12:01:08
+	 */
+	public List<FreightOrderVo> findByCombine(FreightOrderVo freightOrderVo);
+	
+	/**
+	 * 
+	 * @Description: 根据组合编号更新订单状态 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午2:10:27
+	 */
+	public int updStatusByCombineCode(FreightOrderVo freightOrderVo);
+	/**
+	 * 
+	 * @Description: 根据组号查询并根据订单时间倒序排序
+	 * @param freightOrderVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月1日 下午9:24:22
+	 */
+	public List<FreightOrderVo> findByOderNoTimeDesc(FreightOrderVo freightOrderVo);
+	
+	/**
+	 * 
+	 * @Description: 根据订单编号更新订单执行时间 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月16日 下午11:49:55
+	 */
+	public int updateTimeByOrderCode(List<FreightOrderVo>  freightOrderVos);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询订单 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月14日 下午2:20:49
+	 */
+	public List<FreightOrder> findByCondition(FreightOrderVo freightOrderVo);
+}

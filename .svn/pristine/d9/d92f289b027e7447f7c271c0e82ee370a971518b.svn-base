@@ -1,0 +1,67 @@
+package cn.uce.suc.common.biz;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.BeanUtils;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.entity.FreightDemandOften;
+import cn.uce.suc.common.vo.FreightDemandOftenVo;
+
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author yanglei
+ * @date 2017年12月6日 下午3:36:22
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class FreightDemandOftenBizTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	private IFreightDemandOftenBiz freightDemandOftenBiz;
+	/**
+	 * 异常实体
+	 */
+	private FreightDemandOften often;
+	@Before
+	public void before() {
+		often=new FreightDemandOften();
+		often.setArrivalTime(new Date());
+		often.setBeginStation("都匀平塘二部");
+		often.setBeginStationCode("UC059547");
+		often.setDepartureTime(new Date());
+		often.setEndStation("奉贤三部");
+		often.setEndStationCode("UC017314");
+		often.setLayTime(10);
+		often.setRemark("remark");
+	}
+	/**
+	 * 
+	 * @Description: 测试流程
+	 * @author liwei
+	 * @date 2017年12月1日 下午3:39:21
+	 */
+	@Test
+	public void testPro(){
+		freightDemandOftenBiz.addFreightDemandOften(often);
+		freightDemandOftenBiz.findById(often.getId());
+		often.setUpdateTime(new Date());
+		freightDemandOftenBiz.updateFreightDemandOften(often);
+		
+		FreightDemandOftenVo vo=new FreightDemandOftenVo();
+		Page page=new Page();
+		BeanUtils.copyProperties(often, vo);
+		freightDemandOftenBiz.findByPagination(vo, page);
+		freightDemandOftenBiz.deleteFreightDemandOften(often.getId());
+	}
+}

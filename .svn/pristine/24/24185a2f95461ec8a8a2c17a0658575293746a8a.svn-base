@@ -1,0 +1,158 @@
+package cn.uce.suc.bkg.service.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.datamain.OperationTime;
+import cn.uce.suc.bkg.vo.datamain.OperationTimeVo;
+import cn.uce.suc.bkg.cache.IAOperaTimeCacheProcessor;
+import cn.uce.suc.bkg.dao.datamain.IOperationTimeDao;
+
+/**
+ * @Description: 分拨中心时刻信息Service类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月27日 下午07:11:18
+ */
+@Service("operationTimeService")
+public class OperationTimeService {
+	
+	/**
+	 * 注入分拨中心时刻信息Dao
+	 */
+	@Resource
+	private IOperationTimeDao operationTimeDao;
+	
+	/**
+	 * @Description: 新增分拨中心时刻信息
+	 * @param operationTime 分拨中心时刻信息
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public int addOperationTime(OperationTime operationTime) {
+		int rec = operationTimeDao.insert(operationTime);
+		//刷新缓存
+		IAOperaTimeCacheProcessor.refresh(operationTime.getOperationCenterCode());
+		return rec;
+	}
+	
+	/**
+	 * @Description: 修改分拨中心时刻信息
+	 * @param operationTime 分拨中心时刻信息
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public int updateById(OperationTime operationTime) {
+		int rec = operationTimeDao.updateById(operationTime);
+		//刷新缓存
+		IAOperaTimeCacheProcessor.refresh(getOpeCenterCode(operationTime.getId()));
+		return rec;
+	}
+	
+	/**
+	 * @Description: 删除分拨中心时刻信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public int deleteById(Long id) {
+		int rec = operationTimeDao.deleteById(id);
+		//刷新缓存
+		IAOperaTimeCacheProcessor.refresh(getOpeCenterCode(id));
+		return  rec;
+	}
+	
+	/**
+	 * @Description: 根据ID查询分拨中心时刻信息
+	 * @param id 主键
+	 * @return 分拨中心时刻信息
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public OperationTime findById(Long id) {
+		return operationTimeDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询分拨中心时刻信息
+	 * @param operationTimeVo 分拨中心时刻信息
+	 * @param page 分页参数
+	 * @return 分拨中心时刻信息
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public Pagination<OperationTime> findByPagination(OperationTimeVo operationTimeVo, Page page) {
+		Pagination<OperationTime> paginationOperationTime = operationTimeDao.findByPagination(operationTimeVo, page);
+		return paginationOperationTime;
+	}
+	/**
+	 * 
+	 * @Description: 根据组合查询分拨时刻，算法调用
+	 * @param operationTimeVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月29日 上午9:58:10
+	 */
+	public List<OperationTimeVo> findByCombine(OperationTimeVo operationTimeVo){
+		return operationTimeDao.findByCombine(operationTimeVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询分拨时刻
+	 * @param page
+	 * @param operationTimeVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 上午10:43:00
+	 */
+	public Pagination<OperationTime> findByCondition(OperationTimeVo operationTimeVo, Page page){
+		Pagination<OperationTime> paginationOperationTime = operationTimeDao.findByCondition(operationTimeVo, page);
+		return paginationOperationTime;
+	}
+	/**
+	 * 
+	 * @Description: 导出分拨时刻
+	 * @param operationTimeVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 下午4:21:47
+	 */
+	public List<OperationTimeVo> findByExport(OperationTimeVo operationTimeVo){
+		List<OperationTimeVo> list = operationTimeDao.findByExport(operationTimeVo);
+		return list;
+	}
+	/**
+	 * 
+	 * @Description: 查询分拨是否维护
+	 * @param operationCenterCode
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月8日 下午2:39:07
+	 */
+	public Integer findCountByCenterCode(OperationTime operationTime){
+		return operationTimeDao.findCountByCenterCode(operationTime);
+	}
+	
+	/**
+	 * 
+	 * @Description: 获取分拨比那好 
+	 * @param id
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月15日 下午9:36:01
+	 */
+	private String getOpeCenterCode(Long id){
+		OperationTime operationTime = operationTimeDao.findById(id);
+		if (null != operationTime) {
+			return operationTime.getOperationCenterCode();
+		}
+		return "";
+	}
+}

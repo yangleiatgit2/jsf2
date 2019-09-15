@@ -1,0 +1,169 @@
+package cn.uce.suc.bkg.biz.impl.price;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.price.IPricingRuleBiz;
+import cn.uce.suc.bkg.entity.price.PricingRule;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+import cn.uce.suc.common.constants.BkgConstants;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 定价规则
+ * @author laizhendong
+ * @date 2017年11月06日 下午2:50:04
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml"})
+public class PricingRuleBizTest extends AbstractJUnit4SpringContextTests {
+
+	
+	
+	/**
+	 * 定价规则biz
+	 */
+	@Resource
+	private IPricingRuleBiz pricingRuleBiz;
+	
+	/**
+	 * 
+	 * @Description: 测试根据id查找
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午7:28:36
+	 */
+	@Test
+	public void testFindById(){
+		pricingRuleBiz.findById(1L);
+	}
+	
+	/**
+	 * 
+	 * @Description: 测试分页查询 
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午7:32:23
+	 */
+	@Test
+	public void testFindByPagination(){
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		page.setQueryCount(true);
+		pricingRuleBiz.findByPagination(null, page);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午7:33:04
+	 */
+	@Test
+	public void testFindPriceByCondtion(){
+		PricingRuleVo pricingRule = new PricingRuleVo();
+		pricingRule.setCombineCode("XZ17111800000");
+		List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findPriceByCondtion(pricingRule);
+		System.out.println(pricingRuleVos.size());
+	}
+	
+	@Test
+	public void test(){
+		PricingRule pricingRule = new PricingRule();
+		pricingRule.setOrgCode("UC010140");
+		pricingRule.setOrgName("上海分拨中心");
+		pricingRule.setRemark("单元测试");
+		pricingRule.setPriceRuleCode("XZ2017010100001");
+		pricingRule.setVersion(BkgConstants.DEFALUT_VERSION);
+		pricingRule.setDeleteFlag(false);
+		pricingRuleBiz.addPricingRule(pricingRule);
+		Long id = pricingRule.getId();
+		PricingRule pricingRule1 = pricingRuleBiz.findById(id);
+		pricingRule1.setRemark("单元测试");
+		PricingRuleVo pricingRuleVo  = new PricingRuleVo();
+		pricingRuleVo.setId(id);
+		pricingRuleVo.setOfficialVersion(1);
+		pricingRuleVo.setRemark("单元测试");
+		pricingRuleBiz.updatePricingRule(pricingRuleVo);
+		pricingRuleBiz.upgrade(pricingRuleVo);
+		pricingRuleBiz.findPriceByCondtion(null);
+		pricingRuleBiz.deletePricingRule(id);
+		pricingRuleBiz.addPricingRule(new ArrayList<PricingRuleVo>());
+	}
+	
+	@Test
+	public void testFindSelectPrice(){
+		PricingRuleVo pricingRuleVo = new PricingRuleVo();
+		pricingRuleVo.setCombineCode("XZ17112000001");
+		pricingRuleVo.setOrgCode("UC010140");
+		pricingRuleVo.setBusinessMode("2");
+		pricingRuleVo.setDemandType("1");
+		pricingRuleVo.setCombineType("1");
+		try {
+			List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findSelectPrice(pricingRuleVo);
+			System.out.println(pricingRuleVos.size());
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 测试重新计算报价 
+	 * @author laizhendong
+	 * @date 2017年11月21日 上午9:26:38
+	 */
+	@Test
+	public void testReCalcPrice(){
+		PricingRuleVo pricingRuleVo = new PricingRuleVo();
+		//组合编号
+		pricingRuleVo.setCombineCode("XZ17111800000");
+		//中心编号
+		pricingRuleVo.setOrgCode("UC010140");
+		//业务模式
+		pricingRuleVo.setBusinessMode(BkgConstants.BUSINESS_MODE_OUT);
+		//需求类型  长期临时
+		pricingRuleVo.setDemandType(BkgConstants.DEMAND_TYPE_TEMP);
+		//组合类型  需求或订单
+		pricingRuleVo.setCombineType(BkgConstants.COMBINE_SOURCE_TYPE_DEMAND);
+		int count = 0;
+		try {
+			count = pricingRuleBiz.reCalcPrice(pricingRuleVo);
+		} catch (Exception e) {
+		}
+		System.out.println(count);
+	}
+	
+	
+	@Test
+	public void test1(){
+		String priceRuleJson = "{\"businessMode\":\"1\",\"combineCode\":\"OZ17112000002\",\"combineType\":\"2\",\"demandType\":\"1\",\"orgName\":\"上海分拨中心\",\"priceRuleCode\":\"DJ17112000010\",\"priceTypeNum\":1,\"pricingRuleDetailVosStr\":\"[{\\\"orgCode\\\":null,\\\"orgName\\\":null,\\\"priceRuleId\\\":84,\\\"priceRuleCode\\\":\\\"DJ17112000010\\\",\\\"ruleTypeCode\\\":\\\"DJFL17111900000\\\",\\\"priceType\\\":\\\"01\\\",\\\"unitFixedCost\\\":891.94,\\\"unitChangeCost\\\":597.14,\\\"deleteFlag\\\":false,\\\"utf1\\\":null,\\\"utf2\\\":null,\\\"utf3\\\":null,\\\"version\\\":1,\\\"remark\\\":null,\\\"createOrg\\\":\\\"系统\\\",\\\"createEmp\\\":\\\"系统\\\",\\\"createTime\\\":1511160399000,\\\"updateOrg\\\":null,\\\"updateEmp\\\":null,\\\"updateTime\\\":null,\\\"relatedSiteNum\\\":1,\\\"pricingRuleDetailRelVos\\\":null}]\",\"ruleTypeCode\":\"DJFL17111900000\",\"updateEmp\":\"聂风\",\"updateOrg\":\"UC002950\",\"updateTime\":1511229656694,\"upgradeType\":\"手动升级\"}";
+		PricingRuleVo pricingRuleVo = JSON.parseObject(priceRuleJson, PricingRuleVo.class);
+		String detailStr = pricingRuleVo.getPricingRuleDetailVosStr();
+		List<PricingRuleDetailVo> detailRelVos = JSON.parseArray(detailStr, PricingRuleDetailVo.class);
+		pricingRuleVo.setPricingRuleDetailVos(detailRelVos);
+		List<PricingRuleVo> pricingRuleVos = new ArrayList<PricingRuleVo>();
+		pricingRuleVos.add(pricingRuleVo);
+		pricingRuleBiz.addPricingRule(pricingRuleVos);
+		pricingRuleBiz.batchUpdateDetail(pricingRuleVo);
+		pricingRuleBiz.setGeneralRule(pricingRuleVo);
+		pricingRuleBiz.upgrade(pricingRuleVo);
+	}
+
+	
+	
+}

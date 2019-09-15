@@ -1,0 +1,170 @@
+package cn.uce.suc.bkg.biz.operation;
+
+import java.util.List;
+import java.util.Map;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.operation.DeparPlanForApp;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.vo.operation.AppDriverPlanVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+
+/**
+ * @Description: 发车计划BIZ接口类
+ * @author liwei
+ * @date 2017年10月26日 下午05:05:42
+ */
+public interface IDirvingPlanBiz {
+	
+	/**
+	 * @Description: 新增发车计划
+	 * @param dirvingPlan
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:42
+	 */
+	public int addDirvingPlan(DirvingPlan dirvingPlan);
+	
+	/**
+	 * @Description: 修改发车计划
+	 * @param dirvingPlan 发车计划
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:42
+	 */
+	public int updateDirvingPlan(DirvingPlan dirvingPlan);
+	
+	/**
+	 * @Description: 删除发车计划
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:42
+	 */
+	public int deleteDirvingPlan(Long id);
+	
+	/**
+	 * @Description: 根据ID查询发车计划
+	 * @param id 主键
+	 * @return 发车计划
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:42
+	 */
+	public DirvingPlan findById(Long id);
+	
+	/**
+	 * @Description: 分页查询发车计划
+	 * @param dirvingPlanVo 发车计划
+	 * @param page 分页参数
+	 * @return 发车计划
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:42
+	 */
+	public Pagination<DirvingPlan> findByPagination(DirvingPlanVo dirvingPlanVo, Page page);
+	/**
+	 * @Description: 根据drivingPlanCode查询发车计划
+	 * @param drivingPlanCode 发车计划号
+	 * @return 发车计划
+	 * @author yanglei
+	 * @date 2017年10月26日 下午05:05:42
+	 */
+	public DirvingPlan findByrivingPlanCode(String  drivingPlanCode);
+
+	/**
+	 * @Description: 发车计划号取消并向消息列表发送消息
+	 * @param DrivingPlan 发车计划号
+	 * @return  修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	public int updateErrorByDirvingPlan(DirvingPlan dirvingPlan);
+	
+
+	/**
+	 * 
+	 * @Description: 根据车牌号查询发车计划
+	 * @param plateNumber
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月6日 下午4:10:33
+	 */
+	public List<DirvingPlan> findByPlageNumber(String plateNumber);
+	/**
+	 * 
+	 * @Description: 查询司机是否在执行发车计划
+	 * @param telephone
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月20日 上午9:24:51
+	 */
+	public List<DirvingPlan> findPlaneByTelphone(String driverPhone) ;
+	/**
+	 * @Description: 发车计划号司机确认
+	 * @param DrivingPlan 发车计划号
+	 * @return  修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	public int startConfirmById(DirvingPlan dirvingPlan);
+
+
+	
+	
+	public List<DeparPlanForApp> findDepartureForApp(Map<String, String> map);
+	/**
+	 * @Description: 司机获取所有的未确认的 任务
+	 * @param dirvingPlanVo  
+	 * @param page 	 页面显示的数量
+	 * @return  Pagination<AppDriverPlan>  该状态下的发车计划号
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	public Pagination<AppDriverPlanVo> getUnconfirm(DirvingPlanVo dirvingPlanVo,
+			Page page);
+
+	public List<DirvingPlan> findByDepartTimeAndType(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * @Description: 发车计划号司机确认
+	 * @param DrivingPlan 发车计划号
+	 * @return  修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	public int comfirmDrivingPlan(DirvingPlan dirvingPlan);
+	/**
+	 * @Description: 司机获取所有未确认发车计划号的数量
+	 * @param dirvingPlanVo  
+	 * @return  Int  未确认的发车计划号的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	public Integer getUncomfirmDrivingPlanNum(DirvingPlanVo dirvingPlanVo);
+	/**
+	 * 
+	 * @Description:中止发车计划时详情推送
+	 * @param dirvingPlan
+	 * @author liwei
+	 * @date 2017年12月12日 下午3:07:47
+	 */
+	public void stopDirverDlanPushMessage(DirvingPlan dirvingPlan);
+	/**
+	 * 
+	 * @Description: 终止班次时，终止发车计划
+	 * @param groupVo
+	 * @author liwei
+	 * @date 2017年12月13日 上午9:27:52
+	 */
+	public int stopDirverDlan(LineGroupVo groupVo);
+	/**
+	 * @Description: 通过发车计划号的id查询所有的发车计划号详情
+	 * @param id 发车计划号id
+	 * @return  对应的发车计划详情
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午13:37:13
+	 */
+	public List<DirvingPlanDetail> findDetailById(long id);
+
+}

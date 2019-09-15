@@ -1,0 +1,65 @@
+package cn.uce.suc.dpt.control;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanTraceBiz;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanTrace;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanTraceVo;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.utils.StringUtil;
+/**
+ * 
+ * @Description: 车辆轨迹
+ * @author haizhou
+ * @date 2017年11月6日 下午5:56:58
+ */
+@Controller
+@RequestMapping("/dpt/dirvingPlanTrace")
+public class DptDirvingPlanTraceController extends BaseAppController{
+	
+	/**
+	 * 注入发车计划轨迹记录BIZ
+	 */
+	@Resource
+	DirvingPlanTraceBiz dirvingPlanTraceBiz;
+
+
+	
+	/**
+	 * @Description: 条件分页获取发车计划轨迹记录
+	 * @param dirvingPlanTracelVo 发车轨迹记录
+	 * @param currentPage 第几页 pageSize
+	 * @param pageSize 页面展示数量
+	 * @return  pagination 条件查询出来发车轨迹
+	 * @author UCE-haizhou
+	 * @date 2017年11月12日 下午13:37:13
+	 */
+	@RequestMapping(value="/findByDrivingPlanCode")
+	public @ResponseBody Map<String, Object> findByDrivingPlanCode(String  drivingPlanCode ,int  currentPage,int  pageSize){
+		if(StringUtil.isBlank(drivingPlanCode)){
+			return returnError("301","发车计划号填写有误");
+		}
+		DirvingPlanTraceVo dirvingPlanTraceVo = new  DirvingPlanTraceVo();
+		/**
+		 * 设置发车计划号
+		 */
+		dirvingPlanTraceVo.setDrivingPlanCode(drivingPlanCode);
+		/**
+		 * 封装分页参数
+		 */
+		Page page= new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		Pagination<DirvingPlanTrace> pagination= dirvingPlanTraceBiz.findByPagination(dirvingPlanTraceVo, page);
+		return returnSuccess(pagination);
+	}
+
+}

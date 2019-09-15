@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.IFreightDemandDao">
+	
+	<sql id="Base_Column_List">
+			id,demand_code,demand_name,
+			demand_type,demand_site,demand_site_code,truck_manage_code,truck_cost_name,
+			demand_status,is_carpool,begin_station,
+			begin_station_code,end_station,end_station_code,
+			carpool_sites,carpool_sites_codes,departure_time,
+			arrival_time,actual_departure_time,actual_arrival_time,
+			lay_time,demand_combine_code,demand_combine_name,line_group_code,
+			price,demand_begin_time,demand_end_time,
+			execute_begin_time,execute_end_time,adjust_price,
+			business_mode,monday_weight,monday_volume,
+			tuesday_weight,tuesday_volume,wednesday_weight,
+			wednesday_volume,thursday_weight,thursday_volume,
+			friday_weight,friday_volume,saturday_weight,
+			saturday_volume,sunday_weight,sunday_volume,
+			day_weight,day_volume,remark,quotation_rule,
+			del_flag,version,create_emp,
+			create_time,create_org,update_emp,
+			update_time,update_org
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="demandCode != null">
+		and demand_code = #{demandCode}
+		</if>
+	    <if test="demandName != null">
+		and demand_name = #{demandName}
+		</if>
+	    <if test="demandType != null">
+		and demand_type = #{demandType}
+		</if>
+	    <if test="demandSite != null">
+		and demand_site = #{demandSite}
+		</if>
+	    <if test="demandSiteCode != null">
+		and demand_site_code = #{demandSiteCode}
+		</if>
+	    <if test="truckManageCode != null">
+		and truck_manage_code = #{truckManageCode}
+		</if>
+	    <if test="truckCostName != null">
+		and truck_cost_name = #{truckCostName}
+		</if>
+	    <if test="demandStatus != null">
+		and demand_status = #{demandStatus}
+		</if>
+	    <if test="isCarpool != null">
+		and is_carpool = #{isCarpool}
+		</if>
+	    <if test="beginStation != null">
+		and begin_station = #{beginStation}
+		</if>
+	    <if test="beginStationCode != null">
+		and begin_station_code = #{beginStationCode}
+		</if>
+	    <if test="endStation != null">
+		and end_station = #{endStation}
+		</if>
+	    <if test="endStationCode != null">
+		and end_station_code = #{endStationCode}
+		</if>
+	    <if test="carpoolSites != null">
+		and carpool_sites = #{carpoolSites}
+		</if>
+	    <if test="carpoolSitesCodes != null">
+		and carpool_sites_codes = #{carpoolSitesCodes}
+		</if>
+	    <if test="departureTime != null">
+		and departure_time = #{departureTime}
+		</if>
+	    <if test="arrivalTime != null">
+		and arrival_time = #{arrivalTime}
+		</if>
+	    <if test="actualDepartureTime != null">
+		and actual_departure_time = #{actualDepartureTime}
+		</if>
+	    <if test="actualArrivalTime != null">
+		and actual_arrival_time = #{actualArrivalTime}
+		</if>
+	    <if test="layTime != null">
+		and lay_time = #{layTime}
+		</if>
+	    <if test="demandCombineCode != null">
+		and demand_combine_code = #{demandCombineCode}
+		</if>
+	    <if test="demandCombineName != null">
+		and demand_combine_name = #{demandCombineName}
+		</if>
+	    <if test="lineGroupCode != null">
+		and line_group_code = #{lineGroupCode}
+		</if>
+	    <if test="price != null">
+		and price = #{price}
+		</if>
+	    <if test="demandBeginTime != null">
+		and demand_begin_time = #{demandBeginTime}
+		</if>
+	    <if test="demandEndTime != null">
+		and demand_end_time = #{demandEndTime}
+		</if>
+	    <if test="executeBeginTime != null">
+		and execute_begin_time = #{executeBeginTime}
+		</if>
+	    <if test="executeEndTime != null">
+		and execute_end_time = #{executeEndTime}
+		</if>
+	    <if test="adjustPrice != null">
+		and adjust_price = #{adjustPrice}
+		</if>
+	    <if test="businessMode != null">
+		and business_mode = #{businessMode}
+		</if>
+	    <if test="mondayWeight != null">
+		and monday_weight = #{mondayWeight}
+		</if>
+	    <if test="mondayVolume != null">
+		and monday_volume = #{mondayVolume}
+		</if>
+	    <if test="tuesdayWeight != null">
+		and tuesday_weight = #{tuesdayWeight}
+		</if>
+	    <if test="tuesdayVolume != null">
+		and tuesday_volume = #{tuesdayVolume}
+		</if>
+	    <if test="wednesdayWeight != null">
+		and wednesday_weight = #{wednesdayWeight}
+		</if>
+	    <if test="wednesdayVolume != null">
+		and wednesday_volume = #{wednesdayVolume}
+		</if>
+	    <if test="thursdayWeight != null">
+		and thursday_weight = #{thursdayWeight}
+		</if>
+	    <if test="thursdayVolume != null">
+		and thursday_volume = #{thursdayVolume}
+		</if>
+	    <if test="fridayWeight != null">
+		and friday_weight = #{fridayWeight}
+		</if>
+	    <if test="fridayVolume != null">
+		and friday_volume = #{fridayVolume}
+		</if>
+	    <if test="saturdayWeight != null">
+		and saturday_weight = #{saturdayWeight}
+		</if>
+	    <if test="saturdayVolume != null">
+		and saturday_volume = #{saturdayVolume}
+		</if>
+	    <if test="sundayWeight != null">
+		and sunday_weight = #{sundayWeight}
+		</if>
+	    <if test="sundayVolume != null">
+		and sunday_volume = #{sundayVolume}
+		</if>
+	    <if test="dayWeight != null">
+		and day_weight = #{dayWeight}
+		</if>
+	    <if test="dayVolume != null">
+		and day_volume = #{dayVolume}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="quotationRule != null">
+		and quotation_rule = #{quotationRule}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<sql id="condition_Column_Where">
+		<where>
+	  		<if test="demandCode!= null and demandCode !='' ">
+				and demand_code= #{demandCode}
+			</if>
+	  		<if test="demandCombineCode!= null and demandCombineCode !='' ">
+				<!-- and demand_combine_code= #{demandCombineCode} -->
+				and demand_combine_code LIKE CONCAT("%",TRIM(#{demandCombineCode}),"%")
+			</if>
+	  		<if test="combineQueryFlag!= null and combineQueryFlag !=''  ">
+				and (demand_combine_code is null or demand_combine_code='') 
+				<if test="demandStatusList !=null and demandStatusList !=''">
+					 and demand_status in
+			 		<foreach collection="demandStatusList" index="index" item="obj" separator="," open="(" close=")">
+			     		 #{obj}
+			  		</foreach>
+				</if>
+			</if>
+		 	<if test="demandType != null and demandType !='' ">
+				and demand_type = #{demandType}
+			</if>
+			<if test="demandBeginTime != null and demandEndTime!= null ">
+				and (demand_begin_time between #{demandBeginTime} and #{demandEndTime})
+				and (demand_end_time between #{demandBeginTime} and #{demandEndTime})
+			</if>
+		 	<if test="demandSiteCode != null and demandSiteCode !='' ">
+				and demand_site_code = #{demandSiteCode}
+			</if>
+		 	<if test="beginStationCode != null and beginStationCode !='' ">
+				and begin_station_code = #{beginStationCode}
+			</if>
+		 	<if test="endStationCode != null and endStationCode !='' ">
+				and end_station_code = #{endStationCode}
+			</if>
+		 	<if test="executeBeginTime != null and executeEndTime!= null ">
+				and execute_begin_time between #{executeBeginTime} and #{executeEndTime}
+			</if>
+		 	<if test="demandStatus != null and demandStatus !='' ">
+				and demand_status = #{demandStatus}
+			</if>
+		 	<if test="businessMode != null and businessMode !='' ">
+				and business_mode = #{businessMode}
+			</if>
+		 </where>
+			order by create_time desc
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.operation.FreightDemand">
+	UPDATE t_suc_bkg_freight_demand
+	<set>
+		<if test="demandCode != null">
+		demand_code = #{demandCode},
+		</if>
+		<if test="demandName != null">
+		demand_name = #{demandName},
+		</if>
+		<if test="demandType != null">
+		demand_type = #{demandType},
+		</if>
+		<if test="demandSite != null">
+		demand_site = #{demandSite},
+		</if>
+		<if test="demandSiteCode != null">
+		demand_site_code = #{demandSiteCode},
+		</if>
+		<if test="truckManageCode != null">
+		truck_manage_code = #{truckManageCode},
+		</if>
+		<if test="truckCostName != null">
+		truck_cost_name = #{truckCostName},
+		</if>
+		<if test="demandStatus != null">
+		demand_status = #{demandStatus},
+		</if>
+		<if test="isCarpool != null">
+		is_carpool = #{isCarpool},
+		</if>
+		<if test="beginStation != null">
+		begin_station = #{beginStation},
+		</if>
+		<if test="beginStationCode != null">
+		begin_station_code = #{beginStationCode},
+		</if>
+		<if test="endStation != null">
+		end_station = #{endStation},
+		</if>
+		<if test="endStationCode != null">
+		end_station_code = #{endStationCode},
+		</if>
+		<if test="carpoolSites != null">
+		carpool_sites = #{carpoolSites},
+		</if>
+		<if test="carpoolSitesCodes != null">
+		carpool_sites_codes = #{carpoolSitesCodes},
+		</if>
+		<if test="departureTime != null">
+		departure_time = #{departureTime},
+		</if>
+		<if test="arrivalTime != null">
+		arrival_time = #{arrivalTime},
+		</if>
+		<if test="actualDepartureTime != null">
+		actual_departure_time = #{actualDepartureTime},
+		</if>
+		<if test="actualArrivalTime != null">
+		actual_arrival_time = #{actualArrivalTime},
+		</if>
+		<if test="layTime != null">
+		lay_time = #{layTime},
+		</if>
+		<if test="demandCombineCode != null">
+		demand_combine_code = #{demandCombineCode},
+		</if>
+		<if test="demandCombineName != null">
+		demand_combine_name = #{demandCombineName},
+		</if>
+		<if test="lineGroupCode != null">
+		line_group_code = #{lineGroupCode},
+		</if>
+		<if test="price != null">
+		price = #{price},
+		</if>
+		<if test="demandBeginTime != null">
+		demand_begin_time = #{demandBeginTime},
+		</if>
+		<if test="demandEndTime != null">
+		demand_end_time = #{demandEndTime},
+		</if>
+		<if test="executeBeginTime != null">
+		execute_begin_time = #{executeBeginTime},
+		</if>
+		<if test="executeEndTime != null">
+		execute_end_time = #{executeEndTime},
+		</if>
+		<if test="adjustPrice != null">
+		adjust_price = #{adjustPrice},
+		</if>
+		<if test="businessMode != null">
+		business_mode = #{businessMode},
+		</if>
+		<if test="mondayWeight != null">
+		monday_weight = #{mondayWeight},
+		</if>
+		<if test="mondayVolume != null">
+		monday_volume = #{mondayVolume},
+		</if>
+		<if test="tuesdayWeight != null">
+		tuesday_weight = #{tuesdayWeight},
+		</if>
+		<if test="tuesdayVolume != null">
+		tuesday_volume = #{tuesdayVolume},
+		</if>
+		<if test="wednesdayWeight != null">
+		wednesday_weight = #{wednesdayWeight},
+		</if>
+		<if test="wednesdayVolume != null">
+		wednesday_volume = #{wednesdayVolume},
+		</if>
+		<if test="thursdayWeight != null">
+		thursday_weight = #{thursdayWeight},
+		</if>
+		<if test="thursdayVolume != null">
+		thursday_volume = #{thursdayVolume},
+		</if>
+		<if test="fridayWeight != null">
+		friday_weight = #{fridayWeight},
+		</if>
+		<if test="fridayVolume != null">
+		friday_volume = #{fridayVolume},
+		</if>
+		<if test="saturdayWeight != null">
+		saturday_weight = #{saturdayWeight},
+		</if>
+		<if test="saturdayVolume != null">
+		saturday_volume = #{saturdayVolume},
+		</if>
+		<if test="sundayWeight != null">
+		sunday_weight = #{sundayWeight},
+		</if>
+		<if test="sundayVolume != null">
+		sunday_volume = #{sundayVolume},
+		</if>
+		<if test="dayWeight != null">
+		day_weight = #{dayWeight},
+		</if>
+		<if test="dayVolume != null">
+		day_volume = #{dayVolume},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		 <if test="quotationRule != null">
+		quotation_rule = #{quotationRule},
+		</if>
+		<if test="delFlag != null">
+		del_flag = #{delFlag},
+		</if>
+		<if test="version != null">
+		version = #{version}+1,
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+	</set>
+		WHERE id = #{id} 
+			<if test="version != null">
+		 		AND VERSION = #{version}
+		  </if>
+	</update>
+	
+	<!--需求条件分页查询-->
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.FreightDemandVo" resultType="cn.uce.suc.bkg.vo.operation.FreightDemandVo">
+		select
+	 		<include refid="Base_Column_List" />
+	  from t_suc_bkg_freight_demand
+	 		<include refid="condition_Column_Where" />
+	</select>
+	
+	<!--网点端 需求条件分页查询-->
+	<select id="findDotByPagination" parameterType="cn.uce.suc.bkg.vo.operation.FreightDemandVo" resultType="cn.uce.suc.bkg.vo.operation.FreightDemandVo">
+		select
+	 		<include refid="Base_Column_List" />
+	  from t_suc_bkg_freight_demand
+	 		<include refid="dot_condition_Column_Where" />
+	</select>
+	<sql id="dot_condition_Column_Where">
+		<where>
+	  		<if test="demandCode!= null and demandCode !='' ">
+				and demand_code= #{demandCode}
+			</if>
+		 	<if test="demandType != null and demandType !='' ">
+				and demand_type = #{demandType}
+			</if>
+			<if test="demandBeginTime != null and demandEndTime!= null ">
+				and (demand_begin_time between #{demandBeginTime} and #{demandEndTime} or
+					demand_end_time between #{demandBeginTime} and #{demandEndTime})
+			</if>
+		 	<if test="demandSiteCode != null and demandSiteCode !='' ">
+				and demand_site_code = #{demandSiteCode}
+			</if>
+		 	<if test="beginStationCode != null and beginStationCode !='' ">
+				and begin_station_code = #{beginStationCode}
+			</if>
+		 	<if test="endStationCode != null and endStationCode !='' ">
+				and end_station_code = #{endStationCode}
+			</if>
+		 	<if test="executeBeginTime != null and executeEndTime!= null ">
+				and execute_begin_time between #{executeBeginTime} and #{executeEndTime}
+			</if>
+		 	<if test="demandStatus != null and demandStatus !='' ">
+				and demand_status = #{demandStatus}
+			</if>
+			<!-- 网点端查询我的运输需求 -->
+			<if test="demandStatusList !=null and demandStatusList !='' and demandStatus==''">
+					 and demand_status in
+			 		<foreach collection="demandStatusList" index="index" item="obj" separator="," open="(" close=")">
+			     		 #{obj}
+			  		</foreach>
+			</if>
+		 	<if test="businessMode != null and businessMode !='' ">
+				and business_mode = #{businessMode}
+			</if>
+		 </where>
+		 <!-- 网点端查询我的运输需求 -->
+			 order by demand_begin_time desc
+	</sql>
+	
+	<!--需求条件非分页查询-->
+	<select id="findByCondition" parameterType="cn.uce.suc.bkg.vo.operation.FreightDemandVo" resultType="cn.uce.suc.bkg.vo.operation.FreightDemandVo">
+		select
+			<include refid="Base_Column_List" />
+	  	from t_suc_bkg_freight_demand
+	 	 	<include refid="condition_Column_Where" />
+	</select>
+	
+	 <!--根据需求组合编码 查询需求-->
+	<select id="findByDemandCombineCode" parameterType="java.util.List" resultType="cn.uce.suc.bkg.vo.operation.FreightDemandVo">
+		select
+			<include refid="Base_Column_List" />
+	  	from t_suc_bkg_freight_demand
+	 	 	where demand_combine_code in
+ 		<foreach collection="combineCodes" index="index" item="obj" separator="," open="(" close=")">
+     		 #{obj}
+  		</foreach>
+	</select>
+	
+	<!-- 根据组合查询需求 -->
+	<select id="findByCombine" parameterType="cn.uce.suc.bkg.vo.operation.FreightDemandVo" resultType="cn.uce.suc.bkg.vo.operation.FreightDemandVo">
+		SELECT fd.*,oe.depart_limit,oe.port_limit
+		FROM t_suc_bkg_freight_demand fd
+		<if test="businessMode != null and businessMode != '' ">
+			LEFT JOIN t_suc_comm_org_extend oe 
+			<!-- 进港 -->
+			<if test='businessMode == "1"'>
+				ON fd.end_station_code = oe.base_org_code 
+			</if>
+			<!-- 出港 -->
+			<if test='businessMode == "2"'>
+				ON fd.begin_station_code = oe.base_org_code 
+			</if>
+		</if>
+		<where>
+			<if test="demandStatus != null and demandStatus != ''">
+				AND fd.demand_status = #{demandStatus}
+			</if>
+			<if test="businessMode != null and businessMode != ''">
+				AND fd.business_mode = #{businessMode}
+			</if>
+			<if test="demandCombineCode != null and demandCombineCode != ''">
+				AND fd.demand_combine_code = #{demandCombineCode}
+			</if>
+		</where>
+	</select>
+	
+	
+	<!--批量修改  需求的 需求组合编码  根据需求编码-->
+	<update id="batchUpdateDemand" parameterType="java.util.List" >
+ 		UPDATE t_suc_bkg_freight_demand set
+   		 demand_combine_code=
+  		<foreach collection="freightDemandVos" item="obj" index="index" separator=" " open="case demand_code" close="end,">
+     	 when #{obj.demandCode} then #{obj.demandCombineCode} 
+  		</foreach>
+   		 demand_combine_name=
+  		<foreach collection="freightDemandVos" item="obj" index="index" separator=" " open="case demand_code" close="end,">
+     	 when #{obj.demandCode} then #{obj.demandCombineName} 
+  		</foreach>
+  		 update_emp=
+  		<foreach collection="freightDemandVos" item="obj" index="index" separator=" " open="case demand_code" close="end,">
+     	 when #{obj.demandCode} then #{obj.updateEmp} 
+  		</foreach>
+  		 update_time=
+  		<foreach collection="freightDemandVos" item="obj" index="index" separator=" " open="case demand_code" close="end,">
+     	 when #{obj.demandCode} then #{obj.updateTime} 
+  		</foreach>
+  		 update_org=
+  		<foreach collection="freightDemandVos" item="obj" index="index" separator=" " open="case demand_code" close="end">
+     	 when #{obj.demandCode} then #{obj.updateOrg} 
+  		</foreach>
+ 		 where demand_code in
+  		<foreach collection="freightDemandVos" index="index" item="obj" separator="," open="(" close=")">
+     	 #{obj.demandCode}
+  		</foreach>
+	</update>
+	<!-- 批量 修改 需求状态 根据需求组合编码  -->
+	<update id="batchUpdateDemandStatusByCombineCode" parameterType="java.util.List"  >
+ 		UPDATE t_suc_bkg_freight_demand 
+ 		<set>
+	  		<if test="demandStatus != null and demandStatus !='' ">
+	   		 demand_status = #{demandStatus},
+			</if>
+	  		<if test="updateEmp != null and updateEmp !='' ">
+			update_emp = #{updateEmp},
+			</if>
+			<if test="updateTime != null ">
+			update_time = #{updateTime},
+			</if>
+			<if test="updateOrg != null and updateOrg !='' ">
+			update_org = #{updateOrg},
+			</if>
+		</set>
+ 		where demand_combine_code in
+ 		<foreach collection="combineCodes" index="index" item="obj" separator="," open="(" close=")">
+     		 #{obj}
+  		</foreach>
+	</update>
+	
+	<!-- 根据需求编号更新执行时间 -->
+	<update id="updateByDemandCode" parameterType="cn.uce.suc.bkg.vo.operation.FreightDemandVo" >
+		UPDATE t_suc_bkg_freight_demand fd
+		<set>
+			<if test="executeBeginTime != null">
+				execute_begin_time = #{executeBeginTime},
+			</if>
+			<if test="executeEndTime != null">
+				execute_end_time = #{executeEndTime},
+			</if>
+			<if test="actualDepartureTime != null">
+				actual_departure_time = #{actualDepartureTime},
+			</if>
+			<if test="actualArrivalTime != null">
+				actual_arrival_time = #{actualArrivalTime},
+			</if>
+		</set>
+		WHERE demand_code = #{demandCode} 
+	</update>
+	
+</mapper>

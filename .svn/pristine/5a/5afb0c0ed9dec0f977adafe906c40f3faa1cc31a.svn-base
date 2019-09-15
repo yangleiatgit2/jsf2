@@ -1,0 +1,156 @@
+package cn.uce.suc.common.cache;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import redis.clients.jedis.Jedis;
+import cn.uce.core.cache.base.JsonUtils;
+import cn.uce.core.cache.redis.RedisClient;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.utils.StringUtil;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 登陆token缓存
+ * @author lbnwxly
+ * @date 2017年10月10日 上午11:06:18
+ */
+@Service("appLoginToKenCache")
+public class AppLoginToKenCache {
+	private final Logger log = LoggerFactory.getLogger(AppLoginToKenCache.class);
+	// 缓存
+	@Resource
+	private RedisClient uceClient;
+	
+	/** key分隔字符 */
+	public static final String KEY_SEPERATOR = "_";
+
+	/**
+	 * 
+	 * @Description:写入缓存方法
+	 * @param key
+	 * @param token
+	 * @return
+	 * @author lbnwxly
+	 * @date 2017年10月10日 下午10:12:05
+	 */
+	public void set(String phone, String userType, LoginEntity loginEntity) {
+		Jedis jedis = null;
+		jedis = uceClient.getResource();
+		
+		try {
+			String key = generate(generateToken(phone, userType));
+			// 存到redis上 之前，先把value转换成了jsonString
+			String value = JsonUtils.toJsonString(loginEntity, false);
+			jedis.set(key, value);
+		} finally {
+			//返回资源
+			uceClient.returnResource(jedis);
+		}
+	}
+
+	/**
+	 * 
+	 * @Description:删除对应的key
+	 * @param key
+	 * @param token
+	 * @return
+	 * @author lbnwxly
+	 * @date 2017年10月10日 下午10:12:05
+	 */
+	public void remove(String phone, String userType) {
+		Jedis jedis = null;
+		jedis = uceClient.getResource();
+		try {
+			String key = generate(generateToken(phone, userType));
+			jedis.del(key);
+		}finally {
+			//返回资源
+			uceClient.returnResource(jedis);
+		}
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param phone
+	 * @param userType
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月15日 下午7:08:57
+	 */
+	public String generateToken(String phone, String userType) {
+		log.info("AppLoginTokenCache  generateToken  start....");
+		StringBuffer stringBuffer = new StringBuffer(userType);
+		stringBuffer.append(phone);
+		log.info("AppLoginTokenCache  generateToken  end....");
+		return stringBuffer.toString();
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param phone
+	 * @param userType
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月15日 下午7:09:59
+	 */
+	public LoginEntity getToken(String phone, String userType) {
+		log.info("AppLoginTokenCache  getToken  start....");
+		Jedis jedis = null;
+		jedis = uceClient.getResource();
+		String value;
+		try {
+			String key = generate(generateToken(phone, userType));
+			value = jedis.get(key);
+		} finally {
+			//返回资源
+			uceClient.returnResource(jedis);
+		}
+		log.info("AppLoginTokenCache  getToken  start....");
+		return JSON.parseObject(value, LoginEntity.class);
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param phone
+	 * @param userType
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月15日 下午7:09:59
+	 */
+	public LoginEntity get(String key) {
+		Jedis jedis = null;
+		jedis = uceClient.getResource();
+		String value;
+		try {
+			key = generate(key);
+			value = jedis.get(key);
+		}finally {
+			//返回资源
+			uceClient.returnResource(jedis);
+		}
+		//返回值校验
+		if(StringUtil.isBlank(value)){
+			return null;
+		}
+		return JSON.parseObject(value, LoginEntity.class);
+	}
+	/**
+	 * 
+	 * @Description: 生成key
+	 * @param key
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月6日 下午3:58:18
+	 */
+	public String generate(String key) {
+        return this.getClass().getSimpleName() + KEY_SEPERATOR + key;
+    }
+}

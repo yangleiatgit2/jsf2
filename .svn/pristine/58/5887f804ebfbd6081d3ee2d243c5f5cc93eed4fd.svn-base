@@ -1,0 +1,67 @@
+package cn.uce.suc.bkg.biz.impl.price;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.price.IPricingRuleTypeDetailBiz;
+import cn.uce.suc.bkg.entity.price.PricingRuleTypeDetail;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * 
+ * @Description:单元测试
+ * @author wangzhijun
+ * @date 2017年11月10日 下午2:06:14
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class PricingRuleTypeDetailBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 注入biz
+	 */
+	@Resource
+	private IPricingRuleTypeDetailBiz PricingRuleTypeDetailBiz;
+	/**
+	 * 
+	 */
+	private PricingRuleTypeDetailVo detailVo;
+	private PricingRuleTypeDetail detail;
+	private Page page;
+
+	/**
+	 * 
+	 * @Description: 初始化对象
+	 * @author wangzhijun
+	 * @date 2017年11月10日 下午2:18:54
+	 */
+	@Before
+	public void init() {
+		detailVo = new PricingRuleTypeDetailVo();
+		detailVo.setRuleTypeId(1L);
+		detail = new PricingRuleTypeDetail();
+		detail = ObjectConvertUtil.convertObject(detailVo, PricingRuleTypeDetail.class);
+		detail.setUtf1("Test");
+		page = new Page();
+		page.setCurrentPage(1);
+	}
+
+	@Test
+	public void test() {
+		PricingRuleTypeDetailBiz.addPricingRuleTypeDetail(detail);
+		PricingRuleTypeDetailBiz.updatePricingRuleTypeDetail(detail);
+		PricingRuleTypeDetailBiz.findById(detail.getId());
+		PricingRuleTypeDetailBiz.findByPagination(detailVo, page);
+		PricingRuleTypeDetailBiz.getGroupByCondition(detailVo);
+		PricingRuleTypeDetailBiz.deletePricingRuleTypeDetail(detail.getId());
+	}
+}

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IExceptionInfoDao">
+	
+	<sql id="Base_Column_List">
+			id,exception_node,exception_cause,
+			exception_type,exception_msg,remark,
+			create_org,create_emp,create_time,
+			update_org,update_emp,update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="exceptionNode != null">
+		and exception_node = #{exceptionNode}
+		</if>
+	    <if test="exceptionCause != null">
+		and exception_cause = #{exceptionCause}
+		</if>
+	    <if test="exceptionType != null">
+		and exception_type = #{exceptionType}
+		</if>
+	    <if test="exceptionMsg != null">
+		and exception_msg = #{exceptionMsg}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.ExceptionInfo">
+	UPDATE t_suc_comm_exception
+	<set>
+		<if test="exceptionNode != null">
+		exception_node = #{exceptionNode},
+		</if>
+		<if test="exceptionCause != null">
+		exception_cause = #{exceptionCause},
+		</if>
+		<if test="exceptionType != null">
+		exception_type = #{exceptionType},
+		</if>
+		<if test="exceptionMsg != null">
+		exception_msg = #{exceptionMsg},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.ExceptionInfoVo" resultType="cn.uce.suc.common.entity.ExceptionInfo">
+	select <include refid="Base_Column_List" /> from t_suc_comm_exception
+	</select>
+	
+</mapper>

@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.ILineGroupDao">
+	
+	<sql id="Base_Column_List">
+			id,line_group_code,line_group_name,
+			depart_time,arrival_time,line_group_distance,
+			start_org_code,start_org_name,end_org_code,
+			end_org_name,cost_price,selling_price,
+			adjust_type,load_factor,car_type,
+			line_group_type,adjust_price,total_time,
+			total_volume,total_weight,charge_start_time,
+			charge_end_time,requi_type,status,
+			resource,requi_combin_code,driving_plan_combin_code,
+			order_combin_code,business_mode,version,
+			delete_flag,utf1,utf2,
+			utf3,remark,create_org,
+			create_emp,create_time,update_org,
+			update_emp,update_time
+	</sql>
+	
+	<!-- 班次map,包含lineGroupDetail的list一起查询 -->
+	<resultMap id="lineGroupMap" type="cn.uce.suc.bkg.vo.operation.LineGroupVo">
+	    <id column="id" jdbcType="BIGINT" property="id" />
+	    <result column="line_group_code" jdbcType="VARCHAR" property="lineGroupCode" />
+	    <result column="line_group_name" jdbcType="VARCHAR" property="lineGroupName" />
+	    <result column="depart_time" jdbcType="TIMESTAMP" property="departTime" />
+	    <result column="arrival_time" jdbcType="TIMESTAMP" property="arrivalTime" />
+	    <result column="line_group_distance" jdbcType="DECIMAL" property="lineGroupDistance" />
+	    <result column="start_org_code" jdbcType="VARCHAR" property="startOrgCode" />
+	    <result column="start_org_name" jdbcType="VARCHAR" property="startOrgName" />
+	    <result column="end_org_code" jdbcType="VARCHAR" property="endOrgCode" />
+	    <result column="end_org_name" jdbcType="VARCHAR" property="endOrgName" />
+	    <result column="cost_price" jdbcType="DECIMAL" property="costPrice" />
+	    <result column="selling_price" jdbcType="DECIMAL" property="sellingPrice" />
+	    <result column="adjust_type" jdbcType="VARCHAR" property="adjustType" />
+	    <result column="load_factor" jdbcType="DOUBLE" property="loadFactor" />
+	    <result column="car_type" jdbcType="VARCHAR" property="carType" />
+	    <result column="line_group_type" jdbcType="VARCHAR" property="lineGroupType" />
+	    <result column="adjust_price" jdbcType="DECIMAL" property="adjustPrice" />
+	    <result column="total_time" jdbcType="INTEGER" property="totalTime" />
+	    <result column="total_volume" jdbcType="DECIMAL" property="totalVolume" />
+	    <result column="total_weight" jdbcType="DECIMAL" property="totalWeight" />
+	    <result column="charge_start_time" jdbcType="TIMESTAMP" property="chargeStartTime" />
+	    <result column="charge_end_time" jdbcType="TIMESTAMP" property="chargeEndTime" />
+	    <result column="requi_type" jdbcType="INTEGER" property="requiType" />
+	    <result column="status" jdbcType="VARCHAR" property="status" />
+	    <result column="resource" jdbcType="VARCHAR" property="resource" />
+	    <result column="requi_combin_code" jdbcType="VARCHAR" property="requiCombinCode" />
+	    <result column="driving_plan_combin_code" jdbcType="VARCHAR" property="drivingPlanCombinCode" />
+	    <result column="order_combin_code" jdbcType="VARCHAR" property="orderCombinCode" />
+	    <result column="business_mode" jdbcType="VARCHAR" property="businessMode" />
+	    <result column="version" jdbcType="INTEGER" property="version" />
+	    <result column="delete_flag" jdbcType="BIT" property="deleteFlag" />
+	    <result column="utf1" jdbcType="VARCHAR" property="utf1" />
+	    <result column="utf2" jdbcType="VARCHAR" property="utf2" />
+	    <result column="utf3" jdbcType="VARCHAR" property="utf3" />
+	    <result column="remark" jdbcType="VARCHAR" property="remark" />
+	    <collection property="lineGroupDetailVos" ofType="cn.uce.suc.bkg.vo.operation.LineGroupDetailVo">
+		    <result column="lgd_line_group_code" jdbcType="VARCHAR" property="lineGroupCode" />
+		    <result column="lgd_way_point_code" jdbcType="VARCHAR" property="wayPointCode" />
+		    <result column="lgd_way_point_name" jdbcType="VARCHAR" property="wayPointName" />
+		    <result column="lgd_way_point_zone_code" jdbcType="VARCHAR" property="wayPointZoneCode" />
+		    <result column="lgd_way_point_zone_name" jdbcType="VARCHAR" property="wayPointZoneName" />
+		    <result column="lgd_order_combin_code" jdbcType="VARCHAR" property="orderCombinCode" />
+		    <result column="lgd_requi_combin_code" jdbcType="VARCHAR" property="requiCombinCode" />
+		    <result column="lgd_volume" jdbcType="DECIMAL" property="volume" />
+		    <result column="lgd_weight" jdbcType="DECIMAL" property="weight" />
+		    <result column="lgd_end_time" jdbcType="TIMESTAMP" property="endTime" />
+		    <result column="lgd_load_unload_time" jdbcType="INTEGER" property="loadUnloadTime" />
+		    <result column="lgd_distance" jdbcType="DECIMAL" property="distance" />
+		    <result column="lgd_runing_time" jdbcType="INTEGER" property="runingTime" />
+		    <result column="lgd_sort" jdbcType="INTEGER" property="sort" />
+		    <result column="lgd_next_way_distance" jdbcType="DECIMAL" property="nextWayDistance" />
+	    </collection> 
+	  </resultMap>
+	
+	
+     
+		<resultMap id="lineGroupMap2" type="cn.uce.suc.bkg.vo.operation.LineGroupVo">
+	    <id column="id" jdbcType="BIGINT" property="id" />
+	    <result column="line_group_code" jdbcType="VARCHAR" property="lineGroupCode" />
+	    <result column="depart_time" jdbcType="VARCHAR" property="departTime" />
+	  <!--   <result column="start_org_code" jdbcType="VARCHAR" property="startOrgCode" />
+	    <result column="start_org_name" jdbcType="VARCHAR" property="startOrgName" /> -->
+	    
+	    <result column="station_code" jdbcType="VARCHAR" property="startOrgCode" />
+	    <result column="station_name" jdbcType="VARCHAR" property="startOrgName" />
+	    
+	    <result column="car_type" jdbcType="VARCHAR" property="carType" />
+	    <result column="requi_type" jdbcType="INTEGER" property="requiType" />
+	    <result column="requi_combin_code" jdbcType="VARCHAR" property="requiCombinCode" />
+	    <result column="order_combin_code" jdbcType="VARCHAR" property="orderCombinCode" />
+	    <result column="business_mode" jdbcType="VARCHAR" property="businessMode" />
+	    <result column="oper_station_code" jdbcType="VARCHAR" property="endOrgCode" />
+	  </resultMap>
+	
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="lineGroupCode != null and  lineGroupCode != ''">
+		and line_group_code = #{lineGroupCode}
+		</if>
+	    <if test="lineGroupName != null and  lineGroupName != ''">
+		and line_group_name = #{lineGroupName}
+		</if>
+	    <if test="departTime != null and  departTime != ''">
+		and depart_time = #{departTime}
+		</if>
+	    <if test="arrivalTime != null and  arrivalTime != ''">
+		and arrival_time = #{arrivalTime}
+		</if>
+	    <if test="lineGroupDistance != null and  lineGroupDistance != ''">
+		and line_group_distance = #{lineGroupDistance}
+		</if>
+	    <if test="startOrgCode != null and  startOrgCode != '' ">
+		and start_org_code = #{startOrgCode}
+		</if>
+	    <if test="startOrgName != null and  startOrgName != ''">
+		and start_org_name = #{startOrgName}
+		</if>
+	    <if test="endOrgCode != null and  endOrgCode != ''">
+		and end_org_code = #{endOrgCode}
+		</if>
+	    <if test="endOrgName != null  and  endOrgName != ''">
+		and end_org_name = #{endOrgName}
+		</if>
+	    <if test="costPrice != null and  costPrice != ''">
+		and cost_price = #{costPrice}
+		</if>
+	    <if test="sellingPrice != null and  sellingPrice != ''">
+		and selling_price = #{sellingPrice}
+		</if>
+	    <if test="adjustType != null  and  adjustType != ''">
+		and adjust_type = #{adjustType}
+		</if>
+	    <if test="loadFactor != null  and  loadFactor != ''">
+		and load_factor = #{loadFactor}
+		</if>
+	    <if test="carType != null and  carType != ''">
+		and car_type = #{carType}
+		</if>
+	    <if test="lineGroupType != null and  lineGroupType != ''">
+		and line_group_type = #{lineGroupType}
+		</if>
+	    <if test="adjustPrice != null and  adjustPrice != ''">
+		and adjust_price = #{adjustPrice}
+		</if>
+	    <if test="totalTime != null and  totalTime != ''">
+		and total_time = #{totalTime}
+		</if>
+	    <if test="totalVolume != null and  totalVolume != ''">
+		and total_volume = #{totalVolume}
+		</if>
+	    <if test="totalWeight != null and  totalWeight != ''">
+		and total_weight = #{totalWeight}
+		</if>
+	    <if test="chargeStartTime != null and  chargeStartTime != ''">
+		and charge_start_time = #{chargeStartTime}
+		</if>
+	    <if test="chargeEndTime != null and  chargeEndTime != ''">
+		and charge_end_time = #{chargeEndTime}
+		</if>
+	    <if test="requiType != null and  requiType != ''">
+		and requi_type = #{requiType}
+		</if>
+	    <if test="status != null  and  status != ''">
+		and status = #{status}
+		</if>
+	    <if test="resource != null  and  resource != ''">
+		and resource = #{resource}
+		</if>
+	    <if test="requiCombinCode != null  and  requiCombinCode != ''">
+		and requi_combin_code = #{requiCombinCode}
+		</if>
+	    <if test="drivingPlanCombinCode != null and  drivingPlanCombinCode != ''">
+		and driving_plan_combin_code = #{drivingPlanCombinCode}
+		</if>
+	    <if test="orderCombinCode != null and  orderCombinCode != ''">
+		and order_combin_code = #{orderCombinCode}
+		</if>
+	    <if test="businessMode != null  and  businessMode != ''">
+		and business_mode = #{businessMode}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+		 <if test="deleteFlag == null">
+		and delete_flag !=1
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupVo">
+	UPDATE t_suc_bkg_line_group
+	<set>
+
+		<if test="lineGroupName != null">
+		line_group_name = #{lineGroupName},
+		</if>
+		<if test="departTime != null">
+		depart_time = #{departTime},
+		</if>
+		<if test="arrivalTime != null">
+		arrival_time = #{arrivalTime},
+		</if>
+		<if test="lineGroupDistance != null">
+		line_group_distance = #{lineGroupDistance},
+		</if>
+		<if test="startOrgCode != null">
+		start_org_code = #{startOrgCode},
+		</if>
+		<if test="startOrgName != null">
+		start_org_name = #{startOrgName},
+		</if>
+		<if test="endOrgCode != null">
+		end_org_code = #{endOrgCode},
+		</if>
+		<if test="endOrgName != null">
+		end_org_name = #{endOrgName},
+		</if>
+		<if test="costPrice != null">
+		cost_price = #{costPrice},
+		</if>
+		<if test="sellingPrice != null">
+		selling_price = #{sellingPrice},
+		</if>
+		<if test="adjustType != null">
+		adjust_type = #{adjustType},
+		</if>
+		<if test="loadFactor != null">
+		load_factor = #{loadFactor},
+		</if>
+		<if test="carType != null">
+		car_type = #{carType},
+		</if>
+		<if test="lineGroupType != null">
+		line_group_type = #{lineGroupType},
+		</if>
+		<if test="adjustPrice != null">
+		adjust_price = #{adjustPrice},
+		</if>
+		<if test="totalTime != null">
+		total_time = #{totalTime},
+		</if>
+		<if test="totalVolume != null">
+		total_volume = #{totalVolume},
+		</if>
+		<if test="totalWeight != null">
+		total_weight = #{totalWeight},
+		</if>
+		<if test="chargeStartTime != null">
+		charge_start_time = #{chargeStartTime},
+		</if>
+		<if test="chargeEndTime != null">
+		charge_end_time = #{chargeEndTime},
+		</if>
+		<if test="requiType != null">
+		requi_type = #{requiType},
+		</if>
+		<if test="status != null">
+		status = #{status},
+		</if>
+		<if test="resource != null">
+		resource = #{resource},
+		</if>
+		<if test="requiCombinCode != null">
+		requi_combin_code = #{requiCombinCode},
+		</if>
+		<if test="drivingPlanCombinCode != null">
+		driving_plan_combin_code = #{drivingPlanCombinCode},
+		</if>
+		<if test="orderCombinCode != null">
+		order_combin_code = #{orderCombinCode},
+		</if>
+		<if test="businessMode != null">
+		business_mode = #{businessMode},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE line_group_code = #{lineGroupCode}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupVo" resultType="cn.uce.suc.bkg.entity.operation.LineGroup">
+		SELECT <include refid="Base_Column_List" /> 
+		FROM t_suc_bkg_line_group
+		<include refid="Base_Column_Where"/>
+	</select>
+	
+	<select id="queryById" parameterType="java.lang.String" resultType="cn.uce.suc.bkg.entity.operation.LineGroup">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_line_group
+	where 
+ <if test="_parameter != null" >  
+         line_group_code = #{_parameter,jdbcType=VARCHAR}  
+        </if> 
+	</select>
+		
+			
+	
+		<insert id="addLineGroup"  parameterType="cn.uce.suc.bkg.entity.operation.LineGroup">
+			insert into t_suc_bkg_line_group(
+			<include refid="Base_Column_List"></include>
+			)
+			values(
+			<choose>
+				<when test="lineGroupCode != null">#{lineGroupCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="lineGroupName != null">#{lineGroupName},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="departTime != null">#{departTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="arrivalTime != null">#{arrivalTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="lineGroupDistance != null">#{lineGroupDistance},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="startOrgCode != null">#{startOrgCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="startOrgName != null">#{startOrgName},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="endOrgCode != null">#{endOrgCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="endOrgName != null">#{endOrgName},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="costPrice != null">#{costPrice},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="sellingPrice != null">#{sellingPrice},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="adjustType != null">#{adjustType},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="loadFactor != null">#{loadFactor},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="carType != null">#{carType},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="lineGroupType != null">#{lineGroupType},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="adjustPrice != null">#{adjustPrice},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="totalTime != null">#{totalTime}</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="totalVolume != null">#{totalVolume},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="totalWeight != null">#{totalWeight},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="chargeStartTime != null">#{chargeStartTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="chargeEndTime != null">#{chargeEndTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="requiType != null">#{requiType},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="status != null">#{status},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="resource != null">#{resource},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="requiCombinCode != null">#{requiCombinCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+					<choose>
+				<when test="drivingPlanCombinCode != null">#{drivingPlanCombinCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+					<choose>
+				<when test="orderCombinCode != null">#{orderCombinCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+					<choose>
+				<when test="businessMode != null">#{businessMode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+					<choose>
+				<when test="version != null">#{version},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+					<choose>
+				<when test="deleteFlag != null">#{deleteFlag},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+					<choose>
+				<when test="utf1 != null">#{utf1},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="utf2 != null">#{utf2},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="utf3 != null">#{utf3},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="remark != null">#{remark},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="createOrg != null">#{createOrg},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="createEmp != null">#{createEmp},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="createTime != null">#{createTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="updateOrg != null">#{updateOrg},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="updateEmp != null">#{updateEmp},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="updateTime != null">#{updateTime},</when>
+				<otherwise>null</otherwise>
+			</choose>
+		
+			)
+	
+	</insert>
+	
+	
+		<select id="countByLineGroupVo" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupVo" resultType="java.lang.Integer">
+	select count(*) from t_suc_bkg_line_group
+	   <where> 
+        <if test="orderCombinCode != null" >  
+        and order_combin_code = #{orderCombinCode}
+        </if> 
+        <if test="carType != null" >  
+        and  car_type = #{carType}  
+        </if> 
+        
+       <!-- <if test="chargeStartTime != null" >  
+        and  charge_start_time &gt; #{chargeStartTime,jdbcType=DATE} 
+        </if>  --> 
+        <if test="departTime != null" >  
+        AND  STR_TO_DATE(depart_time,"%Y-%m-%d")=#{departTime}
+        </if> 
+         <if test="lineGroupCode != null and lineGroupCode != ''">
+         AND line_group_code LIKE CONCAT(CONCAT('%', #{lineGroupCode}),'%')
+        </if> 
+        </where>
+	</select>
+	
+	<select id="findByCombineOrder" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupVo" resultType="cn.uce.suc.bkg.vo.operation.LineGroupVo">
+	 select <include refid="Base_Column_List" /> from t_suc_bkg_line_group
+	   <where> 
+        <if test="orderCombinCode != null" >  
+        and order_combin_code = #{orderCombinCode}
+        </if> 
+        <!-- <if test="carType != null" >  
+        and  car_type = #{carType}  
+        </if>  -->
+       	<if test="carTypes != null  ">
+			and car_type in
+			<foreach collection="carTypes" index="index" item="type"
+				open="(" separator="," close=")">
+				#{type}
+			</foreach>
+		</if>
+		<if test="departTime != null" >  
+        AND  STR_TO_DATE(depart_time,"%Y-%m-%d")=#{departTime}
+        </if> 
+         <if test="status != null" >  
+        and  status = #{status} 
+        </if> 
+        </where>
+	</select>
+		<select id="findComplexByCombineOrder" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupVo" resultMap="lineGroupMap2">
+	 select
+     g.id,g.line_group_code,g.depart_time,g.start_org_code,g.start_org_name,g.end_org_code,g.car_type,g.requi_type,g.requi_combin_code,g.order_combin_code,g.business_mode,
+     d.station_code,d.station_name
+     from t_suc_bkg_line_group g
+     LEFT JOIN t_suc_bkg_freight_order_combine c ON g.order_combin_code = c.order_combine_code
+     LEFT JOIN t_suc_bkg_freight_demand_combine d ON g.requi_combin_code = d.demand_combine_code 
+	   <where> 
+        <if test="orderCombinCode != null  and orderCombinCode != ''" >  
+        and g.order_combin_code = #{orderCombinCode}
+        </if> 
+         <if test="requiType != null  and requiType != ''" >  
+        and  g.requi_type = #{requiType}  
+        </if> 
+         <if test="businessMode != null  and businessMode != ''" >  
+        and  g.business_mode = #{businessMode} 
+        </if> 
+        <if test="carType != null  and carType != ''" >  
+        and  g.car_type = #{carType}  
+        </if> 
+         <if test="status != null  and status != ''" >  
+        and  g.status = #{status} 
+        </if> 
+        <if test="startOrgCode != null  and startOrgCode != ''" >  
+        and  c.oper_station_code = #{startOrgCode} 
+        </if> 
+        </where>
+	</select>
+	<!-- 查询班次及班次详情 -->
+	<select id="findLineGroupAndDetail" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupVo" resultMap="lineGroupMap">
+		SELECT 
+			lg.id,lg.line_group_code,lg.line_group_name,lg.depart_time,lg.arrival_time,lg.line_group_distance,start_org_code,lg.start_org_name,lg.end_org_code,lg.end_org_name,lg.cost_price,lg.selling_price,adjust_type,lg.load_factor,lg.car_type,
+			lg.line_group_type,lg.adjust_price,lg.total_time,lg.total_volume,total_weight,lg.charge_start_time,lg.charge_end_time,lg.requi_type,lg.status,lg.resource,lg.requi_combin_code,driving_plan_combin_code,lg.order_combin_code,
+			lg.business_mode,lg.version,lg.delete_flag,lg.utf1,lg.utf2,lg.utf3,lg.remark,
+			lgd.id AS lgd_id,lgd.line_group_code AS lgd_line_group_code,lgd.way_point_code AS lgd_way_point_code,lgd.way_point_name AS lgd_way_point_name,lgd.way_point_zone_code AS lgd_way_point_zone_code,lgd.way_point_zone_name AS lgd_way_point_zone_name,
+			lgd.order_combin_code AS lgd_order_combin_code,lgd.requi_combin_code AS lgd_requi_combin_code,lgd.volume AS lgd_volume,
+			lgd.weight AS lgd_weight,lgd.end_time AS lgd_end_time,lgd.load_unload_time AS lgd_load_unload_time,lgd.distance AS lgd_distance,lgd.runing_time AS lgd_runing_time,lgd.sort AS lgd_sort,lgd.next_way_distance AS lgd_next_way_distance,lgd.version AS lgd_version,
+			lgd.delete_flag AS lgd_delete_flag
+		FROM t_suc_bkg_line_group lg
+		LEFT JOIN t_suc_bkg_line_group_detail lgd ON lg.line_group_code = lgd.line_group_code
+		<where>
+			<if test="resource != null and resource != ''">
+				AND lg.resource = #{resource}
+			</if>
+			<if test="businessMode != null and businessMode != ''">
+				AND lg.business_mode = #{businessMode}
+			</if>
+			<if test="requiType != null">
+				AND lg.requi_type = #{requiType}
+			</if>
+			<if test="requiCombinCode != null and requiCombinCode != ''">
+				AND lg.requi_combin_code = #{requiCombinCode}
+			</if>
+			<if test="orderCombinCode != null and orderCombinCode != ''">
+				AND lg.order_combin_code = #{orderCombinCode}
+			</if>
+			<if test="lineGroupCode != null and lineGroupCode != ''">
+				AND lg.line_group_code = #{lineGroupCode}
+			</if>
+		</where>
+	</select>
+	
+	<select id="findByLineGroupVo" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupVo" resultType="cn.uce.suc.bkg.entity.operation.LineGroup">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_line_group
+		  <where>  
+		 	<if test="orderCombinCode != null" >  
+	        and order_combin_code = #{orderCombinCode}
+	        </if> 
+          </where> 
+	</select>
+</mapper>

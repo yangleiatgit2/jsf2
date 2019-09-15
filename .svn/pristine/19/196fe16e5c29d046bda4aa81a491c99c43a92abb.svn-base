@@ -1,0 +1,154 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.IOperationTimeBiz;
+import cn.uce.suc.bkg.entity.datamain.OperationTime;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.service.datamain.OperationTimeService;
+import cn.uce.suc.bkg.vo.datamain.OperationTimeVo;
+
+/**
+ * @Description: 分拨中心时刻信息BIZ实现类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月27日 下午07:11:18
+ */
+@Service("operationTimeBiz")
+@Transactional(readOnly = true,propagation=Propagation.SUPPORTS)
+public class OperationTimeBiz implements IOperationTimeBiz {
+	
+	/**
+	 * 注入分拨中心时刻信息Service
+	 */
+	@Resource
+	private OperationTimeService operationTimeService;
+	
+	/**
+	 * @Description: 新增分拨中心时刻信息
+	 * @param operationTime
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	public int addOperationTime(OperationTime operationTime) {
+		operationTime.setVersion(1);
+		operationTime.setDeleteFlag(false);
+		return operationTimeService.addOperationTime(operationTime);
+	}
+	/**
+	 * 
+	 * @Description: 改数据检查版本号确定是否并发操作
+	 * @param operationTime
+	 * @author zhangqiang
+	 * @date 2017年11月22日 下午5:29:42
+	 */
+	private void checkVersion(OperationTime operationTime){
+		//传入对象非空
+		if(operationTime == null) {
+			throw new BkgModuleException("concurrency.ontrol.data.is.not.exist");
+		}
+		OperationTime o = findById(operationTime.getId());
+		if(o == null){
+			//不存在异常
+			throw new BkgModuleException("concurrency.ontrol.data.is.not.exist");
+		}
+		//版本号发生变化
+		if(!o.getVersion().equals(operationTime.getVersion())){
+			throw new BkgModuleException("concurrency.ontrol.data.is.change");
+		}
+	}
+	/**
+	 * @Description: 修改分拨中心时刻信息
+	 * @param operationTime 分拨中心时刻信息
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	public int updateOperationTime(OperationTime operationTime) {
+		checkVersion(operationTime);
+		return operationTimeService.updateById(operationTime);
+	}
+	
+	/**
+	 * @Description: 删除分拨中心时刻信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	public int deleteOperationTime(Long id) {
+		return operationTimeService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询分拨中心时刻信息
+	 * @param id 主键
+	 * @return 分拨中心时刻信息
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	@Override
+	public OperationTime findById(Long id) {
+		return operationTimeService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询分拨中心时刻信息
+	 * @param operationTimeVo 分拨中心时刻信息
+	 * @param page 分页参数
+	 * @return 分拨中心时刻信息
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public Pagination<OperationTime> findByPagination(OperationTimeVo operationTimeVo, Page page) {
+		Pagination<OperationTime> pagination = operationTimeService.findByPagination(operationTimeVo, page);
+		return pagination;
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询分拨时刻
+	 * @param page
+	 * @param operationTimeVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 上午10:43:00
+	 */
+	public Pagination<OperationTime> findByCondition(OperationTimeVo operationTimeVo, Page page){
+		Pagination<OperationTime> pagination = operationTimeService.findByCondition(operationTimeVo, page);
+		return pagination;
+	}
+	/**
+	 * 
+	 * @Description: 导出分拨时刻
+	 * @param operationTimeVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 下午4:21:47
+	 */
+	public List<OperationTimeVo> findByExport(OperationTimeVo operationTimeVo){
+		List<OperationTimeVo> list = operationTimeService.findByExport(operationTimeVo);
+		return list;
+	}
+	/**
+	 * 
+	 * @Description: 查询分拨是否维护
+	 * @param operationCenterCode
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月8日 下午2:39:07
+	 */
+	public Integer findCountByCenterCode(OperationTime operationTime){
+		return operationTimeService.findCountByCenterCode(operationTime);
+	}
+}

@@ -1,0 +1,276 @@
+package cn.uce.suc.app.control;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.INoticeDetailBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.entity.NoticeDetail;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.suc.common.vo.AppNotice;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.utils.StringUtil;
+
+
+@Controller
+@RequestMapping("/app/newsDetail")
+public class NewsDetailController extends BaseAppController{
+	/**
+	 * 注入消息详情的biz
+	 */
+	@Resource
+	INoticeDetailBiz noticeDetailBiz;
+	/**
+	 * 日志
+	 */
+	protected static Logger log = LoggerFactory.getLogger(AppLoginController.class);
+	
+		/**
+		 * @Description: 消息详情条件分页查询
+		 * @param NoticeDetailVo 消息的条件
+		 * @return  NoticeDetail 条件查询出来的消息详情
+		 * @author UCE-haizhou
+		 * @date 2017年10月30日 下午13:37:13
+		 */
+		@RequestMapping(value = "/findByWhere")
+		public @ResponseBody Map<String, Object> findByCondition(@RequestBody NoticeDetailVo noticeDetailVo, Page page) {
+			Pagination<NoticeDetail> pagination=noticeDetailBiz.findByPagination(noticeDetailVo, page);
+			return returnSuccess(pagination);
+		}
+		/**
+		 * @Description: 消息详情查询
+		 * @param id 消息详情的ID
+		 * @return  NoticeDetail 唯一ID查询出来的消息详情
+		 * @author UCE-haizhou
+		 * @date 2017年10月30日 下午13:37:13
+		 */
+		@RequestMapping(value = "/findOneByid")
+		public @ResponseBody Map<String, Object> findOneByid(@RequestParam(value = "id", required = true) Long id) {
+			NoticeDetail newsDetail = noticeDetailBiz.findById(id);
+			return returnSuccess(newsDetail);
+		}
+		/**
+		 * @Description: app首页任务栏展示
+		 * @param user_phone
+		 * @return Pagination<NoticeDetail> 
+		 * @author UCE-haizhou
+		 * @date 2017年10月30日 下午13:37:13
+		 */
+		
+		@RequestMapping(value = "/findIndexPageByPhone")
+		public @ResponseBody Map<String, Object> findIndexPageByPhone(String userPhone, Integer pageSize,
+				Integer currentPage, String displayWays,String platform) {
+			if (StringUtil.isBlank(userPhone) || userPhone.length() != 11) {
+				return returnError();
+			}
+			Page page = new Page();
+			page.setCurrentPage(currentPage);
+			page.setPageSize(pageSize);
+			NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+			noticeDetailVo.setUserPhone(userPhone);
+			noticeDetailVo.setDisplayWays(displayWays);
+			noticeDetailVo.setPlatform(platform);
+			noticeDetailVo.setAppNewTypes(new String[]{BkgConstants.NEWS_TYPE_IMPORTANT,BkgConstants.NEWS_TYPE_TODO});
+			noticeDetailVo.setReadFlag(false);
+			Pagination<NoticeDetail> pagination = noticeDetailBiz.findByPagination(noticeDetailVo, page);
+			return returnSuccess(pagination);
+	
+		}
+		/**
+		 * @Description: app获取各个类型的消息
+		 * @param noticeDetailVo
+		 * @return Pagination<NoticeDetail> 
+		 * @author UCE-haizhou
+		 * @date 2017年10月30日 下午13:37:13
+		 */
+		@RequestMapping(value = "/findNewsByPhoneAndType")
+	public @ResponseBody Map<String, Object> findNewsByPhoneAndType(String userPhone, String newsType,
+			Integer pageSize, Integer currentPage) {
+		if (StringUtil.isBlank(userPhone) || userPhone.length() != 11) {
+			return returnError();
+		}
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+		noticeDetailVo.setUserPhone(userPhone);
+		noticeDetailVo.setNewsType(newsType);
+		Pagination<NoticeDetail> pagination = noticeDetailBiz.findByPagination(noticeDetailVo, page);
+		return returnSuccess(pagination);
+	}
+		/**
+		 * @Description: app批量设置消息状态已读
+		 * @param ids
+		 * @return ResponseParameterEntity 更改消息的条数
+		 * @author UCE-haizhou
+		 * @date 2017年11月2日 下午17:37:13
+		 */
+		@RequestMapping(value = "/updateReadFlagByIds")
+		public @ResponseBody Map<String, Object> updateReadFlagByIds(
+				String ids,
+				String userPhone,
+				Boolean readFlag
+				){
+			if (StringUtil.isBlank(userPhone) || userPhone.length() != 11) {
+				return returnError();
+			}
+			int val=noticeDetailBiz.updateNewsTypeByIds(ids,readFlag);
+			if(val>0){
+				return returnSuccess("你已修改"+val+"条信息状态");
+			}else{
+				return returnError("msg", "消息状态修改失败!");
+			}
+			
+		}
+		/**
+		 * @Description: app批量删除消息
+		 * @param ids
+		 * @return ResponseParameterEntity 更改消息的条数
+		 * @author UCE-haizhou
+		 * @date 2017年11月2日 下午17:37:13
+		 */
+		@RequestMapping(value = "/deleteNewsByIds")
+		public @ResponseBody Map<String, Object> deleteNewsByIds(
+				String ids,
+				String userPhone
+				){
+			if (StringUtil.isBlank(userPhone) || userPhone.length() != 11) {
+				return returnError();
+			}
+			int val=noticeDetailBiz.deleteNews(ids);
+			if(val>0){
+				return returnSuccess("你已删除"+val+"条信息");
+			}else{
+				return returnError("msg", "消息删除失败!");
+			}
+			
+		}
+		/**
+		 * @Description: 司机端获取首页消息
+		 * @param  司机手机号码
+		 * @return  首页的消息列表
+		 * @author UCE-haizhou
+		 * @date 2017年11月2日 下午17:37:13
+		 */
+		
+		@RequestMapping(value = "/getIndexNews/{userPhone}/{displayWays}/{platform}")
+		public @ResponseBody Map<String, Object> getIndexNews(
+				@PathVariable("userPhone") String userPhone,
+				@PathVariable("displayWays") String displayWays,
+				@PathVariable("platform") String platform
+				){
+			/*if(!userPhone.matches("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$")){
+				return returnError("302","手机号码格式不正确！");
+			}*/
+			NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+			noticeDetailVo.setPlatform(platform);
+			noticeDetailVo.setDeleteFlag(false);  //默认设置未删除
+			noticeDetailVo.setReadFlag(false);		//默认设置未读
+			noticeDetailVo.setUserPhone(userPhone);
+			noticeDetailVo.setDisplayWays(displayWays);
+			List<AppNotice>   appNotices = noticeDetailBiz.getIndexNews(noticeDetailVo);
+			return  returnSuccess(appNotices);
+		}
+		/**
+		 * @Description: 司机端获取消息详情,把消息设置为已读状态
+		 * @param  消息的id
+		 * @return  消息详情
+		 * @author UCE-haizhou
+		 * @date 2017年11月2日 下午17:37:13
+		 */
+		@RequestMapping(value = "/getNewsDetails/{id}")
+		public @ResponseBody Map<String, Object> getNewsDetails(
+				@PathVariable("id") Long id
+				){
+			AppNotice appNotice = noticeDetailBiz.getNewsDetailsById(id);
+			if(appNotice == null){
+				return returnError();
+			}
+			return returnSuccess(appNotice);
+		}
+		
+		/**
+		 * @Description: 司机端消息列表移除首页的某条消息,
+		 * @param  司机手机号码
+		 * @return  影响的条数
+		 * @author UCE-haizhou
+		 * @date 2017年11月2日 下午17:37:13
+		 * 
+		 */
+		@PostMapping(value = "/removeIndex" )
+		public @ResponseBody Map<String, Object> removeIndex(@RequestBody NoticeDetailVo noticeDetailVo
+				){
+			int  val=noticeDetailBiz.removeIndex(noticeDetailVo);
+			if(val > 0){
+				return returnSuccess();
+			}
+			return  returnError();
+		}
+		
+		/**
+		 * @Description: 司机获取所有的消息,
+		 * @param  司机手机号码
+		 * @return  查询的数据
+		 * @author UCE-haizhou
+		 * @date 2017年11月2日 下午17:37:13
+		 * 
+		 */
+		@RequestMapping(value="/getAllNews/{userPhone}/{platform}/{currentPage}/{pageSize}")
+		public @ResponseBody Map<String, Object> getAllNews(
+				@PathVariable("userPhone") String userPhone,
+				@PathVariable("platform") String platform,
+				@PathVariable("currentPage") int currentPage,
+				@PathVariable("pageSize") int pageSize
+				
+				){
+			/*if(!userPhone.matches("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$")){
+				return returnError("302","手机号码格式不正确！");
+			}*/
+			NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+			noticeDetailVo.setPlatform(platform);
+			noticeDetailVo.setUserPhone(userPhone);
+			noticeDetailVo.setDeleteFlag(false);
+			Page page = new Page();
+			page.setCurrentPage(currentPage);
+			page.setPageSize(pageSize);
+			Pagination<AppNotice> pagination =noticeDetailBiz.getAllNews(noticeDetailVo,page);
+			return returnSuccess(pagination);
+		}
+		/**
+		 * @Description: 司机获取所有的未读消息,
+		 * @param  司机手机号码
+		 * @return  消息总数
+		 * @author UCE-haizhou
+		 * @date 2017年11月2日 下午17:37:13
+		 * 
+		 */
+		@RequestMapping(value="/getNotReadNewsNumber/{userPhone}/{platform}")
+		public @ResponseBody Map<String, Object> getNotReadNewsNumber(
+				@PathVariable("userPhone") String userPhone,
+				@PathVariable("platform") String platform
+				){
+			/*if(!userPhone.matches("^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,5-9]))\\d{8}$")){
+				return returnError("302","手机号码格式不正确！");
+			}*/
+			NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+			noticeDetailVo.setPlatform(platform);
+			noticeDetailVo.setUserPhone(userPhone);
+			noticeDetailVo.setReadFlag(false);
+			 Integer  num= noticeDetailBiz.getNotReadNewsNumber(noticeDetailVo);
+			return  returnSuccess(num);
+		}
+}

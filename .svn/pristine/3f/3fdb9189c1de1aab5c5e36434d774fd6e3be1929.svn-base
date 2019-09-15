@@ -1,0 +1,94 @@
+package cn.uce.suc.bkg.vo.ia;
+
+import cn.uce.base.vo.BaseVo;
+
+/**
+ * 
+ * @Description: 集合的信息
+ * @author laizhendong
+ * @date 2017年10月26日 下午3:41:22
+ */
+public class WsSetPointVo extends BaseVo{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 集货点编号
+	 */
+	private String orgCode;
+	
+	/**
+	 * 发货时的限行车型 ,','隔开
+	 */
+	private String NodeToDC_BanTrucks;
+	
+	/**
+	 * 到货时的限行车型,','隔开
+	 */
+	private String DCToNode_BanTrucks;
+	
+	/**
+	 * 集货点最大处理能力
+	 */
+	private Double GatherCapacity;
+
+	/** 
+	 * @return orgCode 
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	/**
+	 * @param orgCode the orgCode to set
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	/** 
+	 * @return nodeToDC_BanTrucks 
+	 */
+	public String getNodeToDC_BanTrucks() {
+		return NodeToDC_BanTrucks;
+	}
+
+	/**
+	 * @param nodeToDC_BanTrucks the nodeToDC_BanTrucks to set
+	 */
+	public void setNodeToDC_BanTrucks(String nodeToDC_BanTrucks) {
+		NodeToDC_BanTrucks = nodeToDC_BanTrucks;
+	}
+
+	/** 
+	 * @return dCToNode_BanTrucks 
+	 */
+	public String getDCToNode_BanTrucks() {
+		return DCToNode_BanTrucks;
+	}
+
+	/**
+	 * @param dCToNode_BanTrucks the dCToNode_BanTrucks to set
+	 */
+	public void setDCToNode_BanTrucks(String dCToNode_BanTrucks) {
+		DCToNode_BanTrucks = dCToNode_BanTrucks;
+	}
+
+	/** 
+	 * @return gatherCapacity 
+	 */
+	public Double getGatherCapacity() {
+		return GatherCapacity;
+	}
+
+	/**
+	 * @param gatherCapacity the gatherCapacity to set
+	 */
+	public void setGatherCapacity(Double gatherCapacity) {
+		GatherCapacity = gatherCapacity;
+	}
+	
+
+}

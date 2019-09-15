@@ -1,0 +1,493 @@
+package cn.uce.suc.bkg.vo.operation;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 智能算法任务监控Vo类
+ * @author laizhendong
+ * @date 2017年11月28日 上午10:45:49
+ */
+public class IaMonitorVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 任务编号 
+	 */
+	private String taskCode;
+    /** 
+	 * 分拨中心编号 
+	 */
+	private String orgCode;
+    /** 
+	 * 分拨中心名称 
+	 */
+	private String orgName;
+    /** 
+	 * 组合编号 
+	 */
+	private String combineCode;
+    /** 
+	 * 组合类型 1需求组合 2订单组合 
+	 */
+	private String combineType;
+    /** 
+	 * 需求类型  1长期 2短期 
+	 */
+	private String demandType;
+    /** 
+	 * 业务分类 1进港 2出港 
+	 */
+	private String businessMode;
+    /** 
+	 * 状态  10 成功  20 失败 30执行中
+	 */
+	private String status;
+    /** 
+	 * 错误信息 
+	 */
+	private String errorMsg;
+    /** 
+	 * 执行时间 
+	 */
+	private Date executeTime;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 删除标识 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	
+	/** 
+	 * 查询开始时间 ，用于页面查询
+	 */
+	private Date startTime;
+	
+	/** 
+	 * 查询结束时间 ，用于页面查询
+	 */
+	private Date endTime;
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 任务编号
+	 */
+	public String getTaskCode() {
+		return taskCode;
+	}
+	
+	/**
+	 * 设置 任务编号
+	 */
+	public void setTaskCode(String taskCode) {
+		this.taskCode = taskCode;
+	}
+
+	
+	/**
+	 * 获取 分拨中心编号
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+	
+	/**
+	 * 设置 分拨中心编号
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	
+	/**
+	 * 获取 分拨中心名称
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+	
+	/**
+	 * 设置 分拨中心名称
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	
+	/**
+	 * 获取 组合编号
+	 */
+	public String getCombineCode() {
+		return combineCode;
+	}
+	
+	/**
+	 * 设置 组合编号
+	 */
+	public void setCombineCode(String combineCode) {
+		this.combineCode = combineCode;
+	}
+
+	
+	/**
+	 * 获取 组合类型 1需求组合 2订单组合
+	 */
+	public String getCombineType() {
+		return combineType;
+	}
+	
+	/**
+	 * 设置 组合类型 1需求组合 2订单组合
+	 */
+	public void setCombineType(String combineType) {
+		this.combineType = combineType;
+	}
+
+	
+	/**
+	 * 获取 需求类型  1长期 2短期
+	 */
+	public String getDemandType() {
+		return demandType;
+	}
+	
+	/**
+	 * 设置 需求类型  1长期 2短期
+	 */
+	public void setDemandType(String demandType) {
+		this.demandType = demandType;
+	}
+
+	
+	/**
+	 * 获取 业务分类 1进港 2出港
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	
+	/**
+	 * 设置 业务分类 1进港 2出港
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	
+	/**
+	 * 获取 状态 10 成功  20 失败 30执行中
+	 */
+	public String getStatus() {
+		return status;
+	}
+	
+	/**
+	 * 设置 状态 10 成功  20 失败 30执行中
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	
+	/**
+	 * 获取 错误信息
+	 */
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+	
+	/**
+	 * 设置 错误信息
+	 */
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
+
+	
+	/**
+	 * 获取 执行时间
+	 */
+	public Date getExecuteTime() {
+		return executeTime;
+	}
+	
+	/**
+	 * 设置 执行时间
+	 */
+	public void setExecuteTime(Date executeTime) {
+		this.executeTime = executeTime;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 删除标识
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标识
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/** 
+	 * @return startTime 
+	 */
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	/**
+	 * @param startTime the startTime to set
+	 */
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	/** 
+	 * @return endTime 
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	/**
+	 * @param endTime the endTime to set
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	
+}

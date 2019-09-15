@@ -1,0 +1,81 @@
+package cn.uce.suc.dpt.entity;
+/**
+ * 
+ * @Description: T发车计划
+ * @author liwei
+ * @date 2017年12月7日 下午4:11:27
+ */
+public class PlanDetail {
+	/**站点编号*/
+	private String wayPointCode;
+	/**站点名称*/
+	private String wayPointName;
+	/**实际方数*/
+	private double actualVolume;
+	/**实际件数*/
+	private double actualNumber;
+	/**实际重量*/
+	private double actualWeight;
+	/** 
+	 * @return wayPointCode 
+	 */
+	public String getWayPointCode() {
+		return wayPointCode;
+	}
+	/**
+	 * @param wayPointCode the wayPointCode to set
+	 */
+	public void setWayPointCode(String wayPointCode) {
+		this.wayPointCode = wayPointCode;
+	}
+	/** 
+	 * @return wayPointName 
+	 */
+	public String getWayPointName() {
+		return wayPointName;
+	}
+	/**
+	 * @param wayPointName the wayPointName to set
+	 */
+	public void setWayPointName(String wayPointName) {
+		this.wayPointName = wayPointName;
+	}
+	/** 
+	 * @return actualVolume 
+	 */
+	public double getActualVolume() {
+		return actualVolume;
+	}
+	/**
+	 * @param actualVolume the actualVolume to set
+	 */
+	public void setActualVolume(double actualVolume) {
+		this.actualVolume = actualVolume;
+	}
+	/** 
+	 * @return actualNumber 
+	 */
+	public double getActualNumber() {
+		return actualNumber;
+	}
+	/**
+	 * @param actualNumber the actualNumber to set
+	 */
+	public void setActualNumber(double actualNumber) {
+		this.actualNumber = actualNumber;
+	}
+	/** 
+	 * @return actualWeight 
+	 */
+	public double getActualWeight() {
+		return actualWeight;
+	}
+	/**
+	 * @param actualWeight the actualWeight to set
+	 */
+	public void setActualWeight(double actualWeight) {
+		this.actualWeight = actualWeight;
+	}
+	
+	
+}

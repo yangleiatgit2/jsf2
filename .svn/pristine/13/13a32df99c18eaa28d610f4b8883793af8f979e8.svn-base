@@ -1,0 +1,29 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.LineGroupOperLog;
+import cn.uce.suc.bkg.vo.operation.LineGroupOperLogVo;
+
+/**
+ * @Description: 班次修改记录DAO接口类
+ * @author liwei
+ * @date 2017年10月26日 上午09:47:37
+ */
+@Repository("lineGroupOperLogDao")
+public interface ILineGroupOperLogDao extends IBaseDao<LineGroupOperLog, Long> {
+	
+	/**
+	 * @Description: 分页查询班次修改记录
+	 * @param lineGroupOperLogVo 班次修改记录
+	 * @param page 分页参数
+	 * @return 班次修改记录
+	 * @author liwei
+	 * @date 2017年10月26日 上午09:47:37
+	 */
+	public Pagination<LineGroupOperLog> findByPagination(LineGroupOperLogVo lineGroupOperLogVo, Page page);
+	
+}

@@ -1,0 +1,286 @@
+package cn.uce.suc.bkg.vo.operation;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 班次订单需求等关系新Vo类
+ * @author liwei
+ * @date 2017年11月06日 下午03:52:11
+ */
+public class LineGroupRelVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 主键 
+	 */
+	private Long id;
+    /** 
+	 * 班次编号 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 业务编号，订单，需求，组合等编号 
+	 */
+	private String businessCode;
+    /** 
+	 * 业务类型-进港出港 
+	 */
+	private String businessType;
+    /** 
+	 * 业务模式-长期,临时 
+	 */
+	private String businessMode;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 删除标示 
+	 */
+	private Integer deleteFalg;
+    /** 
+	 * 更新组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+	
+	
+	
+	/**
+	 * 获取 主键
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 主键
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 班次编号
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 班次编号
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+
+	
+	/**
+	 * 获取 业务编号，订单，需求，组合等编号
+	 */
+	public String getBusinessCode() {
+		return businessCode;
+	}
+	
+	/**
+	 * 设置 业务编号，订单，需求，组合等编号
+	 */
+	public void setBusinessCode(String businessCode) {
+		this.businessCode = businessCode;
+	}
+
+	
+	/**
+	 * 获取 业务类型-进港出港
+	 */
+	public String getBusinessType() {
+		return businessType;
+	}
+	
+	/**
+	 * 设置 业务类型-进港出港
+	 */
+	public void setBusinessType(String businessType) {
+		this.businessType = businessType;
+	}
+
+	
+	/**
+	 * 获取 业务模式-长期,临时
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	
+	/**
+	 * 设置 业务模式-长期,临时
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Integer getDeleteFalg() {
+		return deleteFalg;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFalg(Integer deleteFalg) {
+		this.deleteFalg = deleteFalg;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+}

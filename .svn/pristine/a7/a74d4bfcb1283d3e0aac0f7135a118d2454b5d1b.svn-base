@@ -1,0 +1,40 @@
+package cn.uce.suc.bkg.exception;
+
+import cn.uce.base.exception.BusinessException;
+/**
+ * 
+ * @Description: 承运商平台异常类
+ * @author liwei
+ * @date 2017年10月18日 下午9:40:52
+ */
+public class BkgIaException extends BusinessException{
+	//序列化
+	private static final long serialVersionUID = -4883689301600546900L;
+	
+	/**
+	 * 
+	 * @param code
+	 */
+	public BkgIaException(String code){
+		super(code);
+		super.code = code;
+	}
+	/**
+	 * 
+	 * @param code
+	 * @param msg
+	 * @param cause
+	 */
+	public BkgIaException(String code, String msg, Throwable cause) {
+		super(code, msg, cause);
+	}
+
+	/**
+	 * 
+	 * @param code
+	 * @param msg
+	 */
+	public BkgIaException(String code, String msg) {
+		super(code, msg);
+	}
+}

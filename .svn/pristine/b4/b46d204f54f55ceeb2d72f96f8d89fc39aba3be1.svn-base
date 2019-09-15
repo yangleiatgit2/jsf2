@@ -1,0 +1,66 @@
+package cn.uce.suc.dot.control;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.imp.ActivityAdvertBiz;
+import cn.uce.suc.common.dao.IActivityAdvertDao;
+import cn.uce.suc.common.entity.ActivityAdvert;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.suc.common.vo.ActivityAdvertVo;
+/**
+ * 
+ * @Description: 首页banner控制器
+ * @author yanglei
+ * @date 2017年12月6日 上午10:09:27
+ */
+@RestController
+@RequestMapping("/app/activityAdvert")
+public class ActivityAdvertController extends BaseAppController{
+	
+	/**
+	 * 注入ActivityAdvertBiz对象
+	 */
+	@Resource
+	private ActivityAdvertBiz activityAdvertBiz;  //活动广告宣传biz
+	@Resource
+	private IActivityAdvertDao activityAdvertDao;  //活动广告宣传dao
+	/**
+	 * 注入mobileUserService
+	 */
+
+	/**
+	 * 
+	 * @Description: 根据当前app 平台类型和版本号 查询 banner信息列表,供轮询使用
+	 * @param platform  platform
+	 * @param appVersion appVersion
+	 * @return
+	 * @author yanglei
+	 * @date 2017年12月6日 下午1:24:58
+	 */
+	@GetMapping(value = "list/{appType}/{platForm}/{appVersion}")
+	@ResponseBody
+	public  Map<String, Object> list(@PathVariable  String appType,@PathVariable  String platForm,@PathVariable  String appVersion){
+		ActivityAdvertVo vo =new ActivityAdvertVo();
+		vo.setAppType(appType);
+		vo.setAppVersion(appVersion);
+		vo.setPlatForm(platForm);
+//		Page page = new Page();
+//		page.setCurrentPage(0);
+//		page.setPageSize(15);
+//		Pagination<ActivityAdvert> pagination = activityAdvertBiz.findByPagination(vo, page);
+		List<ActivityAdvert> list=activityAdvertDao.findByListByVo(vo);
+		return returnSuccess(list);
+		
+	}
+	
+}

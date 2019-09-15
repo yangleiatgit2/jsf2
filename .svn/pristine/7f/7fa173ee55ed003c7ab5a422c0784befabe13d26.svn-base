@@ -1,0 +1,87 @@
+package cn.uce.suc.dpt.control;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.impl.datamain.CarManageBiz;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.utils.StringUtil;
+
+/**
+ * @Description: 车辆管理
+ * @author huhaizhou
+ * @date 2017年11月6日 下午5:56:58
+ */
+@Controller
+@RequestMapping("/dpt/truckManage")
+public class DptTruckManageController extends BaseAppController{
+
+	/**
+	 * 日志
+	 */
+	protected static Logger log = LoggerFactory.getLogger(DptTruckManageController.class);
+	/**
+	 * 注入车辆的BIz
+	 */
+	@Resource
+	CarManageBiz carManageBiz;
+
+	/**
+	 * 
+	 * @Description: 查询司机所属机构
+	 * @param driverPhone 手机号
+	 * @param driverName 用户姓名
+	 * @param currentPage 当前第几页
+	 * @param pageSize 页面显示的最大数量
+	 * @return
+	 * @author huhaizhou
+	 * @date 2017年11月6日 下午6:26:11
+	 */
+	@RequestMapping(value="/getAllTheCenter")
+	public @ResponseBody Map<String, Object> getAllTheCenter(
+			String driverPhone,
+			String driverName,
+			int  currentPage,
+			int  pageSize
+			){
+		/**
+		 * 效验手机号和姓名
+		 */
+		if(StringUtil.isBlank(driverPhone) || StringUtil.isBlank(driverName)){
+			return returnError("301","司机姓名和电话不能为空！");
+		}
+		log.info("司机："+driverName+"手机号="+driverPhone+"获取自己所属的分中心===开始");
+		CarManageVo carManageVo =new CarManageVo();
+		carManageVo.setCarOwnerMoble(driverPhone);
+		carManageVo.setCarOwnerName(driverName);
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		/**
+		 * 分页查询车辆信息
+		 */
+		Pagination<CarManage> pagination = carManageBiz.findByPagination(carManageVo, page);
+		if(pagination.getData().size()==0){
+			log.error("司机："+driverName+"手机号="+driverPhone+"没有获取到自己所属的分中心===结束");
+			return returnError("303","未查到你的所属网点信息！");
+		}
+		log.info("司机："+driverName+"手机号="+driverPhone+"获取自己所属的分中心===结束");
+		return returnSuccess(pagination);
+		
+	}
+	
+}
+	
+	
+	

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datamain.IExceptionManagerDao">
+	
+	<sql id="Base_Column_List">
+			ID,app_srage,exception_status,
+			start_trunk_code,reason,end_time,
+			addvice,job_emp,end_reason,
+			excep_type,blow_volume,lng,
+			lat,excep_sites_name,excep_sites_code,
+			remark,delete_flag,version,
+			create_emp,create_org,create_time,
+			update_emp,update_org,update_time,
+			utf1,utf2,utf3,exception_code,line_group_code
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and ID = #{id}
+		</if>
+		
+		    <if test="exceptionCode != null">
+		and exception_code = #{exceptionCode}
+		</if>
+	    <if test="lineGroupCode != null">
+		and line_group_code = #{lineGroupCode}
+		</if>
+		
+		
+	    <if test="appSrage != null">
+		and app_srage = #{appSrage}
+		</if>
+	    <if test="exceptionStatus != null">
+		and exception_status = #{exceptionStatus}
+		</if>
+	    <if test="startTrunkCode != null">
+		and start_trunk_code = #{startTrunkCode}
+		</if>
+	    <if test="reason != null">
+		and reason = #{reason}
+		</if>
+	    <if test="endTime != null">
+		and end_time = #{endTime}
+		</if>
+	    <if test="addvice != null">
+		and addvice = #{addvice}
+		</if>
+	    <if test="jobEmp != null">
+		and job_emp = #{jobEmp}
+		</if>
+	    <if test="endReason != null">
+		and end_reason = #{endReason}
+		</if>
+	    <if test="excepType != null">
+		and excep_type = #{excepType}
+		</if>
+	    <if test="blowVolume != null">
+		and blow_volume = #{blowVolume}
+		</if>
+	    <if test="lng != null">
+		and lng = #{lng}
+		</if>
+	    <if test="lat != null">
+		and lat = #{lat}
+		</if>
+	    <if test="excepSitesName != null">
+		and excep_sites_name = #{excepSitesName}
+		</if>
+	    <if test="excepSitesCode != null">
+		and excep_sites_code = #{excepSitesCode}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.datamain.ExceptionManager">
+	UPDATE t_suc_bkg_exception_manager
+	<set>
+		<if test="appSrage != null">
+		app_srage = #{appSrage},
+		</if>
+		
+		 <if test="exceptionCode != null">
+		 exception_code = #{exceptionCode},
+		</if>
+	    <if test="lineGroupCode != null">
+		 line_group_code = #{lineGroupCode},
+		</if>
+		
+		<if test="exceptionStatus != null">
+		exception_status = #{exceptionStatus},
+		</if>
+		<if test="startTrunkCode != null">
+		start_trunk_code = #{startTrunkCode},
+		</if>
+		<if test="reason != null">
+		reason = #{reason},
+		</if>
+		<if test="endTime != null">
+		end_time = #{endTime},
+		</if>
+		<if test="addvice != null">
+		addvice = #{addvice},
+		</if>
+		<if test="jobEmp != null">
+		job_emp = #{jobEmp},
+		</if>
+		<if test="endReason != null">
+		end_reason = #{endReason},
+		</if>
+		<if test="excepType != null">
+		excep_type = #{excepType},
+		</if>
+		<if test="blowVolume != null">
+		blow_volume = #{blowVolume},
+		</if>
+		<if test="lng != null">
+		lng = #{lng},
+		</if>
+		<if test="lat != null">
+		lat = #{lat},
+		</if>
+		<if test="excepSitesName != null">
+		excep_sites_name = #{excepSitesName},
+		</if>
+		<if test="excepSitesCode != null">
+		excep_sites_code = #{excepSitesCode},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+	</set>
+	WHERE ID = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.datamain.ExceptionManagerVo" resultType="cn.uce.suc.bkg.vo.datamain.ExceptionManagerVo">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_exception_manager
+	  <where>
+	       <if test="exceptionCode != null and exceptionCode != ''">
+			AND exception_code LIKE CONCAT(CONCAT('%', #{exceptionCode}),'%')
+			</if>
+			<if test="startTrunkCode != null and startTrunkCode != ''">
+			AND start_trunk_code LIKE CONCAT(CONCAT('%', #{startTrunkCode}),'%')
+			</if>
+			<if test="exceptionStatus != null and exceptionStatus != ''">
+			AND exception_status = #{exceptionStatus}
+			</if>
+			<if test="createTime != null">  
+			  AND DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= DATE_FORMAT (#{createTime},'%Y-%m-%d')
+			</if>  
+			<if test="updateTime != null">  
+			  AND DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{updateTime},'%Y-%m-%d') 
+			</if> 
+		</where>
+		order by create_time desc
+	</select>
+	
+	<select id="findByVo" parameterType="cn.uce.suc.bkg.vo.datamain.ExceptionManagerVo" resultType="cn.uce.suc.bkg.entity.datamain.ExceptionManager">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_exception_manager
+	      <where>
+	       <if test="exceptionCode != null and exceptionCode != ''">
+			AND exception_code = #{exceptionCode}
+			</if>
+			<if test="startTrunkCode != null and startTrunkCode != ''">
+			AND start_trunk_code = #{startTrunkCode}
+			</if>
+			<if test="exceptionStatus != null and exceptionStatus != ''">
+			AND exception_status = #{exceptionStatus}
+			</if>
+			<if test="createTime != null">  
+			  AND create_time &gt; date (#{createTime})
+			</if>  
+			<if test="updateTime != null">  
+			  AND create_time &lt; date(#{updateTime}) 
+			</if> 
+		</where>
+	</select>
+</mapper>

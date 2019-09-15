@@ -1,0 +1,42 @@
+package cn.uce.suc.common.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.ActivityAdvert;
+import cn.uce.suc.common.vo.ActivityAdvertVo;
+
+/**
+ * @Description: 活动广告宣传表DAO接口类
+ * @author yanglei
+ * @date 2017年12月06日 上午09:46:40
+ */
+@Repository("activityAdvertDao")
+public interface IActivityAdvertDao extends IBaseDao<ActivityAdvert, Long> {
+	
+	/**
+	 * @Description: 分页查询活动广告宣传表
+	 * @param activityAdvertVo 活动广告宣传表
+	 * @param page 分页参数
+	 * @return 活动广告宣传表
+	 * @author yanglei
+	 * @date 2017年12月06日 上午09:46:40
+	 */
+	public Pagination<ActivityAdvert> findByPagination(ActivityAdvertVo activityAdvertVo, Page page);
+	
+	/**
+	 * @Description: 分页查询活动广告宣传表
+	 * @param activityAdvertVo 活动广告宣传表
+	 * @return 活动广告宣传表
+	 * @author yanglei
+	 * @date 2017年12月06日 上午09:46:40
+	 */
+	public List<ActivityAdvert> findByListByVo(ActivityAdvertVo activityAdvertVo);
+	
+	
+	
+}

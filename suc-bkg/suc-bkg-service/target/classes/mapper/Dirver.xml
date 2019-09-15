@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.datamain.IDirverDao">
+	
+	<sql id="Base_Column_List">
+			id,driver_name,plate_number,
+			dirver_type,carrive_id,carrier_name,
+			driver_org,mobile_phone,id_card,
+			employment_type,emergency_contact,emergency_number,
+			driving_model,driving_number,driving_useful_time,
+			certificate_id,certificate_useful_time,dirver_status,
+			id_card_url,stop_instruction,driver_photo_url,
+			driving_file_url,certificate_file_url,remark,
+			utf1,utf2,utf3,
+			delete_flag,version,create_emp,
+			create_org,create_time,update_emp,
+			update_org,usable_flag,update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="driverName != null">
+		and driver_name = #{driverName}
+		</if>
+	    <if test="plateNumber != null">
+		and plate_number = #{plateNumber}
+		</if>
+	    <if test="dirverType != null">
+		and dirver_type = #{dirverType}
+		</if>
+	    <if test="carriveId != null">
+		and carrive_id = #{carriveId}
+		</if>
+	    <if test="carrierName != null">
+		and carrier_name = #{carrierName}
+		</if>
+	    <if test="driverOrg != null">
+		and driver_org = #{driverOrg}
+		</if>
+	    <if test="mobilePhone != null">
+		and mobile_phone = #{mobilePhone}
+		</if>
+	    <if test="idCard != null">
+		and id_card = #{idCard}
+		</if>
+	    <if test="employmentType != null">
+		and employment_type = #{employmentType}
+		</if>
+	    <if test="emergencyContact != null">
+		and emergency_contact = #{emergencyContact}
+		</if>
+	    <if test="emergencyNumber != null">
+		and emergency_number = #{emergencyNumber}
+		</if>
+	    <if test="drivingModel != null">
+		and driving_model = #{drivingModel}
+		</if>
+	    <if test="drivingNumber != null">
+		and driving_number = #{drivingNumber}
+		</if>
+	    <if test="drivingUsefulTime != null">
+		and driving_useful_time = #{drivingUsefulTime}
+		</if>
+	    <if test="certificateId != null">
+		and certificate_id = #{certificateId}
+		</if>
+	    <if test="certificateUsefulTime != null">
+		and certificate_useful_time = #{certificateUsefulTime}
+		</if>
+	    <if test="dirverStatus != null">
+		and dirver_status = #{dirverStatus}
+		</if>
+	    <if test="idCardUrl != null">
+		and id_card_url = #{idCardUrl}
+		</if>
+	    <if test="stopInstruction != null">
+		and stop_instruction = #{stopInstruction}
+		</if>
+	    <if test="driverPhotoUrl != null">
+		and driver_photo_url = #{driverPhotoUrl}
+		</if>
+	    <if test="drivingFileUrl != null">
+		and driving_file_url = #{drivingFileUrl}
+		</if>
+	    <if test="certificateFileUrl != null">
+		and certificate_file_url = #{certificateFileUrl}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="usableFlag != null">
+		and usable_flag = #{usableFlag}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.datamain.Dirver">
+	UPDATE t_suc_bkg_dirver_info
+	<set>
+		<if test="driverName != null">
+		driver_name = #{driverName},
+		</if>
+		<if test="plateNumber != null">
+		plate_number = #{plateNumber},
+		</if>
+		<if test="dirverType != null">
+		dirver_type = #{dirverType},
+		</if>
+		<if test="carriveId != null">
+		carrive_id = #{carriveId},
+		</if>
+		<if test="carrierName != null">
+		carrier_name = #{carrierName},
+		</if>
+		<if test="driverOrg != null">
+		driver_org = #{driverOrg},
+		</if>
+		<if test="mobilePhone != null">
+		mobile_phone = #{mobilePhone},
+		</if>
+		<if test="idCard != null">
+		id_card = #{idCard},
+		</if>
+		<if test="employmentType != null">
+		employment_type = #{employmentType},
+		</if>
+		<if test="emergencyContact != null">
+		emergency_contact = #{emergencyContact},
+		</if>
+		<if test="emergencyNumber != null">
+		emergency_number = #{emergencyNumber},
+		</if>
+		<if test="drivingModel != null">
+		driving_model = #{drivingModel},
+		</if>
+		<if test="drivingNumber != null">
+		driving_number = #{drivingNumber},
+		</if>
+		<if test="drivingUsefulTime != null">
+		driving_useful_time = #{drivingUsefulTime},
+		</if>
+		<if test="certificateId != null">
+		certificate_id = #{certificateId},
+		</if>
+		<if test="certificateUsefulTime != null">
+		certificate_useful_time = #{certificateUsefulTime},
+		</if>
+		<if test="dirverStatus != null">
+		dirver_status = #{dirverStatus},
+		</if>
+		<if test="idCardUrl != null">
+		id_card_url = #{idCardUrl},
+		</if>
+		<if test="stopInstruction != null">
+		stop_instruction = #{stopInstruction},
+		</if>
+		<if test="driverPhotoUrl != null">
+		driver_photo_url = #{driverPhotoUrl},
+		</if>
+		<if test="drivingFileUrl != null">
+		driving_file_url = #{drivingFileUrl},
+		</if>
+		<if test="certificateFileUrl != null">
+		certificate_file_url = #{certificateFileUrl},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="version != null">
+		version = version+1,
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="usableFlag != null">
+		usable_flag = #{usableFlag},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	<select id="findByDrivingNum" parameterType="String" resultType="cn.uce.suc.bkg.entity.datamain.Dirver">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirver_info where driving_number = #{drivingNumber}
+	</select>
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.datamain.DirverVo" resultType="cn.uce.suc.bkg.entity.datamain.Dirver">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirver_info
+	</select>
+	<select id="findByCondition" parameterType="cn.uce.suc.bkg.vo.datamain.DirverVo" resultType="cn.uce.suc.bkg.entity.datamain.Dirver">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirver_info
+	<where>
+		<if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="driverName != null and driverName != '' ">
+		and driver_name LIKE CONCAT(CONCAT('%', #{driverName}),'%')
+		</if>
+	    <if test="plateNumber != null and plateNumber != '' ">
+		and plate_number  LIKE CONCAT(CONCAT('%', #{plateNumber}),'%')
+		</if>
+	    <if test="carriveId != null and carriveId != '' ">
+		and carrive_id = #{carriveId}
+		</if>
+	    <if test="carrierName != null and carrierName != '' ">
+		and carrier_name  LIKE CONCAT(CONCAT('%', #{carrierName}),'%') 
+		</if>
+	    <if test="driverOrg != null and driverOrg != '' ">
+		and driver_org  LIKE CONCAT(CONCAT('%', #{driverOrg}),'%')
+		</if>
+	    <if test="dirverStatus != null and dirverStatus != '' ">
+		and dirver_status = #{dirverStatus}
+		</if>
+	</where>
+	</select>
+	<select id="findByExport" parameterType="cn.uce.suc.bkg.vo.datamain.DirverVo" resultType="cn.uce.suc.bkg.vo.datamain.DirverVo">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_dirver_info
+	<where>
+		<if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="driverName != null and driverName != '' ">
+		and driver_name LIKE CONCAT(CONCAT('%', #{driverName}),'%')
+		</if>
+	    <if test="plateNumber != null and plateNumber != '' ">
+		and plate_number  LIKE CONCAT(CONCAT('%', #{plateNumber}),'%')
+		</if>
+	    <if test="carriveId != null and carriveId != '' ">
+		and carrive_id = #{carriveId}
+		</if>
+	    <if test="carrierName != null and carrierName != '' ">
+		and carrier_name  LIKE CONCAT(CONCAT('%', #{carrierName}),'%') 
+		</if>
+	    <if test="driverOrg != null and driverOrg != '' ">
+		and driver_org  LIKE CONCAT(CONCAT('%', #{driverOrg}),'%')
+		</if>
+	    <if test="dirverStatus != null and dirverStatus != '' ">
+		and dirver_status = #{dirverStatus}
+		</if>
+	</where>
+	</select>
+	<select id="findDriverByCmbgd" parameterType="cn.uce.suc.bkg.vo.datamain.DirverVo" resultType="cn.uce.suc.bkg.entity.datamain.Dirver">
+	select id, driver_name,mobile_phone from t_suc_bkg_dirver_info d
+	<where>
+	<if test="q != null and '' != q">
+		AND (d.driver_name LIKE CONCAT(CONCAT('%', #{q}),'%')
+		OR
+		d.mobile_phone LIKE CONCAT(CONCAT('%', #{q}),'%'))
+	</if>
+	<if test="1 == 1">
+	and d.dirver_status = 3
+	</if>
+	
+	</where>
+	</select>
+	<select id="findByCarrierId"  parameterType="String" resultType="cn.uce.suc.bkg.entity.datamain.Dirver">
+		select <include refid="Base_Column_List" /> from t_suc_bkg_dirver_info where carrier_name  = #{carrierName} ;
+	
+	</select>
+</mapper>

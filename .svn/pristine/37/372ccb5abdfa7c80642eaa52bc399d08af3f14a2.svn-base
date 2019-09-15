@@ -1,0 +1,80 @@
+package cn.uce.suc.common.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.TruckCostManagement;
+import cn.uce.suc.common.vo.TruckCostManagementVo;
+
+/**
+ * @Description: 车型成本管理DAO接口类
+ * @author liwei
+ * @date 2017年10月31日 下午01:36:11
+ */
+@Repository("truckCostManagementDao")
+public interface ITruckCostManagementDao extends IBaseDao<TruckCostManagement, Long> {
+	
+	/**
+	 * @Description: 分页查询车型成本管理
+	 * @param truckCostManagementVo 车型成本管理
+	 * @param page 分页参数
+	 * @return 车型成本管理
+	 * @author liwei
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	public Pagination<TruckCostManagement> findByPagination(TruckCostManagementVo truckCostManagementVo, Page page);
+	/**
+	 * @Description: 	
+	 * @param truckCostManagementVo 车型成本管理
+	 * @param page 分页参数
+	 * @return 车型成本管理
+	 * @author liwei
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	public List<TruckCostManagementVo> findByBelongSiteCode(TruckCostManagementVo truckCostManagementVo);
+	  /**
+	   * 
+	   * @Description: 根据组合查询车型及体积 ，算法调用
+	   * @param truckCostManagementVo
+	   * @return
+	   * @author laizhendong
+	   * @date 2017年10月29日 上午10:10:51
+	   */
+	  public List<TruckCostManagementVo> findByCombine(TruckCostManagementVo truckCostManagementVo);
+	  
+
+		/**
+		 * @Description: 查询该车型管理号的最大版本号
+		 * @param truckManageCode 车型管理号
+		 * @return 车型成本管理的max版本
+		 * @author 
+		 * @date 2017年10月31日 下午01:36:11
+		 */
+	  public Long getMaxVersion(String truckManageCode);
+	  
+	  /**
+	   * 
+	   * @Description: 根据条件查询车型成本 
+	   * @param truckCostManagementVo
+	   * @return
+	   * @author laizhendong
+	   * @date 2017年11月6日 上午11:10:36
+	   */
+	  public List<TruckCostManagementVo> findByCondition(TruckCostManagementVo truckCostManagementVo);
+	  /**
+		 * 
+		 * @Description: 车型车本名称下拉
+		 * @param carrierInfoVo
+		 * @param page
+		 * @return
+		 * @author haizhou
+		 * @date 2017年11月7日 下午5:57:39
+		 */
+	  public Pagination<TruckCostManagement> getByTruckCostName(
+			TruckCostManagementVo truckCostManagementVo, Page page);
+	
+}

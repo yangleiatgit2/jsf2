@@ -1,0 +1,91 @@
+package cn.uce.suc.common.constants;
+
+public interface PromptConstants {
+	
+	/**=========发车计划详情的司机状态提示语Start===============*/
+	/**待确认=*/
+	String DRIVER_STATUS_CONFIRM_WAIT = "待确认"; 
+	/**待执行=*/
+	String DRIVER_STATUS_EXECUTE_WAIT = "本次发车计划【${dirverDistance}】公里，总时长【${firDrivingTime}】小时【${lastDrivingTime}】分钟";  
+	/**待装货=*/
+	String DRIVER_STATUS_LOAD_WAIT = "待装货【${nextStation}】";  
+	/**装货超时？*/
+	String DRIVER_STATUS_LOAD_TIMEOVER = "装货超时"; 
+	/**装货确认=*/
+	String DRIVER_STATUS_LOAD_CONFIRM = "等待【${nextStation}】确认装货"; 
+	/**装货确认=*/
+	String DRIVER_STATUS_LOADING_CONFIRM = "等待【${wayPointName}】确认装货";
+	/**装货完成=*/ 
+	String DRIVER_STATUS_LOADING_FINISH = "装货完成(请准备出发前往下一网点【${nextStation}】)";      // 取消
+	/**装货完成=*/ 
+	String DRIVER_STATUS_LOAD_FINISH = "装货完成(请准备出发前往下一网点【${wayPointName}】)"; 
+	/**下一站？*/
+	String DRIVER_STATUS_NEXT_STATION = "即将到达【${nextStation}】,请做好装货准备";  
+	/**待卸货=*/
+	String DRIVER_STATUS_CARGO_PENDING = "请在装货完成后，确认网点货量信息并点击确认按钮确认";
+	/**卸货超时？*/
+	String DRIVER_STATUS_PENDING_TIMEOVER = "卸货超时";
+	 /**卸货确认=*/
+	String DRIVER_STATUS_PENDING_CONFIRM = "等待【${nextStation}】进行卸货确认"; 
+	/**卸货确认=*/
+	String DRIVER_STATUS_PEND_CONFIRM = "等待【${wayPointName}】进行卸货确认";
+	/**卸货完成=*/
+	String DRIVER_STATUS_UNLOADING_COMPLETED = "请准备出发前往下一网点【${nextStation}】";    //取消
+	/**本站点已完成=*/
+	String DRIVER_STATUS_COMPLETED = "谢谢您，本次发车计划已完成"; 
+	/**异常上报=*/
+	String DRIVER_STATUS_SEND_ERROR = "异常已上报，等待调度员确认";  
+	/**运输异常=*/
+	String DRIVER_STATUS_TRANSPORT_ERROR = "等待调度员进行处理";  
+	/**已终止？*/
+	String DRIVER_STATUS_END = "(发车计划已终止)";  
+	/**公里数的code*/
+	String DIRVER_DISTANCE = "【${dirverDistance}】";
+	/**行驶需要的小时*/
+	String DIRVER_HOUR="【${firDrivingTime}】";
+	/**行驶需要的分钟*/
+	String DIRVER_MINUTE="【${lastDrivingTime}】";
+	/**站点名称*/
+	String NEXT_STATION="【${nextStation}】";
+	
+	 /** ===========发车计划详情的司机状态提示语End=========*/
+	/**=========发车计划详情的网点状态提示语Start===============*/
+	/**装货完成未评价*/
+	String SITE_STATUS_LOAD_UNEVALUATED ="请对司机的服务质量进行评价";
+	/**装货完成已评价*/
+	String SITE_STATUS_LOAD_EVALUATED ="司机即将驶离【${nextStation}】";
+	/**卸货完成未评价*/
+	String SITE_STATUS_UNLOAD_UNEVALUATED ="请对司机的服务质量进行评价";
+	/**卸货完成已评价*/
+	String SITE_STATUS_UNLOAD_EVALUATED ="司机即将驶离【$后序网点名称$】";
+	/**中心待装货*/
+	String SITE_STATUS_STATION_FOR_LOAD = "SITE_STATUS_STATION_FOR_LOAD";
+	/**中心待卸货*/
+	String SITE_STATUS_STATION_FOR_UNLOAD ="SITE_STATUS_STATION_FOR_UNLOAD";
+	/**中心装货完成*/
+	String SITE_STATUS_STATION_LOAD ="SITE_STATUS_STATION_LOAD";
+	/**中心卸货完成*/
+	String SITE_STATUS_STATION_UNLOAD ="SITE_STATUS_STATION_UNLOAD";
+	String SITE_STATUS_NEXT_STATION ="SITE_STATUS_NEXT_STATION";
+	
+	
+	/**待执行*/
+	String SITE_STATUS_EXECUTORY ="司机已接单，请耐心等待";
+	/**待装货*/
+	String SITE_STATUS_FOR_LOAD ="等待【${nextStation}】装货";
+	/**装货确认*/
+	String SITE_STATUS_CONFIRM_LOAD ="请尽快确认实际装货量，点击确认按钮提交信息";
+	/**装货完成*/
+	String SITE_STATUS_LOAD  = "司机即将驶离【$后序网点名称$】";	
+	/**待卸货*/
+	String SITE_STATUS_FOR_UNLOAD  = "司机已经到达，请做好卸货准备";	
+	/**卸货确认*/
+	String SITE_STATUS_CONFIRM_UNLOAD ="请尽快确认实际卸货量，点击确认按钮提交信息";
+	/**卸货完成*/
+	String SITE_STATUS_UNLOAD ="请对司机的服务质量进行评价";
+	/**本站点已完成*/
+	String SITE_STATUS_CURRENT_FINISH ="司机即将驶离【$后序网点名称$】";
+	/**运输异常*/
+	String SITE_STATUS_TRANS_EXCEPTION = "等待调度员进行处理";
+
+}

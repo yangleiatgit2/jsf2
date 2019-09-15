@@ -1,0 +1,757 @@
+package cn.uce.suc.common.vo;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 乾坤机构Vo类
+ * @author liwei
+ * @date 2017年10月15日 下午09:57:58
+ */
+public class OmgCmsOrgVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
+	 * 机构ID.
+	 */
+	private Integer orgId;
+	/**
+	 * 乾坤机构ID.
+	 */
+	private Integer cmsOrgId;
+	/**
+	 * 机构编号.机构编号唯一
+	 */
+	private String orgCode;
+	/**
+	 * 基础编码
+	 */
+	private String baseOrgCode;
+	/**
+	 * 机构名称（简体）.机构名称唯一
+	 */
+	private String orgName;
+	/**
+	 * 机构简称（繁体）.机构名称唯一
+	 */
+	private String orgNameTw;
+	/**
+	 * 机构简称（英文）.机构名称唯一
+	 */
+	private String orgNameEn;
+	/**
+	 * 网点名称全拼.
+	 */
+	private String namePy;
+	/**
+	 * 网点名称拼音缩写.
+	 */
+	private String nameSpy;
+	/**
+	 * 机构类型.总部-10,财务中心-20,操作中心-21,网点-30,承包区-40
+	 */
+	private Integer orgType;
+	/**
+	 * 父级机构
+	 */
+	private String orgFullCode;
+	/**
+	 * 所属机构ID.只有总部允许为空
+	 */
+	private Integer parentOrg;
+	/**
+	 * 所属操作中心.
+	 */
+	private Integer operateCenter;
+	/**
+	 * 所属财务中心.
+	 */
+	private Integer financeCenter;
+	/**
+	 * 所属管理中心.
+	 */
+	private Integer manageCenter;
+	/**
+	 * 对帐机构.DEF = ORG_ID 当为承包区时默认为上一级的值
+	 */
+	private Integer accOrg;
+	/**
+	 * 所属机构ID.只有总部允许为空
+	 */
+	private String parentOrgCode;
+	/**
+	 * 所属操作中心.
+	 */
+	private String operateCenterCode;
+	/**
+	 * 所属财务中心.
+	 */
+	private String financeCenterCode;
+	/**
+	 * 所属管理中心.
+	 */
+	private String manageCenterCode;
+	/**
+	 * 所属结算机构基准编号.乾坤基准编号
+	 */
+	private String accOrgCode;
+	/**
+	 * 币别.
+	 */
+	private Integer currency;
+	/**
+	 * 状态.新建，审核，正常，暂停，停用
+	 */
+	private Integer status;
+	/**
+	 * 网点属性.来自系统参数表:加盟、直营、同行、出货口、代派
+	 */
+	private Integer orgProperty;
+	/**
+	 * 生效时间.预留字段
+	 */
+	private Date effectTime;
+	/**
+	 * 失效时间.预留字段
+	 */
+	private Date expireTime;
+	/**
+	 * 备注.
+	 */
+	private String remark;
+	/**
+	 * 删除标识.1表示已删除，默认为0
+	 */
+	private Boolean deleteFlag;
+	/**
+	 * 版本.
+	 */
+	private Integer version;
+	/**
+	 * 创建人.
+	 */
+	private String createEmp;
+	/**
+	 * 创建机构.
+	 */
+	private Integer createOrg;
+	/**
+	 * 创建时间.
+	 */
+	private Date createTime;
+	/**
+	 * 更新人.
+	 */
+	private String updateEmp;
+	/**
+	 * 更新机构.
+	 */
+	private Integer updateOrg;
+	/**
+	 * 更新时间.
+	 */
+	private Date updateTime;
+	/**
+	 * 状态更新描述
+	 */
+	private String statusUpdateDesc;
+	/**
+	 * 状态更新时间
+	 */
+	private Date statusUpdateTime;
+	/**
+	 * 同步时间
+	 */
+	private Date syncTime;
+	/**
+	 * combox搜索必须
+	 */
+	private String q;
+	/**
+	 * 机构类型集合
+	 */
+	private String[] orgTypes;
+
+	/**
+	 * 机构状态集合
+	 */
+	private String[] orgStatus;
+
+	/**
+	 * 机构类型集合
+	 */
+	public String[] getOrgTypes() {
+		return orgTypes;
+	}
+
+	/**
+	 * 机构类型集合
+	 */
+	public void setOrgTypes(String[] orgTypes) {
+		this.orgTypes = orgTypes;
+	}
+
+	/**
+	 * 机构状态集合
+	 */
+	public String[] getOrgStatus() {
+		return orgStatus;
+	}
+
+	/**
+	 * 机构状态集合
+	 */
+	public void setOrgStatus(String[] orgStatus) {
+		this.orgStatus = orgStatus;
+	}
+
+	/**
+	 * combox搜索必须
+	 */
+	public String getQ() {
+		return q;
+	}
+
+	/**
+	 * combox搜索必须
+	 */
+	public void setQ(String q) {
+		this.q = q;
+	}
+
+	/**
+	 * 获取 机构ID.
+	 */
+	public Integer getOrgId() {
+		return orgId;
+	}
+
+	/**
+	 * 设置 机构ID.
+	 */
+	public void setOrgId(Integer orgId) {
+		this.orgId = orgId;
+	}
+
+	/**
+	 * 获取 乾坤机构ID.
+	 */
+	public Integer getCmsOrgId() {
+		return cmsOrgId;
+	}
+
+	/**
+	 * 设置 乾坤机构ID.
+	 */
+	public void setCmsOrgId(Integer cmsOrgId) {
+		this.cmsOrgId = cmsOrgId;
+	}
+
+	/**
+	 * 获取 机构编号.机构编号唯一
+	 */
+	public String getOrgCode() {
+		return orgCode;
+	}
+
+	/**
+	 * 设置 机构编号.机构编号唯一
+	 */
+	public void setOrgCode(String orgCode) {
+		this.orgCode = orgCode;
+	}
+
+	/**
+	 * 获取 基础编码
+	 */
+	public String getBaseOrgCode() {
+		return baseOrgCode;
+	}
+
+	/**
+	 * 设置 基础编码
+	 */
+	public void setBaseOrgCode(String baseOrgCode) {
+		this.baseOrgCode = baseOrgCode;
+	}
+
+	/**
+	 * 获取 机构名称（简体）.机构名称唯一
+	 */
+	public String getOrgName() {
+		return orgName;
+	}
+
+	/**
+	 * 设置 机构名称（简体）.机构名称唯一
+	 */
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	/**
+	 * 获取 机构简称（繁体）.机构名称唯一
+	 */
+	public String getOrgNameTw() {
+		return orgNameTw;
+	}
+
+	/**
+	 * 设置 机构简称（繁体）.机构名称唯一
+	 */
+	public void setOrgNameTw(String orgNameTw) {
+		this.orgNameTw = orgNameTw;
+	}
+
+	/**
+	 * 获取 机构简称（英文）.机构名称唯一
+	 */
+	public String getOrgNameEn() {
+		return orgNameEn;
+	}
+
+	/**
+	 * 设置 机构简称（英文）.机构名称唯一
+	 */
+	public void setOrgNameEn(String orgNameEn) {
+		this.orgNameEn = orgNameEn;
+	}
+
+	/**
+	 * 获取 网点名称全拼.
+	 */
+	public String getNamePy() {
+		return namePy;
+	}
+
+	/**
+	 * 设置 网点名称全拼.
+	 */
+	public void setNamePy(String namePy) {
+		this.namePy = namePy;
+	}
+
+	/**
+	 * 获取 网点名称拼音缩写.
+	 */
+	public String getNameSpy() {
+		return nameSpy;
+	}
+
+	/**
+	 * 设置 网点名称拼音缩写.
+	 */
+	public void setNameSpy(String nameSpy) {
+		this.nameSpy = nameSpy;
+	}
+
+	/**
+	 * 获取 机构类型.总部-10,财务中心-20,操作中心-21,网点-30,承包区-40
+	 */
+	public Integer getOrgType() {
+		return orgType;
+	}
+
+	/**
+	 * 设置 机构类型.总部-10,财务中心-20,操作中心-21,网点-30,承包区-40
+	 */
+	public void setOrgType(Integer orgType) {
+		this.orgType = orgType;
+	}
+
+	/**
+	 * 获取 父级机构
+	 */
+	public String getOrgFullCode() {
+		return orgFullCode;
+	}
+
+	/**
+	 * 设置 父级机构
+	 */
+	public void setOrgFullCode(String orgFullCode) {
+		this.orgFullCode = orgFullCode;
+	}
+
+	/**
+	 * 获取 所属机构ID.只有总部允许为空
+	 */
+	public Integer getParentOrg() {
+		return parentOrg;
+	}
+
+	/**
+	 * 设置 所属机构ID.只有总部允许为空
+	 */
+	public void setParentOrg(Integer parentOrg) {
+		this.parentOrg = parentOrg;
+	}
+
+	/**
+	 * 获取 所属操作中心.
+	 */
+	public Integer getOperateCenter() {
+		return operateCenter;
+	}
+
+	/**
+	 * 设置 所属操作中心.
+	 */
+	public void setOperateCenter(Integer operateCenter) {
+		this.operateCenter = operateCenter;
+	}
+
+	/**
+	 * 获取 所属财务中心.
+	 */
+	public Integer getFinanceCenter() {
+		return financeCenter;
+	}
+
+	/**
+	 * 设置 所属财务中心.
+	 */
+	public void setFinanceCenter(Integer financeCenter) {
+		this.financeCenter = financeCenter;
+	}
+
+	/**
+	 * 获取 所属管理中心.
+	 */
+	public Integer getManageCenter() {
+		return manageCenter;
+	}
+
+	/**
+	 * 设置 所属管理中心.
+	 */
+	public void setManageCenter(Integer manageCenter) {
+		this.manageCenter = manageCenter;
+	}
+
+	/**
+	 * 获取 对帐机构.DEF = ORG_ID 当为承包区时默认为上一级的值
+	 */
+	public Integer getAccOrg() {
+		return accOrg;
+	}
+
+	/**
+	 * 设置 对帐机构.DEF = ORG_ID 当为承包区时默认为上一级的值
+	 */
+	public void setAccOrg(Integer accOrg) {
+		this.accOrg = accOrg;
+	}
+
+	/**
+	 * 获取 所属机构ID.只有总部允许为空
+	 */
+	public String getParentOrgCode() {
+		return parentOrgCode;
+	}
+
+	/**
+	 * 设置 所属机构ID.只有总部允许为空
+	 */
+	public void setParentOrgCode(String parentOrgCode) {
+		this.parentOrgCode = parentOrgCode;
+	}
+
+	/**
+	 * 获取 所属操作中心.
+	 */
+	public String getOperateCenterCode() {
+		return operateCenterCode;
+	}
+
+	/**
+	 * 设置 所属操作中心.
+	 */
+	public void setOperateCenterCode(String operateCenterCode) {
+		this.operateCenterCode = operateCenterCode;
+	}
+
+	/**
+	 * 获取 所属财务中心.
+	 */
+	public String getFinanceCenterCode() {
+		return financeCenterCode;
+	}
+
+	/**
+	 * 设置 所属财务中心.
+	 */
+	public void setFinanceCenterCode(String financeCenterCode) {
+		this.financeCenterCode = financeCenterCode;
+	}
+
+	/**
+	 * 获取 所属管理中心.
+	 */
+	public String getManageCenterCode() {
+		return manageCenterCode;
+	}
+
+	/**
+	 * 设置 所属管理中心.
+	 */
+	public void setManageCenterCode(String manageCenterCode) {
+		this.manageCenterCode = manageCenterCode;
+	}
+
+	/**
+	 * 获取 所属结算机构基准编号.乾坤基准编号
+	 */
+	public String getAccOrgCode() {
+		return accOrgCode;
+	}
+
+	/**
+	 * 设置 所属结算机构基准编号.乾坤基准编号
+	 */
+	public void setAccOrgCode(String accOrgCode) {
+		this.accOrgCode = accOrgCode;
+	}
+
+	/**
+	 * 获取 币别.
+	 */
+	public Integer getCurrency() {
+		return currency;
+	}
+
+	/**
+	 * 设置 币别.
+	 */
+	public void setCurrency(Integer currency) {
+		this.currency = currency;
+	}
+
+	/**
+	 * 获取 状态.新建，审核，正常，暂停，停用
+	 */
+	public Integer getStatus() {
+		return status;
+	}
+
+	/**
+	 * 设置 状态.新建，审核，正常，暂停，停用
+	 */
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	/**
+	 * 获取 网点属性.来自系统参数表:加盟、直营、同行、出货口、代派
+	 */
+	public Integer getOrgProperty() {
+		return orgProperty;
+	}
+
+	/**
+	 * 设置 网点属性.来自系统参数表:加盟、直营、同行、出货口、代派
+	 */
+	public void setOrgProperty(Integer orgProperty) {
+		this.orgProperty = orgProperty;
+	}
+
+	/**
+	 * 获取 生效时间.预留字段
+	 */
+	public Date getEffectTime() {
+		return effectTime;
+	}
+
+	/**
+	 * 设置 生效时间.预留字段
+	 */
+	public void setEffectTime(Date effectTime) {
+		this.effectTime = effectTime;
+	}
+
+	/**
+	 * 获取 失效时间.预留字段
+	 */
+	public Date getExpireTime() {
+		return expireTime;
+	}
+
+	/**
+	 * 设置 失效时间.预留字段
+	 */
+	public void setExpireTime(Date expireTime) {
+		this.expireTime = expireTime;
+	}
+
+	/**
+	 * 获取 备注.
+	 */
+	public String getRemark() {
+		return remark;
+	}
+
+	/**
+	 * 设置 备注.
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	/**
+	 * 获取 删除标识.1表示已删除，默认为0
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+
+	/**
+	 * 设置 删除标识.1表示已删除，默认为0
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	/**
+	 * 获取 版本.
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+
+	/**
+	 * 设置 版本.
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	/**
+	 * 获取 创建人.
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+
+	/**
+	 * 设置 创建人.
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	/**
+	 * 获取 创建机构.
+	 */
+	public Integer getCreateOrg() {
+		return createOrg;
+	}
+
+	/**
+	 * 设置 创建机构.
+	 */
+	public void setCreateOrg(Integer createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	/**
+	 * 获取 创建时间.
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	/**
+	 * 设置 创建时间.
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	/**
+	 * 获取 更新人.
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+
+	/**
+	 * 设置 更新人.
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	/**
+	 * 获取 更新机构.
+	 */
+	public Integer getUpdateOrg() {
+		return updateOrg;
+	}
+
+	/**
+	 * 设置 更新机构.
+	 */
+	public void setUpdateOrg(Integer updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	/**
+	 * 获取 更新时间.
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	/**
+	 * 设置 更新时间.
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	/**
+	 * 获取 状态更新描述
+	 */
+	public String getStatusUpdateDesc() {
+		return statusUpdateDesc;
+	}
+
+	/**
+	 * 设置 状态更新描述
+	 */
+	public void setStatusUpdateDesc(String statusUpdateDesc) {
+		this.statusUpdateDesc = statusUpdateDesc;
+	}
+
+	/**
+	 * 获取 状态更新时间
+	 */
+	public Date getStatusUpdateTime() {
+		return statusUpdateTime;
+	}
+
+	/**
+	 * 设置 状态更新时间
+	 */
+	public void setStatusUpdateTime(Date statusUpdateTime) {
+		this.statusUpdateTime = statusUpdateTime;
+	}
+
+	/**
+	 * 获取 同步时间
+	 */
+	public Date getSyncTime() {
+		return syncTime;
+	}
+
+	/**
+	 * 设置 同步时间
+	 */
+	public void setSyncTime(Date syncTime) {
+		this.syncTime = syncTime;
+	}
+
+}

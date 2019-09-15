@@ -1,0 +1,136 @@
+package cn.uce.suc.bkg.biz.impl.price;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.price.IPricingRuleDetailBiz;
+import cn.uce.suc.bkg.entity.price.PricingRuleDetail;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.service.price.PricingRuleDetailService;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailVo;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * @Description: 定价规则详情BIZ实现类
+ * @author laizhendong
+ * @date 2017年11月01日 下午09:07:39
+ */
+@Service("pricingRuleDetailBiz")
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class PricingRuleDetailBiz implements IPricingRuleDetailBiz {
+	
+	/**
+	 * 注入定价规则详情Service
+	 */
+	@Resource
+	private PricingRuleDetailService pricingRuleDetailService;
+	
+	/**日志*/
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass()); 
+	
+	/**
+	 * @Description: 新增定价规则详情
+	 * @param pricingRuleDetail
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int addPricingRuleDetail(PricingRuleDetail pricingRuleDetail) {
+		return pricingRuleDetailService.addPricingRuleDetail(pricingRuleDetail);
+	}
+	
+	/**
+	 * @Description: 修改定价规则详情
+	 * @param pricingRuleDetail 定价规则详情
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updatePricingRuleDetail(PricingRuleDetailVo pricingRuleDetailVo) {
+		if (null == pricingRuleDetailVo || null == pricingRuleDetailVo.getId()) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("updatePricingRuleDetail错误，参数错误！");
+			}
+			return 0;
+		}
+		//转换成entity
+		PricingRuleDetail pricingRuleDetail = ObjectConvertUtil.convertObject(pricingRuleDetailVo, PricingRuleDetail.class);
+		int count = pricingRuleDetailService.updateById(pricingRuleDetail);
+		if (count < 1) {
+			throw new BkgModuleException("error.bkg.biz.PricingRuleDetailBiz.DetailDataChanged");
+		}
+		return count;
+	}
+	
+	/**
+	 * @Description: 删除定价规则详情
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int deletePricingRuleDetail(Long id) {
+		return pricingRuleDetailService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询定价规则详情
+	 * @param id 主键
+	 * @return 定价规则详情
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	@Override
+	public PricingRuleDetail findById(Long id) {
+		return pricingRuleDetailService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询定价规则详情
+	 * @param pricingRuleDetailVo 定价规则详情
+	 * @param page 分页参数
+	 * @return 定价规则详情
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public Pagination<PricingRuleDetailVo> findByPagination(PricingRuleDetailVo pricingRuleDetailVo, Page page) {
+		Pagination<PricingRuleDetailVo> pagination = pricingRuleDetailService.findByPagination(pricingRuleDetailVo, page);
+		return pagination;
+	}
+	/**
+	 * 
+	 * @Description: 根据定价分类分组分页查询
+	 * @param pricingRuleDetailVo
+	 * @param page
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 上午11:24:12
+	 */
+	public Pagination<PricingRuleDetailVo> findByPriceTypeGroup(PricingRuleDetailVo pricingRuleDetailVo, Page page){
+		return pricingRuleDetailService.findByPriceTypeGroup(pricingRuleDetailVo, page);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则详情
+	 * @param pricingRuleDetailVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午5:48:34
+	 */
+	public List<PricingRuleDetailVo> findByCondition(PricingRuleDetailVo pricingRuleDetailVo){
+		return pricingRuleDetailService.findByCondition(pricingRuleDetailVo);
+	}
+}

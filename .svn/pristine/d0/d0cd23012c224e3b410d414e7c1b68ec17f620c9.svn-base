@@ -1,0 +1,289 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.INoticeBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.Notice;
+import cn.uce.suc.common.entity.NoticeDetail;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.NoticeVo;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.service.NoticeDetailService;
+import cn.uce.suc.common.service.NoticeService;
+import cn.uce.utils.StringUtil;
+
+/**
+ * @Description: 系统公告信息BIZ实现类
+ * @author liwei
+ * @date 2017年10月25日 下午08:36:46
+ */
+@Service("noticeBiz")
+public class NoticeBiz implements INoticeBiz {
+	
+	/**
+	 * 注入系统公告信息Service
+	 */
+	@Resource
+	private NoticeService noticeService;
+	/**
+	 * 注入消息详情
+	 */
+	@Resource
+	private NoticeDetailService noticeDetailService;
+	/**
+	 * 注入用户注册的手机号
+	 */
+	@Resource
+	private MobileuserService mobileuserService;
+	/**
+	 * @Description: 新增系统公告信息
+	 * @param notice
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public int addNotice(Notice notice) {
+		Date now=new Date();
+		notice.setCreateTime(now);
+		int val=noticeService.addNotice(notice);
+		notice.setId(notice.getId());
+		insertNewsDetails(notice);
+		return val;
+	}
+	
+	/**
+	 * @Description: 修改系统公告信息
+	 * @param notice 系统公告信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public int updateNotice(Notice notice) {
+		/**查询历史的版本是草稿还是正式版本*/
+		Notice findById = noticeService.findById(notice.getId());
+		/**设置消息推送的人群*/
+		notice.setPlatform(findById.getPlatform());
+		if(StringUtil.isNotBlank(notice.getStatus())){
+			if(BkgConstants.NOTICE_STATUS_FORMAL.equals(notice.getStatus())){
+				
+				if(StringUtil.isNotBlank(findById.getStatus())){
+					if(BkgConstants.NOTICE_STATUS_FORMAL.equals(findById.getStatus())){
+						/**
+						 * 查询到的状态为正式版本，默认也去修改对应的消息详情
+						 */
+						notice.setCreateTime(findById.getCreateTime());
+						notice.setId(findById.getId());
+						/**
+						 * 更新对应的消息详情
+						 */
+						updateNewsDetails(notice);
+					}else{
+						/**
+						 * 查询到的状态为草稿状态=新增
+						 */
+						insertNewsDetails(notice);
+					}
+					
+				}else{
+					/**
+					 * 查询到的没有状态，默认之前的没有发布为草稿状态
+					 */
+					insertNewsDetails(notice);
+				}
+				
+				
+			}
+		}
+		return noticeService.updateById(notice);
+	}
+	
+	/**
+	 * @Description: 删除系统公告信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public int deleteNotice(Long id) {
+		return noticeService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询系统公告信息
+	 * @param id 主键
+	 * @return 系统公告信息
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	@Override
+	public Notice findById(Long id) {
+		return noticeService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询系统公告信息
+	 * @param noticeVo 系统公告信息
+	 * @param page 分页参数
+	 * @return 系统公告信息
+	 * @author liwei
+	 * @date 2017年10月25日 下午08:36:46
+	 */
+	public Pagination<Notice> findByPagination(NoticeVo noticeVo, Page page) {
+		Pagination<Notice> pagination = noticeService.findByPagination(noticeVo, page);
+		return pagination;
+	}
+	/**
+	 * @Description: 发布公告给对应的详情增加消息
+	 * @param noticeVo 系统公告信息
+	 * @author huhaizhou
+	 * @date 2017年12月8日 下午08:36:46
+	 */
+	private void insertNewsDetails(Notice notice){
+		
+		if( StringUtil.isNotBlank(notice.getStatus())){
+			/**
+			 * 如果是正式版本，给所在的消息详情添加消息
+			 */
+			if(BkgConstants.NOTICE_STATUS_FORMAL.equals(notice.getStatus())){
+				NoticeDetail  noticeDetail = new  NoticeDetail();
+				/**设置业务id*/
+				noticeDetail.setBusinessId(notice.getId());
+				/**
+				 * 设置消息的内容
+				 */
+				noticeDetail.setContents(notice.getNewsContent());
+				/**
+				 * 设置消息的标题
+				 */
+				noticeDetail.setTitle(notice.getNewsTitle());
+				
+				/**
+				 * 设置消息的级别=公告
+				 */
+				noticeDetail.setNewsType(BkgConstants.NEWS_TYPE_NOTICE);
+				/**
+				 * 设置消息未读，未删除
+				 */
+				noticeDetail.setReadFlag(false);
+				noticeDetail.setDeleteFlag(false);
+				/**设置消息指向*/
+				noticeDetail.setPlatform(notice.getPlatform());
+				/**设置激光推送*/
+				noticeDetail.setJpushFlag("0");
+				/**
+				 * 设置消息展示的位置
+				 */
+				noticeDetail.setDisplayWays(BkgConstants.DISPLAY_WAYS_NOTICE+','+BkgConstants.DISPLAY_WAYS_NEWS);
+				
+				/**
+				 * 设置消息的创建时间
+				 */
+				noticeDetail.setCreateTime(notice.getCreateTime());
+				if(StringUtil.isNotBlank(notice.getPlatform())){
+					/**
+					 * 给个人的公告
+					 */
+					if(StringUtil.isNotBlank(notice.getPhone())){
+						
+							/**设置消息接受的手机号码*/
+							noticeDetail.setUserPhone(notice.getPhone());
+							/**设置消息的指向*/
+							if(StringUtil.isNotBlank(notice.getUtf1())){
+								noticeDetail.setPlatform(notice.getUtf1());
+								if(BkgConstants.NOTICE_TOSEND_DPT.equals(notice.getUtf1())){
+									
+									noticeDetail.setJpushAlia(SucConstants.CAPTCH_PLATFORM_DPT+notice.getPhone());
+									
+								}else if(BkgConstants.NOTICE_TOSEND_DOT.equals(notice.getUtf1())){
+									noticeDetail.setJpushAlia(SucConstants.CAPTCH_PLATFROM_DOT+notice.getPhone());
+								}
+							}
+							noticeDetailService.addNoticeDetail(noticeDetail);
+						
+					}else if(BkgConstants.NOTICE_TOSEND_DPT.equals(notice.getPlatform())){
+						noticeDetail.setPlatform(notice.getPlatform());
+						/**给司机的公告，获取所有的司机的手机号*/
+						MobileuserVo mobileuserVo = new MobileuserVo();
+						mobileuserVo.setDptType(true);  
+						List<MobileuserVo> mobileusers = mobileuserService.findByCondition(mobileuserVo);
+						if(mobileusers.size()>0){
+							for (int i = 0; i < mobileusers.size(); i++) {
+								if(StringUtil.isNotBlank(mobileusers.get(i).getMobilephone())){
+									noticeDetail.setUserPhone(mobileusers.get(i).getMobilephone());
+									noticeDetail.setJpushAlia(SucConstants.CAPTCH_PLATFORM_DPT+mobileusers.get(i).getMobilephone());
+									noticeDetail.setId(null);
+									noticeDetailService.addNoticeDetail(noticeDetail);
+								}
+								
+							}
+						}
+						
+					}else if(BkgConstants.NOTICE_TOSEND_DOT.equals(notice.getPlatform())){
+						noticeDetail.setPlatform(notice.getPlatform());
+						/**给网点的公告，获取所有的网点的手机号*/
+						MobileuserVo mobileuserVo = new MobileuserVo();
+						mobileuserVo.setDotType(true);  
+						List<MobileuserVo> mobileusers = mobileuserService.findByCondition(mobileuserVo);
+						if(mobileusers.size()>0){
+							for (int i = 0; i < mobileusers.size(); i++) {
+								if(StringUtil.isNotBlank(mobileusers.get(i).getMobilephone())){
+									noticeDetail.setUserPhone(mobileusers.get(i).getMobilephone());
+									noticeDetail.setJpushAlia(SucConstants.CAPTCH_PLATFROM_DOT+mobileusers.get(i).getMobilephone());
+									noticeDetail.setId(null);
+									noticeDetailService.addNoticeDetail(noticeDetail);
+								}
+								
+							}
+						}
+						
+					}else if(BkgConstants.NOTICE_TOSEND_PC.equals(notice.getPlatform())){
+						noticeDetail.setPlatform(notice.getPlatform());
+						/**平台没有手机号*/
+						noticeDetailService.addNoticeDetail(noticeDetail);
+					}
+				}
+				
+			}
+		}
+		
+	}
+	private void updateNewsDetails(Notice notice){
+		NoticeDetail  noticeDetail = new  NoticeDetail();
+		/**设置业务id*/
+		noticeDetail.setBusinessId(notice.getId());
+		/**
+		 * 设置消息的内容
+		 */
+		noticeDetail.setContents(notice.getNewsContent());
+		/**
+		 * 设置消息的标题
+		 */
+		noticeDetail.setTitle(notice.getNewsTitle());
+		
+		/**
+		 * 设置消息的级别=公告
+		 */
+		noticeDetail.setNewsType(BkgConstants.NEWS_TYPE_NOTICE);
+		/**
+		 * 设置消息未读，未删除
+		 */
+		noticeDetail.setReadFlag(false);
+		noticeDetail.setDeleteFlag(false);
+		/**
+		 * 设置消息的创建时间
+		 */
+		noticeDetail.setCreateTime(notice.getCreateTime());
+		int val=noticeDetailService.updateNewsDetails(noticeDetail);
+		
+	}
+
+}

@@ -1,0 +1,41 @@
+package cn.uce.suc.dpt.exception;
+
+
+import cn.uce.base.exception.BusinessException;
+/**
+ * 
+ * @Description:dpt异常类
+ * @author liwei
+ * @date 2017年10月18日 下午9:42:50
+ */
+public class DptModuleException extends BusinessException{
+	//序列化
+	private static final long serialVersionUID = -4883689301600546900L;
+	/**
+	 * 
+	 * @param code
+	 */
+	public DptModuleException(String code){
+		super();
+		super.code = code;
+	}
+	/**
+	 * 
+	 * @param code
+	 * @param msg
+	 * @param cause
+	 */
+	public DptModuleException(String code, String msg, Throwable cause) {
+		super(code, msg, cause);
+	}
+
+	/**
+	 * 
+	 * @param code
+	 * @param msg
+	 */
+	public DptModuleException(String code, String msg) {
+		super(code, msg);
+	}
+}
+

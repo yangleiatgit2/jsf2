@@ -1,0 +1,205 @@
+package cn.uce.suc.bkg.biz.operation;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DrivingPlanExecutedVo;
+
+/**
+ * @Description: 发车计划明细BIZ接口类
+ * @author liwei
+ * @date 2017年10月26日 下午05:05:52
+ */
+public interface IDirvingPlanDetailBiz {
+	
+	/**
+	 * @Description: 新增发车计划明细
+	 * @param dirvingPlanDetail
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int addDirvingPlanDetail(DirvingPlanDetail dirvingPlanDetail);
+	
+	/**
+	 * @Description: 修改发车计划明细
+	 * @param dirvingPlanDetail 发车计划明细
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int updateDirvingPlanDetail(DirvingPlanDetail dirvingPlanDetail);
+	
+	/**
+	 * @Description: 删除发车计划明细
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int deleteDirvingPlanDetail(Long id);
+	
+	/**
+	 * @Description: 根据ID查询发车计划明细
+	 * @param id 主键
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public DirvingPlanDetail findById(Long id);
+	
+	/**
+	 * @Description: 分页查询发车计划明细
+	 * @param dirvingPlanDetailVo 发车计划明细
+	 * @param page 分页参数
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public Pagination<DirvingPlanDetail> findByPagination(DirvingPlanDetailVo dirvingPlanDetailVo, Page page);
+	/**
+	 * 
+	 * @Description: 更新发车计划明细
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午10:05:48
+	 */
+	public int updateByApp(DirvingPlanDetailVo dirvingPlanDetail);
+	
+	/**
+	 * 
+	 * @Description: 网点端 提交评价 更新发车计划状态,更新发车计划明细
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午10:01:58
+	 */
+	public int appUpdateAppraise(DirvingPlanDetailVo dirvingPlanDetail);
+	/**
+	 * 
+	 * @Description: 网点端 确认装货/卸货
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午10:01:58
+	 */
+	public int appUpdateActualNumber(DirvingPlanDetailVo dirvingPlanDetailVo);
+	/**
+	 * @Description: 发车计划详情异常上报
+	 * @param ExceptionManager 异常实体类
+	 * @return  新增的数量
+	 * @author UCE-haizhou
+	 * @param driverStatus 
+	 * @param exceptionManager 
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	int sendError(ExceptionManager exceptionManager,
+			DirvingPlanDetail dirvingPlanDetail);
+	
+	/**
+	 * @Description: 网点端 查询运输动态明细
+	 * @param dirvingPlanDetailVo 发车计划明细
+	 * @param page 分页参数
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public DrivingPlanExecutedVo findByDetailId(Long detailId) ;
+	/**
+	 * @Description: 条件查询某个发车计划号详情
+	 * @param dirvingPlanDetailVo
+	 * @return dirvingPlanDetail
+	 * @author haizhou
+	 * @date 2017年11月15日 下午9:03:55
+	 */
+	public DirvingPlanDetail findByCriteria(DirvingPlanDetailVo dirvingPlanDetailVo);
+	/**
+	 * 
+	 * @Description: 根据发车计划号 查询发车计划
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月15日 下午9:03:55
+	 */
+	public DirvingPlan getStation(DirvingPlanDetailVo dirvingPlanDetailVo);
+	/**
+	 * 
+	 * @Description: 通过id修改发车计划详情
+	 * @param dirvingPlanDetail
+	 * @return 变更的数量
+	 * @author huhaizhou
+	 * @date 2017年11月15日 下午9:03:55
+	 */
+	public int updateByid(DirvingPlanDetail dirvingPlanDetail);
+	/**
+	 * 
+	 * @Description: 通过发车计划号查询发车计划号的详情列表
+	 * @param drivePlanCode
+	 * @return DirvingPlanDetail
+	 * @author huhaizhou
+	 * @date 2017年12月7日 下午4:29:03
+	 */
+	public List<DirvingPlanDetail> findByDrivePlanCode(String  drivePlanCode);
+	/**
+	 * @Description: 发车计划修改
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	public int updateByWhere(DirvingPlanDetail dirvingPlanDetail);
+	/**
+	 * @Description: 发车计划详情卸货确定
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	public int outConfirmByCodeBak(DirvingPlanDetailVo dirvingPlanDetailVo);
+	/**
+	 * @Description: 发车计划详情装货确定
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	public int inConfirmByCodeBak(DirvingPlanDetailVo dirvingPlanDetailVo);
+	/**
+	 * @Description: 通过发车计划号获取所在站点的发车计划详情信息 ()
+	 * @param drivingPlanCode 发车计划号
+	 * @return map
+	 * @author UCE-haizhou
+	 * @date 2017年12月15日 下午13:37:13
+	 */
+	public DirvingPlanDetail findByCode(String drivingPlanCode);
+	/**
+	 * @Description: 通过发车计划详情的id获取所在站点的发车计划详情信息 ()
+	 * @param id 发车计划号
+	 * @return DirvingPlanDetail
+	 * @author UCE-haizhou
+	 * @date 2017年12月15日 下午13:37:13
+	 */
+	public DirvingPlanDetail getById(Long id);
+	/**
+	 * @Description: 通过发车计划号获取所有的发车计划详情
+	 * @param drivingPlanCode 发车计划号
+	 * @return map
+	 * @author UCE-haizhou
+	 * @date 2017年12月15日 下午13:37:13
+	 */
+	public List<DirvingPlanDetail> findAllDetailByCode(String drivingPlanCode);
+	/**
+	 * @Description: 司机异常上报
+	 * @param ExceptionManager 异常信息
+	 * @return 修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年12月18日 下午13:37:13
+	 */
+	public int sendErrorBak(ExceptionManager exceptionManager);
+}

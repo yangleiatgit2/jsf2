@@ -1,0 +1,323 @@
+package cn.uce.suc.app.vo;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: Vo类
+ * @author litianjian
+ * @date 2017年11月29日 下午03:19:08
+ */
+public class AppFeedbackVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * id 
+	 */
+	private Long id;
+    /** 
+	 * 姓名 
+	 */
+	private String name;
+    /** 
+	 * 手机 
+	 */
+	private String mobilephone;
+    /** 
+	 * 反馈问题 
+	 */
+	private String feedbackProblem;
+    /** 
+	 * 反馈平台 
+	 */
+	private String feedbackPlatform;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 逻辑状态 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 创建部门 
+	 */
+	private String createOrg;
+    /** 
+	 * 修改人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 修改时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 修改部门 
+	 */
+	private String updateOrg;
+	
+
+	/**
+	 * 获取 id
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 id
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 姓名
+	 */
+	public String getName() {
+		return name;
+	}
+	
+	/**
+	 * 设置 姓名
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	
+	/**
+	 * 获取 手机
+	 */
+	public String getMobilephone() {
+		return mobilephone;
+	}
+	
+	/**
+	 * 设置 手机
+	 */
+	public void setMobilephone(String mobilephone) {
+		this.mobilephone = mobilephone;
+	}
+
+	
+	/**
+	 * 获取 反馈问题
+	 */
+	public String getFeedbackProblem() {
+		return feedbackProblem;
+	}
+	
+	/**
+	 * 设置 反馈问题
+	 */
+	public void setFeedbackProblem(String feedbackProblem) {
+		this.feedbackProblem = feedbackProblem;
+	}
+
+	
+	/**
+	 * 获取 反馈平台
+	 */
+	public String getFeedbackPlatform() {
+		return feedbackPlatform;
+	}
+	
+	/**
+	 * 设置 反馈平台
+	 */
+	public void setFeedbackPlatform(String feedbackPlatform) {
+		this.feedbackPlatform = feedbackPlatform;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 逻辑状态
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 逻辑状态
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 创建部门
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建部门
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 修改人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 修改人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 修改时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 修改时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 修改部门
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 修改部门
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+}

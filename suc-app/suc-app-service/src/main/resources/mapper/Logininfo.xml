@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.app.dao.ILogininfoDao">
+	
+	<sql id="Base_Column_List">
+			id,mobilePhone,loginTime,
+			MobileBrand,PhoneModel,DeviceNumber,
+			ScreenResolution,Edition,Environment,
+			Operator,utf_1,utf_2,
+			utf_3,version,del_flag,
+			create_emp,create_time,create_org,
+			update_emp,update_time,update_org,IsitOnline
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="mobilephone != null">
+		and mobilePhone = #{mobilephone}
+		</if>
+	    <if test="logintime != null">
+		and loginTime = #{logintime}
+		</if>
+	    <if test="mobilebrand != null">
+		and MobileBrand = #{mobilebrand}
+		</if>
+	    <if test="phonemodel != null">
+		and PhoneModel = #{phonemodel}
+		</if>
+	    <if test="devicenumber != null">
+		and DeviceNumber = #{devicenumber}
+		</if>
+	    <if test="screenresolution != null">
+		and ScreenResolution = #{screenresolution}
+		</if>
+	    <if test="edition != null">
+		and Edition = #{edition}
+		</if>
+	    <if test="environment != null">
+		and Environment = #{environment}
+		</if>
+	    <if test="operator != null">
+		and Operator = #{operator}
+		</if>
+	    <if test="utf1 != null">
+		and utf_1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf_2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf_3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<insert id="insertLoginInfo"  parameterType="cn.uce.suc.app.entity.Logininfo">
+			insert into t_suc_app_loginInfo(
+			<include refid="Base_Column_List"></include>
+			)
+			values(
+			<choose>
+				<when test="mobilephone != null">#{mobilephone},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="logintime != null">#{logintime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="mobilebrand != null">#{mobilebrand},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="phonemodel != null">#{phonemodel},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="devicenumber != null">#{devicenumber},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="screenresolution != null">#{screenresolution},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="edition != null">#{edition},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="environment != null">#{environment},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="operator != null">#{operator},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="utf_1 != null">#{utf_1},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="utf_2 != null">#{utf_1},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="utf_3 != null">#{utf_1},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			1,
+			0,
+			<choose>
+				<when test="create_emp != null">#{create_emp},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="create_time != null">#{create_time},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="update_emp != null">#{update_emp},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="update_time != null">#{update_time},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="update_org != null">#{update_org}</when>
+				<otherwise>null</otherwise>
+			</choose>,
+			1
+			)
+	
+	</insert>
+	
+	
+	
+	<update id="updateById" parameterType="string">
+	UPDATE t_suc_app_loginInfo
+	set
+		IsitOnline = 0
+	WHERE mobilephone = #{mobilephone}
+	</update>
+	
+	
+</mapper>

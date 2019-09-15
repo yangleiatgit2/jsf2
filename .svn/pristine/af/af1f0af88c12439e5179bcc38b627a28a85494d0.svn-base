@@ -1,0 +1,219 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.biz.IVersionBiz;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.entity.Version;
+import cn.uce.suc.common.service.VersionService;
+import cn.uce.suc.common.vo.VersionVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * @Description: 移动端软件更新记录BIZ实现类
+ * @author liwei
+ * @date 2017年11月12日 上午09:15:11
+ */
+@Service("versionBiz")
+public class VersionBiz implements IVersionBiz {
+
+	/**
+	 * 注入移动端软件更新记录Service
+	 */
+	@Resource
+	private VersionService versionService;
+	/**
+	 * 注入系统配置项对象
+	 */
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+	/**
+	 * 上传app路径
+	 */
+	@Value("${filePath}")
+	private String uploadfilePath;
+
+	/**
+	 * 日志
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(VersionBiz.class);
+
+	/**
+	 * 替换地址配置编码
+	 */
+	private final static String REPLACE_URL = "REPLACE_URL";
+
+	/**
+	 * @Description: 新增移动端软件更新记录
+	 * @param version
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public int addVersion(VersionVo versionVo) {
+		// 上传文件
+		uploadFile(versionVo);
+		Version version = ObjectConvertUtil.convertObject(versionVo, Version.class);
+		int res = versionService.addVersion(version);
+		return res;
+	}
+
+	/**
+	 * @Description: 上传文件
+	 * @param versionVo
+	 * @author lixueyuan
+	 * @date 2017年11月27日 上午10:48:04
+	 */
+	private void uploadFile(VersionVo versionVo) {
+		// 获取到文件
+		MultipartFile uploadFile = versionVo.getUploadFile();
+		if (null != uploadFile && !uploadFile.isEmpty()) {
+			String fileName = uploadFile.getOriginalFilename();
+			// filePath赋值
+			String path = getUploadfilePath(versionVo);
+			File newFile = new File(path, fileName);
+			if (!newFile.exists()) {
+				newFile.mkdirs();
+			}
+			try {
+				// FileUtils.copyInputStreamToFile(uploadFile.getInputStream(),newFile);
+				logger.info(fileName + "app上传开始");
+				uploadFile.transferTo(newFile);
+				logger.info(fileName + "app上传结束");
+				versionVo.setUrl(versionVo.getUrl() + path + File.separator
+						+ versionVo.getUploadFile().getOriginalFilename());
+			} catch (IllegalStateException | IOException e) {
+				logger.error("上传文件异常...", e);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @Description: 根据平台+app类型(dot/dpt)时间生成文件路径
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月27日 上午10:48:20
+	 */
+	private String getUploadfilePath(VersionVo versionVo) {
+		return uploadfilePath + File.separator + versionVo.getPlatfrom() + File.separator + versionVo.getAppType()
+				+ File.separator + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+	}
+
+	/**
+	 * @Description: 修改移动端软件更新记录
+	 * @param version
+	 *            移动端软件更新记录
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public int updateVersion(VersionVo versionVo) {
+		// 获取到文件
+		MultipartFile uploadFile = versionVo.getUploadFile();
+		if (null != uploadFile && !uploadFile.isEmpty()) {
+			String newfileName = uploadFile.getOriginalFilename();
+			String path = getUploadfilePath(versionVo);
+			File newFile = new File(path, newfileName);
+			/*
+			 * String oldFilePath = versionVo.getUrl(); File oldFile; if(null !=
+			 * oldFilePath&&!"".equals(oldFilePath)){ oldFile = new
+			 * File(oldFilePath
+			 * .substring(0,oldFilePath.lastIndexOf(File.separator ))); }else{
+			 * oldFile = new File(""); }
+			 */
+			try {
+				/*
+				 * if(oldFile.exists()){ logger.info("公告原附件删除开始");
+				 * FileUtils.forceDelete(oldFile); logger.info("公告原附件删除结束"); }
+				 */
+				logger.info("app上传开始");
+				FileUtils.copyInputStreamToFile(uploadFile.getInputStream(), newFile);
+				logger.info("app上传结束");
+				versionVo.setUrl(newFile.getPath());
+			} catch (IOException e) {
+				logger.error("上传文件异常...", e);
+			}
+		}
+		Version version = ObjectConvertUtil.convertObject(versionVo, Version.class);
+		return versionService.updateById(version);
+	}
+
+	/**
+	 * @Description: 删除移动端软件更新记录
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public int deleteVersion(Long id) {
+		return versionService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询移动端软件更新记录
+	 * @param id
+	 *            主键
+	 * @return 移动端软件更新记录
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	@Override
+	public Version findById(Long id) {
+		return versionService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询移动端软件更新记录
+	 * @param versionVo
+	 *            移动端软件更新记录
+	 * @param page
+	 *            分页参数
+	 * @return 移动端软件更新记录
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public Pagination<Version> findByPagination(VersionVo versionVo, Page page) {
+		Pagination<Version> pagination = versionService.findByPagination(versionVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description: 版本校验
+	 * @param versionVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月12日 下午3:07:12
+	 */
+	public Version versionCheck(VersionVo versionVo) {
+		Version version = versionService.versionCheck(versionVo);
+		/* 判断返回的url地址是否替换 */
+		if (version != null && versionVo.isReplaceTag() != null && versionVo.isReplaceTag()) {
+			/* 从缓存中获取地址信息 */
+			SystemConfig config = systemConfigBiz.findCacheByCode(REPLACE_URL);
+			if (config != null && StringUtil.isNotEmpty(config.getConfigValue())) {
+				version.setUrl(version.getUrl().replace(config.getConfigValue(), ""));
+			}
+		}
+		return version;
+	}
+
+}

@@ -1,0 +1,68 @@
+package cn.uce.suc.job;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.biz.operation.IIaConfBiz;
+
+import com.dangdang.ddframe.job.api.ShardingContext;
+import com.dangdang.ddframe.job.api.simple.SimpleJob;
+/**
+ * 
+ * @Description: 长期订单组合 
+ * @author liwei
+ * @date 2017年11月3日 下午10:13:14
+ */
+public class FreightOrderLongStaticsJob implements SimpleJob {
+	/**
+	 * 订单biz
+	 */
+	@Resource
+	private IFreightOrderBiz freightOrderBiz;
+	
+	/**
+	 * 算法biz
+	 */
+	@Resource
+	private IIaConfBiz iaConfBiz;
+	/**
+	 * 日志
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(FreightOrderLongStaticsJob.class);
+	/**
+	 * 默认执行方法
+	* <p>Title: execute</p> 
+	* <p>Description: </p> 
+	* @param shardingContext 
+	* @see com.dangdang.ddframe.job.api.simple.SimpleJob#execute(com.dangdang.ddframe.job.api.ShardingContext)
+	 */
+	@Override
+	public void execute(ShardingContext shardingContext) {
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("长期订单组合生成开始。。。。。。。。。。。。" + new Date());
+		}
+		/**日志输出*/
+		freightOrderBiz.processLongTerm();
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("长期订单组合生成结束。。。。。。。。。。。。。" + new Date());
+		}
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("根据订单长期组合调用算法开始。。。。。。。。。。。。" + new Date());
+		}
+		/**任务处理*/
+		iaConfBiz.autoInvokeIaByLongTermOrderCombine();
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("根据订单长期组合调用算法结束。。。。。。。。。。。。。" + new Date());
+		}
+	}
+
+}

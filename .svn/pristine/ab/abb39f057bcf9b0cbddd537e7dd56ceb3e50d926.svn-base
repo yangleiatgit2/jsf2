@@ -1,0 +1,277 @@
+package cn.uce.suc.bkg.service.datamain;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.cache.IATransportEffectiveCacheProcessor;
+import cn.uce.suc.bkg.dao.datamain.IDeliveryRelationDao;
+import cn.uce.suc.bkg.dao.datamain.ITransportEffectiveDao;
+import cn.uce.suc.bkg.entity.datamain.TransportEffective;
+import cn.uce.suc.bkg.vo.datamain.DeliveryRelationVo;
+import cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.utils.StringUtil;
+
+/**
+ * @Description: 時效管理表Service类
+ * @author yanglei
+ * @date 2017年10月20日 下午05:12:37
+ */
+@Service("transportEffectiveService")
+public class TransportEffectiveService {
+	
+	/**
+	 * 注入時效管理表Dao
+	 */
+	@Resource
+	private ITransportEffectiveDao transportEffectiveDao;
+	
+	/**
+	 * 交货关系dao
+	 */
+	@Resource
+	private IDeliveryRelationDao deliveryRelationDao;
+	
+	/**
+	 * 机构biz
+	 */
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz;
+	
+	/**
+	 * @Description: 新增時效管理表
+	 * @param transportEffective 時效管理表
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年10月20日 下午05:12:37
+	 */
+	public int addTransportEffective(TransportEffective transportEffective) {
+		int rec = transportEffectiveDao.insert(transportEffective);
+		if (rec > 0) {
+			//刷新缓存
+			refreshByParentCode(transportEffective);
+		}
+		return rec;
+	}
+	
+	/**
+	 * @Description: 修改時效管理表
+	 * @param transportEffective 時效管理表
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年10月20日 下午05:12:37
+	 */
+	public int updateById(TransportEffective transportEffective) {
+		TransportEffective dbEffective = findById(transportEffective.getId());
+		int rec = transportEffectiveDao.updateById(transportEffective);
+		if (rec > 0) {
+			//刷新缓存
+			refreshByParentCode(dbEffective,transportEffective);
+		}
+		return rec;
+	}
+	
+	/**
+	 * @Description: 删除時效管理表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年10月20日 下午05:12:37
+	 */
+	public int deleteById(Long id) {
+		TransportEffective oldEffective = findById(id);
+		int rec = transportEffectiveDao.deleteById(id);
+		if (rec > 0) {
+			//刷新缓存
+			refreshByParentCode(oldEffective);
+		}
+		return rec;
+	}
+	
+	/**
+	 * @Description: 根据ID查询時效管理表
+	 * @param id 主键
+	 * @return 時效管理表
+	 * @author yanglei
+	 * @date 2017年10月20日 下午05:12:37
+	 */
+	public TransportEffective findById(Long id) {
+		return transportEffectiveDao.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询時效管理表
+	 * @param transportEffectiveVo 時效管理表
+	 * @param page 分页参数
+	 * @return 時效管理表
+	 * @author yanglei
+	 * @date 2017年10月20日 下午05:12:37
+	 */
+	public Pagination<TransportEffectiveVo> findByPagination(TransportEffectiveVo transportEffectiveVo, Page page) {
+		Pagination<TransportEffectiveVo> paginationTransportEffective = transportEffectiveDao.findByPagination(transportEffectiveVo, page);
+		return paginationTransportEffective;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据组合查询时效 
+	 * @param transportEffectiveVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月27日 下午2:33:11
+	 */
+	public List<TransportEffectiveVo> findByCombine(TransportEffectiveVo transportEffectiveVo){
+		return transportEffectiveDao.findByCombine(transportEffectiveVo);
+	}
+	/**
+	 * @Description: 根据参数获取count总和
+	 * @param transportEffectiveVo 時效管理表
+	 * @return int
+	 * @author yanglei
+	 * @date 2017年11月13日 下午05:12:37
+	 */
+	public int countByVo(TransportEffectiveVo transportEffectiveVo){
+		return transportEffectiveDao.countByVo(transportEffectiveVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据父级机构刷新缓存，父级机构根据交货关系获得
+	 * @param id
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月15日 下午11:03:31
+	 */
+	private void refreshByParentCode(TransportEffective transportEffective){
+		Set<String> set = getRefreshParentCode(transportEffective);
+		//刷新缓存
+		if (set != null && !set.isEmpty()) {
+			for (String parentOrgCode : set) {
+				IATransportEffectiveCacheProcessor.refresh(parentOrgCode);
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 获取刷新的父级机构编号
+	 * @param id
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月15日 下午11:03:31
+	 */
+	private Set<String> getRefreshParentCode(TransportEffective transportEffective){
+		//开始站
+		String startSiteCode = transportEffective.getStartSiteCode();
+		OmgCmsOrgVo startOrgVo = omgCmsOrgBiz.findByBaseOrgCode(startSiteCode);
+		Set<String> set = new HashSet<String>();
+		if (startOrgVo != null) {
+			if (new Integer(BkgConstants.ORG_TYPE_OPERATE_CENTER).equals(startOrgVo.getOrgType())){
+				set.add(startSiteCode);
+			}
+		}
+		//开始站不是分拨，那么判断目的站是否是分拨
+		if (set.isEmpty()) {
+			//目的站
+			String endSiteCode = transportEffective.getEndSiteCode();
+			OmgCmsOrgVo endOrgVo = omgCmsOrgBiz.findByBaseOrgCode(endSiteCode);
+			if (endOrgVo != null && endOrgVo.getOrgType() != null) {
+				if (new Integer(BkgConstants.ORG_TYPE_OPERATE_CENTER).equals(endOrgVo.getOrgType())){
+					set.add(endSiteCode);
+				}
+			}
+		}
+		//上级不为空
+		if (set.isEmpty()) {
+			DeliveryRelationVo search = new DeliveryRelationVo();
+			search.setSiteCode(startSiteCode);
+			//根据开始站查找交货关系
+			List<DeliveryRelationVo> deliveryRelationVos = deliveryRelationDao.findByCondition(search);
+			if (null != deliveryRelationVos && !deliveryRelationVos.isEmpty()) {
+				for (DeliveryRelationVo deliveryVo : deliveryRelationVos) {
+					set.add(deliveryVo.getWorkcenterCode());
+				}
+			}
+		}
+		return set;
+	}
+	
+	/**
+	 * 
+	 * @Description: 刷新时效缓存
+	 * @param oldEffective
+	 * @param newEffective
+	 * @author laizhendong
+	 * @date 2017年12月7日 下午2:49:35
+	 */
+	private void refreshByParentCode(TransportEffective oldEffective,TransportEffective newEffective){
+		//旧的交货关系
+		Set<String> oldSet = getRefreshParentCode(oldEffective);
+		Set<String> newSet = getRefreshParentCode(newEffective);
+		if (newSet == null ) {
+			newSet = new HashSet<String>();
+		}
+		newSet.addAll(oldSet);
+		//刷新缓存
+		if (!newSet.isEmpty()) {
+			for (String parentOrgCode : newSet) {
+				IATransportEffectiveCacheProcessor.refresh(parentOrgCode);
+			}
+		}
+	}
+	
+	/**
+	 * @Description: 根据多个 ID 删除時效管理相关数据
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author yanglei
+	 * @date 2017年11月16日 下午05:12:37
+	 */
+	public int deleteByIds(String [] ids){
+		List<TransportEffective> oldTransportEffectives = new ArrayList<TransportEffective>();
+		for (String id : ids) {
+			oldTransportEffectives.add(findById(Long.parseLong(id)));
+		}
+		int rec = transportEffectiveDao.deleteByIds(ids);
+		if (rec > 0) {
+			//汇总所有要刷新的中心编号
+			Set<String> refreshSet = new HashSet<String>();
+			for (TransportEffective transportEffective : oldTransportEffectives) {
+				Set<String> set = getRefreshParentCode(transportEffective);
+				if (set != null && !set.isEmpty()) {
+					refreshSet.addAll(set);
+				}
+			}
+			//刷新缓存
+			if (!refreshSet.isEmpty()) {
+				for (String parentOrgCode : refreshSet) {
+					IATransportEffectiveCacheProcessor.refresh(parentOrgCode);
+				}
+			}
+		}
+		return rec;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询时效 
+	 * @param transportEffectiveVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月6日 上午11:25:06
+	 */
+	public List<TransportEffectiveVo> findByCondition(TransportEffectiveVo transportEffectiveVo){
+		return transportEffectiveDao.findByCondition(transportEffectiveVo);
+	}
+	
+}

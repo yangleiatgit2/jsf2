@@ -1,0 +1,184 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.entity.operation.FreightOrder;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.WebUtil;
+
+/**
+ * 
+ * @Description: 订单管理
+ * @author liwei
+ * @date 2017年10月20日 上午11:22:49
+ */
+@Controller
+@RequestMapping("/freightOrder")
+public class FreightOrderController extends BaseController {
+	/**
+	 * 订单biz
+	 */
+	@Resource
+	private IFreightOrderBiz freightOrderBiz;
+	/**
+	 * 跳转详情
+	 */
+	private String orderCombinCode;
+	/**
+	 * 是否自动
+	 */
+	private Boolean autoselect=false;
+	/**
+	 * 
+	 * @Description: 页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		orderCombinCode=request.getParameter("orderCombineCode");
+		if(StringUtil.isNotBlank(orderCombinCode)){
+			autoselect=true;
+		}else{
+			autoselect=false;
+		}
+		return "bkg/freightOrder";
+	}
+
+	/**
+	 * 
+	 * @Description: 组合查询分页
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 下午1:50:59
+	 */
+	@RequestMapping(value  = "/findByPagination")
+	@ResponseBody
+	public Map<String, Object> findByPagination(FreightOrderVo freightOrderVo, Page page) {
+		if (null == freightOrderVo.getAutoselect()||!freightOrderVo.getAutoselect()){
+			if (autoselect) {
+				freightOrderVo.setOrderCombinCode(orderCombinCode);
+				Pagination<FreightOrder> pagination = freightOrderBiz.findByPagination(freightOrderVo, page);
+				return returnSuccess(pagination);
+			}else{
+				return returnSuccess();
+			}
+		}
+		
+		Pagination<FreightOrder> pagination = freightOrderBiz.findByPagination(freightOrderVo, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * @Description: 修改货运需求订单表
+	 * @param freightOrder 货运需求订单表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@RequestMapping(value  = "/updateFreightOrder")
+	@ResponseBody
+	public Map<String, Object> updateFreightOrder(FreightOrderVo freightOrderVo) {
+		// 获取当前登录用户
+		SucCurrentUser user = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		freightOrderVo.setUpdateEmp(user.getEmpName());
+		freightOrderVo.setUpdateOrg(user.getCmsOrgName());
+		freightOrderVo.setUpdateTime(new Date());
+		freightOrderBiz.updateFreightOrder(freightOrderVo);
+		return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+	/**
+	 * @Description: 新增货运需求订单表
+	 * @param freightOrder
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@RequestMapping(value  = "/addFreightOrder")
+	@ResponseBody
+	public Map<String, Object> addFreightOrder(FreightOrderVo freightOrderVo) {
+		//获取当前登录用户
+		SucCurrentUser user=DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		freightOrderVo.setCreateEmp(user.getEmpName());
+		freightOrderVo.setCreateOrg(user.getCmsOrgName());
+		freightOrderVo.setCreateTime(new Date());
+		freightOrderBiz.addFreightOrder(freightOrderVo);
+		return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+	/**
+	 * @Description: 修改货运需求订单表
+	 * @param freightOrder 货运需求订单表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月20日 上午12:25:58
+	 */
+	@RequestMapping(value  = "/stopFreightOrder")
+	@ResponseBody
+	public Map<String, Object> stopFreightOrder(Long  id) {
+		//获取当前登录用户
+		SucCurrentUser user=DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		// 获取当前登录用户
+		FreightOrder freightOrder=new FreightOrder();
+		freightOrder.setId(id);
+		freightOrder.setUpdateEmp(user.getEmpName());
+		freightOrder.setUpdateOrg(user.getCmsOrgName());
+		freightOrder.setUpdateTime(new Date());
+		freightOrder.setOrderStatus(BkgConstants.ORDER_STATUS_TERING);
+		freightOrderBiz.updateById(freightOrder);
+		return returnSuccess(Resources.getMessage("修改成功"));
+	}
+	/**
+	 * 
+	 * @Description: 组合查询分页
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 下午1:50:59
+	 */
+	@RequestMapping(value  = "/findCombineByPagination")
+	@ResponseBody
+	public Map<String, Object> findCombineByPagination(FreightOrderVo freightOrderVo, Page page) {
+		Pagination<FreightOrder> pagination = freightOrderBiz.findCombineByPagination(freightOrderVo, page);
+		return returnSuccess(pagination);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月14日 下午2:21:28
+	 */
+	@RequestMapping(value  = "/findByCondition")
+	@ResponseBody
+	public List<FreightOrder> findByCondition(FreightOrderVo freightOrderVo) {
+		List<FreightOrder> freightOrders = freightOrderBiz.findByCondition(freightOrderVo);
+		return freightOrders;
+	}
+}

@@ -1,0 +1,155 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.vo.operation.LineGroupDetailVo;
+import cn.uce.suc.bkg.service.operation.LineGroupDetailService;
+
+/**
+ * @Description: 班次管理明细BIZ实现类
+ * @author litianjian
+ * @date 2017年10月21日 下午05:40:59
+ */
+@Service("lineGroupDetailBiz")
+public class LineGroupDetailBiz implements ILineGroupDetailBiz {
+
+	/**
+	 * 注入班次管理明细Service
+	 */
+	@Resource
+	private LineGroupDetailService lineGroupDetailService;
+
+	/**
+	 * @Description: 新增班次管理明细
+	 * @param lineGroupDetail
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月21日 下午05:40:59
+	 */
+	public int addLineGroupDetail(LineGroupDetail lineGroupDetail) {
+		return lineGroupDetailService.addLineGroupDetail(lineGroupDetail);
+	}
+
+	/**
+	 * @Description: 修改班次管理明细
+	 * @param lineGroupDetail
+	 *            班次管理明细
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月21日 下午05:40:59
+	 */
+	public int updateLineGroupDetail(LineGroupDetail lineGroupDetail) {
+		return lineGroupDetailService.updateById(lineGroupDetail);
+	}
+
+	/**
+	 * @Description: 删除班次管理明细
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author litianjian
+	 * @date 2017年10月21日 下午05:40:59
+	 */
+	public int deleteLineGroupDetail(Long id) {
+		return lineGroupDetailService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询班次管理明细
+	 * @param id
+	 *            主键
+	 * @return 班次管理明细
+	 * @author litianjian
+	 * @date 2017年10月21日 下午05:40:59
+	 */
+	@Override
+	public LineGroupDetail findById(Long id) {
+		return lineGroupDetailService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询班次管理明细
+	 * @param lineGroupDetailVo
+	 *            班次管理明细
+	 * @param page
+	 *            分页参数
+	 * @return 班次管理明细
+	 * @author litianjian
+	 * @date 2017年10月21日 下午05:40:59
+	 */
+	public Pagination<LineGroupDetailVo> findByPagination(LineGroupDetailVo lineGroupDetailVo, Page page) {
+		Pagination<LineGroupDetailVo> pagination = lineGroupDetailService.findByPagination(lineGroupDetailVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description:根据班次编码查询
+	 * @param lineGroupCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月7日 下午3:06:35
+	 */
+
+	public List<LineGroupDetail> queryByWorkDetailId(String lineGroupCode) {
+		List<LineGroupDetail> lineGroupDetails = lineGroupDetailService.queryByWorkDetailId(lineGroupCode);
+		return lineGroupDetails;
+	}
+
+	/**
+	 * 根据班次编码查询
+	 * <p>
+	 * Title: findByLineGroupCode
+	 * </p>
+	 * <p>
+	 * Description:
+	 * </p>
+	 * 
+	 * @param lineGroupCode
+	 * @return
+	 * @see cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz#findByLineGroupCode(java.lang.String)
+	 */
+	@Override
+	public List<LineGroupDetail> findByLineGroupCode(String lineGroupCode) {
+		return lineGroupDetailService.queryByWorkDetailId(lineGroupCode);
+	}
+
+	/**
+	 * 根据班次编码查询
+	 * <p>
+	 * Title: findPageByPagination
+	 * </p>
+	 * <p>
+	 * Description:
+	 * </p>
+	 * 
+	 * @param lineGroupCode
+	 * @param page
+	 * @return
+	 * @see cn.uce.suc.bkg.biz.operation.ILineGroupDetailBiz#findPageByPagination(java.lang.String,
+	 *      cn.uce.base.page.Page)
+	 */
+	public Pagination<LineGroupDetail> findPageByPagination(String lineGroupCode, Page page) {
+		return lineGroupDetailService.findPageByPagination(lineGroupCode, page);
+	}
+
+	/**
+	 * 
+	 * @Description:获取未排班的班次路段--即班次编号为空
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月9日 上午12:18:00
+	 */
+	@Override
+	public List<LineGroupDetail> findGroupDetailByGroupcodeIsNull(LineGroupDetailVo lineGroupDetailVo) {
+		return lineGroupDetailService.findGroupDetailByGroupcodeIsNull(lineGroupDetailVo);
+	}
+}

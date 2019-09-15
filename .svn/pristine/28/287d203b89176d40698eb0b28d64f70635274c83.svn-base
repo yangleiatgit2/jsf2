@@ -1,0 +1,275 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.biz.ITruckCostManagementBiz;
+import cn.uce.suc.common.entity.TruckCostManagement;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.ids.IdsConstants.NamesPrefix;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.TruckCostManagementVo;
+import cn.uce.suc.common.service.TruckCostManagementService;
+import cn.uce.utils.StringUtil;
+
+/**
+ * @Description: 车型成本管理BIZ实现类
+ * @author liwei
+ * @date 2017年10月31日 下午01:36:11
+ */
+@Service("truckCostManagementBiz")
+public class TruckCostManagementBiz implements ITruckCostManagementBiz {
+	
+	/**
+	 * 注入车型成本管理Service
+	 */
+	@Resource
+	private TruckCostManagementService truckCostManagementService;
+	
+	/**
+	 * 组织机构biz
+	 */
+	@Resource
+	IOmgCmsOrgBiz omgCmsOrgBiz;
+	
+	/**
+	 * 编码
+	 */
+	@Resource
+	IIdsWorker  redisIdsWorker;
+	
+	/**
+	 * @Description: 新增车型成本管理
+	 * @param truckCostManagement
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	public int addTruckCostManagement(TruckCostManagement truckCostManagement) {
+		//分拨中心、车辆类型、具体车型的组合唯一
+		if(StringUtil.isBlank(truckCostManagement.getBelongSiteCode())){
+			return 0;
+		}else if(StringUtil.isBlank(truckCostManagement.getTruckType())){
+			return 0;
+		}else if(StringUtil.isBlank(truckCostManagement.getTruckConcrete())){
+			return 0;
+		}
+		TruckCostManagementVo truckCostManagementVo = new  TruckCostManagementVo();
+		truckCostManagementVo.setBelongSiteCode(truckCostManagement.getBelongSiteCode());
+		truckCostManagementVo.setTruckType(truckCostManagement.getTruckType());
+		truckCostManagementVo.setTruckConcrete(truckCostManagement.getTruckConcrete());
+		Page page= new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		Pagination<TruckCostManagement> pagination =truckCostManagementService.findByPagination(truckCostManagementVo, page);
+		if(pagination.getData().size()>0){
+			return -1;
+		}
+		improveParameters(truckCostManagement);
+		truckCostManagement.setTruckCostName(redisIdsWorker.nextName(truckCostManagement.getBelongSiteCode(), NamesPrefix.YLNA));
+		
+		return truckCostManagementService.addTruckCostManagement(truckCostManagement);
+	}
+	
+	/**
+	 * @Description: 修改车型成本管理
+	 * @param truckCostManagement 车型成本管理
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	public int updateTruckCostManagement(TruckCostManagement truckCostManagement) {
+		return truckCostManagementService.updateById(truckCostManagement);
+	}
+	
+	/**
+	 * @Description: 删除车型成本管理
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	public int deleteTruckCostManagement(Long id) {
+		return truckCostManagementService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询车型成本管理
+	 * @param id 主键
+	 * @return 车型成本管理
+	 * @author liwei
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	@Override
+	public TruckCostManagement findById(Long id) {
+		return truckCostManagementService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询车型成本管理
+	 * @param truckCostManagementVo 车型成本管理
+	 * @param page 分页参数
+	 * @return 车型成本管理
+	 * @author liwei
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	public Pagination<TruckCostManagement> findByPagination(TruckCostManagementVo truckCostManagementVo, Page page) {
+		
+		Pagination<TruckCostManagement> pagination = truckCostManagementService.findByPagination(truckCostManagementVo, page);
+		return pagination;
+	}
+	/**
+	 * 
+	 * @Description: 查询所有 当前 网点所属分拨的 临时需求的 车型成本
+	 * @param truckCostManagementVo 车型成本管理
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月6日 下午6:45:56
+	 */
+	@Override
+	public List<TruckCostManagementVo> findByBelongSiteCode(TruckCostManagementVo truckCostManagementVo) {
+		return truckCostManagementService.findByBelongSiteCode(truckCostManagementVo);
+	}
+
+	/**
+	 * @Description: 查询该车型管理号的最大版本号
+	 * @param truckManageCode 车型管理号
+	 * @return 车型成本管理的max版本
+	 * @author 
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	@Override
+	public Long getMaxVersion(String truckManageCode) {
+		return truckCostManagementService.getMaxVersion(truckManageCode);
+	}
+	/**
+	 * @Description: 把老版本的逻辑删除，新建立个新版本
+	 * @param truckManageCode 车型管理号
+	 * @return 更改的条数
+	 * @author 
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	@Override
+	public int addTruckAndDeleteOld(TruckCostManagement truckCostManagement) {
+		improveParameters(truckCostManagement);
+		return truckCostManagementService.updateById(truckCostManagement);
+	}
+
+	/**
+	 * @Description: 批量审核
+	 * @param ids  id的字符串
+	 * @param detailsStatus   审核的状态
+	 * @return 更改的条数
+	 * @author 
+	 * @date 2017年10月31日 下午01:36:11
+	 */
+	@Override
+	public int updateDetailsStatusByIds(String ids, String detailsStatus) {
+		String [] idarr=ids.split(",");
+		List<TruckCostManagement>  capacityManagements=new ArrayList<TruckCostManagement>();
+		for (int i = 0; i < idarr.length; i++) {
+			TruckCostManagement truckCostManagement= new TruckCostManagement();
+			truckCostManagement.setId(Long.valueOf(idarr[i]));
+			truckCostManagement.setDetailsStatus(detailsStatus);
+			truckCostManagement.setVersion(1L);
+			capacityManagements.add(truckCostManagement);
+			
+		}
+		return truckCostManagementService.updateDetailsStatusByIds(capacityManagements);
+	}
+	
+	private void improveParameters(TruckCostManagement truckCostManagement){
+		String baseOrgCode=truckCostManagement.getBelongSiteCode();
+		if(StringUtil.isNotBlank(baseOrgCode)){
+			OmgCmsOrgVo omgCmsOrgVo=omgCmsOrgBiz.findByBaseOrgCode(baseOrgCode);
+			if(omgCmsOrgVo!=null){
+				truckCostManagement.setBelongSiteName(omgCmsOrgVo.getOrgName());
+			}
+		
+		}
+	}
+	/**
+	 * 
+	 * @Description: 获取一个新的车型管理号
+	 * @param 
+	 * @param truckManageCode 
+	 * @return
+	 * @author haizhou
+	 * @date 2017年11月6日 下午3:11:00
+	 */
+	@Override
+	public String getTruckManageCode() {
+		return redisIdsWorker.nextId(IdsPrefix.CXCB);
+	}
+	
+  /**
+   * 
+   * @Description: 根据条件查询车型成本 
+   * @param truckCostManagementVo
+   * @return
+   * @author laizhendong
+   * @date 2017年11月6日 上午11:10:36
+   */
+  public List<TruckCostManagementVo> findByCondition(TruckCostManagementVo truckCostManagementVo){
+	  return truckCostManagementService.findByCondition(truckCostManagementVo);
+  }
+  /**
+ 	 * 
+ 	 * @Description: 车型版本号数据未作修改，版本升级
+ 	 * @param ids  
+ 	 * @return 修改的条数
+ 	 * @author haizhou
+ 	 * @date 2017年11月6日 下午3:11:00
+ 	 */
+	@Override
+	public int versionUpByIds(String ids,String updateEmp) {
+		String [] idarr=ids.split(",");
+		List<TruckCostManagement>  truckCostManagements=new ArrayList<TruckCostManagement>();
+		
+		for (int i = 0; i < idarr.length; i++) {
+			TruckCostManagement truckCostManagement = truckCostManagementService.findById(Long.valueOf(idarr[i]));
+			truckCostManagement.setDeleteFlag(true);
+			truckCostManagementService.updateById(truckCostManagement);
+			truckCostManagement.setDeleteFlag(false);
+			truckCostManagement.setId(null);
+			truckCostManagement.setUpdateEmp(updateEmp);
+			if(truckCostManagement.getVersion()!=null){
+				truckCostManagement.setVersion(truckCostManagement.getVersion()+1L);
+			}else{
+				truckCostManagement.setVersion(1L);
+			}
+			
+			truckCostManagements.add(truckCostManagement);
+			
+		}
+		
+		return truckCostManagementService.versionUpByIds(truckCostManagements);
+		
+	}
+	/**
+	 * 
+	 * @Description: 车型车本名称下拉
+	 * @param carrierInfoVo
+	 * @param page
+	 * @return
+	 * @author haizhou
+	 * @date 2017年11月7日 下午5:57:39
+	 */
+@Override
+public Pagination<TruckCostManagement> getByTruckCostName(
+		TruckCostManagementVo truckCostManagementVo, Page page) {
+	
+	
+	
+	return truckCostManagementService.getByTruckCostName(truckCostManagementVo,page);
+}
+		
+}

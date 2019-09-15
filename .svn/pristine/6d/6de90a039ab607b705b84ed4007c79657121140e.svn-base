@@ -1,0 +1,27 @@
+package cn.uce.suc.app.biz;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.entity.SucDictData;
+import cn.uce.suc.app.vo.SucDictDataVo;
+
+/**
+ * @Description: 系统类型BIZ接口类
+ * @author liwei
+ * @date 2017年10月26日 下午10:38:52
+ */
+public interface ISucDictDataBiz {
+	
+	
+	/**
+	 * 
+	 * @Description: 根据typeClassCode查询数据字典
+	 * @param typeClassCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月26日 下午10:48:08
+	 */
+	public List<SucDictDataVo> findListByTypeClassCode(String typeClassCode);
+}

@@ -1,0 +1,116 @@
+package cn.uce.suc.common.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.vo.MobileuserVo;
+
+/**
+ * @Description: app用户表DAO接口类
+ * @author liwei
+ * @date 2017年10月10日 下午08:42:21
+ */
+@Repository("mobileuserDao")
+public interface IMobileuserDao extends IBaseDao<Mobileuser, Long> {
+
+	/**
+	 * @Description: 分页查询app用户表
+	 * @param mobileuserVo
+	 *            app用户表
+	 * @param page
+	 *            分页参数
+	 * @return app用户表
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public Pagination<MobileuserVo> findByPagination(MobileuserVo mobileuserVo, Page page);
+
+	/**
+	 * @Description: 根据手机号查找用户
+	 * @param telephone
+	 *            用户手机号
+	 * @return app用户表
+	 * @author renxu
+	 * @date 2017年10月12日 下午08:42:21
+	 */
+	public Mobileuser findByMobilephone(String telephone);
+	/**
+	 * 
+	 * @Description: 根据手机号和用户类型 直接 查找用户以及所属分拨中
+	 * @param mobileuserVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月6日 下午8:23:06
+	 */
+	public List<MobileuserVo> findByUserMobilephone(MobileuserVo mobileuserVo);
+
+	/**
+	 * @Description: 查找用户
+	 * @param Mobileuser
+	 *            用户手机号
+	 * @return app用户表
+	 * @author renxu
+	 * @date 2017年10月12日 下午08:42:21
+	 */
+	public Long findMobileUser(Mobileuser mobileuser);
+	/**
+	 * 
+	 * @Description: 根据所属网点编码 查询用户信息
+	 * @param siteCodes
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月3日 下午3:35:02
+	 */
+	public List<Mobileuser> findPhoneByBaseOrgCode(@Param("siteCodes") List<String> siteCodes);
+	/**
+	 * app登录接口
+	 * @return
+	 */
+	public List<MobileuserVo>  appLogin(LoginEntity loginEntity);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param mobileuserVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月11日 上午11:45:05
+	 */
+	public List<MobileuserVo> findByCondition(MobileuserVo mobileuserVo);	
+
+	/**
+	 * 
+	 * @Description: 查询手机号是否注册
+	 * @param mobilephone
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月10日 下午5:05:54
+	 */
+	public Integer findCountByMobilephone(String mobilephone);
+	
+	
+	/**
+	 * 
+	 * @Description: 根据手机号和用户类型(dpt_type 和 dot_type 必须有一个要有值) 校验 用户唯一性
+	 * @param mobileuserVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月28日 下午1:33:29
+	 */
+	public MobileuserVo checkExistsByMobileAndUserType(MobileuserVo mobileuserVo);
+	/**
+	 * 
+	 * @Description: 根据所属网点编码 查询用户信息
+	 * @param siteCodes
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月3日 下午3:35:02
+	 */
+	public List<Mobileuser> findUserByBaseOrgCode(@Param("siteCodes") List<String> siteCodes);
+}

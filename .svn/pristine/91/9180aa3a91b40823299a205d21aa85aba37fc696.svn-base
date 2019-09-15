@@ -1,0 +1,88 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.BeanUtils;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.entity.TruckCostManagement;
+import cn.uce.suc.common.vo.TruckCostManagementVo;
+
+/**
+ * 
+ * @Description: 组织机构单元测试
+ * @author liwei
+ * @date 2017年10月19日 下午11:34:06
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class TruckCostManagementBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * biz
+	 */
+	@Resource
+	private ITruckCostManagementBiz truckCostManagementBiz;
+	
+	/**
+	 * 对象
+	 */
+
+	private TruckCostManagement truckCostManagement;
+	/**
+	 * vo
+	 */
+	private TruckCostManagementVo truckCostManagementVo;
+
+	/**
+	 * 
+	 * @Description: 测试前执行
+	 * @author liwei
+	 * @date 2017年12月3日 下午6:40:21
+	 */
+	@Before
+	public void before() {
+		truckCostManagement = new TruckCostManagement();
+		truckCostManagement.setBelongSiteCode("UC010140");
+		truckCostManagement.setTruckCostName("UC01014011009");
+		truckCostManagementBiz.addTruckAndDeleteOld(truckCostManagement);
+		truckCostManagement=truckCostManagementBiz.findById(truckCostManagement.getId());
+		//truckCostManagement.setBelongSiteCode("UC010140");
+		if(truckCostManagement==null){
+			truckCostManagement = new TruckCostManagement();
+			truckCostManagement.setBelongSiteCode("UC010140");
+			truckCostManagement.setTruckCostName("UC01014011009");
+			truckCostManagementBiz.addTruckCostManagement(truckCostManagement);
+		}
+		truckCostManagement.setTruckCostName("UC01014011010");
+		truckCostManagementBiz.updateTruckCostManagement(truckCostManagement);
+		truckCostManagementVo = new TruckCostManagementVo();
+		BeanUtils.copyProperties(truckCostManagement, truckCostManagementVo);
+	}
+
+	/**
+	 * 
+	 * @Description: 测试方法
+	 * @author liwei
+	 * @date 2017年12月3日 下午6:40:25
+	 */
+	@Test
+	public void testPro() {
+		truckCostManagement.setTruckCostName("UC01014011010");
+		truckCostManagement.setCreateEmp("test");
+		truckCostManagementBiz.addTruckCostManagement(truckCostManagement);
+		truckCostManagementBiz.deleteTruckCostManagement(truckCostManagement.getId());
+		truckCostManagementBiz.findByBelongSiteCode(truckCostManagementVo);
+		truckCostManagementBiz.findById(1L);
+		Page page = new Page();
+		truckCostManagementBiz.findByPagination(truckCostManagementVo, page);
+	
+	}
+}

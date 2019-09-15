@@ -1,0 +1,59 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.entity.ExceptionInfo;
+import cn.uce.suc.common.vo.ExceptionInfoVo;
+
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author liwei
+ * @date 2017年12月1日 下午3:36:22
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class ExceptionInfoBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 异常实体
+	 */
+	private ExceptionInfo exceptionInfo;
+	/**
+	 * 异常
+	 */
+	@Resource
+	private IExceptionInfoBiz exceptionInfoBiz;
+
+	@Before
+	public void before() {
+		exceptionInfo=new ExceptionInfo();
+		exceptionInfo.setExceptionCause("TEST");
+		exceptionInfo.setExceptionMsg("test详情");
+	}
+	/**
+	 * 
+	 * @Description: 测试流程
+	 * @author liwei
+	 * @date 2017年12月1日 下午3:39:21
+	 */
+	@Test
+	public void testPro(){
+		exceptionInfoBiz.addExceptionInfo(exceptionInfo);
+		exceptionInfoBiz.findById(1L);
+		exceptionInfoBiz.updateExceptionInfo(exceptionInfo);
+		exceptionInfoBiz.deleteExceptionInfo(1L);
+		ExceptionInfoVo exceptionInfoVo=new ExceptionInfoVo();
+		Page page=new Page();
+		exceptionInfoBiz.findByPagination(exceptionInfoVo, page);
+	}
+}

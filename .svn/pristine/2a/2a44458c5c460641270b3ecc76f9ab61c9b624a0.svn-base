@@ -1,0 +1,128 @@
+package cn.uce.suc.common.cache;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.alibaba.fastjson.JSON;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheManager;
+import cn.uce.core.cache.base.ICache;
+import cn.uce.suc.common.vo.TruckCostManagementVo;
+import cn.uce.utils.StringUtil;
+
+/**
+ * @Description: 算法参数缓存处理器 
+ * @author laizhendong
+ * @date 2017年4月15日 上午11:05:48
+ */
+public class IATruckModelCacheProcessor {
+	
+	
+	/**
+	 * 
+	 * @Description: 刷新缓存
+	 * @author laizhendong
+	 * @date 2017年11月6日 上午7:51:11
+	 */
+	public static void refresh(String key) throws BusinessException {
+		ICache<String,String> truckModelCache = CacheManager.getInstance().getCache("IATruckModelCache");
+		if(truckModelCache != null){
+			truckModelCache.refresh(key);
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 获取车型缓存
+	 * @return
+	 * @throws BusinessException
+	 * @author laizhendong
+	 * @date 2017年11月17日 下午3:22:14
+	 */
+/*	public static Map<String, TruckCostManagementVo> getAllTruckModel() throws BusinessException {
+		ICache<String,String> truckModelCache = CacheManager.getInstance().getCache("IATruckModelCache");
+		String allCarModel = truckModelCache.get(TRUCK_MODEL);
+		Map<String, TruckCostManagementVo> truckCostManagementVoMap = new HashMap<String, TruckCostManagementVo>();
+		if (StringUtil.isNotBlank(allCarModel)) {
+			List<TruckCostManagementVo> truckCostManagementVos = JSON.parseArray(allCarModel, TruckCostManagementVo.class);
+			if (null != truckCostManagementVos && !truckCostManagementVos.isEmpty()) {
+				for (TruckCostManagementVo truckCostManagementVo : truckCostManagementVos) {
+					truckCostManagementVoMap.put(truckCostManagementVo.getTruckConcrete(), truckCostManagementVo);
+				}
+			}
+		}
+		return truckCostManagementVoMap;
+	}*/
+	
+	/**
+	 * 
+	 * @Description: 根据key获取车型缓存
+	 * @param key
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月6日 下午4:14:21
+	 */
+	public static boolean isExist(String key){
+		//获取缓存对象
+		ICache<String,String> cache = CacheManager.getInstance().getCache("IATruckModelCache");
+		if (cache != null) {
+			String cacheJson = cache.get(key);
+			if (StringUtil.isNotBlank(cacheJson)) {
+				//释放
+				cacheJson = null;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据限行车型获取限行车型数组 
+	 * @param limitCarType
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月17日 下午3:38:59
+	 */
+	public static String[] getLimitCarModel(String key,String limitCarType){
+		ICache<String,String> truckModelCache = CacheManager.getInstance().getCache("IATruckModelCache");
+		String carModels = truckModelCache.get(key);
+		Map<String, Double> carVolumeMap = new HashMap<String, Double>();
+		if (StringUtil.isNotBlank(carModels)) {
+			//获取缓存的车型，转为对应list
+			List<TruckCostManagementVo> truckCostManagementVos = JSON.parseArray(carModels, TruckCostManagementVo.class);
+			if (null != truckCostManagementVos && !truckCostManagementVos.isEmpty()) {
+				//把车型-体积放入map
+				for (TruckCostManagementVo carModel : truckCostManagementVos) {
+					String carType = carModel.getTruckConcrete();
+					Double valume = carModel.getTruckVolume();
+					if (StringUtil.isNotBlank(carType) && valume != null) {
+						carVolumeMap.put(carType, valume);
+					}
+				}
+				if (!carVolumeMap.isEmpty()) {
+					//把大于限行车型的体积返回
+					List<String> limitCarTypeList = new ArrayList<String>();
+					Double limitCarTypeVolumeDouble  = carVolumeMap.get(limitCarType);
+					if (null != limitCarTypeVolumeDouble) {
+						double limitCarTypeVolume  = limitCarTypeVolumeDouble.doubleValue();
+						for (String carModel : carVolumeMap.keySet()) {
+							if (carVolumeMap.get(carModel) >= limitCarTypeVolume) {
+								limitCarTypeList.add(carModel);
+							}
+						}
+					}
+					//返回
+					if (!limitCarTypeList.isEmpty()) {
+						return (String[]) limitCarTypeList.toArray(new String[limitCarTypeList.size()]);
+					}
+				}
+			}
+		}
+		return null;
+	}
+
+}

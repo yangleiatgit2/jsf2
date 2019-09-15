@@ -1,0 +1,63 @@
+package cn.uce.suc.bkg.dao.price;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.price.PricingRuleTypeDetail;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo;
+
+/**
+ * @Description: 定价分类管理明细DAO接口类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月31日 下午05:30:43
+ */
+@Repository("pricingRuleTypeDetailDao")
+public interface IPricingRuleTypeDetailDao extends IBaseDao<PricingRuleTypeDetail, Long> {
+
+	/**
+	 * @Description: 分页查询定价分类管理明细
+	 * @param pricingRuleTypeDetailVo
+	 *            定价分类管理明细
+	 * @param page
+	 *            分页参数
+	 * @return 定价分类管理明细
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:30:43
+	 */
+	public Pagination<PricingRuleTypeDetail> findByPagination(PricingRuleTypeDetailVo pricingRuleTypeDetailVo, Page page);
+
+	/**
+	 * 
+	 * @Description: 根据定价规则编码删除明细 
+	 * @param ruleCode
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午5:32:04
+	 */
+	public int deleteByRuleCode(String ruleCode);
+
+	/**
+	 * 
+	 * @Description: 根据定价规则编码获取组装明细信息 
+	 * @param ruleCode
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午6:39:41
+	 */
+	public List<PricingRuleTypeDetailVo> getGroupByCondition(PricingRuleTypeDetailVo pricingRuleTypeDetailVo);
+
+	/**
+	 * 
+	 * @Description: 根据定价规则编码获取数据 
+	 * @param ruleTypeCode
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午10:13:47
+	 */
+	public List<PricingRuleTypeDetail> findByRuleCode(PricingRuleTypeDetailVo pricingRuleTypeDetailVo);
+
+}

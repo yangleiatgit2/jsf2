@@ -1,0 +1,95 @@
+package cn.uce.suc.bkg.service.operation;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.operation.CarTrace;
+import cn.uce.suc.bkg.vo.operation.CarTraceVo;
+import cn.uce.suc.bkg.dao.operation.ICarTraceDao;
+
+/**
+ * @Description: 车辆轨迹信息Service类
+ * @author liwei
+ * @date 2017年10月31日 上午10:46:42
+ */
+@Service("carTraceService")
+public class CarTraceService {
+	
+	/**
+	 * 注入车辆轨迹信息Dao
+	 */
+	@Resource
+	private ICarTraceDao carTraceDao;
+	
+	/**
+	 * @Description: 新增车辆轨迹信息
+	 * @param carTrace 车辆轨迹信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月31日 上午10:46:42
+	 */
+	public int addCarTrace(CarTrace carTrace) {
+		return carTraceDao.insert(carTrace);
+	}
+	
+	/**
+	 * @Description: 修改车辆轨迹信息
+	 * @param carTrace 车辆轨迹信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月31日 上午10:46:42
+	 */
+	public int updateById(CarTrace carTrace) {
+		return carTraceDao.updateById(carTrace);
+	}
+	
+	/**
+	 * @Description: 删除车辆轨迹信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月31日 上午10:46:42
+	 */
+	public int deleteById(Long id) {
+		return carTraceDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询车辆轨迹信息
+	 * @param id 主键
+	 * @return 车辆轨迹信息
+	 * @author liwei
+	 * @date 2017年10月31日 上午10:46:42
+	 */
+	public CarTrace findById(Long id) {
+		return carTraceDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询车辆轨迹信息
+	 * @param carTraceVo 车辆轨迹信息
+	 * @param page 分页参数
+	 * @return 车辆轨迹信息
+	 * @author liwei
+	 * @date 2017年10月31日 上午10:46:42
+	 */
+	public Pagination<CarTrace> findByPagination(CarTraceVo carTraceVo, Page page) {
+		Pagination<CarTrace> paginationCarTrace = carTraceDao.findByPagination(carTraceVo, page);
+		return paginationCarTrace;
+	}
+	/**
+	 * 根据VO查询车辆轨迹信息
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param carTraceVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月12日 下午8:46:47
+	 */
+	public CarTraceVo queryCarTraceByVo(CarTrace carTrace){
+		return carTraceDao.queryCarTraceByVo(carTrace);
+	}
+	
+}

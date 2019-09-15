@@ -1,0 +1,180 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderCombineBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+
+/**
+ * 
+ * @Description: 运力需求单元测试类
+ * @author yanglei
+ * @date 2017年11月23日 下午7:42:23
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml","classpath*:*/spring-*.xml" })
+public class CapacityDemandRequiredBizTest {
+	/**
+	 * 注入ICapacityGapManagementBiz对象
+	 */
+	@Resource
+	private ILineGroupBiz lineGroupBiz;  //班次biz
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz; //乾坤机构 biz
+	@Resource
+	private  IFreightOrderBiz freightOrderBiz; //订单 biz
+	@Resource
+	private  IFreightOrderCombineBiz  freightOrderCombineBiz; //订单组合biz
+	
+	private  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	private Date[] getDateSection() {
+		// 获取当前月第一天：
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.MONTH, 0);
+		c.set(Calendar.DAY_OF_MONTH, 1);// 设置为1号,当前日期既为本月第一天
+		c.set(Calendar.HOUR_OF_DAY, 0);
+		c.set(Calendar.MINUTE, 0);
+		c.set(Calendar.SECOND, 0);
+		Date first = c.getTime();
+
+		// 获取当前月最后一天
+		Calendar ca = Calendar.getInstance();
+		ca.set(Calendar.DAY_OF_MONTH,
+				ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+		ca.set(Calendar.HOUR_OF_DAY, 23);
+		ca.set(Calendar.MINUTE, 59);
+		ca.set(Calendar.SECOND, 59);
+		Date last1 = ca.getTime();
+		Date[] dateSection = new Date[2];
+		dateSection[0] = first;
+		dateSection[1] = last1;
+		return dateSection;
+	}
+
+	/**
+	 * 页码类
+	 */
+	private Page page;
+
+	/**
+	 * 
+	 * @Description: 初始化方法
+	 * @author yanglei
+	 * @date 2017年11月21日 下午10:15:33
+	 */
+	@Before
+	public void init() {
+		page = new Page();
+		page.setCurrentPage(1);
+		System.out.println("==========单元测试开始========");
+	}
+
+	/**
+	 * 
+	 * @Description: 方法执行后
+	 * @author yanglei
+	 * @date 2017年11月21日 下午10:15:47
+	 */
+	@After
+	public void excuteEnd() {
+		System.out.println("==========单元测试结束========");
+	}
+
+	/**
+	 * 
+	 * @Description: 测试方法
+	 * @author yanglei
+	 * @date 2017年11月6日 下午10:16:01
+	 */
+	@Test
+	public void test() {
+		
+		
+		FreightOrderVo freightOrderVo=new FreightOrderVo();
+		String orderCombineCode="OZ17111400003";
+		freightOrderVo.setOrderCombinCode(orderCombineCode);
+	    List<FreightOrderVo> orderList=freightOrderBiz.findByOderNoTimeDesc(freightOrderVo);
+	    List<FreightOrderCombineVo> orderCombineList = getOrderCombineVo("OZ17111400003","UC016983",1,"2",page);
+	    int count=getOrderCombineVoCount("OZ17111400003","UC016983",1,"2");
+	    
+	    Date [] dateS=getDateSection();
+	    Date startDate=dateS[0];
+		Date endDate=dateS[1];
+	    LineGroupVo vo =new LineGroupVo();
+		CarManageVo carManageVo =new CarManageVo();
+		carManageVo.setCapacityStartTime(startDate);
+		carManageVo.setCapacityEndTime(endDate);
+		carManageVo.setUsableFlag("1");
+		vo.setOrderCombinCode("UC016983");
+		vo.setCarType("4.2");
+		int fourDotTwoExpected=lineGroupBiz.countByLineGroupVo(vo); // 需求
+		
+	}
+	private int getOrderCombineVoCount(String orderCombineCode,String demandSiteCode,int requiType, String businessMode){
+		FreightOrderCombineVo searchCombine = new FreightOrderCombineVo();
+		if(1==requiType){
+			searchCombine.setOrderCombineTypes(new String []{"1","01"});
+		}
+		if(2==requiType){
+			searchCombine.setOrderCombineTypes(new String []{"2","02"});
+		}
+		searchCombine.setOrderCombineStatus(BkgConstants.ORDER_COMBINE_STATUS_CREATE);
+		if(StringUtils.isNoneBlank(demandSiteCode)){
+			searchCombine.setOperStationCode(demandSiteCode);
+		}
+		if(StringUtils.isNoneBlank(businessMode)){
+			searchCombine.setBusinessMode(businessMode);
+		}
+		if(StringUtils.isNoneBlank(orderCombineCode)){
+			searchCombine.setOrderCombineCode(orderCombineCode);
+		}
+		int count= freightOrderCombineBiz.getOrderCombineVoCount(searchCombine);
+		return count;
+	}
+	private List<FreightOrderCombineVo> getOrderCombineVo(String orderCombineCode,String demandSiteCode,int requiType, String businessMode, Page page){
+		FreightOrderCombineVo searchCombine = new FreightOrderCombineVo();
+		if(1==requiType){
+			searchCombine.setOrderCombineTypes(new String []{"1","01"});
+		}
+		if(2==requiType){
+			searchCombine.setOrderCombineTypes(new String []{"2","02"});
+		}
+		String[] orderCombineStatuses=new String[]{BkgConstants.ORDER_COMBINE_STATUS_CREATE};
+		searchCombine.setOrderCombineStatuses(orderCombineStatuses);
+		if(StringUtils.isNoneBlank(demandSiteCode)){
+			searchCombine.setOperStationCode(demandSiteCode);
+		}
+		if(StringUtils.isNoneBlank(businessMode)){
+			searchCombine.setBusinessMode(businessMode);
+		}
+		if(StringUtils.isNoneBlank(orderCombineCode)){
+			searchCombine.setOrderCombineCode(orderCombineCode);
+		} 
+		List<FreightOrderCombineVo> orderCombines = freightOrderCombineBiz.findByConditionMultiCombineType(searchCombine,page);
+		return orderCombines;
+	}
+}

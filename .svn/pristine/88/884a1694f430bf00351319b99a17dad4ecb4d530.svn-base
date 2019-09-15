@@ -1,0 +1,424 @@
+package cn.uce.suc.common.util;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.jiguang.common.resp.APIConnectionException;
+import cn.jiguang.common.resp.APIRequestException;
+import cn.jpush.api.JPushClient;
+import cn.jpush.api.push.PushResult;
+import cn.jpush.api.push.model.Message;
+import cn.jpush.api.push.model.Options;
+import cn.jpush.api.push.model.Platform;
+import cn.jpush.api.push.model.PushPayload;
+import cn.jpush.api.push.model.PushPayload.Builder;
+import cn.jpush.api.push.model.audience.Audience;
+
+import com.alibaba.fastjson.JSON;
+import com.google.gson.JsonObject;
+
+/**
+ * 
+ * @Description: 极光消息推送类
+ * @author liwei
+ * @date 2017年10月30日 下午5:14:50
+ */
+public class MsgPushUtils {
+	protected static Logger log = LoggerFactory.getLogger(MsgPushUtils.class);
+
+	private static PushPayload pushPayload;
+
+	public static final String BEEN_CONCERNED_ALERT = "";
+
+	public static final String SOUND = "";
+
+	public static final int BADGE = 1;
+	
+
+
+	/**
+	 * @throws APIRequestException
+	 * @throws APIConnectionException
+	 * @throws APIRequestException
+	 * @throws APIConnectionException
+	 * 
+	 * @Title: pushMessage
+	 * @Description: (推送消息)
+	 * @param @param json
+	 * @param @return 设定文件
+	 * @return HttpResponse 返回类型
+	 * @throws
+	 */
+	public static PushResult sendPush(PushPayload payload,String masterSecret,String appKey) throws APIConnectionException, APIRequestException {
+		JPushClient jPushClient = new JPushClient(masterSecret, appKey);
+		return jPushClient.sendPush(payload);
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param alert
+	 * @param extras
+	 * @param alias
+	 * @param masterSecret
+	 * @param appKey
+	 * @return
+	 * @throws APIConnectionException
+	 * @throws APIRequestException
+	 * @author liwei
+	 * @date 2017年12月4日 下午2:21:39
+	 */
+	public static PushResult sendIosNotificationWithRegistrationID(JsonObject alert, Map<String, String> extras, String[] registrationID,
+			String masterSecret, String appKey) throws APIConnectionException, APIRequestException {
+		JPushClient jpush = new JPushClient(masterSecret, appKey);
+		return jpush.sendIosNotificationWithRegistrationID(alert, extras, registrationID);
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param title
+	 * @param alert
+	 * @param extras
+	 * @param alias
+	 * @param masterSecret
+	 * @param appKey
+	 * @return
+	 * @throws APIConnectionException
+	 * @throws APIRequestException
+	 * @author liwei
+	 * @date 2017年12月4日 下午2:41:26
+	 */
+	public static PushResult sendAndroidNotificationWithRegistrationID(String title,String alert, Map<String, String> extras, String[] registrationID,
+			String masterSecret, String appKey) throws APIConnectionException, APIRequestException {
+		JPushClient jPushClient = new JPushClient(masterSecret, appKey);
+		return jPushClient.sendAndroidNotificationWithRegistrationID(title, alert, extras, registrationID);
+	}
+
+	/**
+	 * @Title: sendPushTryCatch
+	 * @Description: try catch 推送
+	 * @param @param payload
+	 * @param @param logger
+	 * @param @return 设定文件
+	 * @return String 返回类型
+	 * @throws
+	 */
+	public static void sendPushTryCatch(PushPayload payload, Logger logger) {
+		JPushClient jPushClient = new JPushClient(MASTER_SECRET, APP_KEY);
+		try {
+			PushResult pushResult = jPushClient.sendPush(payload);
+			logger.info("返回结果" + pushResult);
+		} catch (Exception e) {
+			logger.error("连接错误，稍后尝试" + e);
+			logger.error("极光推送内部错误", e);
+			/*
+			 * logger.info("网络请求状态" + e.getStatus()); logger.info("错误状态码" +
+			 * e.getErrorCode()); logger.info("错误信息" + e.getErrorMessage());
+			 * logger.info("信息ID" + e.getMsgId()); logger.info("极光推送错误信息:" +
+			 * e.getErrorMessage());
+			 */
+		}
+	}
+
+	/**
+	 * 
+	 * @Title: buildPushObjectAllAllAlert
+	 * @Description: (快捷地构建推送对象：所有平台，所有设备，内容为 alert 的通知)
+	 * @param @param alert
+	 * @param @return 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	@SuppressWarnings("static-access")
+	public static PushPayload buildPushObjectAllAllAlert(String alert) {
+		return pushPayload.alertAll(alert);
+	}
+
+	/**
+	 * @Title: buildPushObjectAliasAlert
+	 * @Description: (所有平台，推送目标是别名为 alias，通知内容为 alert)
+	 * @param @param alert
+	 * @param @param alias
+	 * @param @return 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload buildPushObjectAliasAlert(String days, String alert, String[] alias) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android_ios())
+				.setAudience(Audience.alias(alias))
+				.setNotification(
+						Notification
+								.newBuilder()
+								.setAlert(alert)
+								.addPlatformNotification(AndroidNotification.newBuilder().addExtra("sign", "5").build())
+								.addPlatformNotification(IosNotification.newBuilder().addExtra("sign", "5").build())
+								.build())
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(Long.valueOf(Integer.valueOf(days) * 86400)).build()).build();
+	}*/
+
+	/**
+	 * 
+	 * @Title: buildPushObjectIos
+	 * @Description: (iOS推送 badge sound)
+	 * @param @param alias
+	 * @param @param alert
+	 * @param @param badge
+	 * @param @return 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload buildPushObjectIosAndroid(String days, Map<String, String> params, String[] alias,
+			String alert, int badge, String sound, String msgContent) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android_ios())
+				.setAudience(Audience.alias(alias))
+				.setNotification(
+						Notification
+								.newBuilder()
+								.addPlatformNotification(
+										IosNotification.newBuilder().setAlert(alert).setBadge(badge).addExtras(params)
+												.setSound(sound).build())
+								.addPlatformNotification(
+										AndroidNotification.newBuilder().setAlert(alert).addExtras(params).build())
+								.build())
+				.setMessage(Message.newBuilder().setMsgContent(msgContent).build())
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(Long.valueOf(Integer.valueOf(days) * 86400)).build()).build();
+	}
+*/
+	/**
+	 * @Title: buildPushObjectAllAliasAlert
+	 * @Description: (所有平台，推送目标是别名为 alias，通知标题为 title，通知内容为 alert)
+	 * @param @param params
+	 * @param @param alias
+	 * @param @return 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload buildPushObjectAllAliasAlert(String days, Map<String, String> params, String alert,
+			String title, String... alias) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android_ios())
+				.setAudience(Audience.alias(alias))
+				.setNotification(
+						Notification
+								.newBuilder()
+								.setAlert(alert)
+								.addPlatformNotification(
+										AndroidNotification.newBuilder().setTitle(title).addExtras(params).build())
+								.addPlatformNotification(IosNotification.newBuilder().addExtras(params).build())
+								.build())
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(Long.valueOf(Integer.valueOf(days) * 86400)).build()).build();
+	}*/
+
+/**
+	 * @Title: buildPushObjectAndroidTagAlertWithTitle
+	 * @Description: (平台是 Android，目标是 tag 为 tag 的设备，内容是 Android 通知 alert，并且标题为
+	 *               title)
+	 * @param @param tag
+	 * @param @param alert
+	 * @param @param title
+	 * @param @return 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload buildPushObjectAndroidTagAlertWithTitle(int i, String tag, String alert, String title) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android())
+				.setAudience(Audience.tag(tag))
+				.setNotification(Notification.android(alert, title, null))
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false).setTimeToLive(Long.valueOf(Integer.valueOf(i)))
+								.build()).build();
+	}
+*/
+	/**
+	 * @Title: buildPushObjectIosTagAndAlertWithExtrasAndMessage
+	 * @Description: ( 构建推送对象：平台是 iOS，推送目标是 tag, tagAll 的交集， 推送内容同时包括通知与消息 -
+	 *               通知信息是 alert，角标数字为 number， 消息内容是 msgContent。 通知是 APNs
+	 *               推送通道的，消息是 JPush 应用内消息通道的。 APNs 的推送环境是“开发”（如果不显式设置的话，Library
+	 *               会默认指定为开发） true 表示推送生产环境，true 表示要推送开发环境 )
+	 * @param @param tag
+	 * @param @param tagAll
+	 * @param @param number
+	 * @param @param alert
+	 * @param @param msgContent
+	 * @param @return 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload buildPushObjectIosTagAndAlertWithExtrasAndMessage(String days, String tag, String tagAll,
+			int number, String alert, String msgContent) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.ios())
+				.setAudience(Audience.tag_and(tag, tagAll))
+				.setNotification(
+						Notification
+								.newBuilder()
+								.addPlatformNotification(
+										IosNotification.newBuilder().setAlert(alert).setBadge(number).build()).build())
+				.setMessage(Message.content(msgContent))
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(Long.valueOf(Integer.valueOf(days) * 86400)).build()).build();
+	}*/
+
+	/**
+	 * 构建推送对象：平台是 Andorid 与 iOS， 推送目标是 （tag1 与 tag2 的并集）， 推送内容是 - 内容为 msgContent
+	 * 的消息
+	 * 
+	 * @Title: buildPushObjectIosAudienceMoreMessageWithExtras
+	 * @param @param tag1
+	 * @param @param tag2
+	 * @param @param msgContent
+	 * @param @return 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload buildPushObjectIosAudienceMoreMessageWithExtras(String days, String tag1, String tag2,
+			String msgContent) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android_ios())
+				.setAudience(Audience.newBuilder().addAudienceTarget(AudienceTarget.tag(tag1, tag2)).build())
+				.setMessage(Message.newBuilder().setMsgContent(msgContent).build())
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(Long.valueOf(Integer.valueOf(days) * 86400)).build()).build();
+	}*/
+
+	/**
+	 * @Title: sendAndroidMessageWithAliasAndExtras
+	 * @Description: 用户自定义消息类型,以及传递附属信息,发送给安卓和IOS特定用户
+	 * @param @param extras
+	 * @param @param title
+	 * @param @param msgContent
+	 * @param @param alias
+	 * @param @return
+	 * @param @throws APIConnectionException
+	 * @param @throws APIRequestException 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload sendAndroidAndIosMessageWithAliasAndExtras(Long i, Map<String, String> extras,
+			String title, String msgContent, String string) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android_ios())
+				.setAudience(Audience.alias(string))
+				.setMessage(Message.newBuilder().setTitle(title).setMsgContent(msgContent).addExtras(extras).build())
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(i).build()).build();
+	}*/
+
+	/**
+	 * @Title: sendAndroidMessageWithAlias
+	 * @Description: 用户自定义消息类型，无附加属性信息，发送给安卓和IOS特定用户
+	 * @param @param title
+	 * @param @param msgContent
+	 * @param @param alias
+	 * @param @return
+	 * @param @throws APIConnectionException
+	 * @param @throws APIRequestException 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload sendAndroidAndIosMessageWithAlias(String days, Map<String, String> extras, String title,
+			String msgContent, String... alias) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android_ios())
+				.setAudience(Audience.alias(alias))
+				.setMessage(Message.newBuilder().setTitle(title).setMsgContent(msgContent).addExtras(extras).build())
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(Long.valueOf(Integer.valueOf(days) * 86400)).build()).build();
+	}*/
+
+	/**
+	 * @Title: sendAndroidAndIosMessageAndNotification
+	 * @Description: 推送消息和通知，发送给所有安卓和IOS用户
+	 * @param @param title
+	 * @param @param alert
+	 * @param @return 设定文件
+	 * @return PushPayload 返回类型
+	 * @throws
+	 */
+	/*public static PushPayload sendAndroidAndIosMessageAndNotification(String days, String content, String alert) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android_ios())
+				.setNotification(Notification.newBuilder().setAlert(alert).build())
+				.setMessage(Message.newBuilder().setTitle("").setMsgContent(content).build())
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(Long.valueOf(Integer.valueOf(days))).build()).build();
+	}*/
+	
+	private static  String MASTER_SECRET="a3807d89e9b1c8885f43bebf";
+	private static  String APP_KEY = "39346a309646ce885164e67a";
+	/**
+	 * 
+	 * @Description: 极光测试
+	 * @param args
+	 * @author liwei
+	 * @date 2017年10月30日 下午5:16:04
+	 */
+	public static void main(String[] args) {
+		Map<String, String> extras = new HashMap<String, String>();
+		extras.put("news_type", "公告");
+		extras.put("business_type", "mine_power_details");
+		extras.put("display_ways", "01,02,03");
+		extras.put("business_id", "12575");
+		extras.put("title", "测试tilte");
+		extras.put("body", "测试一二三");
+		
+	//	System.out.println(sendAndroidAndIosMessageWithAliasAndExtras(1L, extras, "测试", "测试详情", "point13402068345"));
+		System.out.println(JSON.toJSONString(extras));
+		JsonObject alterjosn=new JsonObject();
+		alterjosn.addProperty("title", "测试tilte");
+		alterjosn.addProperty("body", "测试一二三");
+		//网点
+		String[] iosalias={"141fe1da9eae565ff87"};
+		String[] analias={"120c83f76020c21846c"};
+		try {
+			PushResult pushResultNotI = sendIosNotificationWithRegistrationID(alterjosn, extras, iosalias, MASTER_SECRET, APP_KEY);
+			PushResult pushResultNotA=sendAndroidNotificationWithRegistrationID("测试alter", "测试详情", extras, analias, MASTER_SECRET, APP_KEY);
+			//PushResult pushResult=sendPush(sendAndroidAndIosMessageWithAliasAndExtras(1L, extras, "测试详情","测试","dot13162378587"),MASTER_SECRET,APP_KEY);
+			//System.out.println(pushResult.getResponseCode());
+		} catch (APIConnectionException e) {
+			log.error("Connection error. Should retry later. ", e);
+		} catch (APIRequestException e) {
+			log.error("Error response from JPush server. Should review and fix it. ", e);
+			log.info("HTTP Status: " + e.getStatus());
+			log.info("Error Code: " + e.getErrorCode());
+			log.info("Error Message: " + e.getErrorMessage());
+		}
+		log.info("成功");
+	}
+	public static PushPayload sendAndroidAndIosnotificationWithAlias(Long i, Map<String, String> extras,
+			String title, String msgContent, String string) {
+		Builder builder = PushPayload.newBuilder();
+		return builder
+				.setPlatform(Platform.android_ios())
+				.setAudience(Audience.alias(string))
+				.setMessage(Message.newBuilder().setTitle(title).setMsgContent(msgContent).addExtras(extras).build())
+				.setOptions(
+						Options.newBuilder().setApnsProduction(false)
+								.setTimeToLive(i).build()).build();
+	}
+}

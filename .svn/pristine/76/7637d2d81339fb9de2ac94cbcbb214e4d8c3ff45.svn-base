@@ -1,0 +1,120 @@
+package cn.uce.suc.bkg.service.price;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.price.PricingRuleDetail;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailVo;
+import cn.uce.suc.bkg.dao.price.IPricingRuleDetailDao;
+
+/**
+ * @Description: 定价规则详情Service类
+ * @author laizhendong
+ * @date 2017年11月01日 下午09:07:39
+ */
+@Service("pricingRuleDetailService")
+public class PricingRuleDetailService {
+	
+	/**
+	 * 注入定价规则详情Dao
+	 */
+	@Resource
+	private IPricingRuleDetailDao pricingRuleDetailDao;
+	
+	/**
+	 * @Description: 新增定价规则详情
+	 * @param pricingRuleDetail 定价规则详情
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public int addPricingRuleDetail(PricingRuleDetail pricingRuleDetail) {
+		return pricingRuleDetailDao.insert(pricingRuleDetail);
+	}
+	
+	/**
+	 * @Description: 修改定价规则详情
+	 * @param pricingRuleDetail 定价规则详情
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public int updateById(PricingRuleDetail pricingRuleDetail) {
+		return pricingRuleDetailDao.updateById(pricingRuleDetail);
+	}
+	
+	/**
+	 * @Description: 删除定价规则详情
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public int deleteById(Long id) {
+		return pricingRuleDetailDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询定价规则详情
+	 * @param id 主键
+	 * @return 定价规则详情
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public PricingRuleDetail findById(Long id) {
+		return pricingRuleDetailDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询定价规则详情
+	 * @param pricingRuleDetailVo 定价规则详情
+	 * @param page 分页参数
+	 * @return 定价规则详情
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public Pagination<PricingRuleDetailVo> findByPagination(PricingRuleDetailVo pricingRuleDetailVo, Page page) {
+		Pagination<PricingRuleDetailVo> paginationPricingRuleDetail = pricingRuleDetailDao.findByPagination(pricingRuleDetailVo, page);
+		return paginationPricingRuleDetail;
+	}
+	/**
+	 * 
+	 * @Description: 根据定价分类分组分页查询
+	 * @param pricingRuleDetailVo
+	 * @param page
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 上午11:24:12
+	 */
+	public Pagination<PricingRuleDetailVo> findByPriceTypeGroup(PricingRuleDetailVo pricingRuleDetailVo, Page page){
+		return pricingRuleDetailDao.findByPriceTypeGroup(pricingRuleDetailVo, page);
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则详情
+	 * @param pricingRuleDetailVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午5:48:34
+	 */
+	public List<PricingRuleDetailVo> findByCondition(PricingRuleDetailVo pricingRuleDetailVo){
+		return pricingRuleDetailDao.findByCondition(pricingRuleDetailVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据规则id删除定价规则
+	 * @param pricingRuleDetailVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月13日 上午10:37:43
+	 */
+	public int batchUpdateByRuleId(PricingRuleDetail pricingRuleDetail){
+		return pricingRuleDetailDao.batchUpdateByRuleId(pricingRuleDetail);
+	}
+}

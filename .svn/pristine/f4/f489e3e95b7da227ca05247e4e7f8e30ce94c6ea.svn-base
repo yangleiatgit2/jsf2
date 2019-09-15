@@ -1,0 +1,262 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.ICarrierInfoBiz;
+import cn.uce.suc.bkg.entity.datamain.CarrierInfo;
+import cn.uce.suc.bkg.entity.datamain.Dirver;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.service.datamain.CarManageService;
+import cn.uce.suc.bkg.service.datamain.CarrierInfoService;
+import cn.uce.suc.bkg.service.datamain.DirverService;
+import cn.uce.suc.bkg.service.operation.DirvingPlanDetailService;
+import cn.uce.suc.bkg.service.operation.DirvingPlanService;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.datamain.CarrierInfoVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+
+/**
+ * @Description: 承运商信息BIZ实现类
+ * @author liwei
+ * @date 2017年11月01日 上午09:46:05
+ */
+@Service("carrierInfoBiz")
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class CarrierInfoBiz implements ICarrierInfoBiz {
+
+	/**
+	 * 注入承运商信息Service
+	 */
+	@Resource
+	private CarrierInfoService carrierInfoService;
+	@Resource
+	private DirvingPlanDetailService dirvingPlanDetailService;
+	@Resource
+	private DirvingPlanService dirvingPlanService;
+	/**
+	 * 编码
+	 */
+	@Resource
+	IIdsWorker redisIdsWorker;
+	/**
+	 * 注入车辆信息表Service
+	 */
+	@Resource
+	private CarManageService carManageService;
+	/**
+	 * 注入司机的信息service
+	 */
+	@Resource
+	private DirverService dirverService;
+
+	/**
+	 * @Description: 新增承运商信息
+	 * @param carrierInfo
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int addCarrierInfo(CarrierInfo carrierInfo) {
+		return carrierInfoService.addCarrierInfo(carrierInfo);
+	}
+
+	/**
+	 * @Description: 修改承运商信息
+	 * @param carrierInfo
+	 *            承运商信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updateCarrierInfo(CarrierInfo carrierInfo) {
+		return carrierInfoService.updateById(carrierInfo);
+	}
+
+	/**
+	 * @Description: 删除承运商信息
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int deleteCarrierInfo(Long id) {
+		return carrierInfoService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询承运商信息
+	 * @param id
+	 *            主键
+	 * @return 承运商信息
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	@Override
+	public CarrierInfo findById(Long id) {
+		return carrierInfoService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询承运商信息
+	 * @param carrierInfoVo
+	 *            承运商信息
+	 * @param page
+	 *            分页参数
+	 * @return 承运商信息
+	 * @author liwei
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	public Pagination<CarrierInfo> findByPagination(
+			CarrierInfoVo carrierInfoVo, Page page) {
+		Pagination<CarrierInfo> pagination = carrierInfoService
+				.findByPagination(carrierInfoVo, page);
+		return pagination;
+	}
+
+	/**
+	 * @Description: 批量修改承运商状态
+	 * @param ids
+	 *            承运商信息
+	 * @param status
+	 *            分页参数
+	 * @return 受影响行数
+	 * @author haizhou
+	 * @date 2017年11月01日 上午09:46:05
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int startDetails(String[] idarr, String status) {
+		List<CarrierInfo> carrierInfos = new ArrayList<CarrierInfo>();
+		// 判断截取的字符串是否是纯数字
+		for (int i = 0; i < idarr.length; i++) {
+			CarrierInfo carrierInfo = new CarrierInfo();
+			carrierInfo.setId(Long.valueOf(idarr[i]));
+			carrierInfo.setUpdateTime(new Date());
+			carrierInfo.setStatus(status);
+			carrierInfos.add(carrierInfo);
+			if (BkgConstants.CARRIER_STOP.equals(status)) {
+				// 查询改承运商是否存在未停用的车辆信息
+				CarrierInfo findById = carrierInfoService.findById(Long
+						.valueOf(idarr[i]));
+				// 通过承运商全名查询所有车辆
+				CarManageVo carManageVo = new CarManageVo();
+				carManageVo.setCarBelongCarrier(findById.getCompanyFullName());
+				List<CarManageVo> findByVo = carManageService
+						.findByVo(carManageVo);
+				for (int j = 0; j < findByVo.size(); j++) {
+					// 如果改承运商有车辆还在启用中，那么该承运商不能被停用
+					List<DirvingPlan> planList = dirvingPlanService
+							.findByPlageNumber(findByVo.get(j)
+									.getPlateNumbers());
+					// if(BkgConstants.CARRIER_START.equals(findByVo.get(j).getCarStatus())){
+					// return -1;
+					// }
+					if (CollectionUtils.isNotEmpty(planList)) {
+						for (DirvingPlan plan : planList) {
+							if (plan.getStatus() != BkgConstants.PLAN_CODE_EXECUTE
+									&& plan.getStatus() != BkgConstants.PLAN_CODE_FINISH) {
+								return -1;
+							}
+						}
+					}
+				}
+				// 通过承运商获取所有的司机 TODO
+				// List<Dirver> dirvers =
+				// dirverService.findByCarrierId(idarr[i]);
+				// for (int j = 0; j < dirvers.size(); j++) {
+				// if(BkgConstants.CARRIER_START.equals(dirvers.get(j).getDirverStatus())){
+				// return -1;
+				// }
+				// }
+				List<Dirver> driverList = dirverService
+						.findByCarrierId(findById.getCompanyFullName());
+				if (CollectionUtils.isNotEmpty(driverList)) {
+					for (Dirver d : driverList) {
+						List<DirvingPlan> planlist = dirvingPlanService
+								.findPlaneByTelphone(d.getMobilePhone());
+						if (CollectionUtils.isNotEmpty(planlist)) {
+							for (DirvingPlan plan : planlist) {
+								if (plan.getStatus() != BkgConstants.PLAN_CODE_EXECUTE
+										&& plan.getStatus() != BkgConstants.PLAN_CODE_FINISH) {
+									return -1;
+								}
+							}
+						}
+					}
+				}
+
+			}
+		}
+		return carrierInfoService.updateStatusByids(carrierInfos);
+	}
+
+	/**
+	 * @Description: 获取供应商简称编号
+	 * @param
+	 * @return companySimpleName
+	 * @author UCE-haizhou
+	 * @date 2017年11月5日 下午06:54:13
+	 */
+	@Override
+	public String getCompanySimpleName() {
+
+		return redisIdsWorker.nextId(IdsPrefix.CY);
+	}
+
+	@Override
+	/**
+	 * 
+	 * @Description: 承运商下拉
+	 * @param carrierInfoVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月7日 下午5:49:41
+	 */
+	public Pagination<CarrierInfo> findCarrierByCmb(
+			CarrierInfoVo carrierInfoVo, Page page) {
+		return carrierInfoService.findCarrierByCmb(carrierInfoVo, page);
+	}
+
+	/**
+	 * 
+	 * @Description: 根据承运商名称查询该承运商
+	 * @param companyFullName
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月23日 下午5:33:26
+	 */
+	public List<CarrierInfo> findByCompanyFullName(String companyFullName) {
+		return carrierInfoService.findByCompanyFullName(companyFullName);
+	}
+
+	/**
+	 * 
+	 * @Description: 根据承运商名称做唯一校验
+	 * @param carrierInfoVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月28日 上午11:11:54
+	 */
+	public List<CarrierInfoVo> checkExistsByCompanyFullName(
+			CarrierInfoVo carrierInfoVo) {
+		return carrierInfoService.checkExistsByCompanyFullName(carrierInfoVo);
+	}
+}

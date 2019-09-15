@@ -1,0 +1,87 @@
+package cn.uce.suc.common.util;
+
+import cn.uce.web.common.i18n.Resources;
+
+public enum SucAppConstants {
+	/** 200请求成功 */
+	OK("200"),
+	/**-100失败*/
+	FAIL("-100"),
+	/**-400系统未知错误*/
+	SYSEM_ERROR("-400"),
+	/**token失效*/
+	TOKENEXCEPTION("-200"),
+	/**用户未认证*/
+	NOT_CERTIFI("-300"),
+	/** 207频繁操作 */
+	MULTI_STATUS("207"),
+	/** 303登录失败 */
+	LOGIN_FAIL("303"),
+	/**强制修改密码*/
+	FORCED_MODIFY_PASSWORD("-301"),
+	/** 400请求参数出错 */
+	BAD_REQUEST("400"),
+	/** 401没有登录 */
+	UNAUTHORIZED("401"),
+	/** 403没有权限 */
+	FORBIDDEN("403"),
+	/** 404找不到页面 */
+	NOT_FOUND("404"),
+	/** 408请求超时 */
+	REQUEST_TIMEOUT("408"),
+	/** 409发生冲突 */
+	CONFLICT("409"),
+	/** 410已被删除 */
+	GONE("410"),
+	/** 423已被锁定 */
+	LOCKED("423"),
+	/** 500服务器出错 */
+	INTERNAL_SERVER_ERROR("500"),
+	/** 请求参数不正确 */
+	CODE_PARAMS_ERROR("10003"),
+	/** 该手机已经注册过 */
+	Code_PHONE_EXIST("10001"),
+	/**该用户不存在*/
+	Code_PHONE_NOT_EXIST("-202"),
+	/**组织机构不存在*/
+	ORG_NOT_EXIST("-203"),
+	/**验证码错误*/
+	CAPTCHA_IS_ERROR("-204"),
+	/**组织已绑定用户*/
+	USER_ORG_EXIST("-205"),
+	/** 请求短信平台发送消息失败 */
+	Code_SMSC_FALSE("10002"),
+	/** 请求短信平台发送消息失败 */
+	Code_CAPTCHA_ERROR("10004"),
+	/** 该验证比对次数超过10次 */
+	CODE_CAPTCHA_OUTNUMBER("10005"),
+	/** 手机号不能为空 */
+	CODE_PHONE_ISNULL("10006"),
+	/** 更新发车计划车辆轨迹失败 */
+	CODE_UPDATE_TRANSPORT("10007"),
+	/** 在发车计划中没有此车辆在运输中 */
+	CODE_ISNOT_PHONE_TRANSPORT("10008"),
+	/** 在发车计划中没有此发车计划号 */
+	CODE_ISNOT_DRIVERPLAN_CODE("10009");
+	private final String value;
+
+	private SucAppConstants(String value) {
+		this.value = value;
+	}
+
+	/**
+	 * Return the integer value of this status code.
+	 */
+	public String value() {
+		return this.value;
+	}
+
+	public String msg() {
+		return Resources.getMessage("HTTPCODE_" + this.value);
+	}
+
+	public String toString() {
+		return this.value.toString();
+	}
+
+}

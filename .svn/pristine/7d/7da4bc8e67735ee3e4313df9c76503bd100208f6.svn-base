@@ -1,0 +1,195 @@
+package cn.uce.suc.app.control;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import cn.uce.suc.bkg.biz.impl.infomon.VisibleTransportBiz;
+import cn.uce.suc.bkg.biz.infomon.IVisibleTransportBiz;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.suc.common.util.SucAppConstants;
+import cn.uce.utils.StringUtil;
+/**
+ * 
+ * @Description: 经纬度
+ * @author liwei
+ * @date 2017年11月12日 下午7:38:37
+ */
+@RestController
+@RequestMapping("/appPosition")
+public class AppPositionController extends BaseAppController{
+	/**
+	 * 可视化
+	 */
+	@Resource
+	private IVisibleTransportBiz visibleTransportBiz;
+	/**
+	 * 日志
+	 */
+	protected static Logger log = LoggerFactory.getLogger(VisibleTransportBiz.class);
+	/**
+	 * 获取APP端车辆最新轨迹经纬度，更新发车计划经纬度集合、电子围栏操作
+	 * @Description:
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月12日 下午7:39:04
+	 */
+	@RequestMapping(value = "addTransportData", method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> addTransport(@RequestBody DirvingPlanVo dirvingPlanVo) {
+		HashMap<String,Boolean> map=new HashMap<String,Boolean>();
+		//判断APP传过来的参数是否为空
+		if (StringUtil.isBlank(dirvingPlanVo.getDriverPhone())
+				|| StringUtil.isBlank(dirvingPlanVo.getLatitude()) || StringUtil.isBlank(dirvingPlanVo.getLongitude())) {
+			logger.error("参数不全,手机号：" + dirvingPlanVo.getDriverPhone());
+			return returnError(SucAppConstants.CODE_PHONE_ISNULL.value().toString(),
+					SucAppConstants.CODE_PHONE_ISNULL.msg());
+		}
+		//返回电子围栏结果
+		HashMap<String,Boolean> resultMap=visibleTransportBiz.validLatLng(dirvingPlanVo);
+		if((resultMap.get("arrive")==null?false:resultMap.get("arrive"))||(resultMap.get("nextBegin")==null?false:resultMap.get("nextBegin"))){
+			map.put("arrive", true);
+		}
+		if(resultMap.get("ex")==null?false:resultMap.get("ex")){
+			return returnSuccess();
+		}else{
+			// 根据司机手机号查询发车计划中的轨迹集合)
+			DirvingPlanVo oldDp = new DirvingPlanVo();
+			oldDp.setDriverPhone(dirvingPlanVo.getDriverPhone());
+			oldDp.setStatus(BkgConstants.PLAN_CODE_EXECUTING);
+			//查询发车计划
+			List<DirvingPlanVo> oldDpList = visibleTransportBiz.queryDirvingPlan(oldDp);
+			int i = 0;
+			if (CollectionUtils.isNotEmpty(oldDpList)) {
+				i=updateTrail(dirvingPlanVo,oldDpList);
+			} else {
+				return returnError(SucAppConstants.CODE_ISNOT_PHONE_TRANSPORT.value().toString(), "在发车计划中没有此车辆在运输中");
+			}
+			if (i == 1) {
+				return returnSuccess(map);
+			} else {
+				return returnError(SucAppConstants.CODE_UPDATE_TRANSPORT.value().toString(), "更新发车计划车辆轨迹失败 ");
+			}
+		} 
+	}
+	/**
+	 * 
+	 * @Description:APP手动刷新定位
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月5日 上午10:11:35
+	 */
+	@RequestMapping(value = "refreshPosition", method=RequestMethod.POST)
+	public @ResponseBody Map<String, Object> refreshPosition(@RequestBody DirvingPlanVo dirvingPlanVo) {
+		HashMap<String,Boolean> map=new HashMap<String,Boolean>();
+		//判断APP传过来的参数
+		if (StringUtil.isBlank(dirvingPlanVo.getDriverPhone())
+				|| StringUtil.isBlank(dirvingPlanVo.getLatitude()) || StringUtil.isBlank(dirvingPlanVo.getLongitude())) {
+			logger.error("参数不全,手机号：" + dirvingPlanVo.getDriverPhone());
+			return returnError(SucAppConstants.CODE_PHONE_ISNULL.value().toString(),
+					SucAppConstants.CODE_PHONE_ISNULL.msg());
+		}
+		log.info("按钮刷新时-车辆当前位置：" + dirvingPlanVo.getLatitude() + ","
+				+ dirvingPlanVo.getLongitude());
+		//返回电子围栏结果
+		HashMap<String,Boolean> resultMap=visibleTransportBiz.validLatLng(dirvingPlanVo);
+		if((resultMap.get("arrive")==null?false:resultMap.get("arrive"))||(resultMap.get("nextBegin")==null?false:resultMap.get("nextBegin"))){
+			map.put("arrive", true);
+		}
+		if(resultMap.get("ex")==null?false:resultMap.get("ex")){
+			return returnSuccess();
+		}else{
+			// 根据司机手机号查询发车计划中的轨迹集合)
+			DirvingPlanVo oldDp = new DirvingPlanVo();
+			oldDp.setDriverPhone(dirvingPlanVo.getDriverPhone());
+			oldDp.setStatus(BkgConstants.PLAN_CODE_EXECUTING);
+			//查询发车计划
+			List<DirvingPlanVo> oldDpList = visibleTransportBiz.queryDirvingPlan(oldDp);
+			int i = 0;
+			if (CollectionUtils.isNotEmpty(oldDpList)) {
+				i=updateTrail(dirvingPlanVo,oldDpList);
+			} else {
+				return returnError(SucAppConstants.CODE_ISNOT_PHONE_TRANSPORT.value().toString(), "在发车计划中没有此车辆在运输中");
+			}
+			if (i == 1) {
+				return returnSuccess(map);
+			} else {
+				return returnError(SucAppConstants.CODE_UPDATE_TRANSPORT.value().toString(), "更新发车计划车辆轨迹失败 ");
+			}
+		} 
+		
+		
+		
+//		HashMap<String,Object> map=new HashMap<String,Object>();
+//		//返回手动刷新结果
+//		HashMap<String,Boolean> resultMap=visibleTransportBiz.refreshPositionMethod(dirvingPlanVo);
+//		if(resultMap.get("success")==null?false:resultMap.get("success")){
+//			// 根据司机手机号查询发车计划中的轨迹集合)
+//			DirvingPlanVo oldDp = new DirvingPlanVo();
+//			oldDp.setDriverPhone(dirvingPlanVo.getDriverPhone());
+//			oldDp.setStatus(BkgConstants.PLAN_CODE_EXECUTING);
+//			//查询发车计划
+//			List<DirvingPlanVo> oldDpList = visibleTransportBiz.queryDirvingPlan(oldDp);
+//			int i = 0;
+//			if (CollectionUtils.isNotEmpty(oldDpList)) {
+//				//更新发车计划车辆轨迹
+//				i=updateTrail(dirvingPlanVo,oldDpList);
+//			} else {
+//				return returnError(SucAppConstants.CODE_ISNOT_PHONE_TRANSPORT.value().toString(), "在发车计划中没有此车辆在运输中");
+//			}
+//			if (i == 1) {
+//				map.put("arrive", true);
+//				return returnSuccess(map);
+//			} else {
+//				return returnError(SucAppConstants.CODE_UPDATE_TRANSPORT.value().toString(), "更新发车计划车辆轨迹失败 ");
+//			}
+//		}else if(resultMap.get("ex")==null?false:resultMap.get("ex")){
+//			log.info("校验出现异常了");
+//		}else if(resultMap.get("fail")==null?false:resultMap.get("fail")){
+//			map.put("message", "车辆实际并未到达任一站点");
+//		}else if(!(resultMap.get("success")==null?false:resultMap.get("success"))){
+//			map.put("message", "上一个站点未到达，请到上一个站点重新刷新定位");
+//		}
+//		return returnSuccess(map);
+	}
+	/**
+	 * 
+	 * @Description: 更新发车计划车辆轨迹
+	 * @param dirvingPlanVo
+	 * @param oldDpList
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月5日 上午10:11:42
+	 */
+	public int updateTrail(DirvingPlanVo dirvingPlanVo,List<DirvingPlanVo> oldDpList){
+		int i=0;
+		DirvingPlanVo dpVo=oldDpList.get(0);
+		String newLs = "{\"longitude\":\"" + dirvingPlanVo.getLongitude() + "\",\"latitude\":\""
+				+ dirvingPlanVo.getLatitude() + "\"}";
+		StringBuffer allLs=new StringBuffer();
+		if(StringUtil.isBlank(dpVo.getLngLatColleation())){
+			allLs.append(newLs);
+		}else{
+			allLs.append(dpVo.getLngLatColleation()).append(",").append(newLs);
+		}
+		// 将新的经纬度添加到原有的轨迹集合中
+		dirvingPlanVo.setLngLatColleation(allLs.toString());
+		dirvingPlanVo.setId(dpVo.getId());
+		dirvingPlanVo.setDrivingPlanCode(dpVo.getDrivingPlanCode());
+		dirvingPlanVo.setPlateNumber(dpVo.getPlateNumber());
+		//更新运输跟踪
+		i = visibleTransportBiz.updateTransportTrail(dirvingPlanVo);
+		return i;
+	}
+}

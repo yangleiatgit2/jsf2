@@ -1,0 +1,108 @@
+package cn.uce.suc.app.control;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+import cn.uce.suc.bkg.biz.infomon.IVisibleTransportBiz;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.vo.infomon.VehicleStatusVo;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.suc.common.util.SucAppConstants;
+/**
+ * APP接口（司机车辆状态、起途终点经纬度）
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liuhai
+ * @date 2017年11月16日 下午9:23:15
+ */
+@RestController
+@RequestMapping("/AppDriverStatus")
+public class AppDriverStatusController extends BaseAppController{
+	/**
+	 * 可视化
+	 */
+	@Resource
+	private IVisibleTransportBiz visibleTransportBiz;
+	/**
+	 *  获取：当前司机位置
+	           起点(名称,经纬度)
+		途经点(名称,经纬度)
+		终点(名称,经纬度)
+		司机(姓名,车牌号,手机号)
+		起点终点距离(公里), 已行驶(公里)
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param dirvingPlanVo
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月16日 下午10:20:32
+	 */
+	@RequestMapping(value = "getAppDriverStatus", method=RequestMethod.POST)
+	public @ResponseBody Map<String,Object> addTransport(@RequestBody DirvingPlanVo dirvingPlanVo){
+		//判断APP传过来的参数是否为空
+		if("".equals(dirvingPlanVo.getDrivingPlanCode())){
+			return returnError(SucAppConstants.CODE_ISNOT_DRIVERPLAN_CODE.value().toString(), SucAppConstants.CODE_ISNOT_DRIVERPLAN_CODE.msg());
+		}
+		//查询发车计划起终点名称、经纬度、司机相关信息
+		List<DirvingPlanVo> dpList= visibleTransportBiz.queryDriverStatus(dirvingPlanVo);
+		List<VehicleStatusVo> vsList=new ArrayList<VehicleStatusVo>();
+		if(CollectionUtils.isNotEmpty(dpList)){
+			DirvingPlanVo dpVo=dpList.get(0);
+			VehicleStatusVo vs=new VehicleStatusVo();
+			//司机姓名
+			vs.setDriverName(dpVo.getDirverName());
+			//司机电话
+			vs.setDriverPhone(dpVo.getDriverPhone());
+			//车牌号
+			vs.setVehicleNo(dpVo.getPlateNumber());
+			//行驶距离
+			vs.setDirverDistance(dpVo.getDirverDistance());
+			//已行驶距离
+			vs.setHasRunDistance("");
+			//开始站点名称
+			vs.setStartName(dpVo.getStartOrgName());
+			//开始站点经度
+			vs.setStartLng(dpVo.getStartOrgLng());
+			//开始站点纬度
+			vs.setStartLat(dpVo.getStartOrgLat());
+			//结束站点名称
+			vs.setEndName(dpVo.getEndOrgName());
+			//结束站点经度
+			vs.setEndLng(dpVo.getEndEndLng());
+			//结束站点纬度
+			vs.setEndLat(dpVo.getEndEndLat());
+			//当前经度
+			vs.setCurrentLng(dpVo.getLongitude());
+			//当前纬度
+			vs.setCurrentLat(dpVo.getLatitude());
+			//是否是以过
+			vs.setIsThough(false);
+			vsList.add(vs);
+			//查询发车计划途经节点名称、经纬度
+			List<DirvingPlanDetail> dpdetailList=visibleTransportBiz.queryThroughLngLat(dirvingPlanVo);
+			if(CollectionUtils.isNotEmpty(dpdetailList)){
+				for(int i=0;i<dpdetailList.size();i++){
+					VehicleStatusVo vsD=new VehicleStatusVo();
+					//排除起点、终点
+					if(dpdetailList.get(i).getSort()!=1&&dpdetailList.get(i).getSort()!=dpdetailList.size()){
+						vsD.setThougthName(dpdetailList.get(i).getWayPointName());
+						vsD.setThougthLng(dpdetailList.get(i).getLng());
+						vsD.setThougthLat(dpdetailList.get(i).getLat());
+						vsD.setIsThough(true);
+						vsD.setThoughSort(dpdetailList.get(i).getSort());
+						//添加
+						vsList.add(vsD);
+					}
+					
+				}
+			}
+		}
+		return returnSuccess(vsList,"查询司机运输状态成功");
+	}
+}

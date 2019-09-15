@@ -1,0 +1,400 @@
+package cn.uce.suc.app.vo;
+
+import cn.uce.base.vo.BaseVo;
+import java.util.Date;
+
+/**
+ * @Description: 系统类型Vo类
+ * @author liwei
+ * @date 2017年10月26日 下午10:38:52
+ */
+public class SucDictDataVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 流水号. 
+	 */
+	private Long id;
+    /** 
+	 * 类型分类. 
+	 */
+	private String typeClassCode;
+    /** 
+	 * 类型ID.不允许修改 
+	 */
+	private Integer typeId;
+    /** 
+	 * 类型编号. 
+	 */
+	private String typeCode;
+    /** 
+	 * 类型名称(简体). 
+	 */
+	private String typeName;
+    /** 
+	 * 字符型保留字段1. 
+	 */
+	private String fldS1;
+    /** 
+	 * 字符型保留字段2. 
+	 */
+	private String fldS2;
+    /** 
+	 * 数值型保留字段1. 
+	 */
+	private Integer fldN1;
+    /** 
+	 * 数值型保留字段2. 
+	 */
+	private Integer fldN2;
+    /** 
+	 * 备注. 
+	 */
+	private String remark;
+    /** 
+	 * 删除标识.1表示已删除，默认为0 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本. 
+	 */
+	private Integer version;
+    /** 
+	 * 创建人. 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建机构. 
+	 */
+	private Integer createOrg;
+    /** 
+	 * 创建时间. 
+	 */
+	private Date createTime;
+    /** 
+	 * 更新人. 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新机构. 
+	 */
+	private Integer updateOrg;
+    /** 
+	 * 更新时间. 
+	 */
+	private Date updateTime;
+    /** 
+	 * 数据来源 
+	 */
+	private String sourceType;
+    /** 
+	 * 同步时间,数据到达时间 
+	 */
+	private Date syncTime;
+	
+	
+	
+	/**
+	 * 获取 流水号.
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 流水号.
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 类型分类.
+	 */
+	public String getTypeClassCode() {
+		return typeClassCode;
+	}
+	
+	/**
+	 * 设置 类型分类.
+	 */
+	public void setTypeClassCode(String typeClassCode) {
+		this.typeClassCode = typeClassCode;
+	}
+
+	
+	/**
+	 * 获取 类型ID.不允许修改
+	 */
+	public Integer getTypeId() {
+		return typeId;
+	}
+	
+	/**
+	 * 设置 类型ID.不允许修改
+	 */
+	public void setTypeId(Integer typeId) {
+		this.typeId = typeId;
+	}
+
+	
+	/**
+	 * 获取 类型编号.
+	 */
+	public String getTypeCode() {
+		return typeCode;
+	}
+	
+	/**
+	 * 设置 类型编号.
+	 */
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
+	}
+
+	
+	/**
+	 * 获取 类型名称(简体).
+	 */
+	public String getTypeName() {
+		return typeName;
+	}
+	
+	/**
+	 * 设置 类型名称(简体).
+	 */
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	
+	/**
+	 * 获取 字符型保留字段1.
+	 */
+	public String getFldS1() {
+		return fldS1;
+	}
+	
+	/**
+	 * 设置 字符型保留字段1.
+	 */
+	public void setFldS1(String fldS1) {
+		this.fldS1 = fldS1;
+	}
+
+	
+	/**
+	 * 获取 字符型保留字段2.
+	 */
+	public String getFldS2() {
+		return fldS2;
+	}
+	
+	/**
+	 * 设置 字符型保留字段2.
+	 */
+	public void setFldS2(String fldS2) {
+		this.fldS2 = fldS2;
+	}
+
+	
+	/**
+	 * 获取 数值型保留字段1.
+	 */
+	public Integer getFldN1() {
+		return fldN1;
+	}
+	
+	/**
+	 * 设置 数值型保留字段1.
+	 */
+	public void setFldN1(Integer fldN1) {
+		this.fldN1 = fldN1;
+	}
+
+	
+	/**
+	 * 获取 数值型保留字段2.
+	 */
+	public Integer getFldN2() {
+		return fldN2;
+	}
+	
+	/**
+	 * 设置 数值型保留字段2.
+	 */
+	public void setFldN2(Integer fldN2) {
+		this.fldN2 = fldN2;
+	}
+
+	
+	/**
+	 * 获取 备注.
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注.
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 删除标识.1表示已删除，默认为0
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标识.1表示已删除，默认为0
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 版本.
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本.
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 创建人.
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人.
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建机构.
+	 */
+	public Integer getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构.
+	 */
+	public void setCreateOrg(Integer createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 创建时间.
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间.
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 更新人.
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人.
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新机构.
+	 */
+	public Integer getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构.
+	 */
+	public void setUpdateOrg(Integer updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 更新时间.
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间.
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 数据来源
+	 */
+	public String getSourceType() {
+		return sourceType;
+	}
+	
+	/**
+	 * 设置 数据来源
+	 */
+	public void setSourceType(String sourceType) {
+		this.sourceType = sourceType;
+	}
+
+	
+	/**
+	 * 获取 同步时间,数据到达时间
+	 */
+	public Date getSyncTime() {
+		return syncTime;
+	}
+	
+	/**
+	 * 设置 同步时间,数据到达时间
+	 */
+	public void setSyncTime(Date syncTime) {
+		this.syncTime = syncTime;
+	}
+
+	
+}

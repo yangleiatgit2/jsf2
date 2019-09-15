@@ -1,0 +1,1267 @@
+package cn.uce.suc.bkg.vo.operation;
+
+import cn.uce.base.vo.BaseVo;
+
+import java.util.Date;
+
+/**
+ * @Description: 订单信息Vo类
+ * @author liwei
+ * @date 2017年10月22日 下午08:39:37
+ */
+public class FreightOrderVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * id 
+	 */
+	private Long id;
+    /** 
+	 * 订单编码 
+	 */
+	private String orderCode;
+    /** 
+	 * 订单名称 
+	 */
+	private String orderName;
+    /** 
+	 * 订单组合编号 
+	 */
+	private String orderCombinCode;
+    /** 
+	 * 订单组合名称 
+	 */
+	private String orderCombinName;
+    /** 
+	 * 是否拼车 
+	 */
+	private Boolean isCarpool;
+    /** 
+	 * 业务模式 
+	 */
+	private String businessMode;
+    /** 
+	 * 需求类型 
+	 */
+	private String demandType;
+    /** 
+	 * 需求网点 
+	 */
+	private String demandSite;
+    /** 
+	 * 需求网点编码 
+	 */
+	private String demandSiteCode;
+    /** 
+	 * 需求组合编号 
+	 */
+	private String demandCombineCode;
+    /** 
+	 * 需求组合名称 
+	 */
+	private String demandCombineName;
+    /** 
+	 * 订单状态 1待执行、2执行中、3终止、4执行完毕 
+	 */
+	private String orderStatus;
+    /** 
+	 * 执行开始时间 
+	 */
+	private Date executeStartTime;
+    /** 
+	 * 执行结束时间 
+	 */
+	private Date executeEndTime;
+    /** 
+	 * 出发点名称 
+	 */
+	private String beginStation;
+    /** 
+	 * 出发点编码 
+	 */
+	private String beginStationCode;
+    /** 
+	 * 到达点名称 
+	 */
+	private String endStation;
+    /** 
+	 * 到达点编码 
+	 */
+	private String endStationCode;
+    /** 
+	 * 出发时间 
+	 */
+	private Date departureTime;
+	/**
+	 * 出发时间字符串
+	 */
+	private String departureTimeStr;
+	/**
+	 * 到达时间字符串
+	 */
+	private String arrivalTimeStr;
+    /** 
+	 * 到达时间 
+	 */
+	private Date arrivalTime;
+    /** 
+	 * 装卸货耗时(分钟) 
+	 */
+	private Integer layTime;
+    /** 
+	 * 意愿拼车网点集合编号 
+	 */
+	private String carpoolSitesCode;
+    /** 
+	 * 意愿拼车网点集合名称 
+	 */
+	private String carpoolSitesName;
+
+    /** 
+	 * 班次编号 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 价格 
+	 */
+	private Double price;
+    /** 
+	 * 调整后价格 
+	 */
+	private Double adjustPrice;
+    /** 
+	 * 计费时间起 
+	 */
+	private Date chargingBeginTime;
+    /** 
+	 * 计费时间止 
+	 */
+	private Date chargingEndTime;
+    /** 
+	 * 周一重量 
+	 */
+	private Double mondayWeight;
+    /** 
+	 * 周一方数 
+	 */
+	private Double mondayVolume;
+    /** 
+	 * 周二重量 
+	 */
+	private Double tuesdayWeight;
+    /** 
+	 * 周二方数 
+	 */
+	private Double tuesdayVolume;
+    /** 
+	 * 周三重量 
+	 */
+	private Double wednesdayWeight;
+    /** 
+	 * 周三方数 
+	 */
+	private Double wednesdayVolume;
+    /** 
+	 * 周四重量 
+	 */
+	private Double thursdayWeight;
+    /** 
+	 * 周四方数 
+	 */
+	private Double thursdayVolume;
+    /** 
+	 * 周五重量 
+	 */
+	private Double fridayWeight;
+    /** 
+	 * 周五方数 
+	 */
+	private Double fridayVolume;
+    /** 
+	 * 周六重量 
+	 */
+	private Double saturdayWeight;
+    /** 
+	 * 周六方数 
+	 */
+	private Double saturdayVolume;
+    /** 
+	 * 周日重量 
+	 */
+	private Double sundayWeight;
+    /** 
+	 * 周日方数 
+	 */
+	private Double sundayVolume;
+    /** 
+	 * l临时重量 
+	 */
+	private Double dayWeight;
+    /** 
+	 * 临时方数 
+	 */
+	private Double dayVolume;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+	
+	/**
+	 * 出港限行
+	 */
+	private String departLimit;
+	/**
+	 * 进港限行
+	 */
+	private String portLimit;
+	/**
+	 * 开始时间
+	 */
+	private Date beginTime;
+	/**
+	 * 结束时间
+	 */
+	private Date endTime;
+	/**
+	 * 订单开始时间
+	 */
+	private Date orderStartTime;
+	/**
+	 * 订单结束时间
+	 */
+	private Date orderEndTime;
+	/**
+	 * 订单编号模糊
+	 */
+	private String orderCodeStr;
+	/**
+	 * 是否自动
+	 */
+	private Boolean autoselect;
+	
+	
+	public Boolean getAutoselect() {
+		return autoselect;
+	}
+
+	public void setAutoselect(Boolean autoselect) {
+		this.autoselect = autoselect;
+	}
+
+	public String getOrderCodeStr() {
+		return orderCodeStr;
+	}
+
+	public void setOrderCodeStr(String orderCodeStr) {
+		this.orderCodeStr = orderCodeStr;
+	}
+
+	/** 
+	 * @return orderStartTime 
+	 */
+	public Date getOrderStartTime() {
+		return orderStartTime;
+	}
+
+	/**
+	 * @param orderStartTime the orderStartTime to set
+	 */
+	public void setOrderStartTime(Date orderStartTime) {
+		this.orderStartTime = orderStartTime;
+	}
+
+	/** 
+	 * @return orderEndTime 
+	 */
+	public Date getOrderEndTime() {
+		return orderEndTime;
+	}
+
+	/**
+	 * @param orderEndTime the orderEndTime to set
+	 */
+	public void setOrderEndTime(Date orderEndTime) {
+		this.orderEndTime = orderEndTime;
+	}
+	
+	/**
+	 * 开始时间
+	 */
+	
+	public Date getBeginTime() {
+		return beginTime;
+	}
+	/**
+	 * 开始时间
+	 */
+	public void setBeginTime(Date beginTime) {
+		this.beginTime = beginTime;
+	}
+	/**
+	 * 结束时间
+	 */
+	public Date getEndTime() {
+		return endTime;
+	}
+	/**
+	 * 结束时间
+	 */
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	/**
+	 * 获取 id
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 id
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	
+	/**
+	 * 获取 订单编码
+	 */
+	public String getOrderCode() {
+		return orderCode;
+	}
+	
+	/**
+	 * 设置 订单编码
+	 */
+	public void setOrderCode(String orderCode) {
+		this.orderCode = orderCode;
+	}
+
+	
+	/**
+	 * 获取 订单名称
+	 */
+	public String getOrderName() {
+		return orderName;
+	}
+	
+	/**
+	 * 设置 订单名称
+	 */
+	public void setOrderName(String orderName) {
+		this.orderName = orderName;
+	}
+
+	
+	/**
+	 * 获取 订单组合编号
+	 */
+	public String getOrderCombinCode() {
+		return orderCombinCode;
+	}
+	
+	/**
+	 * 设置 订单组合编号
+	 */
+	public void setOrderCombinCode(String orderCombinCode) {
+		this.orderCombinCode = orderCombinCode;
+	}
+
+	
+	/**
+	 * 获取 订单组合名称
+	 */
+	public String getOrderCombinName() {
+		return orderCombinName;
+	}
+	
+	/**
+	 * 设置 订单组合名称
+	 */
+	public void setOrderCombinName(String orderCombinName) {
+		this.orderCombinName = orderCombinName;
+	}
+
+	
+	/**
+	 * 获取 是否拼车
+	 */
+	public Boolean getIsCarpool() {
+		return isCarpool;
+	}
+	
+	/**
+	 * 设置 是否拼车
+	 */
+	public void setIsCarpool(Boolean isCarpool) {
+		this.isCarpool = isCarpool;
+	}
+
+	
+	/**
+	 * 获取 业务模式
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	
+	/**
+	 * 设置 业务模式
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	
+	/**
+	 * 获取 需求类型
+	 */
+	public String getDemandType() {
+		return demandType;
+	}
+	
+	/**
+	 * 设置 需求类型
+	 */
+	public void setDemandType(String demandType) {
+		this.demandType = demandType;
+	}
+
+	
+	/**
+	 * 获取 需求网点
+	 */
+	public String getDemandSite() {
+		return demandSite;
+	}
+	
+	/**
+	 * 设置 需求网点
+	 */
+	public void setDemandSite(String demandSite) {
+		this.demandSite = demandSite;
+	}
+
+	
+	/**
+	 * 获取 需求网点编码
+	 */
+	public String getDemandSiteCode() {
+		return demandSiteCode;
+	}
+	
+	/**
+	 * 设置 需求网点编码
+	 */
+	public void setDemandSiteCode(String demandSiteCode) {
+		this.demandSiteCode = demandSiteCode;
+	}
+
+	
+	/**
+	 * 获取 需求组合编号
+	 */
+	public String getDemandCombineCode() {
+		return demandCombineCode;
+	}
+	
+	/**
+	 * 设置 需求组合编号
+	 */
+	public void setDemandCombineCode(String demandCombineCode) {
+		this.demandCombineCode = demandCombineCode;
+	}
+
+	
+	/**
+	 * 获取 需求组合名称
+	 */
+	public String getDemandCombineName() {
+		return demandCombineName;
+	}
+	
+	/**
+	 * 设置 需求组合名称
+	 */
+	public void setDemandCombineName(String demandCombineName) {
+		this.demandCombineName = demandCombineName;
+	}
+
+	
+	/**
+	 * 获取 订单状态 1待执行、2执行中、3终止、4执行完毕
+	 */
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+	
+	/**
+	 * 设置 订单状态 1待执行、2执行中、3终止、4执行完毕
+	 */
+	public void setOrderStatus(String orderStatus) {
+		this.orderStatus = orderStatus;
+	}
+
+	
+	/**
+	 * 获取 执行开始时间
+	 */
+	public Date getExecuteStartTime() {
+		return executeStartTime;
+	}
+	
+	/**
+	 * 设置 执行开始时间
+	 */
+	public void setExecuteStartTime(Date executeStartTime) {
+		this.executeStartTime = executeStartTime;
+	}
+
+	
+	/**
+	 * 获取 执行结束时间
+	 */
+	public Date getExecuteEndTime() {
+		return executeEndTime;
+	}
+	
+	/**
+	 * 设置 执行结束时间
+	 */
+	public void setExecuteEndTime(Date executeEndTime) {
+		this.executeEndTime = executeEndTime;
+	}
+
+	
+	/**
+	 * 获取 出发点名称
+	 */
+	public String getBeginStation() {
+		return beginStation;
+	}
+	
+	/**
+	 * 设置 出发点名称
+	 */
+	public void setBeginStation(String beginStation) {
+		this.beginStation = beginStation;
+	}
+
+	
+	/**
+	 * 获取 出发点编码
+	 */
+	public String getBeginStationCode() {
+		return beginStationCode;
+	}
+	
+	/**
+	 * 设置 出发点编码
+	 */
+	public void setBeginStationCode(String beginStationCode) {
+		this.beginStationCode = beginStationCode;
+	}
+
+	
+	/**
+	 * 获取 到达点名称
+	 */
+	public String getEndStation() {
+		return endStation;
+	}
+	
+	/**
+	 * 设置 到达点名称
+	 */
+	public void setEndStation(String endStation) {
+		this.endStation = endStation;
+	}
+
+	
+	/**
+	 * 获取 到达点编码
+	 */
+	public String getEndStationCode() {
+		return endStationCode;
+	}
+	
+	/**
+	 * 设置 到达点编码
+	 */
+	public void setEndStationCode(String endStationCode) {
+		this.endStationCode = endStationCode;
+	}
+
+	
+	/**
+	 * 获取 出发时间
+	 */
+	public Date getDepartureTime() {
+		return departureTime;
+	}
+	
+	/**
+	 * 设置 出发时间
+	 */
+	public void setDepartureTime(Date departureTime) {
+		this.departureTime = departureTime;
+	}
+
+	
+	/**
+	 * 获取 到达时间
+	 */
+	public Date getArrivalTime() {
+		return arrivalTime;
+	}
+	
+	/**
+	 * 设置 到达时间
+	 */
+	public void setArrivalTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+	
+	/**
+	 * 获取 装卸货耗时(分钟)
+	 */
+	public Integer getLayTime() {
+		return layTime;
+	}
+	
+	/**
+	 * 设置 装卸货耗时(分钟)
+	 */
+	public void setLayTime(Integer layTime) {
+		this.layTime = layTime;
+	}
+
+	
+	/**
+	 * 获取 意愿拼车网点集合编号
+	 */
+	public String getCarpoolSitesCode() {
+		return carpoolSitesCode;
+	}
+	
+	/**
+	 * 设置 意愿拼车网点集合编号
+	 */
+	public void setCarpoolSitesCode(String carpoolSitesCode) {
+		this.carpoolSitesCode = carpoolSitesCode;
+	}
+
+	
+	/**
+	 * 获取 意愿拼车网点集合名称
+	 */
+	public String getCarpoolSitesName() {
+		return carpoolSitesName;
+	}
+	
+	/**
+	 * 设置 意愿拼车网点集合名称
+	 */
+	public void setCarpoolSitesName(String carpoolSitesName) {
+		this.carpoolSitesName = carpoolSitesName;
+	}
+
+	
+	/**
+	 * 获取 班次编号
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 班次编号
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+
+	
+	/**
+	 * 获取 价格
+	 */
+	public Double getPrice() {
+		return price;
+	}
+	
+	/**
+	 * 设置 价格
+	 */
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+
+	
+	/**
+	 * 获取 调整后价格
+	 */
+	public Double getAdjustPrice() {
+		return adjustPrice;
+	}
+	
+	/**
+	 * 设置 调整后价格
+	 */
+	public void setAdjustPrice(Double adjustPrice) {
+		this.adjustPrice = adjustPrice;
+	}
+
+	
+	/**
+	 * 获取 计费时间起
+	 */
+	public Date getChargingBeginTime() {
+		return chargingBeginTime;
+	}
+	
+	/**
+	 * 设置 计费时间起
+	 */
+	public void setChargingBeginTime(Date chargingBeginTime) {
+		this.chargingBeginTime = chargingBeginTime;
+	}
+
+	
+	/**
+	 * 获取 计费时间止
+	 */
+	public Date getChargingEndTime() {
+		return chargingEndTime;
+	}
+	
+	/**
+	 * 设置 计费时间止
+	 */
+	public void setChargingEndTime(Date chargingEndTime) {
+		this.chargingEndTime = chargingEndTime;
+	}
+
+	
+	/**
+	 * 获取 周一重量
+	 */
+	public Double getMondayWeight() {
+		return mondayWeight;
+	}
+	
+	/**
+	 * 设置 周一重量
+	 */
+	public void setMondayWeight(Double mondayWeight) {
+		this.mondayWeight = mondayWeight;
+	}
+
+	
+	/**
+	 * 获取 周一方数
+	 */
+	public Double getMondayVolume() {
+		return mondayVolume;
+	}
+	
+	/**
+	 * 设置 周一方数
+	 */
+	public void setMondayVolume(Double mondayVolume) {
+		this.mondayVolume = mondayVolume;
+	}
+
+	
+	/**
+	 * 获取 周二重量
+	 */
+	public Double getTuesdayWeight() {
+		return tuesdayWeight;
+	}
+	
+	/**
+	 * 设置 周二重量
+	 */
+	public void setTuesdayWeight(Double tuesdayWeight) {
+		this.tuesdayWeight = tuesdayWeight;
+	}
+
+	
+	/**
+	 * 获取 周二方数
+	 */
+	public Double getTuesdayVolume() {
+		return tuesdayVolume;
+	}
+	
+	/**
+	 * 设置 周二方数
+	 */
+	public void setTuesdayVolume(Double tuesdayVolume) {
+		this.tuesdayVolume = tuesdayVolume;
+	}
+
+	
+	/**
+	 * 获取 周三重量
+	 */
+	public Double getWednesdayWeight() {
+		return wednesdayWeight;
+	}
+	
+	/**
+	 * 设置 周三重量
+	 */
+	public void setWednesdayWeight(Double wednesdayWeight) {
+		this.wednesdayWeight = wednesdayWeight;
+	}
+
+	
+	/**
+	 * 获取 周三方数
+	 */
+	public Double getWednesdayVolume() {
+		return wednesdayVolume;
+	}
+	
+	/**
+	 * 设置 周三方数
+	 */
+	public void setWednesdayVolume(Double wednesdayVolume) {
+		this.wednesdayVolume = wednesdayVolume;
+	}
+
+	
+	/**
+	 * 获取 周四重量
+	 */
+	public Double getThursdayWeight() {
+		return thursdayWeight;
+	}
+	
+	/**
+	 * 设置 周四重量
+	 */
+	public void setThursdayWeight(Double thursdayWeight) {
+		this.thursdayWeight = thursdayWeight;
+	}
+
+	
+	/**
+	 * 获取 周四方数
+	 */
+	public Double getThursdayVolume() {
+		return thursdayVolume;
+	}
+	
+	/**
+	 * 设置 周四方数
+	 */
+	public void setThursdayVolume(Double thursdayVolume) {
+		this.thursdayVolume = thursdayVolume;
+	}
+
+	
+	/**
+	 * 获取 周五重量
+	 */
+	public Double getFridayWeight() {
+		return fridayWeight;
+	}
+	
+	/**
+	 * 设置 周五重量
+	 */
+	public void setFridayWeight(Double fridayWeight) {
+		this.fridayWeight = fridayWeight;
+	}
+
+	
+	/**
+	 * 获取 周五方数
+	 */
+	public Double getFridayVolume() {
+		return fridayVolume;
+	}
+	
+	/**
+	 * 设置 周五方数
+	 */
+	public void setFridayVolume(Double fridayVolume) {
+		this.fridayVolume = fridayVolume;
+	}
+
+	
+	/**
+	 * 获取 周六重量
+	 */
+	public Double getSaturdayWeight() {
+		return saturdayWeight;
+	}
+	
+	/**
+	 * 设置 周六重量
+	 */
+	public void setSaturdayWeight(Double saturdayWeight) {
+		this.saturdayWeight = saturdayWeight;
+	}
+
+	
+	/**
+	 * 获取 周六方数
+	 */
+	public Double getSaturdayVolume() {
+		return saturdayVolume;
+	}
+	
+	/**
+	 * 设置 周六方数
+	 */
+	public void setSaturdayVolume(Double saturdayVolume) {
+		this.saturdayVolume = saturdayVolume;
+	}
+
+	
+	/**
+	 * 获取 周日重量
+	 */
+	public Double getSundayWeight() {
+		return sundayWeight;
+	}
+	
+	/**
+	 * 设置 周日重量
+	 */
+	public void setSundayWeight(Double sundayWeight) {
+		this.sundayWeight = sundayWeight;
+	}
+
+	
+	/**
+	 * 获取 周日方数
+	 */
+	public Double getSundayVolume() {
+		return sundayVolume;
+	}
+	
+	/**
+	 * 设置 周日方数
+	 */
+	public void setSundayVolume(Double sundayVolume) {
+		this.sundayVolume = sundayVolume;
+	}
+
+	
+	/**
+	 * 获取 l临时重量
+	 */
+	public Double getDayWeight() {
+		return dayWeight;
+	}
+	
+	/**
+	 * 设置 l临时重量
+	 */
+	public void setDayWeight(Double dayWeight) {
+		this.dayWeight = dayWeight;
+	}
+
+	
+	/**
+	 * 获取 临时方数
+	 */
+	public Double getDayVolume() {
+		return dayVolume;
+	}
+	
+	/**
+	 * 设置 临时方数
+	 */
+	public void setDayVolume(Double dayVolume) {
+		this.dayVolume = dayVolume;
+	}
+
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+	/**
+	 * 获取 出时间
+	 */
+	public String getDepartureTimeStr() {
+		return departureTimeStr;
+	}
+	/**
+	 * 设置 出发时间字符串
+	 */
+	public void setDepartureTimeStr(String departureTimeStr) {
+		this.departureTimeStr = departureTimeStr;
+	}
+	/**
+	 * 获取 到达时间字符串
+	 */
+	public String getArrivalTimeStr() {
+		return arrivalTimeStr;
+	}
+	/**
+	 * 设置 到达时间字符串
+	 */
+	public void setArrivalTimeStr(String arrivalTimeStr) {
+		this.arrivalTimeStr = arrivalTimeStr;
+	}
+
+	/** 
+	 * 获得出港限行 
+	 */
+	public String getDepartLimit() {
+		return departLimit;
+	}
+
+	/**
+	 * 设置出港限行 
+	 */
+	public void setDepartLimit(String departLimit) {
+		this.departLimit = departLimit;
+	}
+
+	/** 
+	 * 获得进港限行 
+	 */
+	public String getPortLimit() {
+		return portLimit;
+	}
+
+	/**
+	 * 设置进港限行 
+	 */
+	public void setPortLimit(String portLimit) {
+		this.portLimit = portLimit;
+	}
+
+	
+}

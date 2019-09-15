@@ -1,0 +1,158 @@
+package cn.uce.suc.bkg.biz.operation;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.entity.operation.LineGroupDetail;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+
+/**
+ * @Description: 订单组合信息BIZ接口类
+ * @author liwei
+ * @date 2017年10月21日 下午05:28:57
+ */
+public interface IFreightOrderCombineBiz {
+	
+	/**
+	 * @Description: 新增订单组合信息
+	 * @param freightOrderCombine
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public Long addFreightOrderCombine(FreightOrderCombine freightOrderCombine);
+	
+	/**
+	 * @Description: 修改订单组合信息
+	 * @param freightOrderCombine 订单组合信息
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public int updateFreightOrderCombine(FreightOrderCombine freightOrderCombine);
+	
+	/**
+	 * @Description: 删除订单组合信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public int deleteFreightOrderCombine(Long id);
+	
+	/**
+	 * @Description: 根据ID查询订单组合信息
+	 * @param id 主键
+	 * @return 订单组合信息
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public FreightOrderCombine findById(Long id);
+	
+	/**
+	 * @Description: 分页查询订单组合信息
+	 * @param freightOrderCombineVo 订单组合信息
+	 * @param page 分页参数
+	 * @return 订单组合信息
+	 * @author liwei
+	 * @date 2017年10月21日 下午05:28:57
+	 */
+	public Pagination<FreightOrderCombine> findByPagination(FreightOrderCombineVo freightOrderCombineVo, Page page);
+	
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询订单组合详情
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月4日 下午10:15:45
+	 */
+	public List<FreightOrderCombineVo> findByCondition(FreightOrderCombineVo freightOrderCombineVo);
+	/**
+	 * 
+	 * @Description: 终止订单组合
+	 * @param freightOrderCombine
+	 * @author liwei
+	 * @date 2017年11月9日 上午12:36:43
+	 */
+	public void stopFreightOrderCombine(FreightOrderCombine freightOrderCombine);
+	
+	/**
+	 * 
+	 * @Description: 根据组合编号更新订单组合状态 
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午2:17:58
+	 */
+	public int updStatusByCombineCode(FreightOrderCombineVo freightOrderCombineVo);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @author liwei
+	 * @date 2017年11月9日 下午5:27:42
+	 */
+	public void deleteLineGroup(LineGroupVo lineGroupVo);
+	
+	/**
+	 * 
+	 * @Description: 排班微调保存按钮 
+	 * @param lineGroupId
+	 * @param lineGroupDetailIds
+	 * @author liwei
+	 * @date 2017年11月11日 上午10:02:54
+	 */
+	public void saveLineGroup(Long lineGroupId,String lineGroupDetailIds,SucCurrentUser sucCurrentUser);
+	/**
+	 * 
+	 * @Description:保存班次
+	 * @param lineGroupDetails
+	 * @author liwei
+	 * @date 2017年11月11日 下午9:09:17
+	 */
+	public void addLineGroup(String orderCombineCode,List<LineGroupDetail> lineGroupDetails,SucCurrentUser sucCurrentUser);
+	/**
+	 * 
+	 * @Description:根据定价编码 和组合编号
+	 * @param pricingRule
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月11日 下午3:07:02
+	 */
+	public String generateOrderQuotation(PricingRuleVo pricingRule);
+	/**
+	 * 
+	 * @Description: 根据条件查询订单组合详情
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月14日 下午10:15:45
+	 */
+	public List<FreightOrderCombineVo> findByConditionMultiCombineType(FreightOrderCombineVo freightOrderCombineVo, Page page);
+	/**
+	 * 
+	 * @Description: 根据条件查询订单组合详情数量
+	 * @param freightOrderCombineVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月23日 下午10:15:45
+	 */
+	public int getOrderCombineVoCount(FreightOrderCombineVo freightOrderCombineVo);
+
+	/**
+	 * 
+	 * @Description: 发送班次 
+	 * @param orderCombineCode
+	 * @param userInfo
+	 * @author liwei
+	 * @date 2017年11月28日 上午11:17:21
+	 */
+	public void orderCombinSendPricing(Long orderCombineId,SucCurrentUser userInfo);
+	
+}

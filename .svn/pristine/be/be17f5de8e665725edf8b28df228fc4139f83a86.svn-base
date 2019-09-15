@@ -1,0 +1,93 @@
+package cn.uce.suc.common.biz;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.cache.OmgCmsOrgprocessor;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.suc.common.vo.OrgVo;
+import cn.uce.suc.common.vo.ZTreeVo;
+
+/**
+ * 
+ * @Description: 组织机构单元测试
+ * @author liwei
+ * @date 2017年10月19日 下午11:34:06
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class OmgCmsOrgBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 机构组织
+	 */
+	@Resource
+	IOmgCmsOrgBiz omgCmsOrgBiz;
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年11月29日 下午7:20:18
+	 */
+	@Test
+	public void findByBaseOrgCode() {
+		omgCmsOrgBiz.findByBaseOrgCode("UC000034");
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年11月29日 下午7:20:23
+	 */
+	@Test
+	public void getdicdata() {
+		OmgCmsOrgprocessor.findByBaseOrgCode("UC00000001");
+
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年11月29日 下午7:20:28
+	 */
+	@Test
+	public void findChildOrgList() {
+		OrgVo orgVo = new OrgVo();
+		orgVo.setOrgCode("UC000006");
+		List<String> strings = new ArrayList<String>();
+		strings.add("30");
+		orgVo.setOrgTypeList(strings);
+		List<ZTreeVo> zTreeVos = omgCmsOrgBiz.findChildOrgList(orgVo);
+		/*for (ZTreeVo zTreeVo : zTreeVos) {
+			System.out.println(zTreeVo.getName());
+		}*/
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @author liwei
+	 * @date 2017年11月29日 下午7:21:43
+	 */
+	@Test
+	public void findByPagination(){
+		OmgCmsOrgVo omgCmsOrgVo=new OmgCmsOrgVo();
+		Page page=new Page();
+		omgCmsOrgBiz.findByPagination(omgCmsOrgVo, page);
+		omgCmsOrgBiz.findByCombox(omgCmsOrgVo, page);
+		omgCmsOrgBiz.findOperationByVo(omgCmsOrgVo);
+		omgCmsOrgBiz.getAllOperationCount(omgCmsOrgVo);
+	}
+}

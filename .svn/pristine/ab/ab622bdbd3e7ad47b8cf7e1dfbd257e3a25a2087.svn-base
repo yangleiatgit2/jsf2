@@ -1,0 +1,581 @@
+package cn.uce.suc.bkg.vo.operation;
+
+import java.util.Date;
+
+import cn.uce.base.vo.BaseVo;
+
+public class DrivingPlanExecutedVo  extends BaseVo {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 发车计划详情的主键 
+	 */
+	private Long id;
+	/**
+	 * 发车计划详情的主键 
+	 */
+	private Long detailId;
+	/** 
+	 * 发车计划编号 
+	 */
+	private String drivingPlanCode;
+    /** 
+	 * 发车计划名称 
+	 */
+	private String drivingPlanName;
+	  /** 
+	 * 网点编号 
+	 */
+	private String wayPointCode;
+    /** 
+	 * 网点名称 
+	 */
+	private String wayPointName;
+    /** 
+	 * 预报方数 
+	 */
+	private Double forecastVolume;
+    /** 
+	 * 预报重量 
+	 */
+	private Double forecastWeight;
+    /** 
+	 * 实际方数 
+	 */
+	private Double actualVolume;
+    /** 
+	 * 实际重量 
+	 */
+	private Double actualWeight;
+	/**
+	 * 实际方数
+	 */
+	private Integer actualNumber;
+	/** 
+	 * 预计到达时间 
+	 */
+	private Date forecastEndTime;
+    /** 
+	 * 实际到达时间 
+	 */
+	private Date actualEndTime;
+	 /** 
+	 * 始发时间 
+	 */
+	private Date departTime;
+    /** 
+	 * 达发时间 
+	 */
+	private Date arrivalTime;
+	 /** 
+	 * 始发站点编号 
+	 */
+	private String startOrgCode;
+    /** 
+	 * 始发站点名称 
+	 */
+	private String startOrgName;
+	/** 
+	 * 目的站点code 
+	 */
+	private String endOrgCode;
+    /** 
+	 * 目的站点名称 
+	 */
+	private String endOrgName;
+	 /** 
+	 * 站点评价标签 
+	 */
+	private String stationEvalJudge;
+    /** 
+	 * 站点评价星级 
+	 */
+	private String stationEvalLever;
+	 /** 
+	 * 站点评价 
+	 */
+	private String stationAppraise;
+    /** 
+	 * 司机名称 
+	 */
+	private String dirverName;
+   
+    /** 
+	 * 车牌号 
+	 */
+	private String plateNumber;
+    /** 
+	 * 车辆编码 
+	 */
+	private String carCode;
+    /** 
+	 * 车辆类型 
+	 */
+	private Double carType;
+    /** 
+	 * 司机手机号码 
+	 */
+	private String driverPhone;
+		
+    /** 
+	 * 业务模式 
+	 */
+	private String businessMode;
+	/**
+	 * 标记  2已评价  1未评价
+	 */
+	private String status;
+	/**
+	 * 已终止状态
+	 */
+	private String endStatus;
+	/**
+	 * 网点端状态
+	 */
+	private String planSiteStatus;
+	/**
+	 * 评价提交时间
+	 */
+	private Date appraiseTime;
+	/**
+	 * 司机所在网点名称
+	 */
+	private String nextStation;
+	/**
+	 * 司机所在网点编码
+	 */
+	private String nextStationCode;
+	/**
+	 * 网点端提示语
+	 */
+	private String planSitePrompt;
+	
+	/** 
+	 * @return planSitePrompt 
+	 */
+	public String getPlanSitePrompt() {
+		return planSitePrompt;
+	}
+	/**
+	 * @param planSitePrompt the planSitePrompt to set
+	 */
+	public void setPlanSitePrompt(String planSitePrompt) {
+		this.planSitePrompt = planSitePrompt;
+	}
+	/** 
+	 * @return nextStation 
+	 */
+	public String getNextStation() {
+		return nextStation;
+	}
+	/**
+	 * @param nextStation the nextStation to set
+	 */
+	public void setNextStation(String nextStation) {
+		this.nextStation = nextStation;
+	}
+	/** 
+	 * @return nextStationCode 
+	 */
+	public String getNextStationCode() {
+		return nextStationCode;
+	}
+	/**
+	 * @param nextStationCode the nextStationCode to set
+	 */
+	public void setNextStationCode(String nextStationCode) {
+		this.nextStationCode = nextStationCode;
+	}
+	/** 
+	 * @return drivingPlanCode 
+	 */
+	public String getDrivingPlanCode() {
+		return drivingPlanCode;
+	}
+	/**
+	 * @param drivingPlanCode the drivingPlanCode to set
+	 */
+	public void setDrivingPlanCode(String drivingPlanCode) {
+		this.drivingPlanCode = drivingPlanCode;
+	}
+	/** 
+	 * @return drivingPlanName 
+	 */
+	public String getDrivingPlanName() {
+		return drivingPlanName;
+	}
+	/**
+	 * @param drivingPlanName the drivingPlanName to set
+	 */
+	public void setDrivingPlanName(String drivingPlanName) {
+		this.drivingPlanName = drivingPlanName;
+	}
+	/** 
+	 * @return wayPointCode 
+	 */
+	public String getWayPointCode() {
+		return wayPointCode;
+	}
+	/**
+	 * @param wayPointCode the wayPointCode to set
+	 */
+	public void setWayPointCode(String wayPointCode) {
+		this.wayPointCode = wayPointCode;
+	}
+	/** 
+	 * @return wayPointName 
+	 */
+	public String getWayPointName() {
+		return wayPointName;
+	}
+	/**
+	 * @param wayPointName the wayPointName to set
+	 */
+	public void setWayPointName(String wayPointName) {
+		this.wayPointName = wayPointName;
+	}
+	
+	/** 
+	 * @return forecastVolume 
+	 */
+	public Double getForecastVolume() {
+		return forecastVolume;
+	}
+	/**
+	 * @param forecastVolume the forecastVolume to set
+	 */
+	public void setForecastVolume(Double forecastVolume) {
+		this.forecastVolume = forecastVolume;
+	}
+	/** 
+	 * @return forecastWeight 
+	 */
+	public Double getForecastWeight() {
+		return forecastWeight;
+	}
+	/**
+	 * @param forecastWeight the forecastWeight to set
+	 */
+	public void setForecastWeight(Double forecastWeight) {
+		this.forecastWeight = forecastWeight;
+	}
+	/** 
+	 * @return actualVolume 
+	 */
+	public Double getActualVolume() {
+		return actualVolume;
+	}
+	/**
+	 * @param actualVolume the actualVolume to set
+	 */
+	public void setActualVolume(Double actualVolume) {
+		this.actualVolume = actualVolume;
+	}
+	/** 
+	 * @return actualWeight 
+	 */
+	public Double getActualWeight() {
+		return actualWeight;
+	}
+	/**
+	 * @param actualWeight the actualWeight to set
+	 */
+	public void setActualWeight(Double actualWeight) {
+		this.actualWeight = actualWeight;
+	}
+	/** 
+	 * @return actualNumber 
+	 */
+	public Integer getActualNumber() {
+		return actualNumber;
+	}
+	/**
+	 * @param actualNumber the actualNumber to set
+	 */
+	public void setActualNumber(Integer actualNumber) {
+		this.actualNumber = actualNumber;
+	}
+	/** 
+	 * @return forecastEndTime 
+	 */
+	public Date getForecastEndTime() {
+		return forecastEndTime;
+	}
+	/**
+	 * @param forecastEndTime the forecastEndTime to set
+	 */
+	public void setForecastEndTime(Date forecastEndTime) {
+		this.forecastEndTime = forecastEndTime;
+	}
+	/** 
+	 * @return actualEndTime 
+	 */
+	public Date getActualEndTime() {
+		return actualEndTime;
+	}
+	/**
+	 * @param actualEndTime the actualEndTime to set
+	 */
+	public void setActualEndTime(Date actualEndTime) {
+		this.actualEndTime = actualEndTime;
+	}
+	/** 
+	 * @return stationEvalJudge 
+	 */
+	public String getStationEvalJudge() {
+		return stationEvalJudge;
+	}
+	/**
+	 * @param stationEvalJudge the stationEvalJudge to set
+	 */
+	public void setStationEvalJudge(String stationEvalJudge) {
+		this.stationEvalJudge = stationEvalJudge;
+	}
+	/** 
+	 * @return stationEvalLever 
+	 */
+	public String getStationEvalLever() {
+		return stationEvalLever;
+	}
+	/**
+	 * @param stationEvalLever the stationEvalLever to set
+	 */
+	public void setStationEvalLever(String stationEvalLever) {
+		this.stationEvalLever = stationEvalLever;
+	}
+	/** 
+	 * @return stationAppraise 
+	 */
+	public String getStationAppraise() {
+		return stationAppraise;
+	}
+	/**
+	 * @param stationAppraise the stationAppraise to set
+	 */
+	public void setStationAppraise(String stationAppraise) {
+		this.stationAppraise = stationAppraise;
+	}
+	/** 
+	 * @return dirverName 
+	 */
+	public String getDirverName() {
+		return dirverName;
+	}
+	/**
+	 * @param dirverName the dirverName to set
+	 */
+	public void setDirverName(String dirverName) {
+		this.dirverName = dirverName;
+	}
+	/** 
+	 * @return departTime 
+	 */
+	public Date getDepartTime() {
+		return departTime;
+	}
+	/**
+	 * @param departTime the departTime to set
+	 */
+	public void setDepartTime(Date departTime) {
+		this.departTime = departTime;
+	}
+	/** 
+	 * @return arrivalTime 
+	 */
+	public Date getArrivalTime() {
+		return arrivalTime;
+	}
+	/**
+	 * @param arrivalTime the arrivalTime to set
+	 */
+	public void setArrivalTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+	/** 
+	 * @return plateNumber 
+	 */
+	public String getPlateNumber() {
+		return plateNumber;
+	}
+	/**
+	 * @param plateNumber the plateNumber to set
+	 */
+	public void setPlateNumber(String plateNumber) {
+		this.plateNumber = plateNumber;
+	}
+	/** 
+	 * @return carCode 
+	 */
+	public String getCarCode() {
+		return carCode;
+	}
+	/**
+	 * @param carCode the carCode to set
+	 */
+	public void setCarCode(String carCode) {
+		this.carCode = carCode;
+	}
+	/** 
+	 * @return carType 
+	 */
+	public Double getCarType() {
+		return carType;
+	}
+	/**
+	 * @param carType the carType to set
+	 */
+	public void setCarType(Double carType) {
+		this.carType = carType;
+	}
+	/** 
+	 * @return driverPhone 
+	 */
+	public String getDriverPhone() {
+		return driverPhone;
+	}
+	/**
+	 * @param driverPhone the driverPhone to set
+	 */
+	public void setDriverPhone(String driverPhone) {
+		this.driverPhone = driverPhone;
+	}
+	
+	/** 
+	 * @return businessMode 
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	/**
+	 * @param businessMode the businessMode to set
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+	/** 
+	 * @return id 
+	 */
+	public Long getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+	/** 
+	 * @return detailId 
+	 */
+	public Long getDetailId() {
+		return detailId;
+	}
+	/**
+	 * @param detailId the detailId to set
+	 */
+	public void setDetailId(Long detailId) {
+		this.detailId = detailId;
+	}
+	/** 
+	 * @return startOrgCode 
+	 */
+	public String getStartOrgCode() {
+		return startOrgCode;
+	}
+	/**
+	 * @param startOrgCode the startOrgCode to set
+	 */
+	public void setStartOrgCode(String startOrgCode) {
+		this.startOrgCode = startOrgCode;
+	}
+	/** 
+	 * @return startOrgName 
+	 */
+	public String getStartOrgName() {
+		return startOrgName;
+	}
+	/**
+	 * @param startOrgName the startOrgName to set
+	 */
+	public void setStartOrgName(String startOrgName) {
+		this.startOrgName = startOrgName;
+	}
+	/** 
+	 * @return endOrgCode 
+	 */
+	public String getEndOrgCode() {
+		return endOrgCode;
+	}
+	/**
+	 * @param endOrgCode the endOrgCode to set
+	 */
+	public void setEndOrgCode(String endOrgCode) {
+		this.endOrgCode = endOrgCode;
+	}
+	/** 
+	 * @return endOrgName 
+	 */
+	public String getEndOrgName() {
+		return endOrgName;
+	}
+	/**
+	 * @param endOrgName the endOrgName to set
+	 */
+	public void setEndOrgName(String endOrgName) {
+		this.endOrgName = endOrgName;
+	}
+	/** 
+	* @return status 
+	*/
+	public String getStatus() {
+		return status;
+	}
+	/**
+	 * @param status the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	/** 
+	 * @return appraiseTime 
+	 */
+	public Date getAppraiseTime() {
+		return appraiseTime;
+	}
+	/**
+	 * @param appraiseTime the appraiseTime to set
+	 */
+	public void setAppraiseTime(Date appraiseTime) {
+		this.appraiseTime = appraiseTime;
+	}
+	/** 
+	* @return planSiteStatus 
+	*/
+	public String getPlanSiteStatus() {
+		return planSiteStatus;
+	}
+	/**
+	 * @param planSiteStatus the planSiteStatus to set
+	 */
+	public void setPlanSiteStatus(String planSiteStatus) {
+		this.planSiteStatus = planSiteStatus;
+	}
+	/** 
+	 * @return endStatus 
+	 */
+	public String getEndStatus() {
+		return endStatus;
+	}
+	/**
+	 * @param endStatus the endStatus to set
+	 */
+	public void setEndStatus(String endStatus) {
+		this.endStatus = endStatus;
+	}
+
+}

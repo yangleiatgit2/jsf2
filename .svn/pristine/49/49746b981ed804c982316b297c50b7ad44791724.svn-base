@@ -1,0 +1,90 @@
+package cn.uce.suc.bkg.biz.impl.datastatis;
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.datastatis.ILoadRatioReportBiz;
+import cn.uce.suc.bkg.vo.datastatis.LoadRatioReportVo;
+
+/**
+ * 
+ * @Description:  满载率统计 测试
+ * @author xiesonglin
+ * @date 2017年12月7日 上午10:39:37
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml"})
+public class LoadRatioReportBizTest {
+	
+	/**
+	 * biz注入
+	 */
+	@Resource
+	private ILoadRatioReportBiz loadRatioReportBiz;
+	
+	/**
+	 * vo对象
+	 */
+	private LoadRatioReportVo loadRatioReportVo ;
+	/**
+	 * page对象
+	 */
+	private Page page;
+	
+	@Before
+	public void setUp() throws Exception {
+		
+		System.out.println("==========单元测试开始========");
+	}
+	
+	/**
+	 * 
+	 * @Description: 测试分页 
+	 * @author xiesonglin
+	 * @date 2017年12月7日 上午10:44:38
+	 */
+	@Test
+	public void findByPagination(){
+		page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		page.setQueryCount(true);
+		loadRatioReportVo=new LoadRatioReportVo();
+		loadRatioReportVo.setDriverName("小");
+		loadRatioReportBiz.findLoadRatioReportByPage(loadRatioReportVo, page);
+		
+	}
+	
+	/**
+	 * 
+	 * @Description:   测试数据导出
+	 * @author xiesonglin
+	 * @date 2017年12月7日 上午10:44:57
+	 */
+	@Test
+	public void findByExport(){
+		loadRatioReportVo=new LoadRatioReportVo();
+		loadRatioReportVo.setCarType(1);
+		loadRatioReportBiz.findByExport(loadRatioReportVo);
+	}
+	
+	/**
+	 * 
+	 * @Description:  测试结束
+	 * @author xiesonglin
+	 * @date 2017年12月7日 上午10:47:36
+	 */
+	@After
+	public void excuteEnd() {
+		System.out.println("==========单元测试结束========");
+	}
+}

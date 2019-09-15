@@ -1,0 +1,77 @@
+package cn.uce.suc.bkg.dao.datamain;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.datamain.Dirver;
+import cn.uce.suc.bkg.vo.datamain.DirverVo;
+
+/**
+ * @Description: 司机DAO接口类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月30日 下午07:29:39
+ */
+@Repository("dirverDao")
+public interface IDirverDao extends IBaseDao<Dirver, Long> {
+	
+	/**
+	 * @Description: 分页查询司机
+	 * @param dirverVo 司机
+	 * @param page 分页参数
+	 * @return 司机
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月30日 下午07:29:39
+	 */
+	public Pagination<Dirver> findByPagination(DirverVo dirverVo, Page page);
+	/**
+	 * 
+	 * @Description: 根据条件查询司机
+	 * @param dirverVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 上午9:51:11
+	 */
+	public Pagination<Dirver> findByCondition(DirverVo dirverVo, Page page);
+	/**
+	 * 
+	 * @Description: 导出司机信息
+	 * @param dirverVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月31日 下午2:50:31
+	 */
+	public List<DirverVo> findByExport(DirverVo dirverVo);
+	/**
+	 * 
+	 * @Description: 司机下拉 
+	 * @param dirverVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月1日 下午5:39:04
+	 */
+	public Pagination<Dirver> findDriverByCmbgd(DirverVo dirverVo, Page page);
+	/**
+	 * 
+	 * @Description: 根据驾驶证号查询是否司机绑定车辆
+	 * @param drivingNum
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月2日 下午5:43:20
+	 */
+	public List<Dirver> findByDrivingNum(String drivingNumber);
+	/**
+	 * 
+	 * @Description: 根据承运商ID 查询司机表的司机
+	 * @param id
+	 * @return
+	 * @author haizhou
+	 * @date 2017年11月4日 下午5:43:20
+	 */
+	public List<Dirver> findByCarrierId(String carrierId);
+}

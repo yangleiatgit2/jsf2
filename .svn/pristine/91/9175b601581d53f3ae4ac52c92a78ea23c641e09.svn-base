@@ -1,0 +1,37 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.IaMonitor;
+import cn.uce.suc.bkg.vo.operation.IaMonitorVo;
+
+/**
+ * @Description: 智能算法任务监控DAO接口类
+ * @author laizhendong
+ * @date 2017年11月28日 上午10:45:49
+ */
+@Repository("iaMonitorDao")
+public interface IIaMonitorDao extends IBaseDao<IaMonitor, Long> {
+	
+	/**
+	 * @Description: 分页查询智能算法任务监控
+	 * @param iaMonitorVo 智能算法任务监控
+	 * @param page 分页参数
+	 * @return 智能算法任务监控
+	 * @author laizhendong
+	 * @date 2017年11月28日 上午10:45:49
+	 */
+	public Pagination<IaMonitor> findByPagination(IaMonitorVo iaMonitorVo, Page page);
+	
+	/**
+	 * 
+	 * @Description: 根据组合编号查询算法任务
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月29日 下午2:28:50
+	 */
+	IaMonitorVo findByCombineCode(String combineCode);
+}

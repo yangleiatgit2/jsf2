@@ -1,0 +1,104 @@
+package cn.uce.suc.bkg.vo.ia;
+
+import java.util.List;
+
+import cn.uce.base.vo.BaseVo;
+
+/**
+ * 
+ * @Description: webService响应结果vo
+ * @author laizhendong
+ * @date 2017年10月26日 下午3:37:17
+ */
+public class WsResponseVo extends BaseVo {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 进港线路
+	 */
+	private List<WsLineGroupVo> lineGroups;
+	
+	
+	/**
+	 * 是否成功
+	 */
+	private Boolean isSuccess;
+	/**
+	 * 错误编码
+	 */
+	private String errorCode;
+	/**
+	 * 错误信息
+	 */
+	private String errorMsg;
+
+	/** 
+	 * @return lineGroups 
+	 */
+	public List<WsLineGroupVo> getLineGroups() {
+		return lineGroups;
+	}
+
+
+	/**
+	 * @param lineGroups the lineGroups to set
+	 */
+	public void setLineGroups(List<WsLineGroupVo> lineGroups) {
+		this.lineGroups = lineGroups;
+	}
+
+
+	/** 
+	 * @return isSuccess 
+	 */
+	public Boolean getIsSuccess() {
+		return isSuccess;
+	}
+
+
+	/**
+	 * @param isSuccess the isSuccess to set
+	 */
+	public void setIsSuccess(Boolean isSuccess) {
+		this.isSuccess = isSuccess;
+	}
+
+
+	/** 
+	 * @return errorCode 
+	 */
+	public String getErrorCode() {
+		return errorCode;
+	}
+
+
+	/**
+	 * @param errorCode the errorCode to set
+	 */
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
+
+
+	/** 
+	 * @return errorMsg 
+	 */
+	public String getErrorMsg() {
+		return errorMsg;
+	}
+
+
+	/**
+	 * @param errorMsg the errorMsg to set
+	 */
+	public void setErrorMsg(String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
+	
+	
+
+}

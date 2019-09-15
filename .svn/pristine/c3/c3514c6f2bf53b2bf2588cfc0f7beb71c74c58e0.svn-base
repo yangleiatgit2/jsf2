@@ -1,0 +1,65 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.web.file.vo.FileInfoVO;
+
+/**
+ * 
+ * @Description: 附件上传单元测试
+ * @author wangzhijun
+ * @date 2017年12月7日 下午5:55:37
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class FileUpBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 注入biz
+	 */
+	@Resource
+	private IFileUpBiz fileUpBiz;
+	/**
+	 * 申明对象
+	 */
+	private FileInfoVO info;
+
+	/**
+	 * 
+	 * @Description: 对象初始化
+	 * @author wangzhijun
+	 * @date 2017年12月7日 下午5:58:42
+	 */
+	@Before
+	public void init() {
+		info = new FileInfoVO();
+		info.setBizId("1");
+	}
+
+	/**
+	 * 
+	 * @Description: 单元测试执行
+	 * @author wangzhijun
+	 * @date 2017年12月7日 下午5:58:55
+	 */
+	@Test
+	public void test() {
+		fileUpBiz.updateFileInfo(info);
+		try {
+			info.setFileId("1");
+			fileUpBiz.downLoadFile(info);
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+		}
+		fileUpBiz.selectFileInfo(info, 1, 2);
+		fileUpBiz.deleteFile(info, "1");
+	}
+}

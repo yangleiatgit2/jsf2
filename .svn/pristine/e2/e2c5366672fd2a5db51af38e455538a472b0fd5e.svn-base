@@ -1,0 +1,287 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanDetailBiz;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.service.operation.DirvingPlanDetailService;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml"})
+public class DptDirvingPlanBizTest {
+
+	/**
+	 * 注入发车计划号BIZ
+	 */
+	@Resource
+	IDirvingPlanBiz dirvingPlanBiz;
+	/**
+	 * 注入发车计划号详情BIZ
+	 */
+	@Resource
+	IDirvingPlanDetailBiz dirvingPlanDetailBiz;
+	/**
+	 * 注入发车计划号详情service
+	 */
+	@Resource
+	DirvingPlanDetailService dirvingPlanDetailservice;
+	/**
+	 * 编码
+	 */
+	@Resource
+	IIdsWorker  redisIdsWorker;
+	/**
+	 * 定义一个全局的发车计划号
+	 */
+	String drivingPlanCode;
+	/**
+	 * 定义一个全局的需求组合编号
+	 */
+	String demandCombinCode;
+	/**
+	 * 生成一个发车计划单号，上海分拨中心-浦东十一部
+	 */
+	@Before
+	public void createDemo(){
+		//自己创建一个发车计划
+		DirvingPlan dirvingPlan = new  DirvingPlan();
+		//随机生成一个发车计划号
+		drivingPlanCode=redisIdsWorker.nextId(IdsPrefix.FC);
+		//设置发车计划号
+		dirvingPlan.setDrivingPlanCode(drivingPlanCode);
+		dirvingPlan.setDrivingPlanName("司机端测试发车计划号");
+		//设置发车计划号司机的名字
+		dirvingPlan.setDirverName("testName");
+		//设置司机的电话
+		dirvingPlan.setDriverPhone("13888888888");
+		//设置发车计划号开始时间
+		Date now= new Date();
+        Calendar c = Calendar.getInstance();  
+        c.setTime(now);  
+        c.add(Calendar.MINUTE, 60);// 当前时间+60分钟  
+   
+        Date nextOneHour = c.getTime();  
+        dirvingPlan.setDepartTime(nextOneHour); 
+        
+        c.add(Calendar.MINUTE, 120);
+        Date nextTwoHour = c.getTime();	
+        /**
+         * 默认结束时间为当前时间的后二个小时
+         */
+        dirvingPlan.setArrivalTime(nextTwoHour);
+        /**
+         * 设置车牌号
+         */
+        dirvingPlan.setPlateNumber("沪A88888");
+        /**
+         * 设置行驶的距离 默认100公里
+         */
+        dirvingPlan.setDirverDistance(130.00);
+        /**
+         * 设置开始站点的编码 默认为上海分拨中心
+         */
+        dirvingPlan.setStartOrgCode("UC010140"); 
+        /**
+         * 设置开始站点的名称 默认为上海分拨中心
+         */
+        dirvingPlan.setStartOrgName("上海分拨中心"); 
+        /**
+         * 设置结束站点的编码 默认为浦东十一部
+         */
+        dirvingPlan.setEndOrgCode("UC016986");  
+        /**
+         * 设置结束站点的名称 默认为浦东十一部
+         */
+        dirvingPlan.setEndOrgName("浦东十一部");  
+        /**
+         * 设置车辆类型
+         */
+        dirvingPlan.setCarType("4.20");     
+        /**
+         * 设置车辆的满载率
+         */
+        dirvingPlan.setLoadingRate(0.83); 
+        /**
+         * 设置总时长
+         */
+        dirvingPlan.setDrivingTime(120);
+        /**
+         * 随机生成一个需求组合编号
+         */
+        demandCombinCode=redisIdsWorker.nextId(IdsPrefix.XZ);
+        /**
+         *  设置需求组合编号
+         */
+        dirvingPlan.setDemandCombinCode(demandCombinCode); 
+        /**
+         * 设置业务类型=进港
+         */
+        dirvingPlan.setBusinessMode(BkgConstants.BUSINESS_MODE_IN);  
+        dirvingPlan.setNextStation("上海分拨中心");
+        dirvingPlan.setNextStationCode("UC010140");
+        dirvingPlan.setStatus(BkgConstants.PLAN_CODE_UNCONFIRMED);
+        /**
+         * 插入一条发车计划号的数据
+         */
+       int val = dirvingPlanBiz.addDirvingPlan(dirvingPlan);     
+       if(val > 0){
+    	   System.out.println("新建一条发车计划号成功");
+       }
+       System.out.println("给对应的车发计划号新建俩条发车计划详情");
+       DirvingPlanDetail startDirvingPlanDetail = new DirvingPlanDetail();
+       /**设置发车计划号
+        */
+       startDirvingPlanDetail.setDrivingPlanCode(drivingPlanCode);
+       /**
+        * 设置站点编码
+        */
+       startDirvingPlanDetail.setWayPointCode("UC010140");
+       /**
+        * 设置站点名称
+        */
+       startDirvingPlanDetail.setWayPointName("上海分拨中心");
+       /**
+        * 设置预计里程
+        */
+       startDirvingPlanDetail.setForecastDistance(50.00);
+       /**
+        * 设置预计方数
+        */
+       startDirvingPlanDetail.setForecastVolume(8.00);
+       /**
+        * 设置预计到达时间
+        */
+       startDirvingPlanDetail.setForecastEndTime(nextOneHour);
+       /**
+        * 设置司机的状态，未确认的状态
+        */
+       startDirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_CONFIRM_WAIT);
+       /**
+        * 设置起点的发车计划详情
+        */
+       startDirvingPlanDetail.setSort(1);
+       val=dirvingPlanDetailBiz.addDirvingPlanDetail(startDirvingPlanDetail);
+       if(val >0 ){
+    	   System.out.println("起点的发车计划详情新增成功");
+       }
+       DirvingPlanDetail endDirvingPlanDetail = new DirvingPlanDetail();
+       /**设置发车计划号
+        */
+       endDirvingPlanDetail.setDrivingPlanCode(drivingPlanCode);
+       
+       /**
+        * 设置预计里程
+        */
+       endDirvingPlanDetail.setForecastDistance(50.00);
+       /**
+        * 设置预计方数
+        */
+       endDirvingPlanDetail.setForecastVolume(8.00);
+       
+       /**
+        * 设置司机的状态，未确认的状态
+        */
+       endDirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_CONFIRM_WAIT);
+       /**
+        * 设置站点编码
+        */
+       endDirvingPlanDetail.setWayPointCode("UC016986");
+       /**
+        * 设置站点名称
+        */
+       endDirvingPlanDetail.setWayPointName("浦东十一部");
+       /**
+        * 设置预计到达时间
+        */
+       endDirvingPlanDetail.setForecastEndTime(nextTwoHour);
+       endDirvingPlanDetail.setSort(2);
+       val=dirvingPlanDetailBiz.addDirvingPlanDetail(endDirvingPlanDetail);
+       if(val >0 ){
+    	   System.out.println("终点的发车计划详情新增成功");
+       }
+	}
+	@Test
+	public void todo(){
+		/**
+		 * 查询司机的未确认的发车计划号
+		 */
+		DirvingPlanVo dirvingPlanVo = new DirvingPlanVo();
+		dirvingPlanVo.setDriverPhone("13888888888");
+		dirvingPlanVo.setStatus(BkgConstants.PLAN_CODE_UNCONFIRMED);
+		Integer uncomfirmNum = dirvingPlanBiz.getUncomfirmDrivingPlanNum(dirvingPlanVo);
+		System.out.println("司机手机号：13888888888有"+uncomfirmNum+"条未确认的发车计划号");
+		/**
+		 * 司机确认发车计划
+		 */
+		DirvingPlan dirvingPlan= new DirvingPlan();
+		dirvingPlan.setDrivingPlanCode(drivingPlanCode);
+		dirvingPlan.setUpdateEmp("测试机构");
+		dirvingPlan.setUpdateEmp("测试的更新人");
+		int val=dirvingPlanBiz.comfirmDrivingPlan(dirvingPlan);
+		if(val==1){
+			System.out.println("发车计划号："+drivingPlanCode+"确认成功");
+		}
+		/**================================================================================*/
+		/**
+		 * 电子围栏触发修改发车计划号的状态
+		 */
+		dirvingPlan.setUpdateEmp("模拟电子围栏修改状态");
+		dirvingPlan.setStatus(BkgConstants.PLAN_CODE_EXECUTING);
+		val =dirvingPlanBiz.updateDirvingPlan(dirvingPlan);
+		if(val>0){
+			System.out.println("发车计划号状态修改成功");
+		}
+		/**
+		 * 修改发车计划详情的状态
+		 */
+		DirvingPlanDetail dirvingPlanDetail = new DirvingPlanDetail();
+		/**
+		 * 设置发车计划号
+		 */
+		dirvingPlanDetail.setDrivingPlanCode(drivingPlanCode);
+		/**
+		 * 设置发车计划号详情的司机的状态
+		 */
+		dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_LOAD_WAIT);
+		/**
+		 * 设置发车计划号详情的网点的状态
+		 */
+		dirvingPlanDetail.setPlanSiteStatus(BkgConstants.SITE_STATUS_FOR_LOAD);
+		/**
+		 * 设置司机所在的站点的编码
+		 */
+		dirvingPlanDetail.setWayPointCode("UC010140");
+		/**
+		 * 设置司机所在的站点的名称
+		 */
+		dirvingPlanDetail.setWayPointName("上海分拨中心");
+		/**
+		 * 修改所在站点的发车计划详情的状态
+		 */
+		val=dirvingPlanDetailservice.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+		if(val>0){
+			System.out.println("电子围栏修改成功");
+		}
+		/*************************装货确认**************************/
+		
+		
+	}
+}

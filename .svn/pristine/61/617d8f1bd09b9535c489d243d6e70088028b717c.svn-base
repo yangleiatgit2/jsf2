@@ -1,0 +1,596 @@
+package cn.uce.suc.common.entity;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+import cn.uce.core.db.annotion.Transient;
+
+/**
+ * @Description: 组织机构扩展信息Entity类
+ * @author liwei
+ * @date 2017年10月22日 下午10:06:24
+ */
+@Table("t_suc_comm_org_extend")
+public class OrgExtend extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 基准编码 
+	 */
+	private String baseOrgCode;
+	/**
+	 * 基准编码（组织名称）
+	 */
+	private String orgName;
+    /** 
+	 * 纬度 
+	 */
+	private String lat;
+    /** 
+	 * 经度 
+	 */
+	private String lng;
+    /** 
+	 * 所属区域编码 
+	 */
+	private String belongAreaCode;
+    /** 
+	 * 所属区域名称 
+	 */
+	private String belongAreaName;
+    /** 
+	 * 离中心距离 
+	 */
+	private Double distanceOper;
+    /** 
+	 * 集货点处理能力 
+	 */
+	private Double processingCapacity;
+    /** 
+	 * 出港限制 
+	 */
+	private String departLimit;
+    /** 
+	 * 进港限制 
+	 */
+	private String portLimit;
+    /** 
+	 * 出港级别限制 
+	 */
+	private String departSiteLever;
+    /** 
+	 * 进港级别限制 
+	 */
+	private String portSiteLimit;
+    /** 
+	 * 站点负责人姓名 
+	 */
+	private String siteChargeName;
+    /** 
+	 * 站点负责人电话 
+	 */
+	private String siteChargePhine;
+    /** 
+	 * 站点负责人邮箱 
+	 */
+	private String siteChargeMain;
+    /** 
+	 * 删除标示 
+	 */
+	private Boolean deleteFlag;
+    /** 
+	 * 备用字段1 
+	 */
+	private String utf1;
+    /** 
+	 * 备用字段2 
+	 */
+	private String utf2;
+    /** 
+	 * 备用字段3 
+	 */
+	private String utf3;
+    /** 
+	 * 版本号 
+	 */
+	private Integer version;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+    /** 
+	 * 创建组织 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新组织 
+	 */
+	private String updateOrg;
+    /** 
+	 * 备注 
+	 */
+	private String remark2;
+	/**
+	 * 站点类型
+	 */
+	private String siteType;
+	/**
+	 * 站点地址
+	 */
+	private String siteAdress;
+	/**
+	 * 电子围栏
+	 */
+	private String electronicRail;
+	/**
+	 * 分拨中心编码
+	 */
+	private String operateCenter;
+	/**
+	 * 分拨中心名称
+	 */
+	private String operateCenterName;
+	/**
+	 * 机构状态
+	 */
+	private String orgStatus;
+	/**
+	 * 省
+	 */
+	@Transient
+	private String province;
+	/**
+	 * 省编码
+	 */
+	@Transient
+	private String provinceCode;
+	/**
+	 * 市编码
+	 */
+	@Transient
+	private String cityCode;
+	/**
+	 * 市
+	 */
+	@Transient
+	private String city;
+	/**
+	 * 区编码
+	 */
+	@Transient
+	private String regionCode;
+	/**
+	 * 区
+	 */
+	@Transient
+	private String region;
+	/**
+	 * 获取 基准编码
+	 */
+	public String getBaseOrgCode() {
+		return baseOrgCode;
+	}
+	
+	/**
+	 * 设置 基准编码
+	 */
+	public void setBaseOrgCode(String baseOrgCode) {
+		this.baseOrgCode = baseOrgCode;
+	}
+	
+	/**
+	 * 获取 纬度
+	 */
+	public String getLat() {
+		return lat;
+	}
+	
+	/**
+	 * 设置 纬度
+	 */
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+	
+	/**
+	 * 获取 经度
+	 */
+	public String getLng() {
+		return lng;
+	}
+	
+	/**
+	 * 设置 经度
+	 */
+	public void setLng(String lng) {
+		this.lng = lng;
+	}
+	
+	/**
+	 * 获取 所属区域编码
+	 */
+	public String getBelongAreaCode() {
+		return belongAreaCode;
+	}
+	
+	/**
+	 * 设置 所属区域编码
+	 */
+	public void setBelongAreaCode(String belongAreaCode) {
+		this.belongAreaCode = belongAreaCode;
+	}
+	
+	/**
+	 * 获取 所属区域名称
+	 */
+	public String getBelongAreaName() {
+		return belongAreaName;
+	}
+	
+	/**
+	 * 设置 所属区域名称
+	 */
+	public void setBelongAreaName(String belongAreaName) {
+		this.belongAreaName = belongAreaName;
+	}
+	
+	/**
+	 * 获取 离中心距离
+	 */
+	public Double getDistanceOper() {
+		return distanceOper;
+	}
+	
+	/**
+	 * 设置 离中心距离
+	 */
+	public void setDistanceOper(Double distanceOper) {
+		this.distanceOper = distanceOper;
+	}
+	
+	/**
+	 * 获取 集货点处理能力
+	 */
+	public Double getProcessingCapacity() {
+		return processingCapacity;
+	}
+	
+	/**
+	 * 设置 集货点处理能力
+	 */
+	public void setProcessingCapacity(Double processingCapacity) {
+		this.processingCapacity = processingCapacity;
+	}
+	
+	/**
+	 * 获取 出港限制
+	 */
+	public String getDepartLimit() {
+		return departLimit;
+	}
+	
+	/**
+	 * 设置 出港限制
+	 */
+	public void setDepartLimit(String departLimit) {
+		this.departLimit = departLimit;
+	}
+	
+	/**
+	 * 获取 进港限制
+	 */
+	public String getPortLimit() {
+		return portLimit;
+	}
+	
+	/**
+	 * 设置 进港限制
+	 */
+	public void setPortLimit(String portLimit) {
+		this.portLimit = portLimit;
+	}
+	
+	/**
+	 * 获取 出港级别限制
+	 */
+	public String getDepartSiteLever() {
+		return departSiteLever;
+	}
+	
+	/**
+	 * 设置 出港级别限制
+	 */
+	public void setDepartSiteLever(String departSiteLever) {
+		this.departSiteLever = departSiteLever;
+	}
+	
+	/**
+	 * 获取 进港级别限制
+	 */
+	public String getPortSiteLimit() {
+		return portSiteLimit;
+	}
+	
+	/**
+	 * 设置 进港级别限制
+	 */
+	public void setPortSiteLimit(String portSiteLimit) {
+		this.portSiteLimit = portSiteLimit;
+	}
+	
+	/**
+	 * 获取 站点负责人姓名
+	 */
+	public String getSiteChargeName() {
+		return siteChargeName;
+	}
+	
+	/**
+	 * 设置 站点负责人姓名
+	 */
+	public void setSiteChargeName(String siteChargeName) {
+		this.siteChargeName = siteChargeName;
+	}
+	
+	/**
+	 * 获取 站点负责人电话
+	 */
+	public String getSiteChargePhine() {
+		return siteChargePhine;
+	}
+	
+	/**
+	 * 设置 站点负责人电话
+	 */
+	public void setSiteChargePhine(String siteChargePhine) {
+		this.siteChargePhine = siteChargePhine;
+	}
+	
+	/**
+	 * 获取 站点负责人邮箱
+	 */
+	public String getSiteChargeMain() {
+		return siteChargeMain;
+	}
+	
+	/**
+	 * 设置 站点负责人邮箱
+	 */
+	public void setSiteChargeMain(String siteChargeMain) {
+		this.siteChargeMain = siteChargeMain;
+	}
+	
+	/**
+	 * 获取 删除标示
+	 */
+	public Boolean getDeleteFlag() {
+		return deleteFlag;
+	}
+	
+	/**
+	 * 设置 删除标示
+	 */
+	public void setDeleteFlag(Boolean deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+	
+	/**
+	 * 获取 备用字段1
+	 */
+	public String getUtf1() {
+		return utf1;
+	}
+	
+	/**
+	 * 设置 备用字段1
+	 */
+	public void setUtf1(String utf1) {
+		this.utf1 = utf1;
+	}
+	
+	/**
+	 * 获取 备用字段2
+	 */
+	public String getUtf2() {
+		return utf2;
+	}
+	
+	/**
+	 * 设置 备用字段2
+	 */
+	public void setUtf2(String utf2) {
+		this.utf2 = utf2;
+	}
+	
+	/**
+	 * 获取 备用字段3
+	 */
+	public String getUtf3() {
+		return utf3;
+	}
+	
+	/**
+	 * 设置 备用字段3
+	 */
+	public void setUtf3(String utf3) {
+		this.utf3 = utf3;
+	}
+	
+	/**
+	 * 获取 版本号
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本号
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 创建组织
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建组织
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新组织
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新组织
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark2() {
+		return remark2;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark2(String remark2) {
+		this.remark2 = remark2;
+	}
+
+	public String getSiteType() {
+		return siteType;
+	}
+
+	public void setSiteType(String siteType) {
+		this.siteType = siteType;
+	}
+
+	public String getSiteAdress() {
+		return siteAdress;
+	}
+
+	public void setSiteAdress(String siteAdress) {
+		this.siteAdress = siteAdress;
+	}
+
+	public String getElectronicRail() {
+		return electronicRail;
+	}
+
+	public void setElectronicRail(String electronicRail) {
+		this.electronicRail = electronicRail;
+	}
+
+	public String getOrgName() {
+		return orgName;
+	}
+
+	public void setOrgName(String orgName) {
+		this.orgName = orgName;
+	}
+
+	public String getOperateCenter() {
+		return operateCenter;
+	}
+
+	public void setOperateCenter(String operateCenter) {
+		this.operateCenter = operateCenter;
+	}
+
+	public String getOrgStatus() {
+		return orgStatus;
+	}
+
+	public void setOrgStatus(String orgStatus) {
+		this.orgStatus = orgStatus;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getProvinceCode() {
+		return provinceCode;
+	}
+
+	public void setProvinceCode(String provinceCode) {
+		this.provinceCode = provinceCode;
+	}
+
+	public String getCityCode() {
+		return cityCode;
+	}
+
+	public void setCityCode(String cityCode) {
+		this.cityCode = cityCode;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getRegionCode() {
+		return regionCode;
+	}
+
+	public void setRegionCode(String regionCode) {
+		this.regionCode = regionCode;
+	}
+
+	public String getRegion() {
+		return region;
+	}
+
+	public void setRegion(String region) {
+		this.region = region;
+	}
+
+	public String getOperateCenterName() {
+		return operateCenterName;
+	}
+
+	public void setOperateCenterName(String operateCenterName) {
+		this.operateCenterName = operateCenterName;
+	}
+	
+	
+}

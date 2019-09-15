@@ -1,0 +1,204 @@
+package cn.uce.suc.common.control;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.IOmgAreaBiz;
+import cn.uce.suc.common.biz.IOrgExtendBiz;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.entity.OrgExtend;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.vo.OmgAreaVo;
+import cn.uce.suc.common.vo.OrgExtendVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+/**
+ * 
+ * @Description: 组织机构扩展 
+ * @author liwei
+ * @date 2017年10月22日 下午10:09:47
+ */
+@Controller
+@RequestMapping("/orgExctend")
+public class OrgExctendController extends BaseController{
+	/**
+	 * 系统配置systemConfigBiz
+	 */
+	@Resource
+	ISystemConfigBiz systemConfigBiz;
+	/**
+	 * 组织扩展orgExtendBiz
+	 */
+	@Resource
+	public IOrgExtendBiz orgExtendBiz;
+	/**
+	 * 组织区域omgAreaBiz
+	 */
+	@Resource
+	private IOmgAreaBiz omgAreaBiz;
+	/**
+	 * 编号生成redisIdsWorker
+	 */
+	@Resource
+    private IIdsWorker  redisIdsWorker;
+	/**
+	 * 
+	 * @Description: 页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/forward")
+	public ModelAndView get(HttpServletRequest request, HttpServletResponse response) {
+		//查询百度地图系统配置AK
+		SystemConfig sc=systemConfigBiz.findCacheByCode("BAIDU_API_AK");
+		ModelAndView mad = new ModelAndView("common/orgExctend");
+		mad.addObject("systemConfig",sc);
+		return mad;
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询网点扩展数据
+	 * @param dirverVo
+	 * @param page
+	 * @return
+	 * @author liuhai
+	 * @date 2017年10月31日 上午9:51:11
+	 */
+	@RequestMapping(value = "findByCondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(OrgExtendVo orgExtend, Page page){
+		//分页查询扩展表
+		Pagination<OrgExtend> orgExtendList = orgExtendBiz.findByPagination(orgExtend,page);
+		Pagination<OrgExtend> odPageList=new Pagination<OrgExtend>();
+		List<OrgExtend> odList=new ArrayList<OrgExtend>();
+		//查询该组织记录
+		OrgExtend oeVo=null;
+		if(CollectionUtils.isNotEmpty(orgExtendList.getData())){
+			for(int i=0;i<orgExtendList.getData().size();i++){
+				oeVo=orgExtendList.getData().get(i);
+				OmgAreaVo omgAreaVo=new OmgAreaVo();
+				omgAreaVo.setAreaCode(oeVo.getBelongAreaCode());
+				//通过区编码查询省市区县编码及名称
+				OmgAreaVo ov=omgAreaBiz.queryAreaByRegion(omgAreaVo);
+				//重新组装省市区
+				if(ov!=null){
+					oeVo.setProvince(ov.getProvince()==null?"":ov.getProvince());
+					oeVo.setProvinceCode(ov.getProvinceCode()==null?"":ov.getProvinceCode());
+					oeVo.setCityCode(ov.getCityCode()==null?"":ov.getCityCode());
+					oeVo.setCity(ov.getCity()==null?"":ov.getCity());
+					oeVo.setRegionCode(ov.getRegionCode()==null?"":ov.getRegionCode());
+					oeVo.setRegion(ov.getRegion()==null?"":ov.getRegion());
+				}
+				odList.add(oeVo);
+			}
+			odPageList.setData(odList);
+		}
+		return returnSuccess(orgExtendList);
+	}
+	/**
+	 * 
+	 * @Description:保存或更新网点信息  
+	 * @param orgExtend
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月22日 下午2:05:15
+	 */
+	@PostMapping(value  = "/saveOrUpdateOrgExtend" )
+	@ResponseBody
+	public Map<String, Object> saveOrUpdateOrgExtend(OrgExtend orgExtend) {
+		OrgExtendVo orgExtendVo=new OrgExtendVo();
+		orgExtendVo.setBaseOrgCode(orgExtend.getBaseOrgCode());
+		Boolean flag=false;
+		//查询该组织是否有记录
+		List<OrgExtendVo> oeList=orgExtendBiz.findByCondition(orgExtendVo);
+		int i=0;
+		if(StringUtil.isNotBlank(orgExtend.getBaseOrgCode())&&CollectionUtils.isNotEmpty(oeList)){
+			orgExtend.setId(oeList.get(0).getId());
+			//如果有则更新记录
+			i=orgExtendBiz.updateOrgExtend(orgExtend);
+		}else{
+			//如果添加的是集货点
+			if(StringUtil.isBlank(orgExtend.getBaseOrgCode())){
+				orgExtend.setBaseOrgCode(redisIdsWorker.nextId(IdsPrefix.UC));
+				flag=true;
+			}
+			orgExtend.setOrgStatus("1");
+			//如果没有就增加记录
+			i=orgExtendBiz.addOrgExtend(orgExtend);
+		}
+		if(i>0&&!flag){
+			return returnSuccess(Resources.getMessage("common.update.success"));
+		}else if(i>0&&flag){
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}else{
+			return returnError(Resources.getMessage("common.update.fail"));
+		}
+	}
+	/**
+	 * 
+	 * @Description:通过组织编码查询网点信息
+	 * @param orgExtend
+	 * @return
+	 * @author liuhai
+	 * @date 2017年11月22日 下午2:05:24
+	 */
+	@PostMapping(value  = "/querySiteData" )
+	@ResponseBody
+	public Map<String, Object> querySiteData(OrgExtend orgExtend) {
+		OrgExtendVo orgExtendVo=new OrgExtendVo();
+		orgExtendVo.setBaseOrgCode(orgExtend.getBaseOrgCode());
+		//查询该组织记录
+		List<OrgExtendVo> oeList=orgExtendBiz.findByCondition(orgExtendVo);
+		OrgExtendVo oeVo=null;
+		if(CollectionUtils.isNotEmpty(oeList)){
+			oeVo=oeList.get(0);
+			OmgAreaVo omgAreaVo=new OmgAreaVo();
+			omgAreaVo.setAreaCode(oeVo.getBelongAreaCode());
+			//通过区编码查询省市区县编码及名称
+			OmgAreaVo ov=omgAreaBiz.queryAreaByRegion(omgAreaVo);
+			oeVo.setProvince(ov.getProvince()==null?"":ov.getProvince());
+			oeVo.setProvinceCode(ov.getProvinceCode()==null?"":ov.getProvinceCode());
+			oeVo.setCityCode(ov.getCityCode()==null?"":ov.getCityCode());
+			oeVo.setCity(ov.getCity()==null?"":ov.getCity());
+			oeVo.setRegionCode(ov.getRegionCode()==null?"":ov.getRegionCode());
+			oeVo.setRegion(ov.getRegion()==null?"":ov.getRegion());
+		}
+		return returnSuccess(oeVo);
+	}
+	/**
+	 * 
+	 * @Description:启用/停用  更新操作
+	 * @param ids
+	 * @param orgStatus
+	 * @return
+	 * @author liuhai
+	 * @date 2017年12月7日 上午10:55:59
+	 */
+	@PostMapping(value  = "/updateOrgStatus" )
+	@ResponseBody
+	public Map<String, Object> updateOrgStatus(String[] ids,String orgStatus) {
+		//更新扩展表状态
+		if(orgExtendBiz.updateOrgStatus(ids, orgStatus)>0){
+			return returnSuccess(Resources.getMessage("common.update.success"));
+		}else{
+			return returnError(Resources.getMessage("common.update.fail"));
+		}
+	}
+}

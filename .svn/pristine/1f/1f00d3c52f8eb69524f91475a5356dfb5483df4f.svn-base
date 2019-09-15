@@ -1,0 +1,102 @@
+package cn.uce.suc.common.cache;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.core.cache.base.IKeyGenerator;
+import cn.uce.core.cache.base.ResultMap;
+import cn.uce.suc.common.biz.imp.SystemConfigBiz;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.vo.SystemConfigVo;
+
+/**
+ * 
+ * @Description: 系统参数缓存
+ * @author wangzhijun
+ * @date 2017年11月2日 下午2:48:30
+ */
+public class SystemConfigCache extends CacheSupport<SystemConfig> {
+
+	/**
+	 * 注入biz层
+	 */
+	@Resource
+	private SystemConfigBiz systemConfigBiz;
+
+	/**
+	 * 申明logger对象
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(SystemConfigCache.class);
+
+	/**
+	 * (非 Javadoc)
+	 * <p>
+	 * Title: doGet
+	 * </p>
+	 * <p>
+	 * Description: 记录缓存信息
+	 * </p>
+	 * 
+	 * @param arg0
+	 * @return
+	 * @throws BusinessException
+	 * @see cn.uce.core.cache.base.CacheCallBack#doGet(java.lang.Object)
+	 */
+	@Override
+	public SystemConfig doGet(String configCode) throws BusinessException {
+		return systemConfigBiz.findByConfigCode(configCode);
+	}
+
+	/**
+	 * (非 Javadoc)
+	 * <p>
+	 * Title: getCacheId
+	 * </p>
+	 * <p>
+	 * Description: 获取缓存key前缀
+	 * </p>
+	 * 
+	 * @return
+	 * @see cn.uce.core.cache.base.ICache#getCacheId()
+	 */
+	@Override
+	public String getCacheId() {
+		return getClass().getSimpleName();
+	}
+
+	/**
+	 * (非 Javadoc)
+	 * <p>
+	 * Title: doInitialization
+	 * </p>
+	 * <p>
+	 * Description: 默认空实现初始化数据回调函数
+	 * </p>
+	 * 
+	 * @param generator
+	 * @return
+	 * @throws BusinessException
+	 * @see cn.uce.core.cache.CacheSupport#doInitialization(cn.uce.core.cache.base.IKeyGenerator)
+	 */
+	@Override
+	public ResultMap<String, SystemConfig> doInitialization(IKeyGenerator<String> generator) throws BusinessException {
+		SystemConfigVo systemConfigVo = new SystemConfigVo();
+		List<SystemConfig> configs = systemConfigBiz.findByCondition(systemConfigVo);
+		ResultMap<String, SystemConfig> resultMap = new ResultMap<String, SystemConfig>(generator);
+		if (configs != null && !configs.isEmpty()) {
+			for (SystemConfig systemConfig  : configs) {
+				if (!resultMap.containsKey(generate(systemConfig.getConfigCode()))) {
+					resultMap.put(systemConfig.getConfigCode(),systemConfig);
+				} 
+			}	
+		}
+		logger.info("SystemConfig加载完成");
+		return resultMap;
+	}
+}

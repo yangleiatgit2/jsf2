@@ -1,0 +1,92 @@
+package cn.uce.suc.common.biz;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.biz.imp.NoticeDetailBiz;
+import cn.uce.suc.common.entity.NoticeDetail;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+
+/**
+ * 
+ * @Description: 组织机构单元测试
+ * @author haizhou
+ * @date 2017年10月19日 下午11:34:06
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class NoticeDerailBizTest extends AbstractJUnit4SpringContextTests  {
+	/**
+	 * 注入消息的BIZ
+	 */
+	@Resource
+	NoticeDetailBiz noticeDetailBiz;
+	
+	
+	private NoticeDetail noticeDetail;
+	private NoticeDetailVo noticeDetailVo;
+	@Before
+	public void add(){
+		 noticeDetail = new NoticeDetail();
+		noticeDetail.setBusinessId(88L);
+		noticeDetail.setBusinessType("ASD");
+		noticeDetail.setContents("消息详情的内容");
+		noticeDetail.setTitle("消息的标题");
+		noticeDetail.setDisplayWays("01,02,03");
+		noticeDetail.setCreateTime(new Date());
+		noticeDetail.setPlatform("01");
+		noticeDetail.setReadFlag(false);
+		noticeDetail.setUserPhone("13237629888");
+		noticeDetail.setJpushAlia("dot187272772");
+		noticeDetail.setNewsType("01");
+		noticeDetail.setDisplayWays("01,02");
+		noticeDetail.setPlatform("01");
+		 noticeDetailVo=new NoticeDetailVo();
+	}
+	
+	@Test
+	public void todo(){
+		Page page=new Page();
+		System.out.println("单元测试");
+		int val=noticeDetailBiz.addNoticeDetail(noticeDetail);
+		System.out.println("单元测试");
+		noticeDetailBiz.updateNoticeDetail(noticeDetail);
+		System.out.println("单元测试");
+		noticeDetailBiz.deleteNews("1");
+		System.out.println("单元测试");
+		noticeDetailBiz.deleteNoticeDetail(1L);
+		System.out.println("单元测试");
+		noticeDetailBiz.findById(1L);
+		System.out.println("单元测试");
+		noticeDetailBiz.findByPagination(noticeDetailVo, page);
+		System.out.println("单元测试");
+		noticeDetailBiz.getAllNews(noticeDetailVo, page);
+		System.out.println("getAllNews");
+		noticeDetailBiz.getIndexNews(noticeDetailVo);
+		System.out.println("单元测试getIndexNews");
+		//noticeDetailBiz.getNewsDetailsById(1L);
+		System.out.println("单元测试getNewsDetailsById");
+		noticeDetailBiz.jpushNotice();
+		System.out.println("单元测试jpushNotice");
+		noticeDetailBiz.JpushNoticeProcess(noticeDetail);
+		System.out.println("单元测试JpushNoticeProcess");
+		Object object=new Object();
+		noticeDetailBiz.generateMessage(object, noticeDetailVo);
+		noticeDetailBiz.updateNoticeDetail(noticeDetail);
+		noticeDetailBiz.removeIndex(noticeDetailVo);
+		noticeDetailBiz.findPcIndex(noticeDetailVo, page);
+		noticeDetailBiz.getNotReadNewsNumber(noticeDetailVo);
+		
+	}
+}

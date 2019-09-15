@@ -1,0 +1,40 @@
+package cn.uce.suc.app.cache;
+
+import java.util.List;
+
+import cn.uce.base.exception.BusinessException;
+import cn.uce.core.cache.CacheSupport;
+import cn.uce.suc.common.vo.MobileuserVo;
+/**
+ * 
+ * @Description: 移动端用户--司机+网点
+ * @author lbnwxly
+ * @date 2017年10月11日 上午8:55:37
+ */
+public class MobileuserCache extends CacheSupport<List<MobileuserVo>> {
+	/**
+	 * 获取
+	* <p>Title: doGet</p> 
+	* <p>Description: </p> 
+	* @param 手机号+机构类型
+	* @return
+	* @throws BusinessException 
+	* @see cn.uce.core.cache.base.CacheCallBack#doGet(java.lang.Object)
+	 */
+	@Override
+	public List<MobileuserVo> doGet(String k) throws BusinessException {
+		return null;
+	}
+	/**
+	 * 获取缓存id
+	* <p>Title: getCacheId</p> 
+	* <p>Description: </p> 
+	* @return 
+	* @see cn.uce.core.cache.base.ICache#getCacheId()
+	 */
+	@Override
+	public String getCacheId() {
+		return this.getClass().getSimpleName();
+	}
+
+}

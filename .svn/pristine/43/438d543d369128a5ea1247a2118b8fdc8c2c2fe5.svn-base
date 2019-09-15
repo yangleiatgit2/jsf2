@@ -1,0 +1,41 @@
+package cn.uce.suc.bkg.dao.operation;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.operation.IaConf;
+import cn.uce.suc.bkg.vo.operation.IaConfVo;
+
+/**
+ * @Description: 智能算法参数维护DAO接口类
+ * @author laizhendong
+ * @date 2017年10月19日 下午08:41:03
+ */
+@Repository("iaConfDao")
+public interface IIaConfDao extends IBaseDao<IaConf, Long> {
+	
+	/**
+	 * @Description: 分页查询智能算法参数维护
+	 * @param iaConfVo 智能算法参数维护
+	 * @param page 分页参数
+	 * @return 智能算法参数维护
+	 * @author laizhendong
+	 * @date 2017年10月19日 下午08:41:03
+	 */
+	public Pagination<IaConfVo> findByPagination(IaConfVo iaConfVo, Page page);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询参数
+	 * @param iaConfVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月20日 上午11:31:33
+	 */
+	List<IaConfVo> findByCondition(IaConfVo iaConfVo);
+	
+}

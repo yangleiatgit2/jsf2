@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.ISystemConfigDao">
+	
+	<sql id="Base_Column_List">
+			id,config_code,config_value,
+			delete_flag,utf1,utf2,
+			utf3,version,remark,
+			create_org,create_emp,create_time,
+			update_org,update_emp,update_time
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="configCode != null and configCode != ''"  >
+		and config_code = #{configCode}
+		</if>
+	    <if test="configValue != null and configValue != ''">
+		and config_value = #{configValue}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="remark != null">
+		and remark = #{remark}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.SystemConfig">
+	UPDATE t_suc_system_config
+	<set>
+		<if test="configCode != null">
+		config_code = #{configCode},
+		</if>
+		<if test="configValue != null">
+		config_value = #{configValue},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="utf1 != null">
+		utf1 = #{utf1},
+		</if>
+		<if test="utf2 != null">
+		utf2 = #{utf2},
+		</if>
+		<if test="utf3 != null">
+		utf3 = #{utf3},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="remark != null">
+		remark = #{remark},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.SystemConfigVo" resultType="cn.uce.suc.common.entity.SystemConfig">
+		select <include refid="Base_Column_List" /> from t_suc_system_config
+		<include refid="Base_Column_Where"></include>
+	</select>
+	<select id="findSysConfigBycode" parameterType="java.lang.String" resultType="cn.uce.suc.common.entity.SystemConfig">
+	select <include refid="Base_Column_List" /> from t_suc_system_config where config_code = #{configCode}
+	</select>
+	
+	<select id="findByCondition" parameterType="cn.uce.suc.common.vo.SystemConfigVo" resultType="cn.uce.suc.common.entity.SystemConfig">
+		select <include refid="Base_Column_List" /> from t_suc_system_config
+		<include refid="Base_Column_Where"></include>
+	</select>
+</mapper>

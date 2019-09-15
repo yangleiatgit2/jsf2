@@ -1,0 +1,483 @@
+package cn.uce.suc.app.biz.impl;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.biz.ICaptchaBiz;
+import cn.uce.suc.app.cache.CaptchaCache;
+import cn.uce.suc.app.entity.Captcha;
+import cn.uce.suc.app.entity.Logininfo;
+import cn.uce.suc.app.service.CaptchaService;
+import cn.uce.suc.app.service.LogininfoService;
+import cn.uce.suc.app.vo.CaptchaVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.cache.AppLoginToKenCache;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.service.NoticePushService;
+import cn.uce.suc.common.util.SucAppConstants;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * @Description: 验证码BIZ实现类
+ * @author liwei
+ * @date 2017年11月05日 下午08:45:38
+ */
+@Service("captchaBiz")
+public class CaptchaBiz implements ICaptchaBiz {
+
+	/**
+	 * 注入验证码Service
+	 */
+	@Resource
+	private CaptchaService captchaService;
+	/**
+	 * 用户
+	 */
+	@Resource
+	private MobileuserService mobileuserService;
+	/**
+	 * 系统配置
+	 */
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+	/**
+	 * 短信推送服务
+	 */
+	@Resource
+	private NoticePushService noticePushService;
+	/**
+	 * token
+	 */
+	@Resource(name = "appLoginToKenCache")
+	private AppLoginToKenCache appLoginToKenCache;
+	/**
+	 * 组织机构缓存
+	 */
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz;
+	/**
+	 * 登陆记录
+	 */
+	@Resource
+	private LogininfoService logininfoService;
+	/**
+	 * 
+	 */
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+	/**
+	 * 验证码，缓存--
+	 */
+	@Resource(name = "captchaCache")
+	private CaptchaCache captchaCache;
+
+	/**
+	 * @Description: 新增验证码
+	 * @param captcha
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public int addCaptcha(Captcha captcha) {
+		return captchaService.addCaptcha(captcha);
+	}
+
+	/**
+	 * @Description: 修改验证码
+	 * @param captcha
+	 *            验证码
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public int updateCaptcha(Captcha captcha) {
+		return captchaService.updateById(captcha);
+	}
+
+	/**
+	 * @Description: 删除验证码
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public int deleteCaptcha(Long id) {
+		return captchaService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询验证码
+	 * @param id
+	 *            主键
+	 * @return 验证码
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	@Override
+	public Captcha findById(Long id) {
+		return captchaService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询验证码
+	 * @param captchaVo
+	 *            验证码
+	 * @param page
+	 *            分页参数
+	 * @return 验证码
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public Pagination<Captcha> findByPagination(CaptchaVo captchaVo, Page page) {
+		Pagination<Captcha> pagination = captchaService.findByPagination(captchaVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description: 获取验证码
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月5日 下午8:51:47
+	 */
+	@Override
+	public boolean getCaptch(CaptchaVo captchavo) {
+		/*if (null == captchavo) {
+			throw new AppModuleException("001", "传入对象为空");
+		}*/
+
+		return false;
+	}
+
+	/**
+	 * 
+	 * 1,查询用户是否注册 2,用户未注册，进行提示 3,发送验证码 4,返回结果 
+	 * @Description: 忘记密码 发送短信
+	 * @param loginEntity
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月15日 下午2:28:19
+	 */
+	@Override
+	public Map<String, Object> updateCapch(LoginEntity loginEntity) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		//获取手机号
+		String telephone = loginEntity.getMobilePhone();
+		//获取用户类型
+		String userType = loginEntity.getType();
+		//参数校验
+		if (StringUtil.isBlank(userType) || StringUtil.isBlank(telephone)) {
+			map.put("resultFlag", SucAppConstants.CODE_PARAMS_ERROR);
+			map.put("failureReason", "请检查参数是否正确");
+			logger.info("请检查参数是否正确，返回码：" + SucAppConstants.CODE_PARAMS_ERROR);
+			return map;
+		}
+		// 构建查询对象
+		MobileuserVo mobileuserVo = new MobileuserVo();
+		//设置手机号
+		mobileuserVo.setMobilephone(telephone);
+		//用户类型校验
+		if (userType.equals(SucConstants.CAPTCH_PLATFROM_DOT)) {
+			mobileuserVo.setDotType(true);
+		} else if (userType.equals(SucConstants.CAPTCH_PLATFORM_DPT)) {
+			mobileuserVo.setDptType(true);
+		}
+
+		// 获取登陆记录
+		List<MobileuserVo> mobileuserVos = mobileuserService.findByCondition(mobileuserVo);
+		if (null == mobileuserVos || mobileuserVos.size() == 0) {
+			map.put("resultFlag", "-201");
+			map.put("failureReason", "此用户不存在");
+			logger.info("用户不存在：");
+			return map;
+		}
+
+		// 2. 生成验证码
+		// 初始化验证码实体类
+		Captcha captcha = captchaService.initCaptchaEntity(telephone, userType);
+		String captchastr = captcha.getContent();
+		captchaCache.updateset(telephone, userType, captchastr);
+		
+		// 封装参数
+		String RequeParams = noticePushService.initParams(SucConstants.CAPTCH_UPDATE_PASSWORD,captcha, telephone, userType);
+
+		// String url = "http://113.106.93.46/smsc/smsp/sendMessage.action";
+		
+		Map<String, Object> resultEntity = noticePushService.sendMessageToPhone(RequeParams);
+		//获取标示
+		String sendFlag = (String) resultEntity.get("resultFlag");
+        //校验成功
+		if (SucAppConstants.OK.value() == sendFlag) {
+			// 发送成功
+			captchaService.addCaptcha(captcha);
+		}
+
+		return resultEntity;
+	}
+
+
+
+	/**
+	 * 
+	 * @Description:更新密码
+	 * @param loginEntity
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月15日 下午2:28:39
+	 */
+	@Override
+	public Map<String, Object> updatepassWord(MobileuserVo mobileuserVo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		//手机号
+		String telephone = mobileuserVo.getMobilephone();
+		//用户类型
+		String userType = mobileuserVo.getUserType();
+		//传入的验证码
+		String capch = mobileuserVo.getCaptcha();
+		//修改后的密码
+		String password = mobileuserVo.getPassword();
+		//参数校验
+		if (StringUtil.isBlank(userType) || StringUtil.isBlank(telephone)||StringUtil.isBlank(capch)||StringUtil.isBlank(password) ) {
+			map.put("resultFlag", SucAppConstants.CODE_PARAMS_ERROR);
+			map.put("failureReason", "请检查参数是否正确");
+			logger.info("请检查参数是否正确，返回码：" + SucAppConstants.CODE_PARAMS_ERROR);
+			return map;
+		}
+		// 构建查询对象
+		MobileuserVo mobileuserVoOld = new MobileuserVo();
+		//查询手机号
+		mobileuserVoOld.setMobilephone(telephone);
+		//校验查询类型
+		if (userType.equals(SucConstants.CAPTCH_PLATFROM_DOT)) {
+			mobileuserVoOld.setDotType(true);
+		} else if (userType.equals(SucConstants.CAPTCH_PLATFORM_DPT)) {
+			mobileuserVoOld.setDptType(true);
+		}
+		// 获取登陆记录
+		List<MobileuserVo> mobileuserVos = mobileuserService.findByCondition(mobileuserVoOld);
+		if (null == mobileuserVos || mobileuserVos.size() == 0) {
+			map.put("resultFlag", "-201");
+			map.put("failureReason", "此用户不存在");
+			logger.info("用户不存在：");
+			return map;
+		}
+		//获取唯一用户
+		mobileuserVoOld = mobileuserVos.get(0);
+		if (null == mobileuserVoOld) {
+			map.put("resultFlag", "-201");
+			map.put("failureReason", "此用户不存在");
+			logger.info("用户不存在：");
+			return map;
+		}
+		String capchOle = captchaCache.getupdate(telephone, userType);
+		if (!capch.equals(capchOle)) {
+			map.put("resultFlag", SucAppConstants.Code_CAPTCHA_ERROR.value());
+			map.put("failureReason", "验证码错误，请重新输入正确的验证码!");
+			logger.info("验证码错误，请重新输入正确的验证码：");
+			return map;
+		}
+		Mobileuser mobileuser = ObjectConvertUtil.convertObject(mobileuserVoOld, Mobileuser.class);
+		mobileuser.setPassword(password);
+		//密码已修改
+		mobileuser.setUtf1(BkgConstants.FORCE_MODIFY_PASSWORD_FALSE);
+		mobileuserService.updateById(mobileuser);
+		map.put("resultFlag", SucAppConstants.OK.value());
+		map.put("failureReason", SucAppConstants.OK.msg());
+		/**去除验证码*/
+		captchaCache.removeupdate(telephone, userType);
+		return map;
+	}
+	/**
+	 * 
+	 * @Description: 注册获取验证码
+	 * @param telephone
+	 * @param userType
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月21日 下午1:43:17
+	 */
+	@Override
+	public Map<String, Object> getCaptcha(String telephone, String userType) {
+
+		// 构建查询对象
+		MobileuserVo mobileuserVoOld = new MobileuserVo();
+		mobileuserVoOld.setMobilephone(telephone);
+		if (userType.equals(SucConstants.CAPTCH_PLATFROM_DOT)) {
+			mobileuserVoOld.setDotType(true);
+		} else if (userType.equals(SucConstants.CAPTCH_PLATFORM_DPT)) {
+			mobileuserVoOld.setDptType(true);
+		}
+		// 获取登陆记录
+		List<MobileuserVo> mobileuserVos = mobileuserService.findByCondition(mobileuserVoOld);
+		if (null != mobileuserVos && mobileuserVos.size() != 0) {
+			logger.info("用户[" + telephone + "]是否已经注册过:");
+			return noticePushService.initResultEntity(SucAppConstants.Code_PHONE_EXIST.value(), "该手机号已经注册过，请直接登录", null);
+		}
+
+		// 2. 生成验证码
+		// 初始化验证码实体类
+		Captcha captcha = captchaService.initCaptchaEntity(telephone, userType);
+		// 2. 生成验证码
+		String captchastr = captcha.getContent();
+		captchaCache.registset(telephone, userType, captchastr);
+		// 3. 向短信平台发送请求，发送验证码给用户手机
+		String RequeParams = noticePushService.initParams("create", captchastr, telephone, userType);
+
+	
+		Map<String, Object> resultEntity = noticePushService.sendMessageToPhone(RequeParams);
+		String sendFlag = (String) resultEntity.get("resultFlag");
+
+		if (SucAppConstants.OK.value() == sendFlag) {
+			// 发送成功
+			captchaService.addCaptcha(captcha);
+		}
+
+		return resultEntity;
+
+	}
+	
+	
+	/**
+	 * app登录接口
+	 * 
+	 * @return
+	 */
+	@Override
+	public Map<String, Object> login(LoginEntity loginEntity) {
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		// 非空校验
+		if (null == loginEntity || StringUtil.isBlank(loginEntity.getMobilePhone())
+				|| StringUtil.isBlank(loginEntity.getType()) || StringUtil.isBlank(loginEntity.getPassword())) {
+			map.put("resultFlag", SucAppConstants.CODE_PARAMS_ERROR.value());
+			map.put("failureReason", "请求参数不正确");
+			logger.error("登陆失败请求参数不完整");
+			return map;
+		}
+		// 构建查询对象
+		MobileuserVo mobileuserVo = new MobileuserVo();
+		mobileuserVo.setPassword(loginEntity.getPassword());
+		mobileuserVo.setMobilephone(loginEntity.getMobilePhone());
+		//账号类型切换
+		if (loginEntity.getType().equals(SucConstants.CAPTCH_PLATFROM_DOT)) {
+			mobileuserVo.setDotType(true);
+		} else if (loginEntity.getType().equals(SucConstants.CAPTCH_PLATFORM_DPT)) {
+			mobileuserVo.setDptType(true);
+		}
+
+		// 获取登陆记录
+		List<MobileuserVo> mobileuserVos = mobileuserService.findByCondition(mobileuserVo);
+		// 用户账号或者密码错误
+		if (null == mobileuserVos || mobileuserVos.size() == 0) {
+			map.put("resultFlag", SucAppConstants.LOGIN_FAIL.value());
+			map.put("failureReason", "账号或者密码错误");
+			logger.error("登陆失败账号或者密码错误："+loginEntity.getMobilePhone());
+			return map;
+		}
+		// 获取第一个
+		MobileuserVo mobileuserVoResult = mobileuserVos.get(0);
+		//非空校验
+		if (null == mobileuserVoResult) {
+			map.put("resultFlag", SucAppConstants.LOGIN_FAIL.value());
+			map.put("failureReason", "账号或者密码错误");
+			logger.error("登陆失败账号或者密码错误："+loginEntity.getMobilePhone());
+			return map;
+		}
+		/**增加强制修改密码校验**/
+		if(BkgConstants.FORCE_MODIFY_PASSWORD_TRUE_FIRST.equals(mobileuserVoResult.getUtf1())){
+			map.put("resultFlag", SucAppConstants.FORCED_MODIFY_PASSWORD.value());
+			map.put("failureReason", "首次登陆请修改密码");
+			logger.error("强制修改密码"+loginEntity.getMobilePhone());
+			return map;
+		}
+		Logininfo logininfo = ObjectConvertUtil.convertObject(loginEntity, Logininfo.class); // 设置登陆记录
+		logininfo.setLogintime(new Date());
+		logininfo.setMobilephone(loginEntity.getMobilePhone());
+		logininfoService.addLogininfo(logininfo);
+
+		// 生成tokendid
+		String tokenId = UUID.randomUUID().toString();
+		loginEntity.setTokenId(tokenId);
+		mobileuserVoResult.setTokenid(tokenId);
+		loginEntity.setMobileuserVo(mobileuserVoResult);
+		//不将密码返回给客户端
+		mobileuserVoResult.setPassword("*********");
+		//放入缓存
+		appLoginToKenCache.set(loginEntity.getMobilePhone(), loginEntity.getType(), loginEntity);
+		map.put("resultFlag", SucAppConstants.OK.value());
+		map.put("failureReason", SucAppConstants.OK.msg());
+		map.put("result", mobileuserVoResult);
+		logger.error("登陆成功："+loginEntity.getMobilePhone());
+		return map;
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param loginEntity
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月11日 上午10:23:43
+	 */
+	public void logout(LoginEntity loginEntity) {
+		// 非空校验
+		if (StringUtil.isBlank(loginEntity.getMobilePhone()) || StringUtil.isBlank(loginEntity.getType())
+				|| StringUtil.isBlank(loginEntity.getTokenId()))
+			return;
+		// 从缓存获取
+		LoginEntity loginEntityold = appLoginToKenCache.getToken(loginEntity.getMobilePhone(), loginEntity.getType());
+		// 一致时清除缓存
+		if (null != loginEntityold && loginEntity.getTokenId().equals(loginEntityold.getTokenId())) {
+			appLoginToKenCache.remove(loginEntity.getMobilePhone(), loginEntity.getType());
+		}
+		logger.error("注销成功：" + loginEntity.getMobilePhone());
+
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param loginEntity
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月4日 下午7:15:53
+	 */
+	@Override
+	public void setRegistrationID(LoginEntity loginEntity) {
+		if (null == loginEntity || StringUtil.isBlank(loginEntity.getPlatform())
+				|| StringUtil.isBlank(loginEntity.getRegistrationID())) {
+			logger.error("绑定设备ID失败,参数不晚上");
+			return;
+		}
+		// 从缓存获取
+		LoginEntity loginEntityold = appLoginToKenCache.getToken(loginEntity.getMobilePhone(), loginEntity.getType());
+		//非空校验
+		if (null != loginEntityold) {
+			loginEntityold.setPlatform(loginEntity.getPlatform());
+			loginEntityold.setRegistrationID(loginEntity.getRegistrationID());
+			// 更新缓存设备ID及平台
+			appLoginToKenCache.set(loginEntity.getMobilePhone(), loginEntity.getType(), loginEntityold);
+			logger.error("绑定设备ID失败成功，手机号：" + loginEntity.getMobilePhone() + "账号类型：" + loginEntity.getType());
+
+		}
+
+	}
+}

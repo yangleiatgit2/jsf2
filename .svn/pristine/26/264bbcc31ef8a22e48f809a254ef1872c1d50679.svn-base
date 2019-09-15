@@ -1,0 +1,266 @@
+package cn.uce.suc.bkg.vo.ia;
+
+import java.util.List;
+import java.util.Map;
+
+import cn.uce.base.vo.BaseVo;
+
+/**
+ * 
+ * @Description: webService请求参数vo
+ * @author laizhendong
+ * @date 2017年10月26日 下午3:37:17
+ */
+public class WsRequestVo extends BaseVo {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * 调度时间
+	 */
+	private String scheduleDate;
+	
+	/**
+	 * 车辆集合,车型及体积
+	 */
+	private Map<String, Double> truckSet;
+	
+	/**
+	 * 时效
+	 */
+	private Map<String/**startOrgCode-endOrgCode格式*/, Double> travelMinutes;
+	
+	/**
+	 * 站点货量信息，需求或订单
+	 */
+	private List<WsSiteFreightInfoVo> nodesFreight;
+	
+	/**
+	 * 分拨中心时刻
+	 */
+	private WsOperationTimeVo dc;
+	
+	/**
+	 * 集货点处理能力松弛系数
+	 */
+	private Double subDCCapacitySlack;
+	/**
+	 * 并行到集货点的最大行驶时间（分钟）
+	 */
+	private Double paralleMaximalTravleMinutes;
+	/**
+	 * 并行网点货量最大值（方）
+	 */
+	private Double paralleMaximalNodeVolume;
+	/**
+	 * 满载率阈值
+	 */
+	private Double loadRateUB;
+	/**
+	 * 到达时间阈值
+	 */
+	private Double slackMinutes;
+
+	
+	/**
+	 * 中心机构编号
+	 */
+	private String dcOrgCode;
+	
+	/**
+	 * 中心机构名称
+	 */
+	private String dcOrgName;
+	
+	/**
+	 * 需求类型，用于算法读取车型体积时取缓存的标识
+	 */
+	private String demandType;
+	
+	/** 
+	 * @return scheduleDate 
+	 */
+	public String getScheduleDate() {
+		return scheduleDate;
+	}
+
+	/**
+	 * @param scheduleDate the scheduleDate to set
+	 */
+	public void setScheduleDate(String scheduleDate) {
+		this.scheduleDate = scheduleDate;
+	}
+
+	/** 
+	 * @return truckSet 
+	 */
+	public Map<String, Double> getTruckSet() {
+		return truckSet;
+	}
+
+	/**
+	 * @param truckSet the truckSet to set
+	 */
+	public void setTruckSet(Map<String, Double> truckSet) {
+		this.truckSet = truckSet;
+	}
+
+	/** 
+	 * @return travelMinutes 
+	 */
+	public Map<String, Double> getTravelMinutes() {
+		return travelMinutes;
+	}
+
+	/**
+	 * @param travelMinutes the travelMinutes to set
+	 */
+	public void setTravelMinutes(Map<String, Double> travelMinutes) {
+		this.travelMinutes = travelMinutes;
+	}
+
+	/** 
+	 * @return nodesFreight 
+	 */
+	public List<WsSiteFreightInfoVo> getNodesFreight() {
+		return nodesFreight;
+	}
+
+	/**
+	 * @param nodesFreight the nodesFreight to set
+	 */
+	public void setNodesFreight(List<WsSiteFreightInfoVo> nodesFreight) {
+		this.nodesFreight = nodesFreight;
+	}
+
+
+
+	/** 
+	 * @return dc 
+	 */
+	public WsOperationTimeVo getDc() {
+		return dc;
+	}
+
+	/**
+	 * @param dc the dc to set
+	 */
+	public void setDc(WsOperationTimeVo dc) {
+		this.dc = dc;
+	}
+
+	/** 
+	 * @return subDCCapacitySlack 
+	 */
+	public Double getSubDCCapacitySlack() {
+		return subDCCapacitySlack;
+	}
+
+	/**
+	 * @param subDCCapacitySlack the subDCCapacitySlack to set
+	 */
+	public void setSubDCCapacitySlack(Double subDCCapacitySlack) {
+		this.subDCCapacitySlack = subDCCapacitySlack;
+	}
+
+	/** 
+	 * @return paralleMaximalTravleMinutes 
+	 */
+	public Double getParalleMaximalTravleMinutes() {
+		return paralleMaximalTravleMinutes;
+	}
+
+	/**
+	 * @param paralleMaximalTravleMinutes the paralleMaximalTravleMinutes to set
+	 */
+	public void setParalleMaximalTravleMinutes(Double paralleMaximalTravleMinutes) {
+		this.paralleMaximalTravleMinutes = paralleMaximalTravleMinutes;
+	}
+
+	/** 
+	 * @return paralleMaximalNodeVolume 
+	 */
+	public Double getParalleMaximalNodeVolume() {
+		return paralleMaximalNodeVolume;
+	}
+
+	/**
+	 * @param paralleMaximalNodeVolume the paralleMaximalNodeVolume to set
+	 */
+	public void setParalleMaximalNodeVolume(Double paralleMaximalNodeVolume) {
+		this.paralleMaximalNodeVolume = paralleMaximalNodeVolume;
+	}
+
+	/** 
+	 * @return loadRateUB 
+	 */
+	public Double getLoadRateUB() {
+		return loadRateUB;
+	}
+
+	/**
+	 * @param loadRateUB the loadRateUB to set
+	 */
+	public void setLoadRateUB(Double loadRateUB) {
+		this.loadRateUB = loadRateUB;
+	}
+
+	/** 
+	 * @return slackMinutes 
+	 */
+	public Double getSlackMinutes() {
+		return slackMinutes;
+	}
+
+	/**
+	 * @param slackMinutes the slackMinutes to set
+	 */
+	public void setSlackMinutes(Double slackMinutes) {
+		this.slackMinutes = slackMinutes;
+	}
+
+	/** 
+	 * @return dcOrgCode 
+	 */
+	public String getDcOrgCode() {
+		return dcOrgCode;
+	}
+
+	/**
+	 * @param dcOrgCode the dcOrgCode to set
+	 */
+	public void setDcOrgCode(String dcOrgCode) {
+		this.dcOrgCode = dcOrgCode;
+	}
+
+	/** 
+	 * @return demandType 
+	 */
+	public String getDemandType() {
+		return demandType;
+	}
+
+	/**
+	 * @param demandType the demandType to set
+	 */
+	public void setDemandType(String demandType) {
+		this.demandType = demandType;
+	}
+
+	/** 
+	 * @return dcOrgName 
+	 */
+	public String getDcOrgName() {
+		return dcOrgName;
+	}
+
+	/**
+	 * @param dcOrgName the dcOrgName to set
+	 */
+	public void setDcOrgName(String dcOrgName) {
+		this.dcOrgName = dcOrgName;
+	}
+}

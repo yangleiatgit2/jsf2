@@ -1,0 +1,94 @@
+package cn.uce.suc.common.service;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.Version;
+import cn.uce.suc.common.vo.VersionVo;
+import cn.uce.suc.common.dao.IVersionDao;
+
+/**
+ * @Description: 移动端软件更新记录Service类
+ * @author liwei
+ * @date 2017年11月12日 上午09:15:11
+ */
+@Service("versionService")
+public class VersionService {
+	
+	/**
+	 * 注入移动端软件更新记录Dao
+	 */
+	@Resource
+	private IVersionDao versionDao;
+	
+	/**
+	 * @Description: 新增移动端软件更新记录
+	 * @param version 移动端软件更新记录
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public int addVersion(Version version) {
+		return versionDao.insert(version);
+	}
+	
+	/**
+	 * @Description: 修改移动端软件更新记录
+	 * @param version 移动端软件更新记录
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public int updateById(Version version) {
+		return versionDao.updateById(version);
+	}
+	
+	/**
+	 * @Description: 删除移动端软件更新记录
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public int deleteById(Long id) {
+		return versionDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询移动端软件更新记录
+	 * @param id 主键
+	 * @return 移动端软件更新记录
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public Version findById(Long id) {
+		return versionDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询移动端软件更新记录
+	 * @param versionVo 移动端软件更新记录
+	 * @param page 分页参数
+	 * @return 移动端软件更新记录
+	 * @author liwei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	public Pagination<Version> findByPagination(VersionVo versionVo, Page page) {
+		Pagination<Version> paginationVersion = versionDao.findByPagination(versionVo, page);
+		return paginationVersion;
+	}
+	/**
+	 * 
+	 * @Description: 版本校验
+	 * @param versionVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月12日 下午3:15:28
+	 */
+	public Version versionCheck(VersionVo versionVo){
+		return versionDao.versionCheck(versionVo);
+	}
+}

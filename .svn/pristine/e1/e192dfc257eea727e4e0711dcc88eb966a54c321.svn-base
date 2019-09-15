@@ -1,0 +1,120 @@
+package cn.uce.suc.bkg.service.price;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.price.IPricingRuleDao;
+import cn.uce.suc.bkg.entity.price.PricingRule;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+
+/**
+ * @Description: 定价规则Service类
+ * @author laizhendong
+ * @date 2017年11月01日 下午09:05:18
+ */
+@Service("pricingRuleService")
+public class PricingRuleService {
+	
+	/**
+	 * 注入定价规则Dao
+	 */
+	@Resource
+	private IPricingRuleDao pricingRuleDao;
+	
+	/**
+	 * @Description: 新增定价规则
+	 * @param pricingRule 定价规则
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public int addPricingRule(PricingRule pricingRule) {
+		return pricingRuleDao.insert(pricingRule);
+	}
+	
+	/**
+	 * @Description: 修改定价规则
+	 * @param pricingRule 定价规则
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public int updateById(PricingRule pricingRule) {
+		return pricingRuleDao.updateById(pricingRule);
+	}
+	
+	/**
+	 * @Description: 删除定价规则
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public int deleteById(Long id) {
+		return pricingRuleDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询定价规则
+	 * @param id 主键
+	 * @return 定价规则
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public PricingRule findById(Long id) {
+		return pricingRuleDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询定价规则
+	 * @param pricingRuleVo 定价规则
+	 * @param page 分页参数
+	 * @return 定价规则
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:05:18
+	 */
+	public Pagination<PricingRuleVo> findByPagination(PricingRuleVo pricingRuleVo, Page page) {
+		Pagination<PricingRuleVo> paginationPricingRule = pricingRuleDao.findByPagination(pricingRuleVo, page);
+		return paginationPricingRule;
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午7:42:58
+	 */
+	public List<PricingRuleVo> findByCondition(PricingRuleVo pricingRuleVo){
+		return pricingRuleDao.findByCondition(pricingRuleVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询报价 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午1:47:22
+	 */
+	public List<PricingRuleVo> findPriceByCondtion(PricingRuleVo pricingRuleVo){
+		return pricingRuleDao.findPriceByCondtion(pricingRuleVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 查询选择报价 
+	 * @param pricingRuleVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午4:36:06
+	 */
+	public List<PricingRuleVo> findSelectPrice(PricingRuleVo pricingRuleVo){
+		return pricingRuleDao.findSelectPrice(pricingRuleVo);
+	}
+}

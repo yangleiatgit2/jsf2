@@ -1,0 +1,107 @@
+package cn.uce.suc.common.control;
+
+import java.util.Date;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.biz.INoticeRuleBiz;
+import cn.uce.suc.common.entity.NoticeRule;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.NoticeRuleVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.WebUtil;
+/**
+ * 
+ * @Description: 消息模板
+ * @author liwei
+ * @date 2017年11月16日 下午10:23:08
+ */
+@Controller
+@RequestMapping("/noticeRule")
+public class NoticeRuleController extends BaseController {
+	
+	/**
+	 * 消息模板
+	 */
+	@Resource
+	private INoticeRuleBiz noticeRuleBiz;
+	/**
+	 * 
+	 * @Description: 页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/forward")
+	public String forward(HttpServletRequest request, HttpServletResponse response) {
+		return "common/noticeRule";
+	}
+	/**
+	 * 
+	 * @Description: 页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/findByPagination")
+	@ResponseBody
+	public Map<String,Object> findByPagination(NoticeRuleVo  noticeRuleVo, Page page) {
+		return returnSuccess(noticeRuleBiz.findByPagination(noticeRuleVo, page));
+	}
+	
+	/**
+	 * 
+	 * @Description: 新增
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/addNoticeRule")
+	@ResponseBody
+	public Map<String,Object> addNoticeRule(NoticeRule noticeRule) {
+		//获取当前登录用户
+		SucCurrentUser user=DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		noticeRule.setCreateEmp(user.getEmpName());
+		noticeRule.setCreateOrg(user.getCmsOrgName());
+		noticeRule.setCreateTime(new Date());
+		noticeRuleBiz.addNoticeRule(noticeRule);
+		return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+	/**
+	 * 
+	 * @Description: 新增
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月20日 上午11:23:24
+	 */
+	@RequestMapping(value = "/updateNoticeRule")
+	@ResponseBody
+	public Map<String,Object> updateNoticeRule(NoticeRule noticeRule) {
+		//获取当前登录用户
+		SucCurrentUser user=DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		noticeRule.setCreateEmp(user.getEmpName());
+		noticeRule.setCreateOrg(user.getCmsOrgName());
+		noticeRule.setCreateTime(new Date());
+		noticeRuleBiz.updateNoticeRule(noticeRule);
+		return returnSuccess(Resources.getMessage("common.save.success"));
+	}
+}

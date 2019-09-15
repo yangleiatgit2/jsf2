@@ -1,0 +1,68 @@
+package cn.uce.suc.common.biz;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.entity.OrgExtend;
+import cn.uce.suc.common.vo.OrgExtendVo;
+
+/**
+ * 
+ * @Description: 组织机构单元测试
+ * @author liwei
+ * @date 2017年10月19日 下午11:34:06
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class OrgExtendBizTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	private IOrgExtendBiz orgExtendBiz;
+	private OrgExtendVo orgExtendVo;
+	private OrgExtend orgExtend;
+	private Page page;
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年12月3日 下午6:31:33
+	 */
+	@Before
+	public void before() {
+		orgExtend=new OrgExtend();
+		orgExtend.setBaseOrgCode("UC000001");
+		orgExtend.setOperateCenter("UC000001");
+		orgExtend.setOperateCenterName("UC000001");
+		orgExtend.setCreateEmp("单元测试");
+		orgExtendVo=new OrgExtendVo();
+		page=new Page();
+	}
+
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年12月3日 下午6:31:27
+	 */
+	@Test
+	public void testPro() {
+		orgExtendBiz.addOrgExtend(orgExtend);
+		orgExtendBiz.deleteOrgExtend(1L);
+		orgExtendBiz.findByBaseOrgCode("UC00002");
+		orgExtendBiz.findByCombine(orgExtendVo);
+		orgExtendBiz.findByCondition(orgExtendVo);
+		orgExtendBiz.findById(1L);
+		orgExtendBiz.findByPagination(orgExtendVo, page);
+		
+		
+	}
+}

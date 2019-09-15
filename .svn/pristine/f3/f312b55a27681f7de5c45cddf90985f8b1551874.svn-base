@@ -1,0 +1,143 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.IDeliveryRelationBiz;
+import cn.uce.suc.bkg.entity.datamain.DeliveryRelation;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.vo.datamain.DeliveryRelationVo;
+import cn.uce.suc.bkg.service.datamain.DeliveryRelationService;
+import cn.uce.web.common.i18n.Resources;
+
+/**
+ * @Description: 交货关系BIZ实现类
+ * @author UCE-CodeGenerator
+ * @date 2017年11月28日 下午01:52:42
+ */
+@Service("deliveryRelationBiz")
+public class DeliveryRelationBiz implements IDeliveryRelationBiz {
+
+	/**
+	 * 注入交货关系Service
+	 */
+	@Resource
+	private DeliveryRelationService deliveryRelationService;
+
+	/**
+	 * @Description: 新增交货关系
+	 * @param deliveryRelation
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月28日 下午01:52:42
+	 */
+	public int addDeliveryRelation(DeliveryRelation deliveryRelation) {
+		int result = 0;
+		try {
+			result = deliveryRelationService.addDeliveryRelation(deliveryRelation);
+		} catch (Exception e) {
+			if (e instanceof DuplicateKeyException) {
+				throw new BkgModuleException(
+						Resources.getMessage("error.bkg.biz.DeliveryRelation.save.existWorkcenterSiteCode"));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @Description: 修改交货关系
+	 * @param deliveryRelation
+	 *            交货关系
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月28日 下午01:52:42
+	 */
+	public int updateDeliveryRelation(DeliveryRelation deliveryRelation) {
+		int result = 0;
+		try {
+			return deliveryRelationService.updateById(deliveryRelation);
+		} catch (Exception e) {
+			if (e instanceof DuplicateKeyException) {
+				throw new BkgModuleException(
+						Resources.getMessage("error.bkg.biz.DeliveryRelation.save.existWorkcenterSiteCode"));
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * @Description: 删除交货关系
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月28日 下午01:52:42
+	 */
+	public int deleteDeliveryRelation(Long id) {
+		return deliveryRelationService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询交货关系
+	 * @param id
+	 *            主键
+	 * @return 交货关系
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月28日 下午01:52:42
+	 */
+	@Override
+	public DeliveryRelation findById(Long id) {
+		return deliveryRelationService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询交货关系
+	 * @param deliveryRelationVo
+	 *            交货关系
+	 * @param page
+	 *            分页参数
+	 * @return 交货关系
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月28日 下午01:52:42
+	 */
+	public Pagination<DeliveryRelation> findByPagination(DeliveryRelationVo deliveryRelationVo, Page page) {
+		Pagination<DeliveryRelation> pagination = deliveryRelationService.findByPagination(deliveryRelationVo, page);
+		return pagination;
+	}
+
+	/**
+	 * (非 Javadoc)
+	 * <p>
+	 * Title: 批量删除
+	 * </p>
+	 * <p>
+	 * Description:
+	 * </p>
+	 * 
+	 * @param ids
+	 * @return
+	 * @see cn.uce.suc.bkg.biz.datamain.IDeliveryRelationBiz#deleteBatch(java.lang.String)
+	 */
+	@Override
+	public int deleteBatch(String ids) {
+		return deliveryRelationService.deleteBatch(ids);
+	}
+
+	/**
+	 * 
+	 * @Description: 根据条件查询查询交货关系
+	 * @param deliveryRelationVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年12月7日 下午2:11:10
+	 */
+	public List<DeliveryRelationVo> findByCondition(DeliveryRelationVo deliveryRelationVo) {
+		return deliveryRelationService.findByCondition(deliveryRelationVo);
+	}
+}

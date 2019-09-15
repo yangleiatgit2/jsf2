@@ -1,0 +1,750 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.IFreightOrderDao">
+
+	<sql id="Base_Column_List">
+		id,order_code,order_name, order_combin_code,order_combin_name,is_carpool,
+		business_mode,demand_type,demand_site,
+		demand_site_code,demand_combine_code,demand_combine_name,
+		order_status,execute_start_time,execute_end_time,
+		begin_station,begin_station_code,end_station,
+		end_station_code,departure_time,arrival_time,
+		lay_time,carpool_sites_code,carpool_sites_name
+		,line_group_code,price,
+		adjust_price,charging_begin_time,charging_end_time,
+		monday_weight,monday_volume,tuesday_weight,
+		tuesday_volume,wednesday_weight,wednesday_volume,
+		thursday_weight,thursday_volume,friday_weight,
+		friday_volume,saturday_weight,saturday_volume,
+		sunday_weight,sunday_volume,day_weight, day_volume,remark,delete_flag,
+		version,create_emp,create_time, create_org,update_emp,update_time,
+		update_org,utf1,utf2, utf3,order_start_time,order_end_time
+	</sql>
+
+	<sql id="Base_Column_Where">
+		<where>
+			<if test="id != null">
+				and id = #{id}
+			</if>
+			<if test="orderCode != null and orderCode != ''">
+				and order_code = #{orderCode}
+			</if>
+			<if test="orderName != null and orderName != '' ">
+				and order_name = #{orderName}
+			</if>
+			<if test="orderCombinCode != null and orderCombinCode != '' ">
+				and order_combin_code = #{orderCombinCode}
+			</if>
+			<if test="orderCombinName != null and orderCombinName != '' ">
+				and order_combin_name = #{orderCombinName}
+			</if>
+			<if test="isCarpool != null and isCarpool != '' ">
+				and is_carpool = #{isCarpool}
+			</if>
+			<if test="businessMode != null and businessMode != '' ">
+				and business_mode = #{businessMode}
+			</if>
+			<if test="demandType != null and demandType != '' ">
+				and demand_type = #{demandType}
+			</if>
+			<if test="demandSite != null and demandSite != '' ">
+				and demand_site = #{demandSite}
+			</if>
+			<if test="demandSiteCode != null and demandSiteCode != '' ">
+				and demand_site_code = #{demandSiteCode}
+			</if>
+			<if test="demandCombineCode != null and demandCombineCode != '' ">
+				and demand_combine_code = #{demandCombineCode}
+			</if>
+			<if test="demandCombineName != null and demandCombineName != '' ">
+				and demand_combine_name = #{demandCombineName}
+			</if>
+			<if test="orderStatus != null and orderStatus != '' ">
+				and order_status = #{orderStatus}
+			</if>
+			<if test="executeStartTime != null and executeEndTime != null ">
+				and execute_start_time = between #{executeStartTime} and #{executeEndTime}
+			</if>
+			<if test="orderStartTime != null and orderEndTime != null">
+				and order_start_time between #{orderStartTime} and #{orderEndTime}
+			</if>
+		
+			<if test="beginStation != null and beginStation != '' ">
+				and begin_station = #{beginStation}
+			</if>
+			<if test="beginStationCode != null and beginStationCode != '' ">
+				and begin_station_code = #{beginStationCode}
+			</if>
+			<if test="endStation != null and endStation != ''">
+				and end_station = #{endStation}
+			</if>
+			<if test="endStationCode != null and endStationCode != '' ">
+				and end_station_code = #{endStationCode}
+			</if>
+			<if test="departureTime != null  ">
+				and departure_time = #{departureTime}
+			</if>
+			<if test="arrivalTime != null  ">
+				and arrival_time = #{arrivalTime}
+			</if>
+			<if test="layTime != null and layTime != '' ">
+				and lay_time = #{layTime}
+			</if>
+			<if test="carpoolSitesCode != null and carpoolSitesCode != '' ">
+				and carpool_sites_code = #{carpoolSitesCode}
+			</if>
+			<if test="carpoolSitesName != null and carpoolSitesName != '' ">
+				and carpool_sites_name = #{carpoolSitesName}
+			</if>
+		
+			<if test="lineGroupCode != null and lineGroupCode != '' ">
+				and line_group_code = #{lineGroupCode}
+			</if>
+			<if test="price != null and price != '' ">
+				and price = #{price}
+			</if>
+			<if test="adjustPrice != null and adjustPrice != '' ">
+				and adjust_price = #{adjustPrice}
+			</if>
+			<if test="chargingBeginTime != null  ">
+				and charging_begin_time = #{chargingBeginTime}
+			</if>
+			<if test="chargingEndTime != null  ">
+				and charging_end_time = #{chargingEndTime}
+			</if>
+			<if test="mondayWeight != null and mondayWeight != '' ">
+				and monday_weight = #{mondayWeight}
+			</if>
+			<if test="mondayVolume != null and mondayVolume != '' ">
+				and monday_volume = #{mondayVolume}
+			</if>
+			<if test="tuesdayWeight != null and tuesdayWeight != '' ">
+				and tuesday_weight = #{tuesdayWeight}
+			</if>
+			<if test="tuesdayVolume != null and tuesdayVolume != '' ">
+				and tuesday_volume = #{tuesdayVolume}
+			</if>
+			<if test="wednesdayWeight != null and wednesdayWeight != ''">
+				and wednesday_weight = #{wednesdayWeight}
+			</if>
+			<if test="wednesdayVolume != null and wednesdayVolume != '' ">
+				and wednesday_volume = #{wednesdayVolume}
+			</if>
+			<if test="thursdayWeight != null and thursdayWeight != '' ">
+				and thursday_weight = #{thursdayWeight}
+			</if>
+			<if test="thursdayVolume != null and thursdayVolume != '' ">
+				and thursday_volume = #{thursdayVolume}
+			</if>
+			<if test="fridayWeight != null and fridayWeight != '' ">
+				and friday_weight = #{fridayWeight}
+			</if>
+			<if test="fridayVolume != null and fridayVolume != '' ">
+				and friday_volume = #{fridayVolume}
+			</if>
+			<if test="saturdayWeight != null and saturdayWeight != ''">
+				and saturday_weight = #{saturdayWeight}
+			</if>
+			<if test="saturdayVolume != null and saturdayVolume != '' ">
+				and saturday_volume = #{saturdayVolume}
+			</if>
+			<if test="sundayWeight != null and sundayWeight != '' ">
+				and sunday_weight = #{sundayWeight}
+			</if>
+			<if test="sundayVolume != null and sundayVolume != '' ">
+				and sunday_volume = #{sundayVolume}
+			</if>
+			<if test="dayWeight != null and dayWeight != '' ">
+				and day_weight = #{dayWeight}
+			</if>
+			<if test="dayVolume != null and dayVolume != ''  ">
+				and day_volume = #{dayVolume}
+			</if>
+			<if test="remark != null and remark != '' ">
+				and remark = #{remark}
+			</if>
+			<if test="deleteFlag != null and deleteFlag != '' ">
+				and delete_flag = #{deleteFlag}
+			</if>
+			<if test="version != null and version != '' ">
+				and version = #{version}
+			</if>
+			<if test="createEmp != null">
+				and create_emp = #{createEmp}
+			</if>
+			<if test="createTime != null">
+				and create_time = #{createTime}
+			</if>
+			<if test="createOrg != null">
+				and create_org = #{createOrg}
+			</if>
+			<if test="updateEmp != null">
+				and update_emp = #{updateEmp}
+			</if>
+			<if test="updateTime != null">
+				and update_time = #{updateTime}
+			</if>
+			<if test="updateOrg != null">
+				and update_org = #{updateOrg}
+			</if>
+			<if test="utf1 != null">
+				and utf1 = #{utf1}
+			</if>
+			<if test="utf2 != null">
+				and utf2 = #{utf2}
+			</if>
+			<if test="utf3 != null">
+				and utf3 = #{utf3}
+			</if>
+			<if test="orderCodeStr != null and orderCodeStr != ''">
+			and order_code LIKE CONCAT(CONCAT('%', #{orderCodeStr}),'%') 
+			</if>
+		</where>
+	</sql>
+
+	<update id="updateById" parameterType="cn.uce.suc.bkg.entity.operation.FreightOrder">
+		UPDATE t_suc_bkg_freight_order
+		<set>
+			<if test="orderCode != null">
+				order_code = #{orderCode},
+			</if>
+			<if test="orderName != null">
+				order_name = #{orderName},
+			</if>
+			<if test="orderStartTime != null ">
+				order_start_time = #{orderStartTime},
+			</if>
+			<if test="orderEndTime != null  ">
+				order_end_time = #{orderEndTime},
+			</if>
+			<if test="orderCombinCode != null">
+				order_combin_code = #{orderCombinCode},
+			</if>
+			<if test="orderCombinName != null">
+				order_combin_name = #{orderCombinName},
+			</if>
+			<if test="isCarpool != null">
+				is_carpool = #{isCarpool},
+			</if>
+			<if test="businessMode != null">
+				business_mode = #{businessMode},
+			</if>
+			<if test="demandType != null">
+				demand_type = #{demandType},
+			</if>
+			<if test="demandSite != null">
+				demand_site = #{demandSite},
+			</if>
+			<if test="demandSiteCode != null">
+				demand_site_code = #{demandSiteCode},
+			</if>
+			<if test="demandCombineCode != null">
+				demand_combine_code = #{demandCombineCode},
+			</if>
+			<if test="demandCombineName != null">
+				demand_combine_name = #{demandCombineName},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus},
+			</if>
+			<if test="executeStartTime != null">
+				execute_start_time = #{executeStartTime},
+			</if>
+			<if test="executeEndTime != null">
+				execute_end_time = #{executeEndTime},
+			</if>
+			<if test="beginStation != null">
+				begin_station = #{beginStation},
+			</if>
+			<if test="beginStationCode != null">
+				begin_station_code = #{beginStationCode},
+			</if>
+			<if test="endStation != null">
+				end_station = #{endStation},
+			</if>
+			<if test="endStationCode != null">
+				end_station_code = #{endStationCode},
+			</if>
+			<if test="departureTime != null">
+				departure_time = #{departureTime},
+			</if>
+			<if test="arrivalTime != null">
+				arrival_time = #{arrivalTime},
+			</if>
+			<if test="layTime != null">
+				lay_time = #{layTime},
+			</if>
+			<if test="carpoolSitesCode != null">
+				carpool_sites_code = #{carpoolSitesCode},
+			</if>
+			<if test="carpoolSitesName != null">
+				carpool_sites_name = #{carpoolSitesName},
+			</if>
+			
+			<if test="lineGroupCode != null">
+				line_group_code = #{lineGroupCode},
+			</if>
+			<if test="price != null">
+				price = #{price},
+			</if>
+			<if test="adjustPrice != null">
+				adjust_price = #{adjustPrice},
+			</if>
+			<if test="chargingBeginTime != null">
+				charging_begin_time = #{chargingBeginTime},
+			</if>
+			<if test="chargingEndTime != null">
+				charging_end_time = #{chargingEndTime},
+			</if>
+			<if test="mondayWeight != null">
+				monday_weight = #{mondayWeight},
+			</if>
+			<if test="mondayVolume != null">
+				monday_volume = #{mondayVolume},
+			</if>
+			<if test="tuesdayWeight != null">
+				tuesday_weight = #{tuesdayWeight},
+			</if>
+			<if test="tuesdayVolume != null">
+				tuesday_volume = #{tuesdayVolume},
+			</if>
+			<if test="wednesdayWeight != null">
+				wednesday_weight = #{wednesdayWeight},
+			</if>
+			<if test="wednesdayVolume != null">
+				wednesday_volume = #{wednesdayVolume},
+			</if>
+			<if test="thursdayWeight != null">
+				thursday_weight = #{thursdayWeight},
+			</if>
+			<if test="thursdayVolume != null">
+				thursday_volume = #{thursdayVolume},
+			</if>
+			<if test="fridayWeight != null">
+				friday_weight = #{fridayWeight},
+			</if>
+			<if test="fridayVolume != null">
+				friday_volume = #{fridayVolume},
+			</if>
+			<if test="saturdayWeight != null">
+				saturday_weight = #{saturdayWeight},
+			</if>
+			<if test="saturdayVolume != null">
+				saturday_volume = #{saturdayVolume},
+			</if>
+			<if test="sundayWeight != null">
+				sunday_weight = #{sundayWeight},
+			</if>
+			<if test="sundayVolume != null">
+				sunday_volume = #{sundayVolume},
+			</if>
+			<if test="dayWeight != null">
+				day_weight = #{dayWeight},
+			</if>
+			<if test="dayVolume != null">
+				day_volume = #{dayVolume},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="deleteFlag != null">
+				delete_flag = #{deleteFlag},
+			</if>
+			<if test="version != null">
+				version = version +1 ,
+			</if>
+			<if test="createEmp != null">
+				create_emp = #{createEmp},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createOrg != null">
+				create_org = #{createOrg},
+			</if>
+			<if test="updateEmp != null">
+				update_emp = #{updateEmp},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime},
+			</if>
+			<if test="updateOrg != null">
+				update_org = #{updateOrg},
+			</if>
+			<if test="utf1 != null">
+				utf1 = #{utf1},
+			</if>
+			<if test="utf2 != null">
+				utf2 = #{utf2},
+			</if>
+			<if test="utf3 != null">
+				utf3 = #{utf3},
+			</if>
+		</set>
+		WHERE id = #{id}
+		<if test="version != null">
+				and version = #{version}
+		</if>
+	</update>
+
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo"
+		resultType="cn.uce.suc.bkg.entity.operation.FreightOrder">
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_freight_order
+		<include refid="Base_Column_Where" />
+		
+		order by create_time  DESC
+	</select>
+    <select id="findByCondtion" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo"
+		resultType="cn.uce.suc.bkg.entity.operation.FreightOrder">
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_freight_order
+		<include refid="Base_Column_Where" />
+	</select>
+	<!-- 根据OrderCode进展更新  begin-->
+	<update id="updateByOrderCode" parameterType="cn.uce.suc.bkg.entity.operation.FreightOrder">
+			UPDATE t_suc_bkg_freight_order
+			<set>
+			order_combin_code = #{orderCombinCode},
+			order_combin_name = #{orderCombinName}
+				
+			</set>
+			WHERE order_code = #{orderCode}
+	</update>
+	<!-- 根据OrderCode进展更新  end-->
+	<!-- 根据组合查询订单 -->
+	<select id="findByCombine" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo" resultType="cn.uce.suc.bkg.vo.operation.FreightOrderVo">
+		SELECT fo.*,oe.depart_limit,oe.port_limit
+		FROM t_suc_bkg_freight_order fo
+		<if test="businessMode != null and businessMode != '' ">
+			LEFT JOIN t_suc_comm_org_extend oe 
+			<!-- 进港 -->
+			<if test='businessMode == "1"'>
+				ON fo.end_station_code = oe.base_org_code 
+			</if>
+			<!-- 出港 -->
+			<if test='businessMode == "2"'>
+				ON fo.begin_station_code = oe.base_org_code 
+			</if>
+		</if>
+		<where>
+			<if test="orderStatus != null and orderStatus != ''">
+				AND fo.order_status = #{orderStatus}
+			</if>
+			<if test="businessMode != null and businessMode != ''">
+				AND fo.business_mode = #{businessMode}
+			</if>
+			<if test="orderCombinCode != null and orderCombinCode != ''">
+				AND fo.order_combin_code = #{orderCombinCode}
+			</if>
+		
+		</where>
+	</select>
+	
+	<select id="findByVo" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo" resultType="cn.uce.suc.bkg.vo.operation.FreightOrderVo">
+		SELECT fo.* FROM t_suc_bkg_freight_order fo
+	
+		<where>
+			<if test="demandSiteCode != null and demandSiteCode != ''">
+			AND demand_site_code = #{demandSiteCode}
+			</if>
+			<if test="executeStartTime != null">  
+			  AND execute_start_time &gt; date (#{executeStartTime})
+			</if>  
+			<if test="executeEndTime != null">  
+			  AND execute_end_time &lt; date(#{executeEndTime}) 
+			</if> 
+		</where>
+	</select>
+
+	<!-- 出港-->
+	<select id="findEndStationCode" resultType="java.lang.String" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo">
+	select end_station_code from t_suc_bkg_freight_order where business_mode = #{businessMode} and demand_type = #{demandType} and (order_combin_code is null or order_combin_code='') and order_start_time between #{beginTime} and #{endTime} GROUP BY end_station_code;
+	</select>
+	<!--  进港-->
+	<select id="findbeginStationCode" resultType="java.lang.String" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo">
+	select begin_station_code from t_suc_bkg_freight_order where business_mode = #{businessMode} and demand_type = #{demandType} and (order_combin_code is null or order_combin_code='') and order_start_time between #{beginTime} and #{endTime} GROUP BY begin_station_code;
+	</select>
+	
+	
+	<select id="findByOderNoTimeDesc" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo" resultType="cn.uce.suc.bkg.vo.operation.FreightOrderVo">
+		SELECT fo.* FROM t_suc_bkg_freight_order fo
+	
+		<where>
+			<if test="orderCombinCode != null and orderCombinCode != ''">
+			AND order_combin_code = #{orderCombinCode}
+			</if>
+		</where>
+			order by execute_start_time desc
+	</select>
+
+	
+	<!-- 查询未分组的订单 -->
+	<select id="findCombineByPagination" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo"
+		resultType="cn.uce.suc.bkg.entity.operation.FreightOrder">
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_freight_order
+		<where>
+		<if test="demandSiteCode != null and demandSiteCode != '' ">
+		and demand_site_code = #{demandSiteCode}
+		</if>
+		<if test="beginStationCode != null and beginStationCode != '' ">
+			and begin_station_code = #{beginStationCode}
+		</if>
+		<if test="endStationCode != null and endStationCode != ''">
+			and end_station_code = #{endStationCode}
+		</if>
+		<if test="beginTime != null and endTime != null">
+			and create_time between #{beginTime} and #{endTime}
+		</if>
+		<if test="businessMode != null and businessMode != '' ">
+				and business_mode = #{businessMode}
+		</if>
+		<if test="demandType != null and demandType != '' ">
+				and demand_type = #{demandType}
+		</if>
+		<if test="1 == 1">
+		and (order_combin_code is null or order_combin_code='')
+		</if>
+		</where>
+	</select>
+	<!-- 更新订单状态，根据订单组合号  begin-->
+	<update id="updateByOrderCombine" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo">
+	
+	UPDATE t_suc_bkg_freight_order
+		<set>
+			<if test="orderCode != null">
+				order_code = #{orderCode},
+			</if>
+			<if test="orderName != null">
+				order_name = #{orderName},
+			</if>
+			<if test="orderCombinCode != null">
+				order_combin_code = #{orderCombinCode},
+			</if>
+			<if test="orderCombinName != null">
+				order_combin_name = #{orderCombinName},
+			</if>
+			<if test="isCarpool != null">
+				is_carpool = #{isCarpool},
+			</if>
+			<if test="businessMode != null">
+				business_mode = #{businessMode},
+			</if>
+			<if test="demandType != null">
+				demand_type = #{demandType},
+			</if>
+			<if test="demandSite != null">
+				demand_site = #{demandSite},
+			</if>
+			<if test="demandSiteCode != null">
+				demand_site_code = #{demandSiteCode},
+			</if>
+			<if test="demandCombineCode != null">
+				demand_combine_code = #{demandCombineCode},
+			</if>
+			<if test="demandCombineName != null">
+				demand_combine_name = #{demandCombineName},
+			</if>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus},
+			</if>
+			<if test="executeStartTime != null">
+				execute_start_time = #{executeStartTime},
+			</if>
+			<if test="executeEndTime != null">
+				execute_end_time = #{executeEndTime},
+			</if>
+			<if test="beginStation != null">
+				begin_station = #{beginStation},
+			</if>
+			<if test="beginStationCode != null">
+				begin_station_code = #{beginStationCode},
+			</if>
+			<if test="endStation != null">
+				end_station = #{endStation},
+			</if>
+			<if test="endStationCode != null">
+				end_station_code = #{endStationCode},
+			</if>
+			<if test="departureTime != null">
+				departure_time = #{departureTime},
+			</if>
+			<if test="arrivalTime != null">
+				arrival_time = #{arrivalTime},
+			</if>
+			<if test="layTime != null">
+				lay_time = #{layTime},
+			</if>
+			<if test="carpoolSitesCode != null">
+				carpool_sites_code = #{carpoolSitesCode},
+			</if>
+			<if test="carpoolSitesName != null">
+				carpool_sites_name = #{carpoolSitesName},
+			</if>
+			<if test="lineGroupCode != null">
+				line_group_code = #{lineGroupCode},
+			</if>
+			<if test="price != null">
+				price = #{price},
+			</if>
+			<if test="adjustPrice != null">
+				adjust_price = #{adjustPrice},
+			</if>
+			<if test="chargingBeginTime != null">
+				charging_begin_time = #{chargingBeginTime},
+			</if>
+			<if test="chargingEndTime != null">
+				charging_end_time = #{chargingEndTime},
+			</if>
+			<if test="mondayWeight != null">
+				monday_weight = #{mondayWeight},
+			</if>
+			<if test="mondayVolume != null">
+				monday_volume = #{mondayVolume},
+			</if>
+			<if test="tuesdayWeight != null">
+				tuesday_weight = #{tuesdayWeight},
+			</if>
+			<if test="tuesdayVolume != null">
+				tuesday_volume = #{tuesdayVolume},
+			</if>
+			<if test="wednesdayWeight != null">
+				wednesday_weight = #{wednesdayWeight},
+			</if>
+			<if test="wednesdayVolume != null">
+				wednesday_volume = #{wednesdayVolume},
+			</if>
+			<if test="thursdayWeight != null">
+				thursday_weight = #{thursdayWeight},
+			</if>
+			<if test="thursdayVolume != null">
+				thursday_volume = #{thursdayVolume},
+			</if>
+			<if test="fridayWeight != null">
+				friday_weight = #{fridayWeight},
+			</if>
+			<if test="fridayVolume != null">
+				friday_volume = #{fridayVolume},
+			</if>
+			<if test="saturdayWeight != null">
+				saturday_weight = #{saturdayWeight},
+			</if>
+			<if test="saturdayVolume != null">
+				saturday_volume = #{saturdayVolume},
+			</if>
+			<if test="sundayWeight != null">
+				sunday_weight = #{sundayWeight},
+			</if>
+			<if test="sundayVolume != null">
+				sunday_volume = #{sundayVolume},
+			</if>
+			<if test="dayWeight != null">
+				day_weight = #{dayWeight},
+			</if>
+			<if test="dayVolume != null">
+				day_volume = #{dayVolume},
+			</if>
+			<if test="remark != null">
+				remark = #{remark},
+			</if>
+			<if test="deleteFlag != null">
+				delete_flag = #{deleteFlag},
+			</if>
+			<if test="version != null">
+				version = version +1 ,
+			</if>
+			<if test="createEmp != null">
+				create_emp = #{createEmp},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime},
+			</if>
+			<if test="createOrg != null">
+				create_org = #{createOrg},
+			</if>
+			<if test="updateEmp != null">
+				update_emp = #{updateEmp},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime},
+			</if>
+			<if test="updateOrg != null">
+				update_org = #{updateOrg},
+			</if>
+			
+		</set>
+		WHERE 
+				order_code = #{orderCode}
+	
+	</update>
+	<!-- 更新订单状态，根据订单组合号  end-->
+
+	
+	
+	<!-- 网点端 查询网点的订单 -->
+	<select id="findByDemandSiteCodePagination" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo"	resultType="cn.uce.suc.bkg.vo.operation.FreightOrderVo">
+		select
+		<include refid="Base_Column_List" />
+		from t_suc_bkg_freight_order
+		<where>
+			demand_site_code = #{demandSiteCode}	
+			<if test="orderStatus != null and orderStatus != ''">
+				and order_status != #{orderStatus}
+			</if>
+			<if test="demandType != null and demandType != '' ">
+				and demand_type = #{demandType}
+			</if>
+			<if test="businessMode != null and businessMode != '' ">
+				and business_mode = #{businessMode}
+			</if>
+			<if test="beginTime != null and endTime != null">
+			and( order_start_time between #{beginTime} and #{endTime} or order_end_time between #{beginTime} and #{endTime}  )
+			</if>
+		</where>
+		order by create_time desc
+	</select>
+	<!-- 根据订单组合编号更新订单 状态-->
+	<update id="updStatusByCombineCode" parameterType="cn.uce.suc.bkg.vo.operation.FreightOrderVo">
+		UPDATE t_suc_bkg_freight_order
+		<set>
+			<if test="orderStatus != null">
+				order_status = #{orderStatus},
+			</if>
+			<if test="updateEmp != null">
+				update_emp = #{updateEmp},
+			</if>
+			<if test="updateTime != null">
+				update_time = #{updateTime},
+			</if>
+			<if test="updateOrg != null">
+				update_org = #{updateOrg},
+			</if>
+		</set>
+		WHERE 
+			order_combin_code = #{orderCombinCode}
+	</update>
+	
+	<!-- 根据需求编号更新执行时间 -->
+	<update id="updateTimeByOrderCode" parameterType="cn.uce.suc.bkg.vo.operation.FreightDemandVo" >
+		UPDATE t_suc_bkg_freight_order 
+		<set>
+			<if test="executeStartTime != null">
+				execute_start_time = #{executeStartTime},
+			</if>
+			<if test="executeEndTime != null">
+				execute_end_time = #{executeEndTime},
+			</if>
+		</set>
+		WHERE order_code = #{orderCode} 
+	</update>
+	<!-- 根据订单编号进行订单查询 -->
+	<select id="findByOrderCode" resultType="cn.uce.suc.bkg.entity.operation.FreightOrder"  parameterType="java.lang.String">
+	select 	<include refid="Base_Column_List" /> from t_suc_bkg_freight_order WHERE order_code = #{orderCode}  
+	</select>
+</mapper>

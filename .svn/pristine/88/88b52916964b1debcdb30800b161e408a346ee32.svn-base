@@ -1,0 +1,86 @@
+package cn.uce.suc.common.biz.imp;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.INoticeRuleBiz;
+import cn.uce.suc.common.entity.NoticeRule;
+import cn.uce.suc.common.vo.NoticeRuleVo;
+import cn.uce.suc.common.service.NoticeRuleService;
+
+/**
+ * @Description: 消息模板BIZ实现类
+ * @author liwei
+ * @date 2017年10月30日 下午10:17:24
+ */
+@Service("noticeRuleBiz")
+public class NoticeRuleBiz implements INoticeRuleBiz {
+	
+	/**
+	 * 注入消息模板Service
+	 */
+	@Resource
+	private NoticeRuleService noticeRuleService;
+	
+	/**
+	 * @Description: 新增消息模板
+	 * @param noticeRule
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public int addNoticeRule(NoticeRule noticeRule) {
+		return noticeRuleService.addNoticeRule(noticeRule);
+	}
+	
+	/**
+	 * @Description: 修改消息模板
+	 * @param noticeRule 消息模板
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public int updateNoticeRule(NoticeRule noticeRule) {
+		return noticeRuleService.updateById(noticeRule);
+	}
+	
+	/**
+	 * @Description: 删除消息模板
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public int deleteNoticeRule(Long id) {
+		return noticeRuleService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询消息模板
+	 * @param id 主键
+	 * @return 消息模板
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	@Override
+	public NoticeRule findById(Long id) {
+		return noticeRuleService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询消息模板
+	 * @param noticeRuleVo 消息模板
+	 * @param page 分页参数
+	 * @return 消息模板
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public Pagination<NoticeRule> findByPagination(NoticeRuleVo noticeRuleVo, Page page) {
+		Pagination<NoticeRule> pagination = noticeRuleService.findByPagination(noticeRuleVo, page);
+		return pagination;
+	}
+
+}

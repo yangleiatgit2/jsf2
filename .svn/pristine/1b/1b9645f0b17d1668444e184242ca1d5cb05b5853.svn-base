@@ -1,0 +1,786 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.time.DateUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandCombineBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleBiz;
+import cn.uce.suc.bkg.entity.operation.FreightDemandCombine;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.service.datamain.TransportEffectiveService;
+import cn.uce.suc.bkg.service.operation.FreightDemandCombineService;
+import cn.uce.suc.bkg.service.operation.FreightDemandService;
+import cn.uce.suc.bkg.vo.datamain.TransportEffectiveVo;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightDemandVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleVo;
+import cn.uce.suc.common.cache.OmgCmsOrgprocessor;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.ids.IdsConstants.NamesPrefix;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+import com.alibaba.fastjson.JSONArray;
+
+/**
+ * @Description: 货运需求组合表BIZ实现类
+ * @author UCE-lixueyuan
+ * @date 2017年10月19日 下午05:15:20
+ */
+@Service("freightDemandCombineBiz")
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class FreightDemandCombineBiz implements IFreightDemandCombineBiz {
+	
+	/**
+	 * 注入货运需求组合表Service
+	 */
+	@Resource
+	private FreightDemandCombineService freightDemandCombineService;
+	/**
+	 * 注入货运需求表Service
+	 */
+	@Resource
+	private FreightDemandService freightDemandService;
+	/**
+	 * 注入IFreightDemandBiz对象
+	 */
+	@Resource
+	private IFreightDemandBiz freightDemandBiz;
+	
+	/**
+	 * 注入 生成编码的worker
+	 */
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	
+	
+	/**
+	 * 定价规则biz
+	 */
+	@Resource
+	private IPricingRuleBiz pricingRuleBiz;
+	/**
+	 * 时效管理Service
+	 */
+	@Resource
+	private TransportEffectiveService transportEffectiveService;
+	
+	/**
+	 * @Description: 新增货运需求组合表
+	 * @param freightDemandCombine
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月19日 下午05:15:20
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int addFreightDemandCombine(FreightDemandCombineVo freightDemandCombineVo) {
+		/**获得需求组合编码 需求组合 系统自动生成的 固注释掉下面的代码*/
+		/*if(null==freightDemandCombineVo.getDemandCombineCode()||StringUtil.isEmpty(freightDemandCombineVo.getDemandCombineCode())){
+			String demandCombineCode =redisIdsWorker.nextId(IdsPrefix.XZ);
+			freightDemandCombineVo.setDemandCombineCode(demandCombineCode);
+			freightDemandCombineVo.setDemandCombineName(demandCombineCode);
+		}*/
+		FreightDemandCombine freightDemandCombine = ObjectConvertUtil.convertObject(freightDemandCombineVo, FreightDemandCombine.class);
+		return freightDemandCombineService.addFreightDemandCombine(freightDemandCombine);
+	}
+	
+	/**
+	 * @Description: 修改货运需求组合表
+	 * @param freightDemandCombine 货运需求组合表
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月19日 下午05:15:20
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public boolean updateFreightDemandCombine(FreightDemandCombineVo freightDemandCombineVo) {
+		/*存放需要更新 需求组合编码的需求*/
+		Map<String, FreightDemandVo> map = new HashMap<String, FreightDemandVo>();		
+		/*查询出原来的需求组合中的需求,将需求组合编码更新为""  */
+		FreightDemandVo freightDemandVo =new FreightDemandVo();
+		freightDemandVo.setDemandCombineCode(freightDemandCombineVo.getDemandCombineCode());
+		List<FreightDemandVo> oldList = freightDemandService.findByCondition(freightDemandVo);
+		/* 遍历原来的需求组合中的需求,将需求组合编码更新为""  */
+		if(null !=oldList &&!oldList.isEmpty() ){
+			for(FreightDemandVo fdvo:oldList){
+				fdvo.setDemandCombineCode("");
+				fdvo.setDemandCombineName("");
+				fdvo.setUpdateEmp(freightDemandCombineVo.getUpdateEmp());
+				fdvo.setUpdateOrg(freightDemandCombineVo.getUpdateOrg());
+				fdvo.setUpdateTime(freightDemandCombineVo.getUpdateTime());
+				map.put(fdvo.getDemandCode(), fdvo);
+			}
+		}
+		/**
+		 * 把原来存在 现在不存在的 的需求组合编码 更新为""
+		 * 把新增进来的需求 的需求编码更改为现在的需求组合编码
+		 */
+		/*获得需求组合中 本次更新的需求, 将需求组合编码更新为 本次需求组合的编码*/
+		if(null != freightDemandCombineVo.getDemandCodes()&&!freightDemandCombineVo.getDemandCodes().isEmpty()){
+			String demandCodes=freightDemandCombineVo.getDemandCodes();
+			/*将字符串 转换成list*/
+			List<FreightDemandVo> demands=(List<FreightDemandVo>)JSONArray.parseArray(demandCodes, FreightDemandVo.class);
+			for(FreightDemandVo demand: demands){
+				String code =demand.getDemandCode();
+				/*把已经存在的该需求组合中的需求  去除*/
+				if(map.containsKey(code) ){
+					map.remove(code);
+				}else{
+					demand.setDemandCombineCode(freightDemandCombineVo.getDemandCombineCode());
+					demand.setDemandCombineName(freightDemandCombineVo.getDemandCombineName());
+					demand.setUpdateEmp(freightDemandCombineVo.getUpdateEmp());
+					demand.setUpdateOrg(freightDemandCombineVo.getUpdateOrg());
+					demand.setUpdateTime(freightDemandCombineVo.getUpdateTime());
+					map.put(demand.getDemandCode(), demand);
+					
+				}
+			}
+		}
+		if(map.size()>0){
+			Collection<FreightDemandVo> values = map.values();
+			List<FreightDemandVo> freightDemandVos = new ArrayList<FreightDemandVo>(values);
+			/*批量更新 需求*/
+			int res = freightDemandService.batchUpdateDemand(freightDemandVos);
+			if(res!=freightDemandVos.size()){
+				throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.batchUpdateDemand"));
+			}
+		}
+		return true;
+	}
+	
+	/**
+	 * @Description: 删除货运需求组合表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月19日 下午05:15:20
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int deleteFreightDemandCombine(Long id) {
+		return freightDemandCombineService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询货运需求组合表
+	 * @param id 主键
+	 * @return 货运需求组合表
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月19日 下午05:15:20
+	 */
+	@Override
+	public FreightDemandCombine findById(Long id) {
+		return freightDemandCombineService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询货运需求组合表
+	 * @param freightDemandCombineVo 货运需求组合表
+	 * @param page 分页参数
+	 * @return 货运需求组合表
+	 * @author UCE-lixueyuan
+	 * @date 2017年10月19日 下午05:15:20
+	 */
+	@Override
+	public Pagination<FreightDemandCombineVo> findByPagination(FreightDemandCombineVo freightDemandCombineVo, Page page) {
+		Pagination<FreightDemandCombineVo> pagination = freightDemandCombineService.findByPagination(freightDemandCombineVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description: 批量更新需求组合状态
+	 * @param fdcVos
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月26日 下午6:14:28
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public String batchUpdateCombineStatus(List<String> combineCodes, FreightDemandCombineVo freightDemandCombineVo,FreightDemandVo freightDemandVo) {
+		if(null != combineCodes &&!combineCodes.isEmpty()&& null != freightDemandCombineVo&& null != freightDemandVo){
+			int comRes =freightDemandCombineService.batchUpdateCombineStatus(combineCodes, freightDemandCombineVo);
+			if(comRes != combineCodes.size()){
+				throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.batchUpdateCombineStatus"));
+			}
+			int deRes = freightDemandService.batchUpdateDemandStatusByCombineCode(combineCodes,freightDemandVo);
+			if(deRes ==0){
+				throw new BkgModuleException( Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.batchUpdateDemandStatus"));
+			}
+			return Resources.getMessage("common.update.success");
+		}else{
+			return Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.noComebine");
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 单个更新需求组合状态
+	 * @param combineCodes 需求组合编号
+	 * @param freightDemandCombineVo  需求组合的状态
+	 * @param freightDemandVo 需求的状态
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月5日 上午11:10:22
+	 */
+	@Override
+	public String updateCombineStatus(String combineCode, String freightDemandCombineStatus, String freightDemandStaus) {
+		List<String> combineCodes = new ArrayList<String>();
+		if(null != combineCode &&!combineCode.isEmpty()){
+			combineCodes.add(combineCode);
+		}
+		FreightDemandCombineVo freightDemandCombineVo= new FreightDemandCombineVo();
+		freightDemandCombineVo.setUpdateEmp("系统智能排班");
+		freightDemandCombineVo.setUpdateOrg("系统智能排班");
+		freightDemandCombineVo.setUpdateTime(new Date());
+		freightDemandCombineVo.setDemandCombineStatus(freightDemandCombineStatus);
+		
+		FreightDemandVo freightDemandVo = new FreightDemandVo();
+		freightDemandVo.setUpdateEmp("系统智能排班");
+		freightDemandVo.setUpdateOrg("系统智能排班");
+		freightDemandVo.setUpdateTime(new Date());
+		freightDemandVo.setDemandStatus(freightDemandStaus);
+		return  batchUpdateCombineStatus(combineCodes, freightDemandCombineVo, freightDemandVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 自动生成长期货运组合 
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月31日 下午8:44:58
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public int autoCombineLongTermDemands() {
+		/*长期已提报 下一个月的 货运需求*/
+		FreightDemandVo freightDemandVo = new FreightDemandVo();
+		freightDemandVo.setDemandType(BkgConstants.DEMAND_TYPE_LONG);
+		freightDemandVo.setDemandStatus(BkgConstants.DEMAND_STATUS_SUBMIT);
+		freightDemandVo.setCombineQueryFlag("1");//没有分组的需求
+		
+		/**赋值下一个月的需求开始结束时间*/
+        updateDemandTime(freightDemandVo);
+        /*查询 所有的 长期已提报 下一个月的 货运需求 */
+		List<FreightDemandVo> list = freightDemandService.findByCondition(freightDemandVo );
+		return combineDemands(list, BkgConstants.DEMAND_COMBINE_TYPE_LONG,freightDemandVo.getDemandBeginTime());
+	}
+	/**
+	 * 
+	 * @Description:将list中的货运 根据 进出港 分组 然后 各分组根据 分拨中心分组   
+	 * @param list 
+	 * @param demandCombineType
+	 * @param executeTime 需求组合的执行时间 用于赋值
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月7日 下午4:10:53
+	 */
+	private int combineDemands(List<FreightDemandVo> list,String demandCombineType, Date executeTime) {
+		if(null != list && !list.isEmpty()){
+			/**存在进港 的货运需求*/
+			List<FreightDemandVo> incomingList = new ArrayList<FreightDemandVo>();
+			/**存在出港  的货运需求*/
+			List<FreightDemandVo> outgoingList = new ArrayList<FreightDemandVo>();
+			/**** 进出港 分组**/
+			for(FreightDemandVo vo: list){
+				if(BkgConstants.BUSINESS_MODE_IN.equals(vo.getBusinessMode())){//进港
+					incomingList.add(vo);
+				}else{//出港
+					outgoingList.add(vo);
+				}
+			}
+			/***存放 进港 的需求 以出发点 为key*/
+			Map<String, List<FreightDemandVo>> incomingMap = groupByStationCode(incomingList,BkgConstants.BUSINESS_MODE_IN);
+			/***存放 出港 的需求 以到点点 为key*/
+			Map<String, List<FreightDemandVo>> outgoingMap = groupByStationCode(outgoingList,BkgConstants.BUSINESS_MODE_OUT);
+			/*** 循环  Map 批量修改 需求的 需求组合编码*/
+			int incomingRes=0;
+			int outgoingRes=0;
+			Date createTime = new Date();
+			
+			Map<String/**分拨中心机构编号*/, FreightDemandCombineVo/**进港组合*/> addInCombineVoMap = new HashMap<String, FreightDemandCombineVo>();
+			Map<String/**分拨中心机构编号*/, FreightDemandCombineVo/**出港组合*/> addOutCombineVoMap = new HashMap<String, FreightDemandCombineVo>();
+			
+			/**
+			 * 进港
+			 */
+			if(null !=incomingMap&&!incomingMap.isEmpty()){
+				for(String key:incomingMap.keySet()){
+					//如果长期需求且该中心没有对应的出港则不组合
+					if(BkgConstants.DEMAND_COMBINE_TYPE_LONG.equals(demandCombineType) && outgoingMap != null && !outgoingMap.containsKey(key)){
+						continue;
+					}
+					//List<FreightDemandVo> value = incomingMap.get(key);
+					/**新增需求组合*/
+					FreightDemandCombineVo fdcvo = new FreightDemandCombineVo();
+					/**获得需求组合编码*/
+					String demandcombineCode = redisIdsWorker.nextId(IdsPrefix.XZ);
+					fdcvo.setDemandCombineCode(demandcombineCode);
+					/**获取需求组合名称*/
+					String demandcombineName=redisIdsWorker.nextName(key, NamesPrefix.XZNA);
+					fdcvo.setDemandCombineName(demandcombineName);
+					fdcvo.setStationCode(key);
+					OmgCmsOrgVo baseOrg= OmgCmsOrgprocessor.findByBaseOrgCode(key);
+					fdcvo.setStationName(baseOrg.getOrgName());
+					fdcvo.setDemandCombineType(demandCombineType);
+					fdcvo.setDemandCombineStatus(BkgConstants.DEMAND_COMBINE_STATUS_CREATE);
+					fdcvo.setBusinessMode(BkgConstants.BUSINESS_MODE_IN);
+					fdcvo.setCreateEmp("调度系统");
+					fdcvo.setCreateOrg("调度系统");
+					fdcvo.setCreateTime(createTime);
+					fdcvo.setExecuteTime(executeTime);
+					addInCombineVoMap.put(key, fdcvo);
+					/*incomingRes+=addFreightDemandCombine(fdcvo);
+					*//**批量更新需求的需求组合编码*//*
+					batchUpdateDemandCombineCode(value, demandcombineCode);*/
+				}
+			}
+			/**
+			 * 出港
+			 */
+			if(null != outgoingMap &&!outgoingMap.isEmpty()){
+				for(String key:outgoingMap.keySet()){
+					//如果长期需求且该中心没有对应的进港则不组合
+					if(BkgConstants.DEMAND_COMBINE_TYPE_LONG.equals(demandCombineType) && incomingMap != null && !incomingMap.containsKey(key)){
+						continue;
+					}
+					//List<FreightDemandVo> value = outgoingMap.get(key);
+					/**新增需求组合*/
+					FreightDemandCombineVo fdcvo = new FreightDemandCombineVo();
+					/**获得需求组合编码*/
+					String demandcombineCode = redisIdsWorker.nextId(IdsPrefix.XZ);
+					fdcvo.setDemandCombineCode(demandcombineCode);
+					/**获取需求组合名称*/
+					String demandcombineName=redisIdsWorker.nextName(key, NamesPrefix.XZNA);
+					fdcvo.setDemandCombineName(demandcombineName);
+					fdcvo.setStationCode(key);
+					OmgCmsOrgVo baseOrg= OmgCmsOrgprocessor.findByBaseOrgCode(key);
+					fdcvo.setStationName(baseOrg.getOrgName());
+					fdcvo.setDemandCombineType(demandCombineType);
+					fdcvo.setDemandCombineStatus(BkgConstants.DEMAND_COMBINE_STATUS_CREATE);
+					fdcvo.setBusinessMode(BkgConstants.BUSINESS_MODE_OUT);
+					fdcvo.setCreateEmp("调度系统");
+					fdcvo.setCreateOrg("调度系统");
+					fdcvo.setCreateTime(createTime);
+					fdcvo.setExecuteTime(executeTime);
+					addOutCombineVoMap.put(key, fdcvo);
+					/*outgoingRes+=addFreightDemandCombine(fdcvo);
+					*//**批量更新需求的需求组合编码*//*
+					batchUpdateDemandCombineCode(value, demandcombineCode);*/
+				}
+			}
+			if (!addInCombineVoMap.isEmpty()) {
+				for (String key:addInCombineVoMap.keySet()) {
+					FreightDemandCombineVo addInCombineVo = addInCombineVoMap.get(key);
+					if(BkgConstants.DEMAND_COMBINE_TYPE_LONG.equals(demandCombineType)){
+						FreightDemandCombineVo addOutCombineVo = addOutCombineVoMap.get(key);
+						addInCombineVo.setBrotherDemandCombineCode(addOutCombineVo.getDemandCombineCode());
+					}
+					incomingRes+=addFreightDemandCombine(addInCombineVo);
+					/**批量更新需求的需求组合编码*/
+					batchUpdateDemandCombineCode(incomingMap.get(key), addInCombineVo.getDemandCombineCode());
+				}
+			}
+			if (!addOutCombineVoMap.isEmpty()) {
+				for (String key:addOutCombineVoMap.keySet()) {
+					FreightDemandCombineVo addOutCombineVo = addOutCombineVoMap.get(key);
+					if(BkgConstants.DEMAND_COMBINE_TYPE_LONG.equals(demandCombineType)){
+						FreightDemandCombineVo addInCombineVo = addInCombineVoMap.get(key);
+						addOutCombineVo.setBrotherDemandCombineCode(addInCombineVo.getDemandCombineCode());
+					}
+					incomingRes+=addFreightDemandCombine(addOutCombineVo);
+					/**批量更新需求的需求组合编码*/
+					batchUpdateDemandCombineCode(outgoingMap.get(key), addOutCombineVo.getDemandCombineCode());
+				}
+			}
+			return incomingRes+outgoingRes;
+		}
+		return 0;
+	}
+	/**
+	 * 
+	 * @Description: 根据分拨中心分组
+	 * @param incomingList
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月1日 下午8:23:34
+	 */
+	private Map<String, List<FreightDemandVo>> groupByStationCode(List<FreightDemandVo> list,String businessMode) {
+		Map<String, List<FreightDemandVo>> map = new ConcurrentHashMap<String, List<FreightDemandVo>>();
+		/** * 循环 进港list  以出发点 为key分组*/
+		for(FreightDemandVo vo: list){
+			/**
+			 * * 如果是进港 则 出发站编码
+			 *  如果是出港 则 到达站编码
+			 */
+			String stationCode = null !=businessMode&&!businessMode.isEmpty()&&BkgConstants.BUSINESS_MODE_IN.equals(businessMode)?vo.getBeginStationCode():vo.getEndStationCode();
+			if(null != stationCode&&!"".equals(stationCode)&&map.containsKey(stationCode)){
+				List<FreightDemandVo> fdvos = map.get(stationCode);
+				fdvos.add(vo);
+			}else{
+				List<FreightDemandVo> fvo= new ArrayList<FreightDemandVo>();
+				fvo.add(vo);
+				map.put(stationCode, fvo);
+			}
+		}
+		return map;
+	}
+	/**
+	 * 
+	 * @Description: 获得下一个月的第一天和最后一天并且赋值
+	 * @param freightDemandVo
+	 * @author lixueyuan
+	 * @date 2017年11月1日 上午11:12:58
+	 */
+	private void updateDemandTime(FreightDemandVo freightDemandVo) {
+		Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        /**下一个月的开始时间*/
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
+        Date begin =calendar.getTime();
+        begin =DateUtils.setHours(begin, 0);
+        begin =DateUtils.setMinutes(begin, 0);
+        begin =DateUtils.setSeconds(begin, 0);
+        begin =DateUtils.setMilliseconds(begin, 0);
+        /**下一个月的结束时间*/
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        Date end =calendar.getTime();
+        end =DateUtils.setHours(end, 0);
+        end =DateUtils.setMinutes(end, 0);
+        end =DateUtils.setSeconds(end, 0);
+        end =DateUtils.setMilliseconds(end, 0);
+        freightDemandVo.setDemandBeginTime(begin);
+        freightDemandVo.setDemandEndTime(end);
+	}
+	/**
+	 * 
+	 * @Description: 批量更新 需求的需求组合编码
+	 * @param value
+	 * @param demandcombineCode
+	 * @author lixueyuan
+	 * @date 2017年11月1日 上午10:59:58
+	 */
+	private int batchUpdateDemandCombineCode(List<FreightDemandVo> value, String demandcombineCode) {
+		for(FreightDemandVo vo:value){
+			vo.setDemandCombineCode(demandcombineCode);
+			vo.setDemandCombineName(demandcombineCode);
+		}
+		 return freightDemandService.batchUpdateDemand(value);
+	}
+	
+	/**
+	 * 
+	 * @Description: 自动生成临时货运组合 
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年10月31日 下午8:44:58
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public int autoCombineShortTermDemands() {
+		/***已提报的没有组合的 明天的 临时需求 */
+		FreightDemandVo freightDemandVo = new FreightDemandVo();
+		freightDemandVo.setDemandType(BkgConstants.DEMAND_TYPE_TEMP);
+		freightDemandVo.setDemandStatus(BkgConstants.DEMAND_STATUS_SUBMIT);
+		freightDemandVo.setCombineQueryFlag("1");//没有分组的需求
+		Date date = new Date();
+		date =DateUtils.addDays(date,1);
+		date=DateUtils.setHours(date,0);
+		date =DateUtils.setMinutes(date, 0);
+		date =DateUtils.setSeconds(date, 0);
+		date =DateUtils.setMilliseconds(date, 0);
+		freightDemandVo.setDemandBeginTime(date);
+		freightDemandVo.setDemandEndTime(date);
+        /**查询 所有的 临时已提报 的 明天的  没有组合的货运需求 */
+		List<FreightDemandVo> list = freightDemandService.findByCondition(freightDemandVo );
+		return combineDemands(list, BkgConstants.DEMAND_COMBINE_TYPE_TEMP, date);
+	}
+
+	/**
+	 * 
+	 * @Description:生成报价
+	 * @param vo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月9日 下午1:37:36
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public String generateQuotation(PricingRuleVo pricingRule) {
+		PricingRuleVo search = new PricingRuleVo();
+		search.setPriceRuleCode(pricingRule.getPriceRuleCode());
+		List<PricingRuleVo> pricingRuleVos = pricingRuleBiz.findPriceByCondtion(search);
+		int res=0;
+		/*** 获得网点 对应的单位价格 */ 
+		Map<String,PricingRuleVo> sitePrices =getSitesPrice(pricingRuleVos);		
+		if(null != pricingRule.getCombineCode()&&!pricingRule.getCombineCode().isEmpty()){
+			FreightDemandVo freightDemandVo = new FreightDemandVo();
+			freightDemandVo.setDemandCombineCode(pricingRule.getCombineCode());
+			/** * 查询组合对应的需求*/
+			List<FreightDemandVo> freightDemandVos = freightDemandService.findByCondition(freightDemandVo );
+			if(null != freightDemandVos&&!freightDemandVos.isEmpty()){
+				for(FreightDemandVo fdvo:freightDemandVos){
+					/*if(BkgConstants.BUSINESS_MODE_IN.equals(fdvo.getBusinessMode())){
+						PricingRuleVo inprv = sitePrices.get(fdvo.getEndStationCode());
+						updateDemandPrice(inprv, fdvo);
+						res++;
+					}
+					if(BkgConstants.BUSINESS_MODE_OUT.equals(fdvo.getBusinessMode())){
+						PricingRuleVo outprv = sitePrices.get(fdvo.getBeginStationCode());
+						updateDemandPrice(outprv, fdvo);
+						res++;
+					}*/
+					String siteCode = "";
+					String siteName = "";
+					if(BkgConstants.BUSINESS_MODE_IN.equals(fdvo.getBusinessMode())){
+						siteCode = fdvo.getEndStationCode();
+						siteName = fdvo.getEndStation();
+					}
+					if(BkgConstants.BUSINESS_MODE_OUT.equals(fdvo.getBusinessMode())){
+						siteCode = fdvo.getBeginStationCode();
+						siteName = fdvo.getBeginStation();
+					}
+					if (StringUtil.isNotBlank(siteCode)) {
+						PricingRuleVo prv = sitePrices.get(siteCode);
+						if (prv == null ) {
+							Boolean isDefault = pricingRuleVos.get(0).getGeneralFlag();
+							if (isDefault) {
+								throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.generatePrice.noDefaultPricingRuleDetailRels",siteName));
+							}else {
+								throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.generatePrice.noPricingRuleDetailRels",siteName));
+							}
+						}
+						updateDemandPrice(prv, fdvo);
+						res++;
+					}
+				}
+				
+				
+				if(res==freightDemandVos.size()){
+					/*更新需求组合的状态 以及对应的需求状态*/
+					updateCombineStatus(pricingRule.getCombineCode(), BkgConstants.DEMAND_COMBINE_STATUS_QUOT_NO, BkgConstants.DEMAND_STATUS_QUOTE_NO);
+					return Resources.getMessage("bkg.biz.FreightDemandCombineBiz.generatePrice.success");
+				} else {
+					return Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.generatePrice.fail");
+				}
+			}else{
+				throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.generatePrice.noDemand"));
+			}
+		}else{
+			throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.generatePrice.noCombine"));
+		}
+	}
+	/**
+	 * 
+	 * @Description: 获得网点的单位价格
+	 * @param pricingRuleVos
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月9日 下午2:10:47
+	 */
+	private Map<String,PricingRuleVo> getSitesPrice(List<PricingRuleVo> pricingRuleVos) {
+		Map<String,PricingRuleVo> sitePrices = new HashMap<String, PricingRuleVo>();
+		if(null != pricingRuleVos&&!pricingRuleVos.isEmpty()){
+			for(PricingRuleVo vo:pricingRuleVos){
+				sitePrices.put(vo.getSiteCode(), vo);
+			}
+		}else{
+			throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.generatePrice.noPricingRuleDetails"));
+		}
+		return sitePrices;
+	}
+	/**
+	 * 
+	 * @Description: 修改需求价格
+	 * @param pricingRuleVo
+	 * @param freightDemandVo
+	 * @author lixueyuan
+	 * @date 2017年11月11日 下午3:10:57
+	 */
+	private void updateDemandPrice(PricingRuleVo pricingRuleVo,FreightDemandVo freightDemandVo){
+		TransportEffectiveVo transportEffectiveVo = new TransportEffectiveVo();
+		transportEffectiveVo.setStartSiteCode(freightDemandVo.getBeginStationCode());
+		transportEffectiveVo.setEndSiteCode(freightDemandVo.getEndStationCode());
+		List<TransportEffectiveVo> transportEffectiveVos = transportEffectiveService.findByCondition(transportEffectiveVo);
+		Double distance = 0.00;
+		if(null != transportEffectiveVos &&!transportEffectiveVos.isEmpty()){
+			distance = transportEffectiveVos.get(0).getDistance();
+		}
+		/**临时的需求*/
+		Double price=0.00;
+		if(BkgConstants.DEMAND_TYPE_TEMP.equals(freightDemandVo.getDemandType())){
+			price = freightDemandVo.getDayVolume()*pricingRuleVo.getUnitFixedCost() +distance*pricingRuleVo.getUnitChangeCost();
+			
+		}else{
+			/**长期的需求*/
+			Map<Integer, List<Date>> dateNumberMap = getDateNumber(freightDemandVo.getDemandBeginTime(), freightDemandVo.getDemandEndTime());
+			price = calculateLongTermPrice(dateNumberMap, freightDemandVo, pricingRuleVo, distance);
+		}
+		freightDemandVo.setPrice(price);
+		int res =freightDemandBiz.updateFreightDemand(freightDemandVo);
+		if(res==0){
+			throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.generatePrice.updatePriceFail"));
+		}
+	}
+	/**
+	 * 
+	 * @Description: 计算长期需求的价格
+	 * @param dateNumberMap
+	 * @param fdv
+	 * @param prv
+	 * @param distance
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月9日 下午3:25:21
+	 */
+	private Double calculateLongTermPrice(Map<Integer, List<Date>> dateNumberMap, FreightDemandVo fdv,PricingRuleVo prv,Double distance ){
+		List<Date> sunList = dateNumberMap.get(1);
+		Double price = (fdv.getSundayVolume()*prv.getUnitFixedCost()+distance*prv.getUnitChangeCost())*sunList.size();
+		List<Date> monList = dateNumberMap.get(2);
+		price +=(fdv.getMondayVolume()*prv.getUnitFixedCost()+distance*prv.getUnitChangeCost())*monList.size();
+		List<Date> tuesList = dateNumberMap.get(3);
+		price +=(fdv.getTuesdayVolume()*prv.getUnitFixedCost()+distance*prv.getUnitChangeCost())*tuesList.size();
+		List<Date> wenList = dateNumberMap.get(4);
+		price +=(fdv.getWednesdayVolume()*prv.getUnitFixedCost()+distance*prv.getUnitChangeCost())*wenList.size();
+		List<Date> thurList = dateNumberMap.get(5);
+		price +=(fdv.getThursdayVolume()*prv.getUnitFixedCost()+distance*prv.getUnitChangeCost())*thurList.size();
+		List<Date> friList = dateNumberMap.get(6);
+		price +=(fdv.getFridayVolume()*prv.getUnitFixedCost()+distance*prv.getUnitChangeCost())*friList.size();
+		List<Date> satList = dateNumberMap.get(7);
+		price +=(fdv.getSaturdayVolume()*prv.getUnitFixedCost()+distance*prv.getUnitChangeCost())*satList.size();
+		return price;
+	}
+	/**计算 一段时间  有几个星期一,星期二....... begin*/
+	/**
+	 * 
+	 * @Description: 判断一段时间内 有几个星期一,星期二,星期三.......
+	 * @param dateFrom
+	 * @param dateEnd
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月9日 下午3:10:45
+	 */
+	private Map<Integer, List< Date>> getDateNumber(Date begin, Date end){
+        Map<Integer, List< Date>>  map = new HashMap<Integer, List< Date>>();
+		/**一天的毫秒数*/
+		long perDayMilSec = 24L * 60 * 60 * 1000;
+		while (true) {
+	         if (begin.compareTo(end) <= 0) {
+	               // 查询的某一时间的星期系数
+	             Integer weekDay = dayForWeek(begin);
+	              //新增map 或者修改已经存在key的值
+	             judgeDayByWeek(map, begin, weekDay);
+	         } else {
+	             break;
+	         }
+	         begin = new Date(begin.getTime() + perDayMilSec);
+		}
+		return map;
+	}
+	/**
+	 * 
+	 * @Description: 判断是星期几, 比如 如果是星期一则 放入1这个key中
+	 * @param map
+	 * @param date
+	 * @param weekDay
+	 * @author lixueyuan
+	 * @date 2017年11月9日 下午3:08:02
+	 */
+	private void judgeDayByWeek(Map<Integer, List<Date>> map, Date date, Integer weekDay) {
+		List<Date> newList;
+		List<Date> oldList;
+		for(int i = 0; i<7;i++){
+			  if(weekDay ==(i+1)){
+				  if(!map.containsKey(weekDay)){
+					  newList = new ArrayList<Date>();
+					  newList.add(date);
+					  map.put(weekDay, newList);
+				  }else{
+					  oldList = map.get(weekDay);
+					  oldList.add(date);
+				  }
+				  break;
+			  }
+		  }
+	}
+	 // 等到当期时间的周系数。星期日：1，星期一：2，星期二：3，星期三：4，星期四：5，星期五：6，星期六：7
+    private Integer dayForWeek(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar.get(Calendar.DAY_OF_WEEK);
+    }
+	/**计算 一段时间  有几个星期一,星期二....... end*/
+
+	
+	/**
+	 * 
+	 * @Description: 发送报价 网点审核
+	 * @param freightDemandCombineVos
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月3日 上午9:00:07
+	 */
+	@Transactional(readOnly=false,propagation=Propagation.REQUIRED)
+	@Override
+	public String sendQuotation(FreightDemandCombineVo freightDemandCombineVo, List<String> combineCodes) {
+		 /**根据需求组合编码查询  货运需求 */
+		List<FreightDemandVo> freightDemandVos = freightDemandService.findByDemandCombineCode(combineCodes);
+		if(null !=freightDemandVos&&!freightDemandVos.isEmpty()){
+			List<String> sitecodes = new ArrayList<String>();
+			for (FreightDemandVo vo:freightDemandVos) {
+				if(null !=vo.getDemandSiteCode()&&!vo.getDemandSiteCode().isEmpty()){
+					sitecodes.add(vo.getDemandSiteCode());
+				}else{
+					throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.sendQuotation.noDemandSiteCode"));
+				}
+			}
+			/**根据需求 给网点发送信息 同时更新需求的状态为已报价*/
+			freightDemandBiz.sendQuotation(freightDemandVos, sitecodes);
+			/**批量更新 需求组合的状态 为已报价*/
+			freightDemandCombineVo.setDemandCombineStatus(BkgConstants.DEMAND_COMBINE_STATUS_QUOT_YES);
+			int comRes =freightDemandCombineService.batchUpdateCombineStatus(combineCodes, freightDemandCombineVo);
+			if(comRes != combineCodes.size()){
+				throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.batchUpdateCombineStatus"));
+			}
+		}else{
+			throw new BkgModuleException(Resources.getMessage("error.bkg.biz.FreightDemandCombineBiz.sendQuotation.noDemand"));
+		}
+		return Resources.getMessage("common.update.success");
+	}
+
+	/**
+	 * 
+	 * @Description:根据条件查询需求组合
+	 * @param freightDemandCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月2日 下午7:37:18
+	 */
+	public List<FreightDemandCombineVo> findByCondition(FreightDemandCombineVo freightDemandCombineVo){
+		return freightDemandCombineService.findByCondition(freightDemandCombineVo);
+	}
+
+	
+
+}

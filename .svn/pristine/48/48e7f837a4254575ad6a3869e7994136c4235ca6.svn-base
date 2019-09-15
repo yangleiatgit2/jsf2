@@ -1,0 +1,11 @@
+package cn.uce.suc.bkg.vo.ia;
+
+/**
+ * 
+ * @Description: 算法参数
+ * @author laizhendong
+ * @date 2017年10月26日 下午3:40:12
+ */
+public class WsIaConfVo {
+
+}

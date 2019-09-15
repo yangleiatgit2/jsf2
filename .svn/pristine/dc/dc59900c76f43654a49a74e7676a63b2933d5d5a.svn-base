@@ -1,0 +1,60 @@
+package cn.uce.suc.common.dao;
+
+import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.OrgExtend;
+import cn.uce.suc.common.vo.OrgExtendVo;
+
+/**
+ * @Description: 组织机构扩展信息DAO接口类
+ * @author liwei
+ * @date 2017年10月22日 下午10:06:24
+ */
+@Repository("orgExtendDao")
+public interface IOrgExtendDao extends IBaseDao<OrgExtend, Long> {
+	
+	/**
+	 * @Description: 分页查询组织机构扩展信息
+	 * @param orgExtendVo 组织机构扩展信息
+	 * @param page 分页参数
+	 * @return 组织机构扩展信息
+	 * @author liwei
+	 * @date 2017年10月22日 下午10:06:24
+	 */
+	public Pagination<OrgExtend> findByPagination(OrgExtendVo orgExtendVo, Page page);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询组织机构扩展信息
+	 * @param orgExtendVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月27日 下午4:58:40
+	 */
+	public List<OrgExtendVo> findByCombine(OrgExtendVo orgExtendVo);
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询集货点 
+	 * @param orgExtendVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午3:58:15
+	 */
+	public List<OrgExtendVo> findByCondition(OrgExtendVo orgExtendVo);
+	/**
+	 * 
+	 * @Description: 根据条件查询集货点 
+	 * @param orgExtendVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月11日 下午3:58:15
+	 */
+	public OrgExtendVo findByBaseOrgCode(String baseOrgCode);
+	
+}

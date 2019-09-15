@@ -1,0 +1,133 @@
+package cn.uce.suc.bkg.service.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.datamain.ICapacityManagementDao;
+import cn.uce.suc.bkg.entity.datamain.CapacityManagement;
+import cn.uce.suc.bkg.vo.datamain.CapacityManagementVo;
+
+/**
+ * @Description: 网点运力管理Service类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月20日 下午06:59:56
+ */
+@Service("capacityManagementService")
+public class CapacityManagementService {
+	
+	/**
+	 * 注入网点运力管理Dao
+	 */
+	@Resource
+	private ICapacityManagementDao capacityManagementDao;
+	
+	/**
+	 * @Description: 新增网点运力管理
+	 * @param capacityManagement 网点运力管理
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月20日 下午06:59:56
+	 */
+	public int addCapacityManagement(CapacityManagement capacityManagement) {
+		return capacityManagementDao.insert(capacityManagement);
+	}
+	
+	/**
+	 * @Description: 修改网点运力管理
+	 * @param capacityManagement 网点运力管理
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月20日 下午06:59:56
+	 */
+	public int updateById(CapacityManagement capacityManagement) {
+		return capacityManagementDao.updateById(capacityManagement);
+	}
+	
+	/**
+	 * @Description: 删除网点运力管理
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月20日 下午06:59:56
+	 */
+	public int deleteById(Long id) {
+		return capacityManagementDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询网点运力管理
+	 * @param id 主键
+	 * @return 网点运力管理
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月20日 下午06:59:56
+	 */
+	public CapacityManagement findById(Long id) {
+		return capacityManagementDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询网点运力管理
+	 * @param capacityManagementVo 网点运力管理
+	 * @param page 分页参数
+	 * @return 网点运力管理
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月20日 下午06:59:56
+	 */
+	public Pagination<CapacityManagement> findByPagination(CapacityManagementVo capacityManagementVo, Page page) {
+		Pagination<CapacityManagement> paginationCapacityManagement = capacityManagementDao.findByPagination(capacityManagementVo, page);
+		return paginationCapacityManagement;
+	}
+	/**
+	 * 
+	 * @Description: 网点端,我的运力查询 -
+	 * @param capacityManagementVo
+	 * @param page
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月7日 下午4:28:04
+	 */
+	public Pagination<CapacityManagementVo> findByBelongSiteCodePagination(CapacityManagementVo capacityManagementVo, Page page){
+		Pagination<CapacityManagementVo> paginationCapacityManagement = capacityManagementDao.findByBelongSiteCodePagination(capacityManagementVo, page);
+		return paginationCapacityManagement;
+		
+	}
+	
+	
+/*	public int updateByIdsAndBuyStatus(List<Long> ids, String buyStatus){
+		ArrayList<CapacityManagement> CapacityManagements= new ArrayList<CapacityManagement>();
+		Date updateTime= new Date();
+		for (int i = 0; i < ids.size(); i++) {
+			CapacityManagement capacityManagement= new CapacityManagement();
+			capacityManagement.setId(ids.get(i));
+			capacityManagement.setBuyStatus(buyStatus);
+			capacityManagement.setUpdateDate(updateTime);
+			CapacityManagements.add(capacityManagement);
+			
+		}
+		
+		return capacityManagementDao.updateById(CapacityManagements);
+		
+		
+	}*/
+	public int updateByIdsAndBuyStatus(List<CapacityManagement> capacityManagements){
+		
+		return capacityManagementDao.updateById(capacityManagements);
+		
+		
+	}
+	/**
+	 * @Description: 定时器修改过期的运力状态为过期
+	 * @param 
+	 * @return 
+	 * @author UCE-haizhou
+	 * @date 2017年11月3日 下午06:54:13
+	 */
+	public int updateTimeOver() {
+		return capacityManagementDao.updateTimeOver();
+	}
+}

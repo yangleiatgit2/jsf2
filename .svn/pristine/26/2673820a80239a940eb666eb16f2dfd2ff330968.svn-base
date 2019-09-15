@@ -1,0 +1,612 @@
+package cn.uce.suc.common.biz.imp;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.jiguang.common.resp.APIConnectionException;
+import cn.jiguang.common.resp.APIRequestException;
+import cn.jpush.api.push.PushResult;
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.INoticeDetailBiz;
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.cache.AppLoginToKenCache;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.entity.NoticeDetail;
+import cn.uce.suc.common.entity.NoticeRule;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.service.NoticeDetailService;
+import cn.uce.suc.common.service.NoticeRuleService;
+import cn.uce.suc.common.util.MessageTemplateUtil;
+import cn.uce.suc.common.util.MsgPushUtils;
+import cn.uce.suc.common.vo.AppNotice;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+import com.google.gson.JsonObject;
+
+/**
+ * @Description: 消息详情--BIZ实现类
+ * @author liwei
+ * @date 2017年10月30日 下午10:46:47
+ */
+@Service("noticeDetailBiz")
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class NoticeDetailBiz implements INoticeDetailBiz {
+
+	/**
+	 * 注入消息详情--Service
+	 */
+	@Resource
+	private NoticeDetailService noticeDetailService;
+	/**
+	 * 注入消息规则--service
+	 */
+	@Resource
+	private NoticeRuleService noticeRuleService;
+	/**
+	 * 系统配置
+	 */
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+
+	/**
+	 * 登陆缓存
+	 */
+	@Resource(name = "appLoginToKenCache")
+	private AppLoginToKenCache appLoginToKenCache;
+	/**
+	 * 日志
+	 */
+	protected static Logger log = LoggerFactory.getLogger(NoticeDetailBiz.class);
+	private String masterSecret;
+	private String appKey;
+
+	/**
+	 * @Description: 新增消息详情--
+	 * @param noticeDetail
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:46:47
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
+	public int addNoticeDetail(NoticeDetail noticeDetail) {
+		return noticeDetailService.addNoticeDetail(noticeDetail);
+	}
+
+	/**
+	 * @Description: 修改消息详情--
+	 * @param noticeDetail
+	 *            消息详情--
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:46:47
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
+	public int updateNoticeDetail(NoticeDetail noticeDetail) {
+		return noticeDetailService.updateById(noticeDetail);
+	}
+
+	/**
+	 * @Description: 删除消息详情--
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:46:47
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.SUPPORTS)
+	public int deleteNoticeDetail(Long id) {
+		return noticeDetailService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询消息详情--
+	 * @param id
+	 *            主键
+	 * @return 消息详情--
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:46:47
+	 */
+	@Override
+	public NoticeDetail findById(Long id) {
+		return noticeDetailService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询消息详情--
+	 * @param noticeDetailVo
+	 *            消息详情--
+	 * @param page
+	 *            分页参数
+	 * @return 消息详情--
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:46:47
+	 */
+	public Pagination<NoticeDetail> findByPagination(NoticeDetailVo noticeDetailVo, Page page) {
+		Pagination<NoticeDetail> pagination = noticeDetailService.findByPagination(noticeDetailVo, page);
+		return pagination;
+	}
+
+	/**
+	 * 
+	 * @Description: 构建别名
+	 * @param pre
+	 * @param userPhone
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月1日 下午10:51:14
+	 */
+	private String bulidJpushAlia(String pre, String userPhone) {
+		StringBuffer sb = new StringBuffer(pre);
+		sb.append(userPhone);
+		return sb.toString();
+	}
+
+	/**
+	 * 
+	 * @Description:(这里用一句话描述这个方法的作用)
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月31日 上午10:50:39
+	 */
+	public int generateMessage(Object object, NoticeDetailVo noticeDetailVo) {
+		/** 对象，消息规则，手机号不允许为空 */
+		if (null == noticeDetailVo || StringUtil.isBlank(noticeDetailVo.getNoticeRuleCode())) {
+			log.info("校验消息规则出错");
+			return 0;
+		}
+		/**
+		 * 根据消息规则code获取对应的消息规则
+		 */
+		NoticeRule noticeRule = noticeRuleService.findByPagination(noticeDetailVo.getNoticeRuleCode());
+		if (null == noticeRule) {
+			log.info("消息规则不存在" + noticeDetailVo.getNoticeRuleCode());
+			/** 消息规则不存在 */
+			return 0;
+		}
+		/** 处理title,cntents,displayways */
+
+		/** ①校验titleextends */
+		String titleRule = noticeRule.getTitle();
+		String title = MessageTemplateUtil.convertObject(titleRule, object);
+
+		/**
+		 * 1,校验规则是否存在。 2，扩展字段是否存在 3，获取传入信息
+		 */
+
+		/** ①校验contentsExtends */
+		String contentsRule = noticeRule.getContents();
+		// 转化为消息
+		String contents = MessageTemplateUtil.convertObject(contentsRule, object);
+		/**
+		 * 1,校验规则是否存在。 2，扩展字段是否存在 3，获取传入信息
+		 */
+		String platform = noticeRule.getPlatform();
+		if (StringUtil.isNotBlank(platform)) {
+			if (platform.equals(SucConstants.PLATFORM_DPT)) {
+				//校验手机号
+				if( StringUtil.isBlank(noticeDetailVo.getUserPhone())){
+					log.info("校验消息--手机号不能为空");
+					return 0;
+				}
+				noticeDetailVo
+						.setJpushAlia(bulidJpushAlia(SucConstants.PLATFORM_DPT_STR, noticeDetailVo.getUserPhone()));
+			} else if (platform.equals(SucConstants.PLATFORM_DOT)) {
+				//校验手机号
+				if( StringUtil.isBlank(noticeDetailVo.getUserPhone())){
+					log.info("校验消息-手机号不能为空");
+					return 0;
+				}
+				noticeDetailVo
+						.setJpushAlia(bulidJpushAlia(SucConstants.PLATFORM_DOT_STR, noticeDetailVo.getUserPhone()));
+			}
+		}
+		NoticeDetail noticeDetail = ObjectConvertUtil.convertObject(noticeDetailVo, NoticeDetail.class);
+		// 标题
+		noticeDetail.setTitle(title);
+		// 内容
+		noticeDetail.setContents(contents);
+		// 消息推向的平台
+		noticeDetail.setPlatform(noticeRule.getPlatform());
+		// 方式
+		noticeDetail.setDisplayWays(noticeRule.getDisplayWays());
+		// 删除标示
+		noticeDetail.setDeleteFlag(false);
+		// 消息类型
+		noticeDetail.setNewsType(noticeRule.getNewsType());
+		// 极光推送标示
+		noticeDetail.setJpushFlag(SucConstants.JPUSH_CREATE);
+		// 已读标示
+		noticeDetail.setReadFlag(false);
+		noticeDetail.setCreateTime(new Date());
+		// 业务数据id
+		noticeDetail.setBusinessId(noticeDetailVo.getBusinessId());
+		// 消息对应的功能
+		noticeDetail.setBusinessType(noticeDetailVo.getBusinessType());
+		return noticeDetailService.addNoticeDetail(noticeDetail);
+	}
+
+	/**
+	 * 
+	 * @Description: 极光推送--获取需要推送的消息记录
+	 * @author liwei
+	 * @date 2017年10月31日 下午3:55:35
+	 */
+	@Override
+	public void jpushNotice() {
+		log.info("jpushNotice" + "开始推送" + new Date());
+		/* 获取推送记录 */
+		List<NoticeDetail> details = noticeDetailService.findByJpushFlase();
+		if (null == details || details.size() == 0) {
+			// 记日志
+			log.info("jpushNotice" + "没有需要推送的数据");
+		}
+		for (NoticeDetail noticeDetail : details) {
+			JpushNoticeProcess(noticeDetail);
+		}
+	}
+
+	/**
+	 * 
+	 * @Description: 推送单条信息并回写状态
+	 * @param noticeDetail
+	 * @author liwei
+	 * @date 2017年10月31日 下午3:58:33
+	 */
+	@Override
+	public void JpushNoticeProcess(NoticeDetail noticeDetail) {
+		// /空校验
+		if (null == noticeDetail) {
+			return;
+		}
+		// 业务校验
+		/*if (StringUtil.isBlank(noticeDetail.getJpushAlia()) || StringUtil.isBlank(noticeDetail.getNewsType())
+				|| StringUtil.isBlank(noticeDetail.getDisplayWays())) {
+			// 设置失败
+			noticeDetail.setJpushFlag(SucConstants.JPUSH_NO);
+			noticeDetail.setRemark("推送失败，存在非空值");
+			log.info("JpushNoticeProcess推送失败，存在非空值");
+			noticeDetail.setJpushNum(10);
+			noticeDetailService.updateById(noticeDetail);
+			return;
+		}*/
+		// 调用推送
+		if (sendPush(noticeDetail)) {
+			log.info("JpushNoticeProcess推送成功");
+			noticeDetail.setJpushFlag(SucConstants.JPUSH_YES);
+			noticeDetailService.updateById(noticeDetail);
+		} else {
+			noticeDetail.setJpushFlag(SucConstants.JPUSH_NO);
+
+			Integer pushnum = noticeDetail.getJpushNum();
+			if (null == pushnum) {
+				pushnum = 0;
+			} else {
+				pushnum++;
+			}
+			Calendar calendar = Calendar.getInstance();
+			calendar.add(Calendar.MINUTE, 10);
+			noticeDetail.setJpushNum(pushnum);
+			noticeDetail.setJpushTime(calendar.getTime());
+			noticeDetailService.updateById(noticeDetail);
+		}
+	}
+
+	/**
+	 * 
+	 * @Description: 调用api推送
+	 * @param noticeDetail
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月31日 下午6:45:34
+	 */
+	private Boolean sendPush(NoticeDetail noticeDetail) {
+		log.info("sendPush开始推送");
+		Map<String, String> extras = new HashMap<String, String>();
+		extras.put("news_type", noticeDetail.getNewsType());
+		// 非空校验
+		if (StringUtil.isNotBlank(noticeDetail.getBusinessType())) {
+			extras.put("business_type", noticeDetail.getBusinessType());
+		} else {
+			extras.put("business_type", "");
+		}
+		// 非空校验
+		if (null != noticeDetail.getBusinessId()) {
+			extras.put("business_id", noticeDetail.getBusinessId().toString());
+		} else {
+			extras.put("business_id", "");
+		}
+		// 展示方式
+		extras.put("display_ways", noticeDetail.getDisplayWays());
+		PushResult pushResult = null;
+		// 司机
+		if (BkgConstants.NEWS_PLATFORM_DRIVER.equals(noticeDetail.getPlatform())) {
+			findParValueDpt();
+			// 网点
+		} else if (BkgConstants.NEWS_PLATFORM_SITE.equals(noticeDetail.getPlatform())) {
+			findParValueDot();
+			// 平台不需要极光推送，直接置为成功
+		} else if (BkgConstants.NEWS_PLATFORM_SCHEDULE.equals(noticeDetail.getPlatform())) {
+			log.info("此条消息为执行平台：" + noticeDetail.getId());
+			return true;
+		} else {
+			log.info("此条消息异常，推送端不存在：" + noticeDetail.getPlatform());
+			return false;
+		}
+		//校验别名是否存在
+		if(StringUtil.isBlank(noticeDetail.getJpushAlia())){
+			log.info("此条消息异常，推送别名不存在：" + noticeDetail.getJpushAlia());
+			noticeDetail.setRemark("不存在别名（无法获取当前登录用户）");
+			return false;
+		}
+		// 从缓存中湖区token
+		// LoginEntity loginEntity = appLoginToKenCache.getToken("13122416995",
+		// "dot");
+		/** 获取登陆对象 */
+		LoginEntity loginEntity = appLoginToKenCache.get(noticeDetail.getJpushAlia());
+		log.info("用户登陆信息：" + loginEntity);
+		if (null == loginEntity || StringUtil.isBlank(loginEntity.getPlatform())
+				|| StringUtil.isBlank(loginEntity.getRegistrationID())) {
+			//设置失败原因
+			noticeDetail.setRemark("此用户未登陆");
+			log.info("此用户未登陆无法进行推送：" + noticeDetail.getJpushAlia());
+			return false;
+		}
+		String errorMessage = "";
+		String[] registrationIDs = { loginEntity.getRegistrationID() };
+		try {
+			// 安卓
+			if (loginEntity.getPlatform().equals(SucConstants.PLATFORM_ANDROID)) {
+				// 推送
+				pushResult = MsgPushUtils.sendAndroidNotificationWithRegistrationID(noticeDetail.getTitle(),
+						noticeDetail.getContents(), extras, registrationIDs, masterSecret, appKey);
+				// IOS
+			} else if (loginEntity.getPlatform().equals(SucConstants.PLATFORM_IOS)) {
+				JsonObject alterjosn = new JsonObject();
+				alterjosn.addProperty("title", noticeDetail.getTitle());
+				alterjosn.addProperty("body", noticeDetail.getContents());
+				extras.put("title", noticeDetail.getTitle());
+				extras.put("body", noticeDetail.getContents());
+				/** 推送 */
+				pushResult = MsgPushUtils.sendIosNotificationWithRegistrationID(alterjosn, extras, registrationIDs,
+						masterSecret, appKey);
+			}else{
+				//设置备注消息
+				noticeDetail.setRemark("非网点，非司机，无法推送，"+loginEntity.getPlatform());
+			}
+		} catch (APIConnectionException e) {
+			log.error("Connection error. Should retry later. ", e);
+		} catch (APIRequestException e) {
+			log.error("Error response from JPush server. Should review and fix it. ", e);
+			log.info("HTTP Status: " + e.getStatus());
+			log.info("Error Code: " + e.getErrorCode());
+			log.info("Error Message: " + e.getErrorMessage());
+			errorMessage = e.getErrorMessage();
+		} catch (IllegalArgumentException e) {
+			log.error("Error response from JPush server. appKey and masterSecret are both required. ", e);
+			log.info("masterSecret: " + masterSecret);
+			log.info("appKey: " + appKey);
+		}
+
+		if (null != pushResult && pushResult.getResponseCode() == 200) {
+			log.info("返回编码: " + pushResult.getResponseCode());
+			log.info("返回编码: " + pushResult.getOriginalContent());
+			log.info("返回编码: " + pushResult.getRateLimitReset());
+			return true;
+		} else {
+			//回写失败编码
+			noticeDetail.setRemark(errorMessage);
+			return false;
+		}
+
+	}
+
+	/**
+	 * 获取系统配置
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年11月3日 下午2:09:15
+	 */
+	private void findParValueDpt() {
+		SystemConfig secrtSysConfig = systemConfigBiz.findCacheByCode("DPT_MASTER_SECRET");
+		if (null != secrtSysConfig) {
+			masterSecret = secrtSysConfig.getConfigValue();
+		}
+		SystemConfig appkeySysConfig = systemConfigBiz.findCacheByCode("DPT_APP_KEY");
+		if (null != appkeySysConfig) {
+			appKey = appkeySysConfig.getConfigValue();
+		}
+	}
+
+	/**
+	 * 获取系统配置
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @author liwei
+	 * @date 2017年11月3日 下午2:09:15
+	 */
+	private void findParValueDot() {
+		SystemConfig secrtSysConfig = systemConfigBiz.findCacheByCode("DOT_MASTER_SECRET");
+		if (null != secrtSysConfig) {
+			masterSecret = secrtSysConfig.getConfigValue();
+		}
+		SystemConfig appkeySysConfig = systemConfigBiz.findCacheByCode("DOT_APP_KEY");
+		if (null != appkeySysConfig) {
+			appKey = appkeySysConfig.getConfigValue();
+		}
+	}
+
+	/**
+	 * @Description: app批量设置消息状态
+	 * @param ids
+	 * @return ResponseParameterEntity 更改消息的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 */
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+	public int updateNewsTypeByIds(String ids, Boolean readFlag) {
+
+		String[] idarr = ids.split(",");
+		List<NoticeDetail> noticeDetails = new ArrayList<NoticeDetail>();
+		for (int i = 0; i < idarr.length; i++) {
+			NoticeDetail noticeDetail = new NoticeDetail();
+			if (StringUtil.isNumeric(idarr[i])) {
+				noticeDetail.setId(Long.valueOf(idarr[i]));
+				noticeDetail.setReadFlag(readFlag);
+				noticeDetail.setReceivedTime(new Date());
+				noticeDetail.setUpdateTime(new Date());
+				noticeDetails.add(noticeDetail);
+			} else {
+				return 0;
+			}
+
+		}
+		return noticeDetailService.updateNewsTypeByIds(noticeDetails);
+	}
+
+	/**
+	 * @Description: app批量删除消息
+	 * @param ids
+	 * @return ResponseParameterEntity 更改消息的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 */
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+	public int deleteNews(String ids) {
+		String[] idarr = ids.split(",");
+		List<NoticeDetail> noticeDetails = new ArrayList<NoticeDetail>();
+		for (int i = 0; i < idarr.length; i++) {
+			if (StringUtil.isNumeric(idarr[i])) {
+				NoticeDetail noticeDetail = new NoticeDetail();
+				noticeDetail.setId(Long.valueOf(idarr[i]));
+				noticeDetail.setDeleteFlag(true);
+				noticeDetail.setUpdateTime(new Date());
+				noticeDetails.add(noticeDetail);
+			} else {
+				return 0;
+			}
+		}
+		return noticeDetailService.updateNewsTypeByIds(noticeDetails);
+	}
+
+	/**
+	 * @Description: 司机端获取首页消息
+	 * @param noticeDetailVo
+	 * @return 首页的消息列表
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 */
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+	public List<AppNotice> getIndexNews(NoticeDetailVo noticeDetailVo) {
+		return noticeDetailService.getIndexNews(noticeDetailVo);
+	}
+
+	/**
+	 * @Description: 司机端获取消息详情,把消息设置为已读状态
+	 * @param 司机手机号码
+	 * @return 消息详情
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 */
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+	public AppNotice getNewsDetailsById(Long id) {
+		// 把消息设置为已读的状态
+		NoticeDetail noticeDetail = noticeDetailService.findById(id);
+		noticeDetail.setId(id);
+		noticeDetail.setReadFlag(true);
+		noticeDetail.setUpdateTime(new Date());
+		int val = noticeDetailService.updateById(noticeDetail);
+		if (val > 0) {
+			return noticeDetailService.getNewsDetailsById(id);
+		}
+		return null;
+	}
+
+	/**
+	 * @Description: 司机端消息列表移除首页的某条消息,
+	 * @param 司机手机号码
+	 * @return 影响的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 * 
+	 */
+	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+	public int removeIndex(NoticeDetailVo noticeDetailVo) {
+		if (noticeDetailVo.getId() == null) {
+			return 0;
+		} else if (StringUtil.isBlank(noticeDetailVo.getDisplayWays())) {
+			return 0;
+		}
+		// 查询该ID 下的内容
+		NoticeDetail findById = noticeDetailService.findById(noticeDetailVo.getId());
+		if (findById != null && StringUtil.isNotBlank(findById.getDisplayWays())) {
+			String newDisplayWays = findById.getDisplayWays().replaceAll(noticeDetailVo.getDisplayWays(), "");
+			NoticeDetail noticeDetail = new NoticeDetail();
+			noticeDetail.setId(noticeDetailVo.getId());
+			noticeDetail.setDisplayWays(newDisplayWays);
+			return noticeDetailService.updateById(noticeDetail);
+		}
+		return 0;
+	}
+
+	/**
+	 * @Description: 司机获取所有的消息,
+	 * @param 司机手机号码
+	 * @return 查询的数据
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 * 
+	 */
+	@Override
+	public Pagination<AppNotice> getAllNews(NoticeDetailVo noticeDetailVo, Page page) {
+		return noticeDetailService.getAllNews(noticeDetailVo, page);
+	}
+
+	/**
+	 * @Description: PC首页获取消息
+	 * @param
+	 * @return Pagination<NoticeDetail> pc端首页显示的消息
+	 * @author UCE-haizhou
+	 * @date 2017年10月30日 下午13:37:13
+	 */
+	public Pagination<NoticeDetail> findPcIndex(NoticeDetailVo noticeDetailVo, Page page) {
+		return noticeDetailService.findPcIndex(noticeDetailVo, page);
+	}
+
+	/**
+	 * @Description: 司机获取所有的未读消息,
+	 * @param noticeDetailVo
+	 * @return 消息总数
+	 * @author UCE-haizhou
+	 * @date 2017年11月2日 下午17:37:13
+	 * 
+	 */
+	@Override
+	public Integer getNotReadNewsNumber(NoticeDetailVo noticeDetailVo) {
+		return noticeDetailService.getNotReadNewsNumber(noticeDetailVo);
+
+	}
+
+}

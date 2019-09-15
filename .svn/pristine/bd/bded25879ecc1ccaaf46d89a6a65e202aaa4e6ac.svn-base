@@ -1,0 +1,90 @@
+package cn.uce.suc.bkg.biz.datamain;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.datamain.OperationTime;
+import cn.uce.suc.bkg.vo.datamain.OperationTimeVo;
+
+/**
+ * @Description: 分拨中心时刻信息BIZ接口类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月27日 下午07:11:18
+ */
+public interface IOperationTimeBiz {
+	
+	/**
+	 * @Description: 新增分拨中心时刻信息
+	 * @param operationTime
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public int addOperationTime(OperationTime operationTime);
+	
+	/**
+	 * @Description: 修改分拨中心时刻信息
+	 * @param operationTime 分拨中心时刻信息
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public int updateOperationTime(OperationTime operationTime);
+	
+	/**
+	 * @Description: 删除分拨中心时刻信息
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public int deleteOperationTime(Long id);
+	
+	/**
+	 * @Description: 根据ID查询分拨中心时刻信息
+	 * @param id 主键
+	 * @return 分拨中心时刻信息
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public OperationTime findById(Long id);
+	
+	/**
+	 * @Description: 分页查询分拨中心时刻信息
+	 * @param operationTimeVo 分拨中心时刻信息
+	 * @param page 分页参数
+	 * @return 分拨中心时刻信息
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月27日 下午07:11:18
+	 */
+	public Pagination<OperationTime> findByPagination(OperationTimeVo operationTimeVo, Page page);
+	/**
+	 * 
+	 * @Description: 根据条件查询分拨时刻
+	 * @param page
+	 * @param operationTimeVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 上午10:43:00
+	 */
+	public Pagination<OperationTime> findByCondition(OperationTimeVo operationTimeVo, Page page);
+	/**
+	 * 
+	 * @Description: 导出分拨时刻
+	 * @param operationTimeVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 下午4:21:47
+	 */
+	public List<OperationTimeVo> findByExport(OperationTimeVo operationTimeVo);
+	/**
+	 * 
+	 * @Description: 查询分拨是否维护
+	 * @param operationCenterCode
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月8日 下午2:39:07
+	 */
+	public Integer findCountByCenterCode(OperationTime operationTime);
+}

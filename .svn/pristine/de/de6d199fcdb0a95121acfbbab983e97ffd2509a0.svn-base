@@ -1,0 +1,118 @@
+package cn.uce.suc.common.biz;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.imp.NoticeBiz;
+import cn.uce.suc.common.entity.Notice;
+import cn.uce.suc.common.vo.NoticeVo;
+
+/**
+ * 
+ * @Description: 组织机构单元测试
+ * @author liwei
+ * @date 2017年10月19日 下午11:34:06
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class NoticeBizTest extends AbstractJUnit4SpringContextTests {
+	
+	@Resource
+	private NoticeBiz noticeBiz;
+	
+	
+	@Before
+	public void addNotice(){
+		Notice notice = new Notice();
+		notice.setCreateEmp("赵子龙");
+		notice.setCreateOrg("TEST-DEMO");
+		notice.setCreateTime(new Date());
+		notice.setDeleteFlag(false);
+		notice.setNewsContent("测试赵子龙的消息内容================================");
+		notice.setNewsTitle("消息的标题");
+		notice.setNewsType("01");
+		notice.setStatus("0");
+		notice.setPlatform("01");
+		notice.setNewUser("关羽");  // 实际中如果指向平台是个人，这里才能填写
+		notice.setPhone("13888888888");
+		notice.setReadTrue(false);
+		notice.setSendTrue(false);
+		notice.setTopTrue(true); //设置置顶
+		notice.setRemark("备注消息");
+		
+		noticeBiz.addNotice(notice);
+	}
+	@Test
+	public void update(){
+		Notice notice = new Notice();
+		notice.setCreateEmp("张飞");
+		notice.setCreateOrg("TEST-DEMO1");
+		notice.setCreateTime(new Date());
+		notice.setDeleteFlag(false);
+		notice.setNewsContent("测试张飞修改赵子龙的消息内容================================");
+		notice.setNewsTitle("消息修改的标题");
+		notice.setNewsType("01");
+		notice.setStatus("0");
+		notice.setPlatform("01");
+		notice.setNewUser("关羽");  // 实际中如果指向平台是个人，这里才能填写
+		notice.setPhone("13888888888");
+		notice.setReadTrue(false);
+		notice.setSendTrue(false);
+		notice.setTopTrue(true); //设置置顶
+		notice.setRemark("备注修改的消息");
+		notice.setId(1L);
+		
+		int val=noticeBiz.updateNotice(notice);
+		System.out.println("修改了"+val+"条消息！");
+	}
+	@Test
+	public void findAll(){
+		//获取一条消息
+		NoticeVo noticeVo = new NoticeVo();
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(1);
+		Pagination<Notice> pagination=noticeBiz.findByPagination(noticeVo, page);
+		System.out.println("===============获取到了ID："+pagination.getData().get(0).getId()+"=============");
+		
+		if(pagination.getData().size()>0){
+			Notice notice = pagination.getData().get(0);
+			notice.setCreateEmp("张飞");
+			notice.setCreateOrg("TEST-DEMO1");
+			notice.setCreateTime(new Date());
+			notice.setDeleteFlag(false);
+			notice.setNewsContent("测试张飞修改赵子龙的消息内容================================");
+			notice.setNewsTitle("消息修改的标题");
+			notice.setNewsType("01");
+			notice.setStatus("0");
+			notice.setPlatform("01");
+			notice.setNewUser("关羽");  // 实际中如果指向平台是个人，这里才能填写
+			notice.setPhone("13888888888");
+			notice.setReadTrue(false);
+			notice.setSendTrue(false);
+			notice.setTopTrue(true); //设置置顶
+			notice.setRemark("备注修改的消息");
+			System.out.println("===============ID："+pagination.getData().get(0).getId()+"进行修改=============");
+			noticeBiz.updateNotice(notice);
+			System.out.println("===============ID："+pagination.getData().get(0).getId()+"修改完毕=============");
+			System.out.println("===============ID："+pagination.getData().get(0).getId()+"进行删除=============");
+			noticeBiz.deleteNotice(notice.getId());
+			System.out.println("===============ID："+pagination.getData().get(0).getId()+"删除完毕=============");
+			
+		}
+		
+	}
+
+}

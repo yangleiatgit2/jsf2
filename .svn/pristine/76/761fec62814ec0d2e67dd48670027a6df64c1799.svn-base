@@ -1,0 +1,86 @@
+package cn.uce.suc.bkg.biz.impl.price;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.entity.price.PricingRuleType;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeVo;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * 
+ * @Description: 定价规则分类
+ * @author wangzhijun
+ * @date 2017年11月8日 下午4:38:23
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class PricingRuleTypeBizTest extends AbstractJUnit4SpringContextTests {
+
+	/**
+	 * 注入对象
+	 */
+	@Resource
+	private PricingRuleTypeBiz pricingRuleTypeBiz;
+	private PricingRuleType pricingRuleType;
+	private PricingRuleTypeVo pricingRuleTypeVo;
+	private String details;
+	private Page page;
+	
+	@Resource
+	private IIdsWorker redisIdsWorker;
+	/**
+	 * 
+	 * @Description: 初始化对象
+	 * @author wangzhijun
+	 * @date 2017年11月8日 下午4:40:05
+	 */
+	@Before
+	public void initVo() {
+		pricingRuleType = new PricingRuleType();
+		pricingRuleType.setBusinessType("01");
+		pricingRuleType.setGroupType("01");
+		pricingRuleType.setWorkCenterCode("UC001004");
+		pricingRuleType.setRuleTypeVesion(1);
+		String ruleTypeCode = redisIdsWorker.nextId(IdsPrefix.DJFL);
+		pricingRuleType.setRuleTypeCode(ruleTypeCode);
+		
+		pricingRuleTypeVo = new PricingRuleTypeVo();
+		pricingRuleTypeVo = ObjectConvertUtil.convertObject(pricingRuleType, PricingRuleTypeVo.class);
+		details = "[{\"id\":null,\"ruleTypeCode\":null,\"pricingType\":\"1\",\"siteCode\":null,\"siteName\":null,\"areaCode\":null,\"areaName\":null,\"total\":1,\"deleteFlag\":null,\"utf1\":\"UC010299\",\"utf2\":\"普陀三部\",\"utf3\":null,\"version\":null,\"remark\":null,\"createOrg\":null,\"createEmp\":\"\",\"createTime\":1510130863000,\"updateOrg\":null,\"updateEmp\":null,\"updateTime\":null},{\"id\":null,\"ruleTypeCode\":null,\"pricingType\":\"2\",\"siteCode\":null,\"siteName\":null,\"areaCode\":null,\"areaName\":null,\"total\":1,\"deleteFlag\":null,\"utf1\":\"UC007037\",\"utf2\":\"普陀二部\",\"utf3\":null,\"version\":null,\"remark\":null,\"createOrg\":null,\"createEmp\":\"\",\"createTime\":1510130863000,\"updateOrg\":null,\"updateEmp\":null,\"updateTime\":null}]";
+		
+		page = new Page();
+		page.setCurrentPage(1);
+	}
+
+	/**
+	 * 
+	 * @Description: 测试
+	 * @author wangzhijun
+	 * @date 2017年11月8日 下午4:40:50
+	 */
+	@Test
+	public void test() {
+		pricingRuleTypeBiz.addPricingRuleType(pricingRuleType);
+		pricingRuleTypeBiz.deletePricingRuleType(pricingRuleType.getId());
+		pricingRuleTypeBiz.addPricingRuleType(pricingRuleTypeVo, details);
+		pricingRuleTypeBiz.findById(pricingRuleType.getId());
+		pricingRuleTypeBiz.findByPagination(pricingRuleTypeVo, page);
+		pricingRuleTypeBiz.updatePricingRuleType(pricingRuleType);
+		pricingRuleTypeBiz.updatePricingRuleType(pricingRuleType, details);
+		pricingRuleTypeBiz.updateVersion(pricingRuleType);
+		pricingRuleTypeBiz.updateVersion(pricingRuleType, details);
+		pricingRuleTypeBiz.deletePricingRuleType(pricingRuleType.getId());
+	}
+}

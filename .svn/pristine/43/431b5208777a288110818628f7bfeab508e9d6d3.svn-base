@@ -1,0 +1,312 @@
+package cn.uce.suc.common.service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.NoticeRule;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.suc.common.util.HttpUtil;
+import cn.uce.suc.common.util.Md5Helper;
+import cn.uce.suc.common.util.MessageTemplateUtil;
+import cn.uce.suc.common.util.SucAppConstants;
+import cn.uce.suc.common.vo.NoticePushResultVo;
+import cn.uce.suc.common.vo.NoticePushResultVo.RmList;
+import cn.uce.utils.StringUtil;
+
+import com.alibaba.fastjson.JSON;
+/**
+ * 
+ * @Description: 短信推送服务
+ * @author liwei
+ * @date 2017年11月21日 下午5:00:47
+ */
+@Service("noticePushService")
+public class NoticePushService {
+
+	/**
+	 * 资源参数
+	 */
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+	/**
+	 * 付费组织
+	 */
+	private  String smspCostOrgCode;
+	/**
+	 * ID
+	 */
+	private  String tempId;
+	/**
+	 * 父类ID
+	 */
+	private  String partnerId;
+	/**
+	 * 秘钥
+	 */
+	private  String secrtKey;
+	/**
+	 * 服务名称
+	 */
+	private  String serviceName;
+	/**
+	 * 地址
+	 */
+	private  String url;
+	
+	@Resource
+	private NoticeRuleService noticeRuleService;
+
+	
+	/**
+	 * 日志
+	 */
+	protected final  Logger logger = LoggerFactory.getLogger(NoticePushService.class);
+	/**
+	 * 
+	 * @Description:发送
+	 * @param url
+	 * @param method
+	 * @param json
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月21日 上午10:25:25
+	 */
+	public  Map<String,Object> sendMessageToPhone(String json) {
+			
+			//3. 向短信平台发送请求
+			//3.1 调用接口返回成功，保存验证码到数据库,验证码 表
+			Map<String, Object> resultMap;
+			NoticePushResultVo noticePushResultVo;
+			try {
+				String result = HttpUtil.httpRequest(url, "POST", json);
+				logger.debug("result:"+result);
+				
+				noticePushResultVo=JSON.parseObject(result,NoticePushResultVo.class);
+				resultMap = JSON.parseObject(result);
+			} catch (Exception e) {
+				logger.error("请求短信平台发生异常"+e);
+				//在此做异常处理
+				return initResultEntity(SucAppConstants.Code_SMSC_FALSE.value(), "发送验证码失败", null);
+			}
+			//处理返回结果
+			if(null == resultMap){
+				logger.info("请求短信平台发生异常,没有获取到正确的返回");
+				//在此做异常处理
+				return initResultEntity(SucAppConstants.Code_SMSC_FALSE.value(), "请求短信平台发生异常,没有获取到正确的返回",null);
+			}
+			List<RmList> rmList =noticePushResultVo.getRmList();
+			if(null == rmList|| rmList.size()==0){
+				//根据返回code做不同的操作,构建返回结果
+				logger.info("发送失败，返回码："+ (String) resultMap.get("errorCode"));
+				
+				return initResultEntity(SucAppConstants.Code_SMSC_FALSE.value(), "发送验证码失败", null);
+			}
+			RmList rmlis=rmList.get(0);
+			if(null == rmlis || rmlis.getIsSuccess().equals("fail")){
+				logger.info("发送失败，返回码："+ (String) resultMap.get("errorCode"));
+				if(null!=rmlis&&"S0008".equals(rmlis.getErrorCode())) return initResultEntity(SucAppConstants.Code_SMSC_FALSE.value(), "手机号码维护错误", null);
+				return initResultEntity(SucAppConstants.Code_SMSC_FALSE.value(), "发送验证码失败", null);
+			}
+			
+			//默认成功
+			return initResultEntity(SucAppConstants.OK.value(), "发送验证码成功", null);
+			
+		}
+		/**
+		 * 初始化返回
+		 * 
+		 * @param resultCode
+		 * @param reason
+		 * @param data
+		 * @return
+		 */
+		public  Map<String,Object> initResultEntity(String resultCode, String reason, Object data) {
+			Map<String,Object> map=new HashMap<String, Object>();
+	        map.put("resultFlag", resultCode);
+	       
+			// 设置原因
+			if (null != reason) {
+				 map.put("failureReason", reason);
+			}
+	
+			// 设置数据对象
+			if (null != data) {
+				 map.put("result", data);
+			}
+			return map;
+		}
+	/**
+	 * 
+	 * @Description: 初始化请求短信平台参数
+	 * @param method
+	 * @param captcha
+	 * @param telephone
+	 * @param userType
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月11日 下午2:01:28
+	 */
+		public  String initParams(String method,Object object, String telephone, String userType) {
+			//获取参数
+			findParValue();
+			Map<String, Object> outMap = new HashMap<String, Object>();
+			String charset = "utf-8";
+			outMap.put("charset", charset);
+
+			// 初始化 数组content
+			List<Map<String, Object>> content = new ArrayList<Map<String, Object>>();
+			// 初始化数组的元素
+			Map<String, Object> contentMap = new HashMap<String, Object>();
+			contentMap.put("mobile", telephone);
+
+			Map<String, Object> paramsMap = new HashMap<String, Object>();
+			String data = getMessageInfo(method, userType,object);
+			paramsMap.put("content", data);
+			contentMap.put("paramsMap", paramsMap);
+			content.add(contentMap);
+			outMap.put("content", content);
+			outMap.put("contentType", "json");
+			Map<String, Object> paramsMap2 = new HashMap<String, Object>();
+			paramsMap2.put("smspCostOrgCode", smspCostOrgCode);
+			paramsMap2.put("tempId", tempId);
+			outMap.put("paramsMap", paramsMap2);
+			outMap.put("partnerId", partnerId);
+			outMap.put("serviceName", serviceName);
+			// 密钥
+			outMap.put("secrtKey", secrtKey);
+
+			// 签名
+			StringBuilder unsigned = new StringBuilder();
+			// 加密签名
+			unsigned.append(charset).append(secrtKey);
+			String unsignedString = unsigned.toString();
+			outMap.put("unsignedString", unsignedString);
+
+			String sign = Md5Helper.md5(unsignedString + secrtKey, charset, false);
+
+			outMap.put("sign", sign);
+
+			return JSON.toJSONString(outMap);
+		}
+		/**
+		 * 
+		 * @param method  --create新增--update 更新
+		 * @param userType
+		 * @return
+		 * @author liwei
+		 * @date 2017年11月21日 上午11:13:37
+		 */
+	private String getMessageInfo(String method, String userType, Object object) {
+		String ruleCode = "";
+		// 网点注册
+		if (SucConstants.CAPTCH_REGIST_ACCOUNT.equals(method) && SucConstants.CAPTCH_PLATFROM_DOT.equals(userType)) {
+			ruleCode = SucConstants.CAPTCH_REGIST_DOT;
+			// 网点忘记密码
+		} else if (SucConstants.CAPTCH_UPDATE_PASSWORD.equals(method)
+				&& SucConstants.CAPTCH_PLATFROM_DOT.equals(userType)) {
+			ruleCode = SucConstants.CAPTCH_UPDATE_DOT;
+			// 司机注册
+		} else if (SucConstants.CAPTCH_REGIST_ACCOUNT.equals(method)
+				&& SucConstants.CAPTCH_PLATFORM_DPT.equals(userType)) {
+			ruleCode = SucConstants.CAPTCH_REGIST_DPT;
+			// 司机忘记密码
+		} else if (SucConstants.CAPTCH_UPDATE_PASSWORD.equals(method)
+				&& SucConstants.CAPTCH_PLATFORM_DPT.equals(userType)) {
+			ruleCode = SucConstants.CAPTCH_UPDATE_DPT;
+			// 司机端--认证
+		} else if (SucConstants.CAPTCH_USER_AUTH.equals(method)
+				&& SucConstants.CAPTCH_PLATFROM_DOT.equals(userType)) {
+			ruleCode = SucConstants.CAPTCH_USER_AUTH_DOT;
+			// 生成用户--司机
+		} else if (SucConstants.CAPTCH_USER_ADD.equals(method) 
+				&& SucConstants.CAPTCH_PLATFORM_DPT.equals(userType)) {
+			ruleCode = SucConstants.CAPTCH_USER_ADD_DPT;
+		}
+		/** 消息规则 */
+		NoticeRule noticeRule = noticeRuleService.findByPagination(ruleCode);
+		String content = "";
+		if (null != noticeRule) {
+			content = noticeRule.getContents();
+			if (StringUtil.isNotBlank(content)) {
+				content = MessageTemplateUtil.convertObject(content, object);
+			}
+		}
+		return content;
+	}
+		/**
+		 * 
+		 * @Description: 将验证码等存入缓存
+		 * @author liwei
+		 * @date 2017年11月21日 下午1:57:07
+		 */
+	/*	private void captchaCahch(){
+			captchaCache.
+		}*/
+		/**
+		 * 获取系统配置
+		 * @Description: TODO(这里用一句话描述这个方法的作用) 
+		 * @author liwei
+		 * @date 2017年11月3日 下午2:09:15
+		 */
+		private  void  findParValue(){
+			/**
+			 * 结算组织
+			 */
+			SystemConfig smspCostOrgCodeConfig = systemConfigBiz.findCacheByCode("smspCostOrgCode");
+			/**非空*/
+			if (null != smspCostOrgCodeConfig) {
+				smspCostOrgCode=smspCostOrgCodeConfig.getConfigValue();
+			}
+			/**
+			 * 员工ID
+			 */
+			SystemConfig  tempIdConfig= systemConfigBiz.findCacheByCode("tempId");
+			/**非空*/
+			if (null != tempIdConfig) {
+				tempId=tempIdConfig.getConfigValue();
+			}
+			/**
+			 * 父类ID
+			 */
+			SystemConfig partnerIdConfig = systemConfigBiz.findCacheByCode("partnerId");
+			/**非空*/
+			if (null != partnerIdConfig) {
+				partnerId=partnerIdConfig.getConfigValue();
+			}
+			/**
+			 * 秘钥
+			 */
+			SystemConfig  secrtKeyConfig= systemConfigBiz.findCacheByCode("secrtKey");
+			/**非空*/
+			if (null != secrtKeyConfig) {
+				secrtKey=secrtKeyConfig.getConfigValue();
+			}
+			/**
+			 * 服务名称
+			 */
+			SystemConfig serviceNameConfig = systemConfigBiz.findCacheByCode("serviceName");
+			/**非空*/
+			if (null != serviceNameConfig) {
+				serviceName=serviceNameConfig.getConfigValue();
+			}
+			 /** UR
+			 */
+			SystemConfig urlConfig = systemConfigBiz.findCacheByCode("SMS_URL");
+			/**非空*/
+			if (null != urlConfig) {
+				url=urlConfig.getConfigValue();
+			}
+		
+		}
+
+}

@@ -1,0 +1,31 @@
+package cn.uce.suc.app.biz;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.entity.Logininfo;
+import cn.uce.suc.app.vo.LogininfoVo;
+
+/**
+ * @Description: BIZ接口类
+ * @author liwei
+ * @date 2017年10月11日 下午05:55:14
+ */
+public interface ILogininfoBiz {
+	
+	/**
+	 * @Description: 新增
+	 * @param logininfo
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月11日 下午05:55:14
+	 */
+	public int addLogininfo(Logininfo logininfo);
+	
+	
+	   /**
+     * 注销登陆
+     * @param mobilephone
+     * @return
+     */
+    int updateById(String  mobilephone);
+}

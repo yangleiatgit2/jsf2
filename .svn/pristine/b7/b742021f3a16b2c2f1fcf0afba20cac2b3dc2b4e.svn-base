@@ -1,0 +1,103 @@
+package cn.uce.suc.bkg.biz.impl.price;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.price.IPricingRuleDetailBiz;
+import cn.uce.suc.bkg.biz.price.IPricingRuleDetailRelBiz;
+import cn.uce.suc.bkg.entity.price.PricingRuleDetailRel;
+
+/**
+ * 
+ * @Description: 定价规则
+ * @author laizhendong
+ * @date 2017年11月06日 下午2:50:04
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml"})
+public class PricingRuleDetailBizTest extends AbstractJUnit4SpringContextTests {
+
+	
+	
+	/**
+	 * 定价规则biz
+	 */
+	@Resource
+	private IPricingRuleDetailBiz pricingRuleDetailBiz;
+	
+	/**
+	 * 定价规则详情关系
+	 */
+	@Resource
+	private IPricingRuleDetailRelBiz pricingRuleDetailRelBiz;
+	
+	/**
+	 * 
+	 * @Description: 测试根据id查找
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午7:28:36
+	 */
+	@Test
+	public void testFindById(){
+		pricingRuleDetailBiz.findById(1L);
+	}
+	
+	/**
+	 * 
+	 * @Description: 测试分页查询 
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午7:32:23
+	 */
+	@Test
+	public void testFindByPagination(){
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		page.setQueryCount(true);
+		pricingRuleDetailBiz.findByPagination(null, page);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则
+	 * @author laizhendong
+	 * @date 2017年11月6日 下午7:33:04
+	 */
+	@Test
+	public void testFindByCondition(){
+		pricingRuleDetailBiz.findByCondition(null);
+	}
+	
+	/**
+	 * 
+	 * @Description: 测试详情关系
+	 * @author laizhendong
+	 * @date 2017年12月5日 上午10:23:29
+	 */
+	@Test
+	public void testDetailRel(){
+		//根据id查找
+		pricingRuleDetailRelBiz.findById(1L);
+		//删除
+		pricingRuleDetailRelBiz.deletePricingRuleDetailRel(1L);
+		Page page = new Page();
+		page.setCurrentPage(1);
+		page.setPageSize(10);
+		page.setQueryCount(true);
+		//查找
+		pricingRuleDetailRelBiz.findByPagination(null, page);
+		
+		//更新
+		PricingRuleDetailRel pricingRuleDetailRel = new PricingRuleDetailRel();
+		pricingRuleDetailRel.setId(1L);
+		pricingRuleDetailRelBiz.updatePricingRuleDetailRel(pricingRuleDetailRel);
+	}
+}

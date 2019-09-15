@@ -1,0 +1,104 @@
+package cn.uce.suc.bkg.biz.impl.datamain;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.datamain.ICarManageBiz;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * 
+ * @Description: 车辆管理单元测试类
+ * @author zhangqiang
+ * @date 2017年11月1日 下午7:42:23
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class CarManageBizTest {
+	/**
+	 * 注入biz
+	 */
+	@Resource
+	private ICarManageBiz carManageBiz;
+	/**
+	 * 车辆实体
+	 */
+	private CarManage carManage;
+	/**
+	 * 车辆vo
+	 * 
+	 */
+	private CarManageVo carManageVo;
+	/**
+	 * 页码类
+	 */
+	private Page page;
+	/**
+	 * 
+	 * @Description: 初始化方法
+	 * @author zhangqiang
+	 * @date 2017年11月6日 下午10:15:33
+	 */
+	@Before
+	public void init() {
+		System.out.println("==========单元测试开始========");
+		carManage = new CarManage();
+		page = new Page();
+		carManage.setCarNumber("161616");
+		carManage.setDrivingLicenseNumber("abc888");
+	}
+	/**
+	 * 
+	 * @Description: 方法执行后
+	 * @author zhangqiang
+	 * @date 2017年11月6日 下午10:15:47
+	 */
+	@After
+	public void excuteEnd() {
+		System.out.println("==========单元测试结束========");
+	}
+	/**
+	 * 
+	 * @Description: 测试方法
+	 * @author zhangqiang
+	 * @date 2017年11月6日 下午10:16:01
+	 */
+	@Test
+	public void test(){
+		carManageBiz.addCarManage(carManage);
+		carManageVo  = JSON.parseObject(JSON.toJSONString(carManage),CarManageVo.class);
+		Pagination<CarManage> cars = carManageBiz.findByCondition(carManageVo, page);
+		List<CarManage> list = cars.getData();
+		for(CarManage car : list){
+			if("abc888".equals(car.getDrivingLicenseNumber())){
+				carManage = car;
+			}
+		}
+		carManageVo  = JSON.parseObject(JSON.toJSONString(carManage),CarManageVo.class);
+		carManageBiz.findById(carManage.getId());
+		carManageBiz.findByExport(carManageVo);
+		carManageBiz.findCarByCmbgd(carManageVo, page);
+		carManageBiz.findByPagination(carManageVo, page);
+		carManageBiz.updateCarManage(carManage);
+		carManageBiz.deleteCarManage(carManage.getId());
+		carManageBiz.findByVo(carManageVo);
+		carManageBiz.findCarManage();
+		carManageBiz.findByInsurance(carManageVo, page);
+	}
+
+}

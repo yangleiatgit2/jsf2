@@ -1,0 +1,67 @@
+package cn.uce.suc.common.util;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+
+/*import org.junit.Test;*/
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.suc.common.cache.SystemConfigCache;
+/*import cn.uce.suc.common.entity.OmgCmsOrg;
+*/
+public class MessageTemplateUtil {
+	/**
+	 * 申明logger对象
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(SystemConfigCache.class);
+
+	/**
+	 * 
+	 * @Description: 消息模版 转化
+	 * @param msg
+	 * @param source
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月8日 下午8:01:48
+	 */
+	public static String convertObject(String msg, Object source) {
+		// 获取对象所有属性
+		Field[] fields = source.getClass().getDeclaredFields();
+		// 获取对象所有方法
+		Method[] methods = source.getClass().getMethods();
+		List<String> list = new ArrayList<String>();
+		for (Method method : methods) {
+			list.add(method.getName());
+		}
+		for (Field field : fields) {
+			String firstLetter = field.getName().substring(0, 1).toUpperCase();
+			String getter = "get" + firstLetter + field.getName().substring(1);
+			if (list.contains(getter)) {
+				try {
+					Method method = source.getClass().getMethod(getter, new Class[] {});
+					Object value = method.invoke(source, new Object[] {});
+					if (value == null) {
+						value = "";
+					}
+					msg = msg.replaceAll("\\$\\{" + field.getName() + "\\}", value.toString());
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+		return msg;
+	}
+
+/*	@Test
+	public void test() {
+		OmgCmsOrg cmsOrg = new OmgCmsOrg();
+		cmsOrg.setBaseOrgCode("UC0001");
+		cmsOrg.setOrgName("上海分拨中心");
+		String s = convertObject("${baseOrgCode}${orgName}", cmsOrg);
+		System.out.print(s);
+	}*/
+
+}

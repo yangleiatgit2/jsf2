@@ -1,0 +1,48 @@
+package cn.uce.suc.common.control;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.web.common.base.BaseController;
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月4日 下午7:48:06
+ */
+@Controller
+@RequestMapping("/cmsOrg")
+public class CmsOrgController extends BaseController {
+	/**
+	 * 注入组织对象
+	 */
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz;
+	
+	/**
+	 * 
+	 * @Description: 查询组织数据 
+	 * @param omgCmsOrgVo
+	 * @param page
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月3日 下午5:26:04
+	 */
+	@RequestMapping(value = "/findByCmbgd")
+	@ResponseBody
+	public Map<String, Object> findByCmbgd(OmgCmsOrgVo omgCmsOrgVo, Page page) {
+		if (!StringUtils.isEmpty(omgCmsOrgVo.getQ())	) {
+			omgCmsOrgVo.setQ(omgCmsOrgVo.getQ().trim());
+		}
+		return returnSuccess(omgCmsOrgBiz.findByCombox(omgCmsOrgVo, page));
+	}
+}

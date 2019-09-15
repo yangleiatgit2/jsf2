@@ -1,0 +1,165 @@
+package cn.uce.suc.common.service;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.dao.IMobileuserDao;
+import cn.uce.suc.common.entity.LoginEntity;
+import cn.uce.suc.common.entity.Mobileuser;
+import cn.uce.suc.common.vo.MobileuserVo;
+
+
+/**
+ * @Description: app用户表Service类
+ * @author liwei
+ * @date 2017年10月10日 下午08:42:21
+ */
+@Service("mobileuserService")
+public class MobileuserService {
+	
+	/**
+	 * 注入app用户表Dao
+	 */
+	@Resource
+	private IMobileuserDao mobileuserDao;
+	
+	/**
+	 * @Description: 新增app用户表
+	 * @param mobileuser app用户表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public int addMobileuser(Mobileuser mobileuser) {
+		return mobileuserDao.insert(mobileuser);
+	}
+	
+	/**
+	 * @Description: 修改app用户表
+	 * @param mobileuser app用户表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public int updateById(Mobileuser mobileuser) {
+		return mobileuserDao.updateById(mobileuser);
+	}
+	
+	/**
+	 * @Description: 删除app用户表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public int deleteById(Long id) {
+		return mobileuserDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询app用户表
+	 * @param id 主键
+	 * @return app用户表
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public Mobileuser findById(Long id) {
+		return mobileuserDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询app用户表
+	 * @param mobileuserVo app用户表
+	 * @param page 分页参数
+	 * @return app用户表
+	 * @author liwei
+	 * @date 2017年10月10日 下午08:42:21
+	 */
+	public Pagination<MobileuserVo> findByPagination(MobileuserVo mobileuserVo, Page page) {
+		Pagination<MobileuserVo> paginationMobileuser = mobileuserDao.findByPagination(mobileuserVo, page);
+		return paginationMobileuser;
+	}
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param mobileuserVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月11日 上午11:44:55
+	 */
+	public List<MobileuserVo> findByCondition(MobileuserVo mobileuserVo) {
+		return  mobileuserDao.findByCondition(mobileuserVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据手机号 和用户类型 查找用户以及所属分拨中心
+	 * @param mobileuserVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月6日 下午8:24:03
+	 */
+	public List<MobileuserVo> findByUserMobilephone(MobileuserVo mobileuserVo){
+		return mobileuserDao.findByUserMobilephone(mobileuserVo);
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据所属网点编码 查询用户信息
+	 * @param siteCodes
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月3日 下午3:35:02
+	 */
+	public List<Mobileuser> findPhoneByBaseOrgCode(@Param("siteCodes") List<String> siteCodes){
+		return mobileuserDao.findPhoneByBaseOrgCode(siteCodes);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据所属网点编码 查询用户信息
+	 * @param siteCodes
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月3日 下午3:35:02
+	 */
+	public List<Mobileuser> findUserByBaseOrgCode(@Param("siteCodes") List<String> siteCodes){
+		return mobileuserDao.findUserByBaseOrgCode(siteCodes);
+	}
+	/**
+	 * app登录接口
+	 * @return
+	 */
+	public List<MobileuserVo>  appLogin(LoginEntity loginEntity){
+		return mobileuserDao.appLogin(loginEntity);
+	}
+	/**
+	 * 
+	 * @Description: 查询手机号是否注册
+	 * @param mobilephone
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月10日 下午5:05:54
+	 */
+	public Integer findCountByMobilephone(String mobilephone){
+		return mobileuserDao.findCountByMobilephone(mobilephone);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据手机号和用户类型 校验用户唯一性 
+	 * @param mobileuserVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月28日 下午1:42:33
+	 */
+	public MobileuserVo checkExistsByMobileAndUserType(MobileuserVo mobileuserVo){
+		return mobileuserDao.checkExistsByMobileAndUserType(mobileuserVo);
+	}
+}

@@ -1,0 +1,1001 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.biz.IServiceevaluationBiz;
+import cn.uce.suc.app.entity.Serviceevaluation;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanBiz;
+import cn.uce.suc.bkg.biz.operation.IDirvingPlanDetailBiz;
+import cn.uce.suc.bkg.entity.datamain.ExceptionManager;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.service.datamain.ExceptionManagerService;
+import cn.uce.suc.bkg.service.operation.DirvingPlanDetailService;
+import cn.uce.suc.bkg.service.operation.DirvingPlanService;
+import cn.uce.suc.bkg.service.operation.DirvingPlanTraceService;
+import cn.uce.suc.bkg.vo.operation.DirvingPlanDetailVo;
+import cn.uce.suc.bkg.vo.operation.DrivingPlanExecutedVo;
+import cn.uce.suc.common.biz.INoticeDetailBiz;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.cache.CarPositioningCache;
+import cn.uce.suc.common.cache.OmgCmsOrgprocessor;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.constants.PromptConstants;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.entity.NoticeRule;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.service.NoticeRuleService;
+import cn.uce.suc.common.vo.MobileuserVo;
+import cn.uce.suc.common.vo.NoticeDetailVo;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+/**
+ * @Description: 发车计划明细BIZ实现类
+ * @author liwei
+ * @date 2017年10月26日 下午05:05:52
+ */
+@Service("dirvingPlanDetailBiz")
+public class DirvingPlanDetailBiz implements IDirvingPlanDetailBiz {
+	
+	/**
+	 * 注入发车计划明细Service
+	 */
+	@Resource
+	private DirvingPlanDetailService dirvingPlanDetailService;
+	/**
+	 * 注入发车计划Service
+	 */
+	@Resource
+	private DirvingPlanService dirvingPlanService;
+	/**
+	 * 注入发车计划Biz
+	 */
+	@Resource
+	private IDirvingPlanBiz dirvingPlanBiz;
+	/**
+	 * 注入发车计划Biz
+	 */
+	@Resource
+	private INoticeDetailBiz noticeDetailBiz;
+	
+	/**
+	 * 网点评价Biz
+	 */
+	@Resource
+	IServiceevaluationBiz serviceEvaluationBiz;
+
+	/**
+	 * 注入异常的service
+	 */
+	@Resource
+	private ExceptionManagerService exceptionManagerService;
+	/**
+	 * 注入获取异常code
+	 */
+	@Resource
+	private IIdsWorker  redisIdsWorker;
+	/**
+	 * 注入消息模板
+	 * 
+	 */
+	@Resource
+	private NoticeRuleService noticeRuleService;
+	/**
+	 * 注入MobileuserService
+	 */
+	@Resource
+	private MobileuserService mobileuserService;
+	
+	/**
+   * 车辆当前位置
+   */
+	  @Resource(name = "carPositioningCache")
+	  CarPositioningCache carPositioningCache;
+  /**
+	 * 注入发车计划轨迹记录Service
+	 */
+	@Resource
+	private DirvingPlanTraceService dirvingPlanTraceService;
+ 	/**
+	 * 注入机构
+	 */
+	@Resource
+	IOmgCmsOrgBiz omgCmsOrgBiz;
+	/**
+	 * @Description: 新增发车计划明细
+	 * @param dirvingPlanDetail
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int addDirvingPlanDetail(DirvingPlanDetail dirvingPlanDetail) {
+		return dirvingPlanDetailService.addDirvingPlanDetail(dirvingPlanDetail);
+	}
+	
+	/**
+	 * @Description: 修改发车计划明细
+	 * @param dirvingPlanDetail 发车计划明细
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int updateDirvingPlanDetail(DirvingPlanDetail dirvingPlanDetail) {
+		/**
+		 * 判断司机是否是已经
+		 */
+		if(dirvingPlanDetail.getPlanDriverStatus()=="02"){
+			
+		}
+		return dirvingPlanDetailService.updateById(dirvingPlanDetail);
+	}
+	
+	/**
+	 * @Description: 删除发车计划明细
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public int deleteDirvingPlanDetail(Long id) {
+		return dirvingPlanDetailService.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询发车计划明细
+	 * @param id 主键
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	@Override
+	public DirvingPlanDetail findById(Long id) {
+		return dirvingPlanDetailService.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询发车计划明细
+	 * @param dirvingPlanDetailVo 发车计划明细
+	 * @param page 分页参数
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	public Pagination<DirvingPlanDetail> findByPagination(DirvingPlanDetailVo dirvingPlanDetailVo, Page page) {
+		Pagination<DirvingPlanDetail> pagination = dirvingPlanDetailService.findByPagination(dirvingPlanDetailVo, page);
+		return pagination;
+	}
+	
+	/**
+	 * @Description: 发车计划详情装货确认
+	 * @param dirvingPlanDetailVo 发车计划条件
+	 * @return  修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updateByWhere(DirvingPlanDetail dirvingPlanDetail) {
+		DirvingPlanDetailVo zdirvingPlanDetailVo = new DirvingPlanDetailVo ();
+		/**设置发车计划号*/
+		zdirvingPlanDetailVo.setDrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());
+		/**设置站点编码*/
+		zdirvingPlanDetailVo.setWayPointCode(dirvingPlanDetail.getWayPointCode());
+		/**设置站点名称*/
+		zdirvingPlanDetailVo.setWayPointName(dirvingPlanDetail.getWayPointName());
+		/**
+		 * 插入轨迹
+		 *///TODO
+		DirvingPlanDetail zdirvingPlanDetail =dirvingPlanDetailService.findByCriteria(zdirvingPlanDetailVo);
+		if(zdirvingPlanDetail!=null){
+			dirvingPlanDetail.setId(zdirvingPlanDetail.getId());
+		}
+		MobileuserVo mobileuserVo = new MobileuserVo();
+		mobileuserVo.setBaseOrgCode(dirvingPlanDetail.getWayPointCode());
+		mobileuserVo.setDotType(true);
+		/**查询该网点下的所有APP 用户*/
+		List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVo);
+		/**中心装货*/
+		if(dirvingPlanDetail.getPlanDriverStatus().equals(BkgConstants.DRIVER_STATUS_LOADING_FINISH)){
+			
+			NoticeRule noticeRule =noticeRuleService.findByPagination(SucConstants.PLATFORM_CENTER_LOAD_CONFIRM);
+			if(noticeRule!=null){
+				NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+				noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_CENTER_LOAD_CONFIRM);
+				noticeDetailVo.setBusinessType(BkgConstants.APP_DRIVING_PLAN_DETAIL);
+				List<DirvingPlanDetail> findByDrivePlanCode = dirvingPlanDetailService.findByDrivePlanCode(dirvingPlanDetail.getDrivingPlanCode());
+				/**给所有网点 发送消息*/
+				for (DirvingPlanDetail detail:findByDrivePlanCode) {
+					noticeDetailVo.setBusinessId(detail.getId());
+					MobileuserVo centerVO = new MobileuserVo();
+					centerVO.setBaseOrgCode(detail.getWayPointCode());
+					centerVO.setDotType(true);
+					centerVO.setCertifiFlag(true);
+					centerVO.setDelFlag(false);
+					List<MobileuserVo> centerVOs=mobileuserService.findByCondition(centerVO);
+					/**给网点所有用户 发送消息*/
+					for (int j = 0; j < centerVOs.size(); j++) {
+						noticeDetailVo.setUserPhone(null);
+						if(StringUtil.isNotBlank(centerVOs.get(j).getMobilephone())){
+							noticeDetailVo.setUserPhone(centerVOs.get(j).getMobilephone());
+							/**给每个该网点下的app用户推送消息*/
+							noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+						}
+					}
+				}
+			}
+			
+		/**中心卸货*/
+		}else if(dirvingPlanDetail.getPlanDriverStatus().equals(BkgConstants.DRIVER_STATUS_UNLOADING_COMPLETED)){
+			NoticeRule noticeRule =noticeRuleService.findByPagination(SucConstants.PLATFORM_CENTER_OUT_CONFIRM);
+			if(noticeRule!=null){
+				NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+				noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_CENTER_OUT_CONFIRM);
+				noticeDetailVo.setBusinessType(BkgConstants.APP_DRIVING_PLAN_DETAIL);
+				List<DirvingPlanDetail> findByDrivePlanCode = dirvingPlanDetailService.findByDrivePlanCode(dirvingPlanDetail.getDrivingPlanCode());
+				for (int i = 0; i < findByDrivePlanCode.size(); i++) {
+					noticeDetailVo.setBusinessId(findByDrivePlanCode.get(i).getId());
+					MobileuserVo centerVO = new MobileuserVo();
+					centerVO.setBaseOrgCode(findByDrivePlanCode.get(i).getWayPointCode());
+					centerVO.setDotType(true);
+					List<MobileuserVo> centerVOs=mobileuserService.findByCondition(centerVO);
+					for (int j = 0; j < centerVOs.size(); j++) {
+						noticeDetailVo.setUserPhone(null);
+						if(StringUtil.isNotBlank(centerVOs.get(j).getMobilephone())){
+							noticeDetailVo.setUserPhone(centerVOs.get(j).getMobilephone());
+							/**给每个该网点下的app用户推送消息*/
+							noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+						}
+					}
+				}
+			}
+			/**中心卸货: (出港) 发车计划到达最后一站,即发车计划已完成,需要给网点和平台发送消息 Start*/
+			DirvingPlanDetailVo dirvingPlanDetailVo = ObjectConvertUtil.convertObject(dirvingPlanDetail, DirvingPlanDetailVo.class);
+			generateMessageToDispatch(dirvingPlanDetailVo);
+			/**中心卸货: (出港) 发车计划到达最后一站,即发车计划已完成,需要给网点和平台发送消息 End*/
+			
+			
+			
+		/**网点装货*/
+		}else if(dirvingPlanDetail.getPlanDriverStatus().equals(BkgConstants.DRIVER_STATUS_LOAD_CONFIRM)){
+			NoticeRule noticeRule =noticeRuleService.findByPagination(SucConstants.PLATFORM_LOAD_CONFIRM);
+			if(noticeRule!=null){
+				NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+				for (int i = 0; i < mobileuserVos.size(); i++) {
+					noticeDetailVo.setUserPhone(mobileuserVos.get(i).getMobilephone());
+					noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_LOAD_CONFIRM);
+					noticeDetailVo.setBusinessType(BkgConstants.APP_DRIVING_PLAN_DETAIL);
+					noticeDetailVo.setBusinessId(dirvingPlanDetail.getId());
+					noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+				}
+				
+			}
+		/**网点卸货*/
+		}else if(dirvingPlanDetail.getPlanDriverStatus().equals(BkgConstants.DRIVER_STATUS_PENDING_CONFIRM)){
+			NoticeRule noticeRule =noticeRuleService.findByPagination(SucConstants.PLATFORM_OUT_CONFIRM);
+			if(noticeRule!=null){
+				NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+				for (int i = 0; i < mobileuserVos.size(); i++) {
+					noticeDetailVo.setUserPhone(mobileuserVos.get(i).getMobilephone());
+					noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_OUT_CONFIRM);
+					noticeDetailVo.setBusinessType(BkgConstants.APP_DRIVING_PLAN_DETAIL);
+					noticeDetailVo.setBusinessId(dirvingPlanDetail.getId());
+					noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+				}
+				
+			}
+		}
+		DirvingPlanDetail rirvingPlanDetail = new  DirvingPlanDetail();
+		rirvingPlanDetail.setDrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());
+		rirvingPlanDetail.setPlanDriverPrompt(dirvingPlanDetail.getPlanDriverPrompt());
+		rirvingPlanDetail.setPlanSitePrompt(dirvingPlanDetail.getPlanSitePrompt());
+		int val=dirvingPlanDetailService.updatePlanDriverStatusByWhere(rirvingPlanDetail);
+		if(val>0){
+			return dirvingPlanDetailService.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+		}
+		return 0;
+	}
+	/**
+	 * @Description: 发车计划详情异常上报
+	 * @param ExceptionManager 异常实体类
+	 * @return  新增的数量
+	 * @author UCE-haizhou
+	 * @param driverStatus 
+	 * @param exceptionManager 
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int sendError(ExceptionManager exceptionManager, DirvingPlanDetail dirvingPlanDetail) {
+		dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_SEND_ERROR);
+		/**
+		 * 给司机的提示注入提示语
+		 */
+		dirvingPlanDetail.setPlanDriverPrompt(PromptConstants.DRIVER_STATUS_SEND_ERROR);
+		/**
+		 * 获取司机之前的状态用于备份
+		 */
+		//TODO
+		DirvingPlanDetailVo dirvingPlanDetailVo = ObjectConvertUtil.convertObject(dirvingPlanDetail, DirvingPlanDetailVo.class);
+		DirvingPlanDetail findByCriteria = dirvingPlanDetailService.findByCriteria(dirvingPlanDetailVo);
+		if(findByCriteria!= null){
+			if(StringUtil.isNotBlank(findByCriteria.getPlanDriverStatus())){
+				String backupsDirverStatus= new String(findByCriteria.getPlanDriverStatus());
+				dirvingPlanDetail.setUtf3(backupsDirverStatus);
+			}
+			if(StringUtil.isNotBlank(findByCriteria.getPlanSiteStatus())){
+				String backupsDotStatus= new String(findByCriteria.getPlanSiteStatus());
+				dirvingPlanDetail.setUtf2(backupsDotStatus);
+			}
+		}
+		int val=dirvingPlanDetailService.updatePlanDriverStatusByWhere(dirvingPlanDetail);
+		if(val<1){
+			return val;
+		}
+		/**
+		 * 给所在平台和司机本人发送消息
+		 */
+		DirvingPlan dirvingPlan = dirvingPlanService.findByPlanCode(dirvingPlanDetail.getDrivingPlanCode());
+		if(dirvingPlan == null){
+			return -1;
+		}
+		dirvingPlan.setAbnormalState(BkgConstants.IS_EXCEPTION_IS);
+		/**
+		 * 修改发车计划号异常标识，设置为异常
+		 */
+		dirvingPlanService.updateByCode(dirvingPlan);
+		NoticeDetailVo noticeDetailVo = new NoticeDetailVo();
+		noticeDetailVo.setNoticeRuleCode(SucConstants.PLATFORM_SEND_ERROR);
+		noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+		noticeDetailVo.setUserPhone(dirvingPlan.getDriverPhone());
+		noticeDetailVo.setNoticeRuleCode(SucConstants.DRIVER_SEND_ERROR);
+		noticeDetailVo.setCreateTime(new  Date());
+		//获取发车计划号的id
+		//TODO
+		DirvingPlan findByrivingPlanCode = dirvingPlanBiz.findByrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());
+		if(findByrivingPlanCode!=null){
+			noticeDetailVo.setBusinessId(findByrivingPlanCode.getId());
+			noticeDetailVo.setBusinessType(BkgConstants.APP_DRIVER_TASK);
+		}
+		noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVo);
+		if(val==1){
+			exceptionManager.setExceptionCode(redisIdsWorker.nextId(IdsPrefix.YC));
+			exceptionManager.setCreateTime(new Date());
+			val=exceptionManagerService.addException(exceptionManager);
+		}
+		return val;
+	}
+	/**
+	 * 
+	 * @Description: 网点端 提交评价 更新发车计划状态,更新发车计划明细
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午10:01:58
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int appUpdateAppraise(DirvingPlanDetailVo dirvingPlanDetailVo){
+		dirvingPlanDetailVo.setAppraiseTime(new Date());	
+		OmgCmsOrgVo oo=OmgCmsOrgprocessor.findByBaseOrgCode(dirvingPlanDetailVo.getWayPointCode());
+		if(oo!=null){
+			dirvingPlanDetailVo.setUpdateEmp(oo.getOrgName());
+		}
+		dirvingPlanDetailVo.setUpdateOrg(dirvingPlanDetailVo.getWayPointCode());
+		dirvingPlanDetailVo.setUpdateTime(new Date());
+		//评价后 将提示语更新为 : ""
+		dirvingPlanDetailVo.setPlanSitePrompt("");
+		int res=updateByApp(dirvingPlanDetailVo);
+		if(res>0){
+			/**查询发车计划*/
+			DirvingPlan drivingPlan = dirvingPlanBiz.findByrivingPlanCode(dirvingPlanDetailVo.getDrivingPlanCode());	
+			Serviceevaluation se = new Serviceevaluation();
+			if(oo!=null){
+				se.setEvaluationDot(oo.getOrgName());
+				se.setCreateEmp(oo.getOrgName()) ;
+			}
+			se.setEvaluationDotcode(dirvingPlanDetailVo.getWayPointCode());
+			se.setDepartureTime(se.getDepartureTime());
+			se.setDrivingPlanCode(dirvingPlanDetailVo.getDrivingPlanCode());
+			se.setDriverName(drivingPlan.getDirverName());
+			se.setMobilePhone(drivingPlan.getDriverPhone());
+			se.setScore(Double.valueOf(dirvingPlanDetailVo.getStationEvalLever()));
+			se.setEvaluate(dirvingPlanDetailVo.getStationEvalJudge());
+			se.setCreateOrg(dirvingPlanDetailVo.getWayPointCode()) ;
+			se.setCreateTime(dirvingPlanDetailVo.getUpdateTime());		
+			serviceEvaluationBiz.addTSucAppServiceevaluation(se);
+		}
+		return res;
+	}
+	/**
+	 * 
+	 * @Description: 网点端 确认装货/卸货  
+	 * 					需要修改 司机端的状态, 网点端的状态, 司机端提示语,网点端提示语
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午10:01:58
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int appUpdateActualNumber(DirvingPlanDetailVo dirvingPlanDetail){
+		/**获得发车计划计划 所有的站点 order by sort desc */
+		DirvingPlanDetailVo dirvingPlanDetailVo = new DirvingPlanDetailVo(); 
+		dirvingPlanDetailVo.setDrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());
+		List<DirvingPlanDetailVo> dpds = dirvingPlanDetailService.findByCode(dirvingPlanDetailVo);
+		/**
+		 * 发车计划计划对应的 除当前网点的其它网点
+		 */
+		Map<Integer, DirvingPlanDetailVo> otherSites = new HashMap<Integer, DirvingPlanDetailVo>();
+		DirvingPlanDetailVo current = new DirvingPlanDetailVo();
+		/**
+		 * 移除当前网点
+		 */
+		for (DirvingPlanDetailVo vo:dpds) {
+			if(vo.getWayPointCode().equals(dirvingPlanDetail.getWayPointCode())){
+				otherSites.put(vo.getSort(), vo);
+			}else{
+				current=vo;
+			}
+		}
+		/**发送消息需要businessId*/
+		dirvingPlanDetail.setId(current.getId());
+		/** 网点确认装卸货时 传来实际的重量,实际的体积和实际的件数 同时更改状态  */
+		/**进港 时确认卸货操作*/
+		if(BkgConstants.BUSINESS_MODE_IN.equals(dirvingPlanDetail.getBusinessMode())){
+			/**出港 网点端 确认卸货 后变成  卸货货完成 同时更新司机端状态为 装货完成*/
+			dirvingPlanDetail.setPlanSiteStatus(BkgConstants.SITE_STATUS_UNLOAD);
+			dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_UNLOADING_COMPLETED);
+			/**如果进港  需要确认一下 是不是最后一个网点的确认发货,如果是的  更新发车计划状态为已执行*/
+		
+			if(null !=dpds&&!dpds.isEmpty()){
+				/**
+				 * 末端网点
+				 */
+				DirvingPlanDetailVo lastSite = dpds.get(0);
+				/**
+				 * 如果当前网点就是最有一个网点时 修改发车计划状态 为已执行
+				 */
+				if(lastSite.getWayPointCode().equals(dirvingPlanDetail.getWayPointCode())){
+					DirvingPlan dirvingPlan = new DirvingPlan();
+					dirvingPlan.setDrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());
+					dirvingPlan.setStatus(BkgConstants.PLAN_CODE_EXECUTE);
+					dirvingPlan.setUpdateEmp(dirvingPlanDetail.getUpdateEmp());
+					dirvingPlan.setUpdateOrg(dirvingPlanDetail.getWayPointCode());
+					dirvingPlan.setUpdateTime(new Date());
+					int updateByCode = dirvingPlanService.updateByCode(dirvingPlan);
+					if(updateByCode==0){
+						throw new BkgModuleException(Resources.getMessage("error.bkg.biz.DirvingPlan.updateByCode.fail"));
+					}
+					/**进港 如果当前网点是 最后一站 更新发车计划状态
+					 * 提示语 : 司机端: 谢谢您，本次发车计划已完成  
+					 * 			当前网点: 请对司机的服务质量进行评价
+					 * 			其他网点:如果已评价 则无提示语, 没有评价则 
+					 * */
+					/**
+					 * 司机提示语
+					 */
+					dirvingPlanDetail.setPlanDriverPrompt("谢谢您，本次发车计划已完成!");
+					/**
+					 * 修改其它网点的提示语 					
+					 */
+					for(int i=1;i<dpds.size();i++){
+						DirvingPlanDetailVo siteVo = dpds.get(i);
+						/**
+						 * 如果已评价 则"", 未评价则提示: 请对司机的服务质量进行评价!
+						 */
+						siteAppraisePromt(siteVo);
+						updateByApp(siteVo);
+					}
+					/**清理 发车计划号  缓存 liwei*/
+					carPositioningCache.remove(dirvingPlanDetail.getDrivingPlanCode());
+					/**末端网点 给司机和调度台发送消息*/
+					/**查询发车计划*/
+					DirvingPlan drivingPlan = dirvingPlanBiz.findByrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());	
+					genenrateMessageToDriver(BkgConstants.RULE_CODE_END_SITE_TO_DRIVER_UNLOAD,BkgConstants.APP_DRIVER_TASK, drivingPlan);
+					generateMessageToDispatch( dirvingPlanDetail);
+				}else{
+					/**
+					 * 当前网点不是末端网点
+					 */
+					/**进港 当前网点不是最后一个网点 不更新发车计划状态
+					 * 提示语 : 司机端:  请准备出发前往下一网点    
+					 * 			当前网点: 请对司机的服务质量进行评价  
+					 * 			其他网点无提示语
+					 * */
+					/**
+					 * 司机提示语
+					 */
+					dirvingPlanDetail.setPlanDriverPrompt("请准备出发前往下一网点!");
+					/**
+					 * 其它网点的提示语 
+					 */
+					/**
+					 * 如果在当前网点前面 则 判断是够已评价 给出相应的提示语
+					 * 如果在后面则提示:  司机即将驶离【$前序网点名称$】
+					 */
+					setMiddleSitesPrompt(otherSites, current);
+					/**当前网点不是末端网点 向司机端和自己发送消息*/
+					/**查询发车计划*/
+					DirvingPlan drivingPlan = dirvingPlanBiz.findByrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());	
+					genenrateMessageToDriver(BkgConstants.RULE_CODE_SITE_TO_DRIVER_UNLOAD,BkgConstants.APP_DRIVER_TASK, drivingPlan);
+					genenrateMessageToSite(BkgConstants.RULE_CODE_SITE_TO_SITE_UNLOAD,BkgConstants.APP_DRIVING_PLAN_DETAIL,dirvingPlanDetail);
+				}
+			}else{
+				throw new BkgModuleException(Resources.getMessage("error.bkg.biz.DirvingPlanDetail.noDetails"));
+			}
+		}else{
+			/**出港  时确认装货操作*/
+			/**出港 网点端 确认装货 后变成  装货完成 同时更新司机端状态为 装货完成*/
+			dirvingPlanDetail.setPlanSiteStatus(BkgConstants.SITE_STATUS_LOAD);
+			dirvingPlanDetail.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_LOADING_FINISH);
+			/**出港
+			 * 提示语 : 司机端: 谢谢您，本次发车计划已完成  
+			 * 			当前网点: 请对司机的服务质量进行评价
+			 * 			其他网点:如果已评价 则无提示语, 没有评价则 
+			 * */
+			/**
+			 * 司机提示语
+			 */
+			dirvingPlanDetail.setPlanDriverPrompt("请准备出发前往下一网点!");
+			setMiddleSitesPrompt(otherSites, current);
+			/**当前网点不是末端网点 向司机端和自己发送消息*/
+			/**查询发车计划*/
+			DirvingPlan drivingPlan = dirvingPlanBiz.findByrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());	
+			genenrateMessageToDriver(BkgConstants.RULE_CODE_SITE_TO_DRIVER_LOAD,BkgConstants.APP_DRIVER_TASK, drivingPlan);
+			genenrateMessageToSite(BkgConstants.RULE_CODE_SITE_TO_SITE_LOAD,BkgConstants.APP_DRIVING_PLAN_DETAIL,dirvingPlanDetail);
+		}
+		/**
+		 * 当前网点的网点提示语
+		 */
+		dirvingPlanDetail.setPlanSitePrompt("请对司机的服务质量进行评价!");
+		/**更新明细的修改信息*/
+		OmgCmsOrgVo oo=OmgCmsOrgprocessor.findByBaseOrgCode(dirvingPlanDetail.getWayPointCode());
+		if(oo!=null){
+			dirvingPlanDetail.setUpdateEmp(oo.getOrgName());
+		}
+		dirvingPlanDetail.setUpdateOrg(dirvingPlanDetail.getWayPointCode());
+		dirvingPlanDetail.setUpdateTime(new Date());
+		int updateByApp = updateByApp(dirvingPlanDetail);
+		return updateByApp;
+	}
+	/**
+	 * 
+	 * @Description: 当前网点是最后一个网点时, 向平台发送消息
+	 * @param dirvingPlanDetail
+	 * @author lixueyuan
+	 * @date 2017年11月16日 下午8:15:51
+	 */
+	private void generateMessageToDispatch( DirvingPlanDetailVo dirvingPlanDetail) {
+		NoticeDetailVo noticeDetailVoDispatch=new NoticeDetailVo();
+		noticeDetailVoDispatch.setBusinessType("");
+		noticeDetailVoDispatch.setNoticeRuleCode(BkgConstants.RULE_CODE_END_SITE_TO_DISPATCH_UNLOAD);
+		noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVoDispatch);
+	}
+
+	/**
+	 * 
+	 * @Description: 网点 向 司机端获取发送消息
+	 * @param ruleCode  消息规则
+	 * @param businessType  功能模块
+	 * @param dirvingPlanDetail  发车计划明细()
+	 * @param drivingPlan 发车计划(司机手机号)
+	 * @author lixueyuan
+	 * @date 2017年11月16日 下午9:38:11
+	 */
+	private void genenrateMessageToDriver(String ruleCode, String businessType,DirvingPlan drivingPlan ){
+		if(drivingPlan!=null){
+			/**查询发车计划*/
+			NoticeDetailVo noticeDetailVoDriver=new NoticeDetailVo();
+			noticeDetailVoDriver.setNoticeRuleCode(ruleCode);
+			noticeDetailVoDriver.setUserPhone(drivingPlan.getDriverPhone());
+			noticeDetailVoDriver.setBusinessId(drivingPlan.getId());
+			noticeDetailVoDriver.setBusinessType(businessType);
+			noticeDetailBiz.generateMessage(drivingPlan, noticeDetailVoDriver);
+		}
+	}
+	/**
+	 * 
+	 * @Description: 网点 向 网点端获取发送消息
+	 * @param ruleCode  消息规则
+	 * @param businessType  功能模块
+	 * @param dirvingPlanDetail  发车计划明细()
+	 * @param drivingPlan 发车计划(司机手机号)
+	 * @author lixueyuan
+	 * @date 2017年11月16日 下午9:38:11
+	 */
+	private void genenrateMessageToSite(String ruleCode, String businessType,DirvingPlanDetailVo dirvingPlanDetail){
+		if(dirvingPlanDetail!=null){
+			MobileuserVo mobileuserVo=new MobileuserVo();
+			mobileuserVo.setBaseOrgCode(dirvingPlanDetail.getWayPointCode());
+			mobileuserVo.setDotType(true);
+			mobileuserVo.setDelFlag(false);
+			mobileuserVo.setCertifiFlag(true);
+			List<MobileuserVo> mobileuserVos=mobileuserService.findByCondition(mobileuserVo);
+			for(MobileuserVo vo:mobileuserVos){
+				/**查询发车计划*/
+				NoticeDetailVo noticeDetailVoSite=new NoticeDetailVo();
+				noticeDetailVoSite.setNoticeRuleCode(ruleCode);
+				noticeDetailVoSite.setUserPhone(vo.getMobilephone());
+				if(dirvingPlanDetail.getId()!=null){
+					noticeDetailVoSite.setBusinessId(Long.parseLong(dirvingPlanDetail.getId().toString()));
+				}
+				noticeDetailVoSite.setBusinessType(businessType);
+				noticeDetailBiz.generateMessage(dirvingPlanDetail, noticeDetailVoSite);
+			}
+		}
+	}
+	/**
+	 * 
+	 * @Description:网点装卸后确认后  修改其它网点 (途径点)提示语
+	 * @param otherSites
+	 * @param current
+	 * @author lixueyuan
+	 * @date 2017年11月15日 下午2:44:50
+	 */
+	private void setMiddleSitesPrompt(Map<Integer, DirvingPlanDetailVo> otherSites, DirvingPlanDetailVo current) {
+		for (Entry<Integer, DirvingPlanDetailVo> entry: otherSites.entrySet()) {
+			Integer sort = entry.getKey();
+			DirvingPlanDetailVo dvo = entry.getValue();
+			if(sort<current.getSort()){
+				siteAppraisePromt(dvo);
+			} else if(sort>current.getSort()){
+				dvo.setPlanSitePrompt("司机即将驶离【"+current.getWayPointName()+"】");
+			}
+			updateByApp(dvo);
+		}
+	}
+	/**
+	 * 
+	 * @Description:  如果已评价 则"", 未评价则提示: 请对司机的服务质量进行评价!
+	 * @param siteVo
+	 * @author lixueyuan
+	 * @date 2017年11月15日 下午2:34:07
+	 */
+	private void siteAppraisePromt(DirvingPlanDetailVo siteVo) {
+		if(null ==siteVo.getAppraiseTime()){//没有评价
+			siteVo.setPlanSitePrompt("请对司机的服务质量进行评价!");
+		}else{//已评价
+			siteVo.setPlanSitePrompt("");
+		}
+	}
+	
+	/**
+	 * @Description: 网点端 查询运输动态明细
+	 * @param dirvingPlanDetailVo 发车计划明细
+	 * @param page 分页参数
+	 * @return 发车计划明细
+	 * @author liwei
+	 * @date 2017年10月26日 下午05:05:52
+	 */
+	@Override
+	public DrivingPlanExecutedVo findByDetailId(Long detailId) {
+		DrivingPlanExecutedVo dirvingPlanDetai= new DrivingPlanExecutedVo();
+		dirvingPlanDetai.setDetailId(detailId);
+		/**查询本站网点*/
+		List<DrivingPlanExecutedVo> vos = dirvingPlanDetailService.findSiteDepartPlan(dirvingPlanDetai);
+		DrivingPlanExecutedVo currentSite;
+		if(null !=vos &&!vos.isEmpty()){
+			currentSite = vos.get(0);
+			DirvingPlanDetailVo activeSite = new DirvingPlanDetailVo();
+			activeSite.setDrivingPlanCode(currentSite.getDrivingPlanCode());
+			activeSite.setWayPointCode(currentSite.getNextStationCode());
+			/**司机在网点*/
+			List<DirvingPlanDetailVo> activeSites = dirvingPlanDetailService.findByCode(activeSite);
+			if(null!=activeSites&&!activeSites.isEmpty()){
+				DirvingPlanDetailVo active = activeSites.get(0);
+				currentSite.setPlanSiteStatus(active.getPlanSiteStatus());
+			}
+		}else{
+			currentSite = null;
+		}
+		return currentSite;
+	}
+	
+	
+	/**
+	 * 
+	 * @Description: 根据发车计划号和网点编号 更新发车计划明细
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月12日 下午10:05:48
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updateByApp(DirvingPlanDetailVo dirvingPlanDetail){
+		DirvingPlanDetail convertObject = ObjectConvertUtil.convertObject(dirvingPlanDetail, DirvingPlanDetail.class);
+		return dirvingPlanDetailService.updateByApp(convertObject);
+	}
+	/**
+	 * 
+	 * @Description: 根据发车计划号 查询发车计划
+	 * @param dirvingPlanDetailVo
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月15日 下午9:03:55
+	 */
+	@Override
+	public DirvingPlan getStation(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		System.out.print("biz接收参数：" + dirvingPlanDetailVo.getDrivingPlanCode());
+		System.out.print(dirvingPlanDetailVo);
+		return  dirvingPlanDetailService.getStation(dirvingPlanDetailVo.getDrivingPlanCode());
+		
+	}
+	/**
+	 * 
+	 * @Description: 条件查询某个发车计划号详情
+	 * @param dirvingPlanDetailVo
+	 * @return dirvingPlanDetail
+	 * @author haizhou
+	 * @date 2017年11月15日 下午9:03:55
+	 */
+	@Override
+	public DirvingPlanDetail findByCriteria(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		
+		return dirvingPlanDetailService.findByCriteria(dirvingPlanDetailVo);
+		
+	}
+
+	/**
+	 * 
+	 * @Description: (这里用一句话描述这个方法的作用) 
+	 * @param dirvingPlanDetail
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月16日 下午4:29:03
+	 */
+	@Override
+	public int updateByid(DirvingPlanDetail dirvingPlanDetail) {
+		return dirvingPlanDetailService.updateById(dirvingPlanDetail);
+	}
+	/**
+	 * 
+	 * @Description: 通过发车计划号查询发车计划号的详情列表
+	 * @param drivePlanCode
+	 * @return DirvingPlanDetail
+	 * @author huhaizhou
+	 * @date 2017年12月7日 下午4:29:03
+	 */
+	@Override
+	public List<DirvingPlanDetail> findByDrivePlanCode(String  drivePlanCode) {
+		return dirvingPlanDetailService.findByDrivePlanCode(drivePlanCode);
+	}
+	/**
+	 * @Description: 发车计划详情卸货确定
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public int outConfirmByCodeBak(DirvingPlanDetailVo dirvingPlanDetailVo){
+		/**
+		 * 通过途径点的code和name，发车计划号来查询详情
+		 */
+		DirvingPlanDetail findByCriteria = dirvingPlanDetailService.findByCriteria(dirvingPlanDetailVo);
+		if(findByCriteria==null){
+			return -1;
+		}
+		/**
+		 * 通过途径点的code去判断该点是网点还是中心
+		 */
+		OmgCmsOrgVo findByBaseOrgCode = omgCmsOrgBiz.findByBaseOrgCode(dirvingPlanDetailVo.getWayPointCode());
+		/**
+		 * 判断是网点还是分拨中心
+		 */
+		if(BkgConstants.ORG_TYPE_OPERATE_CENTER==findByBaseOrgCode.getOrgType()){
+			/**
+			 * 中心卸货
+			 */
+			if(BkgConstants.DRIVER_STATUS_UNLOADING_COMPLETED.equals(findByCriteria.getPlanDriverStatus())){
+				/**
+				 * 中心已经卸货确认
+				 */
+				return -2;
+			}
+			return dirvingPlanDetailService.centerUnload(dirvingPlanDetailVo);
+		}else{
+			/**
+			 * 网点卸货
+			 */
+			if(BkgConstants.DRIVER_STATUS_PENDING_CONFIRM.equals(findByCriteria.getPlanDriverStatus())){
+				/**
+				 * 网点已经卸货确认
+				 */
+				return -2;
+			}
+			return dirvingPlanDetailService.dotUnload(dirvingPlanDetailVo);
+		}
+		
+	}
+	/**
+	 * @Description: 发车计划详情装货确定
+	 * @param DirvingPlanDetailVo 发车计划详情类
+	 * @return  修改的数量
+	 * @author UCE-haizhou
+	 * @date 2017年11月7日 下午13:37:13
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public int inConfirmByCodeBak(DirvingPlanDetailVo dirvingPlanDetailVo) {
+		/**
+		 * 通过途径点的code和name，发车计划号来查询详情
+		 */
+		DirvingPlanDetail findByCriteria = dirvingPlanDetailService.findByCriteria(dirvingPlanDetailVo);
+		if(findByCriteria==null){
+			return -1;
+		}
+		/**
+		 * 通过途径点的code去判断该点是网点还是中心
+		 */
+		OmgCmsOrgVo findByBaseOrgCode = omgCmsOrgBiz.findByBaseOrgCode(dirvingPlanDetailVo.getWayPointCode());
+		/**
+		 * 判断是网点还是分拨中心
+		 */
+		if(BkgConstants.ORG_TYPE_OPERATE_CENTER==findByBaseOrgCode.getOrgType()){
+			/**
+			 * 中心卸货
+			 */
+			if(BkgConstants.DRIVER_STATUS_LOADING_FINISH.equals(findByCriteria.getPlanDriverStatus())){
+				/**
+				 * 中心已装货确认
+				 */
+				return -2;
+			}
+			return dirvingPlanDetailService.centerLoad(dirvingPlanDetailVo);
+		}else{
+			/**
+			 * 网点卸货
+			 */
+			if(BkgConstants.DRIVER_STATUS_LOAD_CONFIRM.equals(findByCriteria.getPlanDriverStatus())){
+				/**
+				 * 网点已经装货确认
+				 */
+				return -2;
+			}
+			return dirvingPlanDetailService.dotLoad(dirvingPlanDetailVo);
+			
+			
+		}
+	}
+	/**
+	 * @Description: 通过发车计划号获取所在站点的发车计划详情信息 ()
+	 * @param drivingPlanCode 发车计划号
+	 * @return map
+	 * @author UCE-haizhou
+	 * @date 2017年12月15日 下午13:37:13
+	 */
+	@Override
+	public DirvingPlanDetail findByCode(String drivingPlanCode) {
+		DirvingPlanDetail findByCriteria=null;
+		/**
+		 * 通过发车计划号查询该车辆的所处的任务详情地点
+		 */
+		DirvingPlan findByrivingPlanCode = dirvingPlanBiz.findByrivingPlanCode(drivingPlanCode);
+		if(findByrivingPlanCode!=null){
+			if(StringUtil.isBlank(findByrivingPlanCode.getNextStationCode()) &&
+					StringUtil.isBlank(findByrivingPlanCode.getNextStation())
+					){
+				return  null;
+			}
+			DirvingPlanDetailVo dirvingPlanDetailVo = new DirvingPlanDetailVo();
+			dirvingPlanDetailVo.setDrivingPlanCode(drivingPlanCode);
+			dirvingPlanDetailVo.setWayPointCode(findByrivingPlanCode.getNextStationCode());
+			dirvingPlanDetailVo.setWayPointName(findByrivingPlanCode.getNextStation());
+			findByCriteria = dirvingPlanDetailService.findByCriteria(dirvingPlanDetailVo);
+			if(findByCriteria==null){
+				return  null;
+			}
+			dirvingPlanDetailService.checkUtil(findByCriteria,findByrivingPlanCode);
+		}
+
+		return findByCriteria;
+	}
+	/**
+	 * @Description: 通过发车计划详情的id获取所在站点的发车计划详情信息 ()
+	 * @param drivingPlanCode 发车计划号
+	 * @return map
+	 * @author UCE-haizhou
+	 * @date 2017年12月15日 下午13:37:13
+	 */
+	@Override
+	public DirvingPlanDetail getById(Long id) {
+		DirvingPlanDetail dirvingPlanDetail  = dirvingPlanDetailService.findById(id);
+		if(dirvingPlanDetail==null){
+			return null;
+		}
+		DirvingPlan findByrivingPlanCode = dirvingPlanBiz.findByrivingPlanCode(dirvingPlanDetail.getDrivingPlanCode());
+		if(findByrivingPlanCode==null){
+			return  null;
+		}
+		dirvingPlanDetailService.checkUtil(dirvingPlanDetail,findByrivingPlanCode);
+		return dirvingPlanDetail;
+	}
+	/**
+	 * @Description: 通过发车计划号获取所有的发车计划详情
+	 * @param drivingPlanCode 发车计划号
+	 * @return map
+	 * @author UCE-haizhou
+	 * @date 2017年12月15日 下午13:37:13
+	 */
+	@Override
+	public List<DirvingPlanDetail> findAllDetailByCode(String drivingPlanCode) {
+		DirvingPlan dirvingPlan = dirvingPlanService.findByPlanCode(drivingPlanCode);
+		List<DirvingPlanDetail> dirvingPlanDetails = dirvingPlanDetailService.findByDrivePlanCode(drivingPlanCode);
+		if(dirvingPlanDetails==null){
+			return  null;
+		}
+		for (int i = 0; i < dirvingPlanDetails.size(); i++) {
+			dirvingPlanDetailService.checkUtil(dirvingPlanDetails.get(i),dirvingPlan);
+		}
+		return dirvingPlanDetails;
+	}
+	/**
+	 * @Description: 司机异常上报
+	 * @param ExceptionManager 异常信息
+	 * @return 修改的条数
+	 * @author UCE-haizhou
+	 * @date 2017年12月18日 下午13:37:13
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	@Override
+	public int sendErrorBak(ExceptionManager exceptionManager) {
+		/**
+		 * 通过发车计划号的code查询发车计划号
+		 */
+		DirvingPlan dirvingPlan = dirvingPlanService.findByPlanCode(exceptionManager.getStartTrunkCode());
+		if(dirvingPlan==null){
+			return  -1;
+		}
+		DirvingPlanDetailVo dirvingPlanDetailVo = new DirvingPlanDetailVo();
+		/**设置发车计划号*/
+		dirvingPlanDetailVo.setDrivingPlanCode(dirvingPlan.getDrivingPlanCode());
+		/**设置所在站点信息*/
+		dirvingPlanDetailVo.setWayPointCode(dirvingPlan.getNextStationCode());
+		dirvingPlanDetailVo.setWayPointName(dirvingPlan.getNextStation());
+		DirvingPlanDetail dirvingPlanDetail = dirvingPlanDetailService.findByCriteria(dirvingPlanDetailVo);
+		dirvingPlanDetailVo = ObjectConvertUtil.convertObject(dirvingPlanDetail, DirvingPlanDetailVo.class);
+		
+		/**备份司机的状态*/
+		dirvingPlanDetailVo.setUtf3(dirvingPlanDetailVo.getPlanDriverStatus());
+		/**备份网点的状态*/
+		dirvingPlanDetailVo.setUtf2(dirvingPlanDetailVo.getPlanSiteStatus());
+		/**给司机赋值异常状态*/
+		dirvingPlanDetailVo.setPlanDriverStatus(BkgConstants.DRIVER_STATUS_SEND_ERROR);
+		/** 给司机的提示注入提示语*/
+		dirvingPlanDetailVo.setPlanDriverPrompt(PromptConstants.DRIVER_STATUS_SEND_ERROR);
+		dirvingPlan.setAbnormalState(BkgConstants.IS_EXCEPTION_IS);
+		int val=dirvingPlanDetailService.sendError(dirvingPlan,dirvingPlanDetailVo);
+		/**
+		 * 1,获取一条异常编码
+		 * 2,向异常表中添加一条异常的消息
+		 */
+		if(val>0){
+			exceptionManager.setExceptionCode(redisIdsWorker.nextId(IdsPrefix.YC));
+			 val = exceptionManagerService.addException(exceptionManager);
+		}
+		
+		return val;
+	}
+	
+	
+	
+}

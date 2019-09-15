@@ -1,0 +1,269 @@
+package cn.uce.suc.common.vo;
+
+/**
+ * 
+ * @Description: 车辆定位缓存
+ * @author liwei
+ * @date 2017年11月12日 下午10:38:08
+ */
+public class CarPositioningVo {
+	/**
+	 * 对应的手机号
+	 */
+	private String phoneMobile;
+	/**
+	 * 即将到达的站点
+	 */
+	private String stationCode;
+	/**
+	 * 即将到达的站点
+	 */
+	private String stationName;
+
+	/**
+	 * 组织类型
+	 */
+	private String orgType;
+	/**
+	 * 精度
+	 */
+	private String lat;
+	/**
+	 * 纬度
+	 */
+	private String lng;
+	
+	
+	/**
+	 * 精度车辆当前
+	 */
+	private String currentlat;
+	/**
+	 * 纬度车辆当前
+	 */
+	private String currentlng;
+	/**
+	 * 是否已经到达
+	 */
+	private boolean arriveFlag;
+	/**
+	 * 对应的发车计划号
+	 */
+	private String driverPlanCode;
+	/**
+	 * 距离--电子围栏半径
+	 */
+	private Double distane;
+	/**
+	 * 发车计划详情ID
+	 */
+	private Long planDetailId;
+	/**
+	 * 业务模式
+	 */
+	private String bussessModule;
+	/**
+	 * 发车计划ID
+	 */
+	private Long planId;
+	
+	
+	
+
+	public String getCurrentlat() {
+		return currentlat;
+	}
+
+	public void setCurrentlat(String currentlat) {
+		this.currentlat = currentlat;
+	}
+
+	public String getCurrentlng() {
+		return currentlng;
+	}
+
+	public void setCurrentlng(String currentlng) {
+		this.currentlng = currentlng;
+	}
+
+	/**
+	 * @return orgType
+	 */
+	public String getOrgType() {
+		return orgType;
+	}
+
+	/**
+	 * @param orgType
+	 *            the orgType to set
+	 */
+	public void setOrgType(String orgType) {
+		this.orgType = orgType;
+	}
+
+	/**
+	 * @return planId
+	 */
+	public Long getPlanId() {
+		return planId;
+	}
+
+	/**
+	 * @param planId
+	 *            the planId to set
+	 */
+	public void setPlanId(Long planId) {
+		this.planId = planId;
+	}
+
+	/**
+	 * @return stationName
+	 */
+	public String getStationName() {
+		return stationName;
+	}
+
+	/**
+	 * @param stationName
+	 *            the stationName to set
+	 */
+	public void setStationName(String stationName) {
+		this.stationName = stationName;
+	}
+
+	/**
+	 * @return bussessModule
+	 */
+	public String getBussessModule() {
+		return bussessModule;
+	}
+
+	/**
+	 * @param bussessModule
+	 *            the bussessModule to set
+	 */
+	public void setBussessModule(String bussessModule) {
+		this.bussessModule = bussessModule;
+	}
+
+	/**
+	 * @return planDetailId
+	 */
+	public Long getPlanDetailId() {
+		return planDetailId;
+	}
+
+	/**
+	 * @param planDetailId
+	 *            the planDetailId to set
+	 */
+	public void setPlanDetailId(Long planDetailId) {
+		this.planDetailId = planDetailId;
+	}
+
+	/**
+	 * @return distane
+	 */
+	public Double getDistane() {
+		return distane;
+	}
+
+	/**
+	 * @param distane
+	 *            the distane to set
+	 */
+	public void setDistane(Double distane) {
+		this.distane = distane;
+	}
+
+	/**
+	 * @return phoneMobile
+	 */
+	public String getPhoneMobile() {
+		return phoneMobile;
+	}
+
+	/**
+	 * @param phoneMobile
+	 *            the phoneMobile to set
+	 */
+	public void setPhoneMobile(String phoneMobile) {
+		this.phoneMobile = phoneMobile;
+	}
+
+	/**
+	 * @return stationCode
+	 */
+	public String getStationCode() {
+		return stationCode;
+	}
+
+	/**
+	 * @param stationCode
+	 *            the stationCode to set
+	 */
+	public void setStationCode(String stationCode) {
+		this.stationCode = stationCode;
+	}
+
+	/**
+	 * @return lat
+	 */
+	public String getLat() {
+		return lat;
+	}
+
+	/**
+	 * @param lat
+	 *            the lat to set
+	 */
+	public void setLat(String lat) {
+		this.lat = lat;
+	}
+
+	/**
+	 * @return lng
+	 */
+	public String getLng() {
+		return lng;
+	}
+
+	/**
+	 * @param lng
+	 *            the lng to set
+	 */
+	public void setLng(String lng) {
+		this.lng = lng;
+	}
+
+	/**
+	 * @return arriveFlag
+	 */
+	public boolean isArriveFlag() {
+		return arriveFlag;
+	}
+
+	/**
+	 * @param arriveFlag
+	 *            the arriveFlag to set
+	 */
+	public void setArriveFlag(boolean arriveFlag) {
+		this.arriveFlag = arriveFlag;
+	}
+
+	/**
+	 * @return driverPlanCode
+	 */
+	public String getDriverPlanCode() {
+		return driverPlanCode;
+	}
+
+	/**
+	 * @param driverPlanCode
+	 *            the driverPlanCode to set
+	 */
+	public void setDriverPlanCode(String driverPlanCode) {
+		this.driverPlanCode = driverPlanCode;
+	}
+
+}

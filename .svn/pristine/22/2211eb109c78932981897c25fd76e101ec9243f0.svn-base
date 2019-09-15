@@ -1,0 +1,85 @@
+package cn.uce.suc.common.util;
+
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
+import org.apache.shiro.session.InvalidSessionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.utils.StringUtil;
+import cn.uce.web.common.base.CurrentUser;
+
+/**
+ * @Description: 获取当前登录用户的数据编码转换
+ * @author chenwei
+ * @date 2017年05月31日 下午13:00:06
+ */
+public class DataConversionUtil {
+	// 加入日志
+	final static Logger logger = LoggerFactory.getLogger(DataConversionUtil.class);
+
+	/**
+	 * 根据平台获取的登录信息解码成NOS登录信息
+	 * 
+	 * @param userInfo
+	 *            平台登录用户
+	 * @return 解码后的NOS登录用户信息
+	 */
+	public static SucCurrentUser getUserInfo(CurrentUser userInfo) {
+		// 获取当前类名
+		String className = "DataConversionUtil";
+		String method = "getUserInfo";
+		// 解码userInfo对象
+		SucCurrentUser currentUser = new SucCurrentUser();
+		if (userInfo != null) {
+			try {
+				// 通过URLDecoder解码后存储到NosCurrentUser对象中
+				currentUser.setCmsOrgCode(getNodeData(userInfo.getCmsOrgCode()));
+				currentUser.setCmsOrgId(getNodeData(userInfo.getCmsOrgId()));
+				currentUser.setEmpCode(getNodeData(userInfo.getEmpCode()));
+				currentUser.setEmpName(getNodeData(userInfo.getEmpName()));
+				currentUser.setCmsOrgType(userInfo.getCmsOrgType());
+				currentUser.setCmsBaseOrgCode(getNodeData(userInfo.getCmsBaseOrgCode()));
+				currentUser.setCmsOrgName(getNodeData(userInfo.getCmsOrgName()));
+			} catch (InvalidSessionException e) {
+				String errorCode = SucConstants.NOS_CONVERSION_DATA_STATUS;
+				String errorInfo = e.getMessage();
+				// 开发环境中用于推进程序的日志记录
+				logger.trace(e.getMessage(), e);
+			} catch (UnsupportedEncodingException e) {
+				String errorCode = SucConstants.NOS_CONVERSION_DATA_STATUS;
+				String errorInfo = e.getMessage();
+				// 开发环境中用于推进程序的日志记录
+				logger.trace(e.getMessage(), e);
+			} catch (Exception e) {
+				String errorCode = SucConstants.NOS_CONVERSION_DATA_STATUS;
+				String errorInfo = e.getMessage();
+				// 开发环境中用于推进程序的日志记录
+				logger.trace(e.getMessage(), e);
+			}
+		}
+		return currentUser;
+	}
+
+	/**
+	 * 根据URLDecoder解码登录用户信息
+	 * 
+	 * @param nodeKey
+	 *            解码节点信息
+	 * @return ""解码失败
+	 * @throws InvalidSessionException
+	 * @throws UnsupportedEncodingException
+	 */
+	public static String getNodeData(String nodeKey) throws InvalidSessionException, UnsupportedEncodingException {
+		// 判断传入的nodeKey是否不为null
+		/*
+		 * if(StringUtil.isNotEmpty(nodeKey)){ return URLDecoder.decode(nodeKey,
+		 * "UTF-8"); } return "";
+		 */
+		return StringUtil.isNotEmpty(nodeKey) ? URLDecoder.decode(nodeKey, "UTF-8") : "";
+	}
+}

@@ -1,0 +1,29 @@
+package cn.uce.suc.bkg.dao.datamain;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.bkg.entity.datamain.CapacityGapManagement;
+import cn.uce.suc.bkg.vo.datamain.CapacityGapManagementVo;
+
+/**
+ * @Description: 运力缺口管理DAO接口类
+ * @author yanglei
+ * @date 2017年10月25日 下午03:24:55
+ */
+@Repository("capacityGapManagementDao")
+public interface ICapacityGapManagementDao extends IBaseDao<CapacityGapManagement, Long> {
+	
+	/**
+	 * @Description: 分页查询运力缺口管理
+	 * @param capacityGapManagementVo 运力缺口管理
+	 * @param page 分页参数
+	 * @return 运力缺口管理
+	 * @author yanglei
+	 * @date 2017年10月25日 下午03:24:55
+	 */
+	public Pagination<CapacityGapManagementVo> findByPagination(CapacityGapManagementVo capacityGapManagementVo, Page page);
+	
+}

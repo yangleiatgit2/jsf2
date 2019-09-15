@@ -1,0 +1,146 @@
+package cn.uce.suc.bkg.control.datamain;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.biz.imp.ActivityAdvertBiz;
+import cn.uce.suc.common.dao.IVersionDao;
+import cn.uce.suc.common.entity.ActivityAdvert;
+import cn.uce.suc.common.entity.Version;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.suc.common.vo.ActivityAdvertVo;
+import cn.uce.suc.common.vo.SucCurrentUser;
+import cn.uce.suc.common.vo.VersionVo;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.WebUtil;
+/**
+ * 
+ * @Description: 首页banner管理控制器
+ * @author yanglei
+ * @date 2017年12月6日 上午10:09:27
+ */
+@Controller
+@RequestMapping("/activityAdvert")
+public class ActivityAdvertController extends BaseController{
+	
+	/**
+	 * 注入ActivityAdvertBiz对象
+	 */
+	@Resource
+	private ActivityAdvertBiz activityAdvertBiz;  //活动广告宣传biz
+	@Resource
+	private IVersionDao versionDao;
+	
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/activityAdvert";
+	}
+	
+	@RequestMapping(value = "/findBycondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(ActivityAdvertVo ActivityAdvertVo, Page page) {
+		//TransportEffective transportEffective = ObjectConvertUtil.convertObject(transportEffectiveVo, TransportEffective.class);
+		Pagination<ActivityAdvert> pagination = activityAdvertBiz.findByPagination(ActivityAdvertVo, page);
+		return returnSuccess(pagination);
+	}
+	/**
+	 * 
+	 * @Description: 添加活动广告
+	 * @param ids
+	 * @param lineClassVo
+	 * @param request
+	 * @return @
+	 * @author yanglei
+	 * @date 2017年10月20日 下午1:32:17
+	 */
+	@RequestMapping(value = "add")
+	@ResponseBody
+	public Map<String, Object> add(ActivityAdvertVo vo, HttpServletRequest request) {
+		SucCurrentUser userInfo = DataConversionUtil.getUserInfo(WebUtil.getCurrentUser());
+		vo.setCreateEmp(userInfo.getEmpName());
+		vo.setVersion(1);
+		
+		int res = activityAdvertBiz.addActivityAdvert(vo);
+		if (res > 0) {
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}else{
+			return returnError(Resources.getMessage("common.save.fail"));
+		}
+	}
+	/**
+	 * 
+	 * @Description: 修改活动广告
+	 * @param ids
+	 * @param lineClassVo
+	 * @param request
+	 * @return @
+	 * @author yanglei
+	 * @date 2017年10月20日 下午1:32:17
+	 */
+	@RequestMapping(value = "update")
+	@ResponseBody
+	public Map<String, Object> update(ActivityAdvertVo vo, HttpServletRequest request) {
+//		ActivityAdvert entity=new ActivityAdvert();
+//		BeanUtils.copyProperties(vo, entity);
+		int res = activityAdvertBiz.updateActivityAdvert(vo);
+		if (res > 0) {
+			return returnSuccess(Resources.getMessage("common.save.success"));
+		}else{
+			return returnError(Resources.getMessage("common.save.fail"));
+		}
+	}
+
+	
+	/**
+	 * 
+	 * @Description: 刪除
+	 * @param ids
+	 * @param request
+	 * @return @
+	 * @author yanglei
+	 * @date 2017年10月20日 下午1:32:17
+	 */
+	@RequestMapping(value = "delete", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> delete(String idStrs) {
+		String[] ids=idStrs.split(",");
+		int result=0;
+		for(String id : ids){
+			activityAdvertBiz.deleteActivityAdvert(Long.parseLong(id));
+			result++;
+		}
+		if(result>0){
+			return returnSuccess(Resources.getMessage("common.delete.success"));
+		}else{
+			return returnError(Resources.getMessage("common.delete.fail"));
+		}
+	}
+	/**
+	 * @Description: 分页查询移动端软件更新记录
+	 * @param versionVo 移动端软件更新记录
+	 * @param page 分页参数
+	 * @return 移动端软件更新记录
+	 * @author yanglei
+	 * @date 2017年11月12日 上午09:15:11
+	 */
+	@RequestMapping("/findListByVo")
+	@ResponseBody
+	public Map<String,Object> findListByVo(String appType){
+		VersionVo versionVo =new VersionVo();
+		versionVo.setAppType(appType);
+		List<Version> list=versionDao.findByListByVo(versionVo);
+		return returnSuccess(list);
+	}
+}

@@ -1,0 +1,49 @@
+package cn.uce.suc.app.control;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.suc.app.biz.impl.ServiceevaluationBiz;
+import cn.uce.suc.app.entity.Serviceevaluation;
+import cn.uce.suc.common.util.BaseAppController;
+
+/**
+ * 
+ * @Description: 司机平分 
+ * @author litianjian
+ * @date 2017年12月7日 下午4:45:10
+ */
+@Controller
+@RequestMapping("/app/scoreforDriver")
+public class ScoreforDriverController extends BaseAppController{
+	
+	/**
+	 * 资源注入
+	 */
+	@Resource
+	ServiceevaluationBiz sucAppServiceevaluationBiz;
+	/**
+	 * 
+	 * @Description: 查询平分 
+	 * @param mobliePhone
+	 * @return
+	 * @author liwei
+	 * @date 2017年12月7日 下午4:45:28
+	 */
+	@GetMapping(value = "findByDriver")
+	@ResponseBody
+	public Map<String, Object> findByDriver(String mobliePhone){
+		/**
+		 * 查询司机评分
+		 */
+	Serviceevaluation sucAppServiceevaluation =	sucAppServiceevaluationBiz.findScoreforDriver(mobliePhone);
+		return returnSuccess(sucAppServiceevaluation);
+	}
+	
+}

@@ -1,0 +1,49 @@
+package cn.uce.suc.job;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cn.uce.suc.bkg.biz.datamain.ICapacityManagementBiz;
+
+import com.dangdang.ddframe.job.api.ShardingContext;
+import com.dangdang.ddframe.job.api.simple.SimpleJob;
+/**
+ * 
+ * @Description:运力状态
+ * @author liwei
+ * @date 2017年12月5日 下午1:24:08
+ */
+public class DotAbilityStaticsJob implements SimpleJob{
+	/**
+	 * 注入BIZ
+	 */
+	@Resource
+	private  ICapacityManagementBiz capacityManagementBiz;
+	/**
+	 * 日志
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(DotAbilityStaticsJob.class);
+	/**
+	 * 
+	 * @Description: 定时扫描所有的网点运力,获取所有的过期网点运力，修改状态过期
+	 * @return
+	 * @author huhaizhou
+	 * @date 2017年10月31日 下午8:44:58
+	 */
+	@Override
+	public void execute(ShardingContext arg0) {
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("定时任务扫描所有网点运力，获取所有过期的网点运力，修改运力状态=========>>>开始");
+		}
+		/**任务处理*/
+		int val = capacityManagementBiz.updateTimeOver();
+		/**日志输出*/
+		if (logger.isInfoEnabled()) {
+			logger.info("定时任务扫描所有网点运力，获取所有过期的网点运力，修改运力状态====="+val+"条过期====>>>结束");
+		}
+	}
+
+}

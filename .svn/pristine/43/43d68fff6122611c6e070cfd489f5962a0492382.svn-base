@@ -1,0 +1,56 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.ILineGroupRelBiz;
+import cn.uce.suc.bkg.entity.operation.LineGroupRel;
+import cn.uce.suc.bkg.vo.operation.LineGroupRelVo;
+
+/**
+ * @Description: 单元测试
+ * @author liwei
+ * @date 2017年12月7日 下午12:32:08
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class LineGroupRelBizTest extends AbstractJUnit4SpringContextTests {
+	/**
+	 * 注入
+	 */
+	@Resource
+	private ILineGroupRelBiz lineGroupRelBiz;
+/**
+ * 
+ * @Description: T单元测试
+ * @author liwei
+ * @date 2017年12月7日 下午3:02:28
+ */
+	@Test
+	public void testPro() {
+		/**创建对象*/
+		LineGroupRel lineGroupRel=new LineGroupRel();
+		/**新增*/
+		lineGroupRelBiz.addLineGroupRel(lineGroupRel);
+		/**id查询*/
+		lineGroupRelBiz.findById(lineGroupRel.getId());
+		/**id更新*/
+		lineGroupRelBiz.updateLineGroupRel(lineGroupRel);
+		/**删除*/
+		lineGroupRelBiz.deleteLineGroupRel(lineGroupRel.getId());
+		/**构建对象*/
+		LineGroupRelVo lineGroupRelVo=new LineGroupRelVo();
+		/**构建对象*/
+		Page page=new Page();
+		/**查询*/
+		lineGroupRelBiz.findByPagination(lineGroupRelVo, page);
+	}
+}

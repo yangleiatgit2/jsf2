@@ -1,0 +1,29 @@
+package cn.uce.suc.common.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.ExceptionInfo;
+import cn.uce.suc.common.vo.ExceptionInfoVo;
+
+/**
+ * @Description: DAO接口类
+ * @author UCE-CodeGenerator
+ * @date 2017年11月02日 下午02:23:32
+ */
+@Repository("exceptionInfoDao")
+public interface IExceptionInfoDao extends IBaseDao<ExceptionInfo, Long> {
+	
+	/**
+	 * @Description: 分页查询
+	 * @param exceptionInfoVo 
+	 * @param page 分页参数
+	 * @return 
+	 * @author UCE-CodeGenerator
+	 * @date 2017年11月02日 下午02:23:32
+	 */
+	public Pagination<ExceptionInfo> findByPagination(ExceptionInfoVo exceptionInfoVo, Page page);
+	
+}

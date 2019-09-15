@@ -1,0 +1,83 @@
+package cn.uce.suc.bkg.control.datastatis;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.excel.entity.vo.NormalExcelConstants;
+import cn.uce.core.poi.excel.entity.ExportParams;
+import cn.uce.suc.bkg.biz.datastatis.ILoadRatioReportBiz;
+import cn.uce.suc.bkg.vo.datastatis.LoadRatioReportVo;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.util.WebUtil;
+
+/**
+ * 
+ * @Description:  全局满载率统计报表
+ * @author xiesonglin
+ * @date 2017年12月3日 上午11:44:55
+ */
+@Controller
+@RequestMapping(value = "/loadRatioReport")
+public class LoadRatioReportController extends BaseController {
+
+	/**
+	 * biz注入
+	 */
+	@Resource
+	private ILoadRatioReportBiz loadRatioReportBiz;
+
+	/**
+	 * @Description:  主页跳转
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月3日 上午11:45:11
+	 */
+	@RequestMapping(value = "forward")
+	public String forward() {
+		return "bkg/loadRatioReport";
+	}
+
+	/**
+	 * @Description:  根据分页查询满载率报表 
+	 * @param loadRatioReportVo
+	 * @param page
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月4日 下午2:07:00
+	 */
+	@RequestMapping(value = "findLoadRatioReportByPage")
+	@ResponseBody
+	public Map<String, Object> findLoadRatioReportByPage(LoadRatioReportVo loadRatioReportVo, Page page) {
+		Pagination<LoadRatioReportVo> pagination=this.loadRatioReportBiz.findLoadRatioReportByPage(loadRatioReportVo, page);
+		return returnSuccess(pagination);
+	}
+	
+	/**
+	 * 
+	 * @Description:  数据导出 满载率统计
+	 * @param driverEvaluateReportVo
+	 * @param map
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月5日 下午4:21:49
+	 */
+	@RequestMapping(value="exportXls")
+	public String exportXls(LoadRatioReportVo loadRatioReportVo,ModelMap map){
+		List<LoadRatioReportVo> vos=this.loadRatioReportBiz.findByExport(loadRatioReportVo);
+		map.put(NormalExcelConstants.FILE_NAME, "满载率数据统计报表");
+		map.put(NormalExcelConstants.CLASS, LoadRatioReportVo.class);
+		map.put(NormalExcelConstants.PARAMS, new ExportParams("满载率数据统计", "导出人:"+DataConversionUtil.getUserInfo(WebUtil.getCurrentUser()).getEmpName(), "导出信息"));
+		map.put(NormalExcelConstants.DATA_LIST, vos);
+		return NormalExcelConstants.JEECG_EXCEL_VIEW;
+	}
+}

@@ -1,0 +1,46 @@
+package cn.uce.suc.app.biz.impl;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.app.biz.ISucDictDataBiz;
+import cn.uce.suc.app.cache.SucDictDataCache;
+import cn.uce.suc.app.entity.SucDictData;
+import cn.uce.suc.app.service.SucDictDataService;
+import cn.uce.suc.app.vo.SucDictDataVo;
+
+/**
+ * @Description: 系统类型BIZ实现类
+ * @author liwei
+ * @date 2017年10月26日 下午10:38:52
+ */
+@Service("sucDictDataBiz")
+public class SucDictDataBiz implements ISucDictDataBiz {
+	
+	/**
+	 * 注入系统类型Service
+	 */
+	@Resource
+	private SucDictDataService sucDictDataService;
+	
+	@Resource(name = "sucDictDataCache")
+	private SucDictDataCache sucDictDataCache;
+	
+	
+	/**
+	 * 
+	 * @Description: 根据typeClassCode查询数据字典
+	 * @param typeClassCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月26日 下午10:48:08
+	 */
+	public List<SucDictDataVo> findListByTypeClassCode(String typeClassCode){
+		return sucDictDataCache.get(typeClassCode);
+	}
+}

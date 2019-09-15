@@ -1,0 +1,110 @@
+package cn.uce.suc.common.util;
+
+import java.security.MessageDigest;
+
+import org.apache.commons.net.util.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * <pre>
+ * md5加密算法
+ * </pre>
+ * 
+ * @since
+ * 
+ *        <pre>
+ *   modify by liwei on 2016-8-24下午6:23:34
+ *    fix->1.
+ *         2.
+ * </pre>
+ */
+public class Md5Helper {
+
+	private static final char hexDigits[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
+			'e', 'f' };
+	private static final String CHARSET = "GBK";
+
+	/**
+	 * 日志
+	 */
+	private final static Logger logger = LoggerFactory.getLogger(Md5Helper.class);
+
+	/*
+	 * public static String md5(String data) { return md5(data, CHARSET, true);
+	 * }
+	 * 
+	 * public static String md5(String data, String charset) { return md5(data,
+	 * charset, true); }
+	 * 
+	 * public static String md5(String data, boolean isBase64) { return
+	 * md5(data, CHARSET, isBase64); }
+	 */
+	/**
+	 * 
+	 * @Description:MD5算法
+	 * @param data
+	 * @param charset
+	 * @param isBase64
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月3日 下午9:01:25
+	 */
+	public static String md5(String data, String charset, boolean isBase64) {
+		String digest = "";
+		try {
+			MessageDigest mdTemp = MessageDigest.getInstance("MD5");
+			mdTemp.update((data).getBytes(charset));
+			byte[] md5Bytes = mdTemp.digest();
+
+			if (isBase64) {
+				// digest = CodecUtil.encodeForBase64(md5Bytes);
+			} else {
+				int k = 0;
+				char str[] = new char[md5Bytes.length * 2];
+				for (byte c : md5Bytes) {
+					str[k++] = hexDigits[c >> 4 & 0xf];
+					str[k++] = hexDigits[c & 0xf];
+				}
+				digest = new String(str);
+			}
+		} catch (Exception e) {
+			logger.error("http请求一次", e);
+		}
+		return digest.replace("\r\n", "");
+	}
+
+	/**
+	 * 加密
+	 * 
+	 * @Description:
+	 * @param plainText
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月23日 上午11:59:10
+	 */
+	public static String encodeStr(String plainText) {
+		byte[] b = plainText.getBytes();
+		Base64 base64 = new Base64();
+		b = base64.encode(b);
+		String s = new String(b);
+		return s;
+	}
+
+	/**
+	 * 解密
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用)
+	 * @param encodeStr
+	 * @return
+	 * @author wangzhijun
+	 * @date 2017年11月23日 上午11:59:18
+	 */
+	public static String decodeStr(String encodeStr) {
+		byte[] b = encodeStr.getBytes();
+		Base64 base64 = new Base64();
+		b = base64.decode(b);
+		String s = new String(b);
+		return s;
+	}
+}

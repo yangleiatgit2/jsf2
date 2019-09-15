@@ -1,0 +1,324 @@
+package cn.uce.suc.bkg.biz.impl.price;
+
+import java.util.Date;
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.price.IPricingRuleTypeBiz;
+import cn.uce.suc.bkg.entity.price.PricingRuleType;
+import cn.uce.suc.bkg.entity.price.PricingRuleTypeDetail;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.service.price.PricingRuleTypeDetailService;
+import cn.uce.suc.bkg.service.price.PricingRuleTypeService;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeDetailVo;
+import cn.uce.suc.bkg.vo.price.PricingRuleTypeVo;
+import cn.uce.suc.common.constants.SucConstants;
+import cn.uce.suc.common.ids.IIdsWorker;
+import cn.uce.suc.common.ids.IdsConstants.IdsPrefix;
+import cn.uce.web.common.i18n.Resources;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+import com.alibaba.fastjson.JSON;
+
+/**
+ * @Description: 定价分类管理BIZ实现类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月31日 下午05:28:19
+ */
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+@Service("pricingRuleTypeBiz")
+public class PricingRuleTypeBiz implements IPricingRuleTypeBiz {
+
+	/**
+	 * 注入定价分类管理Service
+	 */
+	@Resource
+	private PricingRuleTypeService pricingRuleTypeService;
+
+	/**
+	 * 注入定价规则明细Service
+	 */
+	@Resource
+	private PricingRuleTypeDetailService detailService;
+
+	/**
+	 * 注入区号规则设置
+	 */
+	@Resource
+	private IIdsWorker redisIdsWorker;
+
+	/**
+	 * @Description: 新增定价分类管理
+	 * @param pricingRuleType
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int addPricingRuleType(PricingRuleType pricingRuleType) {
+		return pricingRuleTypeService.addPricingRuleType(pricingRuleType);
+	}
+
+	/**
+	 * @Description: 修改定价分类管理
+	 * @param pricingRuleType
+	 *            定价分类管理
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updatePricingRuleType(PricingRuleType pricingRuleType) {
+		return pricingRuleTypeService.updateById(pricingRuleType);
+	}
+
+	/**
+	 * @Description: 删除定价分类管理
+	 * @param id
+	 *            主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int deletePricingRuleType(Long id) {
+		return pricingRuleTypeService.deleteById(id);
+	}
+
+	/**
+	 * @Description: 根据ID查询定价分类管理
+	 * @param id
+	 *            主键
+	 * @return 定价分类管理
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	@Override
+	public PricingRuleType findById(Long id) {
+		return pricingRuleTypeService.findById(id);
+	}
+
+	/**
+	 * @Description: 分页查询定价分类管理
+	 * @param pricingRuleTypeVo
+	 *            定价分类管理
+	 * @param page
+	 *            分页参数
+	 * @return 定价分类管理
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月31日 下午05:28:19
+	 */
+	public Pagination<PricingRuleType> findByPagination(PricingRuleTypeVo pricingRuleTypeVo, Page page) {
+		Pagination<PricingRuleType> pagination = pricingRuleTypeService.findByPagination(pricingRuleTypeVo, page);
+		return pagination;
+	}
+
+	/**
+	 * (非 Javadoc)
+	 * <p>
+	 * Title: addPricingRuleType
+	 * </p>
+	 * <p>
+	 * Description: 保存定价规则
+	 * </p>
+	 * 
+	 * @param pricingRuleTypeVo
+	 * @param details
+	 * @return
+	 * @see cn.uce.suc.bkg.biz.price.IPricingRuleTypeBiz#addPricingRuleType(cn.uce.suc.bkg.vo.price.PricingRuleTypeVo,
+	 *      java.lang.String)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int addPricingRuleType(PricingRuleTypeVo pricingRuleTypeVo, String details) {
+		Page page = new Page();
+		page.setCurrentPage(1);
+		// 根据分拨中心+业务分类+组合类型 查询定价分类规则
+		PricingRuleTypeVo ruleTypeVo = new PricingRuleTypeVo();
+		ruleTypeVo.setWorkCenterCode(pricingRuleTypeVo.getWorkCenterCode());
+		ruleTypeVo.setBusinessType(pricingRuleTypeVo.getBusinessType());
+		ruleTypeVo.setGroupType(pricingRuleTypeVo.getGroupType());
+		ruleTypeVo.setDeleteFlag(false);
+		Pagination<PricingRuleType> pagination = pricingRuleTypeService.findByPagination(ruleTypeVo, page);
+		if (pagination != null && pagination.getPage().getTotal() > 0) {
+			throw new BkgModuleException(Resources.getMessage("error.bkg.biz.PricingRuleTypeBiz.PricingRuleTypeExist"));
+		}
+
+		String ruleTypeCode = redisIdsWorker.nextId(IdsPrefix.DJFL);
+		// 转化对象
+		PricingRuleType pricingRuleType = ObjectConvertUtil.convertObject(pricingRuleTypeVo, PricingRuleType.class);
+		pricingRuleType.setRuleTypeCode(ruleTypeCode);
+		int i = pricingRuleTypeService.addPricingRuleType(pricingRuleType);
+		// 反序列化对象
+		pricingRuleTypeVo.setId(pricingRuleType.getId());
+		addDetail(pricingRuleTypeVo, details, ruleTypeCode);
+		return i;
+	}
+
+	/**
+	 * 
+	 * @Description: 明细新增
+	 * @param pricingRuleTypeVo
+	 * @param details
+	 * @param ruleTypeCode
+	 * @author wangzhijun
+	 * @date 2017年11月6日 下午5:46:34
+	 */
+	private void addDetail(PricingRuleTypeVo pricingRuleTypeVo, String details, String ruleTypeCode) {
+		List<PricingRuleTypeDetail> ruleTypeDetails = JSON.parseArray(details, PricingRuleTypeDetail.class);
+		String[] siteCodes = null;
+		String[] siteNames = null;
+		PricingRuleTypeDetail ruleTypeDetail = null;
+		for (PricingRuleTypeDetail pricingRuleTypeDetail : ruleTypeDetails) {
+			siteCodes = pricingRuleTypeDetail.getUtf1().split(",");
+			siteNames = pricingRuleTypeDetail.getUtf2().split(",");
+			int m = 0;
+			for (String siteCode : siteCodes) {
+				ruleTypeDetail = new PricingRuleTypeDetail();
+				ruleTypeDetail.setRuleTypeId(pricingRuleTypeVo.getId());
+				ruleTypeDetail.setPricingType(pricingRuleTypeDetail.getPricingType());
+				ruleTypeDetail.setDeleteFlag(false);
+				ruleTypeDetail.setCreateEmp(pricingRuleTypeVo.getCreateEmp());
+				ruleTypeDetail.setUpdateEmp(pricingRuleTypeVo.getUpdateEmp());
+				ruleTypeDetail.setUpdateTime(new Date());
+				ruleTypeDetail.setVersion(SucConstants.ONE);
+				ruleTypeDetail.setSiteCode(siteCode);
+				ruleTypeDetail.setSiteName(siteNames[m]);
+				ruleTypeDetail.setRuleTypeCode(ruleTypeCode);
+				detailService.addPricingRuleTypeDetail(ruleTypeDetail);
+				m++;
+			}
+		}
+	}
+
+	/**
+	 * (非 Javadoc)
+	 * <p>
+	 * Title: 更新定价规则
+	 * </p>
+	 * <p>
+	 * Description:
+	 * </p>
+	 * 
+	 * @param pricingRuleType
+	 * @param details
+	 * @return
+	 * @see cn.uce.suc.bkg.biz.price.IPricingRuleTypeBiz#updatePricingRuleType(cn.uce.suc.bkg.entity.price.PricingRuleType,
+	 *      java.lang.String)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updatePricingRuleType(PricingRuleType pricingRuleType, String details) {
+		int i = pricingRuleTypeService.updateById(pricingRuleType);
+		// 先删除明细，再新增数据
+		detailService.deleteByRuleCode(pricingRuleType.getRuleTypeCode());
+		PricingRuleTypeVo pricingRuleTypeVo = ObjectConvertUtil.convertObject(pricingRuleType, PricingRuleTypeVo.class);
+		this.addDetail(pricingRuleTypeVo, details, pricingRuleType.getRuleTypeCode());
+		return i;
+	}
+
+	/**
+	 * (非 Javadoc)
+	 * <p>
+	 * Title: 升级版本
+	 * </p>
+	 * <p>
+	 * Description:
+	 * </p>
+	 * 
+	 * @param ruleType
+	 * @return
+	 * @see cn.uce.suc.bkg.biz.price.IPricingRuleTypeBiz#updateVersion(cn.uce.suc.bkg.entity.price.PricingRuleType)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updateVersion(PricingRuleType pricingRuleType) {
+		PricingRuleTypeDetailVo pricingRuleTypeDetailVo = new PricingRuleTypeDetailVo();
+		pricingRuleTypeDetailVo.setRuleTypeCode(pricingRuleType.getRuleTypeCode());
+		pricingRuleTypeDetailVo.setDeleteFlag(false);
+		List<PricingRuleTypeDetail> details = detailService.findByRuleCode(pricingRuleTypeDetailVo);
+		// 对原来版本进行逻辑删除
+		pricingRuleType.setDeleteFlag(true);
+		pricingRuleTypeService.updateById(pricingRuleType);
+		// 重复新增数据
+		pricingRuleType.setDeleteFlag(false);
+		pricingRuleType.setId(null);
+		pricingRuleType.setUpdateEmp(null);
+		pricingRuleType.setUpdateTime(null);
+		pricingRuleType.setRuleTypeVesion(pricingRuleType.getRuleTypeVesion() + 1);
+		pricingRuleType.setOldRuleTypeCode(pricingRuleType.getRuleTypeCode());
+		int i = pricingRuleTypeService.addPricingRuleType(pricingRuleType);
+		for (PricingRuleTypeDetail typeDetail : details) {
+			typeDetail.setDeleteFlag(true);
+			detailService.updateById(typeDetail);
+
+			typeDetail.setId(null);
+			typeDetail.setDeleteFlag(false);
+			typeDetail.setUpdateEmp(null);
+			typeDetail.setDeleteFlag(false);
+			typeDetail.setUpdateTime(null);
+			detailService.addPricingRuleTypeDetail(typeDetail);
+		}
+		return i;
+	}
+
+	/**
+	 * (非 Javadoc) 
+	* <p>Title: 版本升级支持明细可编辑</p> 
+	* <p>Description: </p> 
+	* @param pricingRuleType
+	* @param sourceDetails
+	* @return 
+	* @see cn.uce.suc.bkg.biz.price.IPricingRuleTypeBiz#updateVersion(cn.uce.suc.bkg.entity.price.PricingRuleType, java.lang.String)
+	 */
+	@Override
+	@Transactional(readOnly = false, propagation = Propagation.REQUIRED)
+	public int updateVersion(PricingRuleType pricingRuleType, String sourceDetails) {
+		PricingRuleTypeDetailVo pricingRuleTypeDetailVo = new PricingRuleTypeDetailVo();
+		pricingRuleTypeDetailVo.setRuleTypeCode(pricingRuleType.getRuleTypeCode());
+		pricingRuleTypeDetailVo.setDeleteFlag(false);
+		List<PricingRuleTypeDetail> details = detailService.findByRuleCode(pricingRuleTypeDetailVo);
+		
+		for (PricingRuleTypeDetail typeDetail : details) {
+			typeDetail.setDeleteFlag(true);
+			detailService.updateById(typeDetail);
+		}
+		
+		// 对原来版本进行逻辑删除
+		pricingRuleType.setDeleteFlag(true);
+		pricingRuleTypeService.updateById(pricingRuleType);
+		
+		// 重复新增数据
+		pricingRuleType.setDeleteFlag(false);
+		pricingRuleType.setId(null);
+//		pricingRuleType.setUpdateEmp(null);
+//		pricingRuleType.setUpdateTime(null);
+		pricingRuleType.setRuleTypeVesion(pricingRuleType.getRuleTypeVesion() + 1);
+		pricingRuleType.setOldRuleTypeCode(pricingRuleType.getRuleTypeCode());
+		int i = pricingRuleTypeService.addPricingRuleType(pricingRuleType);
+		
+		PricingRuleTypeVo pricingRuleTypeVo = ObjectConvertUtil.convertObject(pricingRuleType, PricingRuleTypeVo.class);
+		this.addDetail(pricingRuleTypeVo, sourceDetails, pricingRuleTypeVo.getRuleTypeCode());
+		
+		return i;
+	}
+
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则详情
+	 * @param pricingRuleTypeDetailVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月2日 下午5:18:23
+	 */
+	public List<PricingRuleTypeVo> findByCondition(PricingRuleTypeVo pricingRuleTypeVo){
+		return pricingRuleTypeService.findByCondition(pricingRuleTypeVo);
+	}
+}

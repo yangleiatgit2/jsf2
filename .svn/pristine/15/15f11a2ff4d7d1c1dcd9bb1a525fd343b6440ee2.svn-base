@@ -1,0 +1,39 @@
+package cn.uce.suc.bkg.biz.datastatis;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.vo.datastatis.LoadRatioReportVo;
+
+/**
+ * 
+ * @Description:  满载率报表 biz接口 
+ * @author xiesonglin
+ * @date 2017年12月4日 下午1:26:24
+ */
+public interface ILoadRatioReportBiz {
+
+	/**
+	 * 
+	 * @Description:  根据分页查询 满载率报表 
+	 * @param loadRatioReportVo
+	 * @param page
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月4日 下午1:27:11
+	 */
+	public Pagination<LoadRatioReportVo> findLoadRatioReportByPage(LoadRatioReportVo loadRatioReportVo,Page page);
+	
+	
+	/**
+	 * 
+	 * @Description:  根据查询条件查找数据 并用于数据导出 
+	 * @param loadRatioReportVo
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月5日 下午4:36:16
+	 */
+	public List<LoadRatioReportVo> findByExport(LoadRatioReportVo loadRatioReportVo);
+	
+}

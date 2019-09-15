@@ -1,0 +1,287 @@
+package cn.uce.suc.app.entity;
+
+import java.util.Date;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+/**
+ * @Description: app验证码Captcha类
+ * @author renxu
+ * @date 2017年10月10日 下午08:42:21
+ */
+/**
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月3日 下午8:55:24
+ */
+/**
+ * @Description: TODO(这里用一句话描述这个类的作用) 
+ * @author liwei
+ * @date 2017年11月3日 下午8:55:39
+ */
+@Table("t_suc_app_captcha")
+public class CaptchaEntity extends BaseEntity {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/** 手机号 */
+	private String mobilePhone;
+
+	/** 验证码值 */
+	private String content;
+
+	/** 比对次数 */
+	private Integer count;
+
+	/** 过期时间 */
+	private Date deadTime;
+
+	/** 平台类型 */
+	private Boolean dot_type;
+
+	/** 平台类型 */
+	private Boolean dpt_type;
+
+	/** 备注 */
+	private String remark;
+
+	/** 删除标志 */
+	private Integer deleteFlag;
+
+	/** 版本 */
+	private Integer version;
+
+	/** 创建人 */
+	private String createEmp;
+
+	/** 创建机构 */
+	private Integer createOrg;
+
+	/** 创建时间 */
+	private Date createTime;
+
+	/** 更新人 */
+	private String updateEmp;
+
+	/** 更新机构 */
+	private Integer updateOrg;
+
+	/** 更新时间 */
+	private Date updateTime;
+
+	/** 
+	 * @return mobilePhone 
+	 */
+	public String getMobilePhone() {
+		return mobilePhone;
+	}
+
+	/**
+	 * @param mobilePhone the mobilePhone to set
+	 */
+	public void setMobilePhone(String mobilePhone) {
+		this.mobilePhone = mobilePhone;
+	}
+
+	/** 
+	 * @return content 
+	 */
+	public String getContent() {
+		return content;
+	}
+
+	/**
+	 * @param content the content to set
+	 */
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	/** 
+	 * @return count 
+	 */
+	public Integer getCount() {
+		return count;
+	}
+
+	/**
+	 * @param count the count to set
+	 */
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
+	/** 
+	 * @return deadTime 
+	 */
+	public Date getDeadTime() {
+		return deadTime;
+	}
+
+	/**
+	 * @param deadTime the deadTime to set
+	 */
+	public void setDeadTime(Date deadTime) {
+		this.deadTime = deadTime;
+	}
+
+	/** 
+	 * @return dot_type 
+	 */
+	public Boolean getDot_type() {
+		return dot_type;
+	}
+
+	/**
+	 * @param dot_type the dot_type to set
+	 */
+	public void setDot_type(Boolean dot_type) {
+		this.dot_type = dot_type;
+	}
+
+	/** 
+	 * @return dpt_type 
+	 */
+	public Boolean getDpt_type() {
+		return dpt_type;
+	}
+
+	/**
+	 * @param dpt_type the dpt_type to set
+	 */
+	public void setDpt_type(Boolean dpt_type) {
+		this.dpt_type = dpt_type;
+	}
+
+	/** 
+	 * @return remark 
+	 */
+	public String getRemark() {
+		return remark;
+	}
+
+	/**
+	 * @param remark the remark to set
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	/** 
+	 * @return deleteFlag 
+	 */
+	public Integer getDeleteFlag() {
+		return deleteFlag;
+	}
+
+	/**
+	 * @param deleteFlag the deleteFlag to set
+	 */
+	public void setDeleteFlag(Integer deleteFlag) {
+		this.deleteFlag = deleteFlag;
+	}
+
+	/** 
+	 * @return version 
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+
+	/**
+	 * @param version the version to set
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	/** 
+	 * @return createEmp 
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+
+	/**
+	 * @param createEmp the createEmp to set
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	/** 
+	 * @return createOrg 
+	 */
+	public Integer getCreateOrg() {
+		return createOrg;
+	}
+
+	/**
+	 * @param createOrg the createOrg to set
+	 */
+	public void setCreateOrg(Integer createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	/** 
+	 * @return createTime 
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	/**
+	 * @param createTime the createTime to set
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	/** 
+	 * @return updateEmp 
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+
+	/**
+	 * @param updateEmp the updateEmp to set
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	/** 
+	 * @return updateOrg 
+	 */
+	public Integer getUpdateOrg() {
+		return updateOrg;
+	}
+
+	/**
+	 * @param updateOrg the updateOrg to set
+	 */
+	public void setUpdateOrg(Integer updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	/** 
+	 * @return updateTime 
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+
+	/**
+	 * @param updateTime the updateTime to set
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+}

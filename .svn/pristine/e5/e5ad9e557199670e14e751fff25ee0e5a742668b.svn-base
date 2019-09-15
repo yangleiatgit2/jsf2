@@ -1,0 +1,223 @@
+package cn.uce.suc.common.vo;
+
+import java.util.List;
+
+/**
+ * 
+ * @Description: 短信发送返回结果vo
+ * @author liwei
+ * @date 2017年12月1日 下午10:03:24
+ */
+public class NoticePushResultVo {
+	/**
+	 * 数据
+	 */
+	private String data;
+	/**
+	 * 错误编码
+	 */
+	private String errorCode;
+	/**
+	 * 备注
+	 */
+	private String errorRemark;
+	/**
+	 * 成功标示
+	 */
+	private String isSuccess;
+	/**
+	 * 消息id
+	 */
+	private String reqId;
+	private List<RmList> rmList;
+
+	/**
+	 * @return data
+	 */
+	public String getData() {
+		return data;
+	}
+
+	/**
+	 * @param data
+	 *            the data to set
+	 */
+	public void setData(String data) {
+		this.data = data;
+	}
+
+	/**
+	 * @return errorCode
+	 */
+	public String getErrorCode() {
+		return errorCode;
+	}
+
+	/**
+	 * @param errorCode
+	 *            the errorCode to set
+	 */
+	public void setErrorCode(String errorCode) {
+		this.errorCode = errorCode;
+	}
+
+	/**
+	 * @return errorRemark
+	 */
+	public String getErrorRemark() {
+		return errorRemark;
+	}
+
+	/**
+	 * @param errorRemark
+	 *            the errorRemark to set
+	 */
+	public void setErrorRemark(String errorRemark) {
+		this.errorRemark = errorRemark;
+	}
+
+	/**
+	 * @return isSuccess
+	 */
+	public String getIsSuccess() {
+		return isSuccess;
+	}
+
+	/**
+	 * @param isSuccess
+	 *            the isSuccess to set
+	 */
+	public void setIsSuccess(String isSuccess) {
+		this.isSuccess = isSuccess;
+	}
+
+	/**
+	 * @return reqId
+	 */
+	public String getReqId() {
+		return reqId;
+	}
+
+	/**
+	 * @param reqId
+	 *            the reqId to set
+	 */
+	public void setReqId(String reqId) {
+		this.reqId = reqId;
+	}
+
+	/**
+	 * @return rmList
+	 */
+	public List<RmList> getRmList() {
+		return rmList;
+	}
+
+	/**
+	 * @param rmList
+	 *            the rmList to set
+	 */
+	public void setRmList(List<RmList> rmList) {
+		this.rmList = rmList;
+	}
+
+	public class RmList {
+		/**
+		 * 错误编码
+		 */
+		private String errorCode;
+
+		/**
+		 * 是否成功
+		 */
+		private String isSuccess;
+		/**
+		 * 手机号
+		 */
+		private String mobile;
+		/**
+		 * 消息编码
+		 */
+		private String msgCode;
+		/**
+		 * 以几条短信发送
+		 */
+		private int smsNum;
+
+		/**
+		 * @return errorCode
+		 */
+		public String getErrorCode() {
+			return errorCode;
+		}
+
+		/**
+		 * @param errorCode
+		 *            the errorCode to set
+		 */
+		public void setErrorCode(String errorCode) {
+			this.errorCode = errorCode;
+		}
+
+		/**
+		 * @return isSuccess
+		 */
+		public String getIsSuccess() {
+			return isSuccess;
+		}
+
+		/**
+		 * @param isSuccess
+		 *            the isSuccess to set
+		 */
+		public void setIsSuccess(String isSuccess) {
+			this.isSuccess = isSuccess;
+		}
+
+		/**
+		 * @return mobile
+		 */
+		public String getMobile() {
+			return mobile;
+		}
+
+		/**
+		 * @param mobile
+		 *            the mobile to set
+		 */
+		public void setMobile(String mobile) {
+			this.mobile = mobile;
+		}
+
+		/**
+		 * @return msgCode
+		 */
+		public String getMsgCode() {
+			return msgCode;
+		}
+
+		/**
+		 * @param msgCode
+		 *            the msgCode to set
+		 */
+		public void setMsgCode(String msgCode) {
+			this.msgCode = msgCode;
+		}
+
+		/**
+		 * @return smsNum
+		 */
+		public int getSmsNum() {
+			return smsNum;
+		}
+
+		/**
+		 * @param smsNum
+		 *            the smsNum to set
+		 */
+		public void setSmsNum(int smsNum) {
+			this.smsNum = smsNum;
+		}
+
+	}
+}

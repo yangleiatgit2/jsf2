@@ -1,0 +1,260 @@
+package cn.uce.suc.bkg.biz.impl.ia;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.core.task.TaskRejectedException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import cn.uce.suc.bkg.biz.ia.IIaSyncBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandCombineBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderCombineBiz;
+import cn.uce.suc.bkg.biz.operation.IIaConfBiz;
+import cn.uce.suc.bkg.biz.operation.IIaMonitorBiz;
+import cn.uce.suc.bkg.entity.operation.FreightDemandCombine;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.exception.BkgIaException;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.service.operation.FreightDemandCombineService;
+import cn.uce.suc.bkg.service.operation.FreightOrderCombineService;
+import cn.uce.suc.bkg.vo.ia.FreigtCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.IaMonitorVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.utils.StringUtil;
+/**
+ * 
+ * @Description: 用于页面异步调用算法生成班次 
+ * @author laizhendong
+ * @date 2017年12月5日 下午2:14:40
+ */
+@Service("iaSyncBiz")
+@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
+public class IaSyncBiz implements IIaSyncBiz{
+	
+	
+	/**
+	 * 需求组合service
+	 */
+	@Resource
+	private IFreightDemandCombineBiz freightDemandCombineBiz;
+	
+	@Resource
+	private FreightDemandCombineService freightDemandCombineService;
+	
+	/**
+	 * 订单组合biz
+	 */
+	@Resource
+	private IFreightOrderCombineBiz freightOrderCombineBiz;
+	
+	/**
+	 * 订单组合service
+	 */
+	@Resource
+	private FreightOrderCombineService freightOrderCombineService;
+	
+	/**
+	 * 算法任务监控biz
+	 */
+	@Resource
+	private IIaMonitorBiz iaMonitorBiz;
+	
+	@Resource
+	private IIaConfBiz iaConfBiz;
+	
+	/**日志*/
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass()); 
+	
+	/**
+	 * 
+	 * @Description: 智能排班
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月7日 下午3:24:52
+	 */
+	public void smartSchedule(FreigtCombineVo freigtCombineVo){
+		if (null == freigtCombineVo || StringUtil.isBlank(freigtCombineVo.getCombineSourceType())
+				|| StringUtil.isBlank(freigtCombineVo.getCombineCode())) {
+			return;
+		}
+		//组合来源 需求或订单
+		String combieType = freigtCombineVo.getCombineSourceType();
+		try {
+			//需求
+			if (BkgConstants.COMBINE_SOURCE_TYPE_DEMAND.equals(combieType)) {
+				smartScheduleDemand(freigtCombineVo);
+			}else if (BkgConstants.COMBINE_SOURCE_TYPE_ORDER.equals(combieType)) {
+			//订单
+				smartScheduleOrder(freigtCombineVo);
+			}
+		} catch (TaskRejectedException e) {
+		//抛出TaskRejectedException异常标识队列已满，在页面提示用户。
+			if (logger.isErrorEnabled()) {
+				logger.error("当前执行排班任务队列已满" + e);
+			}
+			throw new BkgIaException("当前执行排班任务已满，请稍后执行！");
+		}
+		return;
+	}
+	
+	/**
+	 * 
+	 * @Description: 智能调度需求
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月7日 下午7:22:52
+	 */
+	private void smartScheduleDemand(FreigtCombineVo freigtCombineVo){
+		String combineCode = freigtCombineVo.getCombineCode();
+		//查询长期已生成的需求组合
+		FreightDemandCombineVo searchDemandCombine = new FreightDemandCombineVo();
+		searchDemandCombine.setDemandCombineCode(combineCode);
+		searchDemandCombine.setDemandCombineStatus(BkgConstants.DEMAND_COMBINE_STATUS_CREATE);
+		List<FreightDemandCombineVo> demandCombines = freightDemandCombineBiz.findByCondition(searchDemandCombine);
+		if (null == demandCombines || demandCombines.isEmpty()) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("没有该需求组合号【" + combineCode + "】");
+			}
+			throw new BkgIaException("长期需求组合组合编号【"+combineCode+"】不存在。");
+		}
+		//进港或出港
+		FreightDemandCombineVo demandCombineVo = demandCombines.get(0);
+		//根据组合编号校验需求组合执行状态
+		checkIaMonitor(demandCombineVo.getDemandCombineCode());
+		
+		String brotherCombineCode = freigtCombineVo.getBrotherCombineCode();
+		//长期 判断兄弟组合是不是在运行
+		if (BkgConstants.DEMAND_TYPE_LONG.equals(demandCombineVo.getDemandCombineType()) && StringUtil.isNotBlank(brotherCombineCode)) {
+			//根据组合编号校验需求组合执行状态
+			checkIaMonitor(brotherCombineCode);
+			searchDemandCombine.setDemandCombineCode(brotherCombineCode);
+			demandCombines = freightDemandCombineBiz.findByCondition(searchDemandCombine);
+			if (null == demandCombines || demandCombines.isEmpty()) {
+				if (logger.isWarnEnabled()) {
+					logger.warn("没有该需求组合号【" + combineCode + "】");
+				}
+				throw new BkgIaException("长期需求组合组合编号【"+combineCode+"】不存在。");
+			}
+			//进港或出港
+			FreightDemandCombineVo brotherDemandCombineVo = demandCombines.get(0);
+			//更新组合
+			FreightDemandCombine update = new FreightDemandCombine();
+			update.setCreateTime(null);
+			update.setId(demandCombineVo.getId());
+			update.setBrotherDemandCombineCode(brotherCombineCode);
+			freightDemandCombineService.updateById(update);
+			//更新兄弟组合
+			update = new FreightDemandCombine();
+			update.setCreateTime(null);
+			update.setId(brotherDemandCombineVo.getId());
+			update.setBrotherDemandCombineCode(combineCode);
+			freightDemandCombineService.updateById(update);
+			//设置对应组合编号
+			demandCombineVo.setBrotherDemandCombineCode(brotherCombineCode);
+			brotherDemandCombineVo.setBrotherDemandCombineCode(combineCode);
+			//异步调用
+			iaConfBiz.asyncRunDemandCombine(demandCombineVo,brotherDemandCombineVo);
+		}else {
+			//异步调用
+			iaConfBiz.asyncRunDemandCombine(demandCombineVo);
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 智能调度订单 
+	 * @param freigtCombineVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月7日 下午7:23:21
+	 */
+	private void smartScheduleOrder(FreigtCombineVo freigtCombineVo){
+		String combineCode = freigtCombineVo.getCombineCode();
+		//查询长期已生成的需求组合
+		FreightOrderCombineVo searchCombine = new FreightOrderCombineVo();
+		searchCombine.setOrderCombineCode(combineCode);
+		searchCombine.setOrderCombineStatus(BkgConstants.ORDER_COMBINE_STATUS_CREATE);
+		List<FreightOrderCombineVo> orderCombines = freightOrderCombineBiz.findByCondition(searchCombine);
+		//判空
+		if (null == orderCombines || orderCombines.isEmpty()) {
+			if (logger.isWarnEnabled()) {
+				logger.warn("没有该订单组合号【" + combineCode + "】");
+			}
+			throw new BkgIaException("长期订单组合组合编号【"+combineCode+"】不存在。");
+		}
+		//进港或出港
+		FreightOrderCombineVo orderCombineVo = orderCombines.get(0);
+		//校验订单组合执行状态
+		checkIaMonitor(orderCombineVo.getOrderCombineCode());
+		
+		String brotherCombineCode = freigtCombineVo.getBrotherCombineCode();
+		//长期 判断兄弟组合是不是在运行
+		if (BkgConstants.DEMAND_TYPE_LONG.equals(orderCombineVo.getOrderCombineType()) && StringUtil.isNotBlank(brotherCombineCode)) {
+			//根据组合编号校验需求组合执行状态
+			checkIaMonitor(brotherCombineCode);
+			searchCombine.setOrderCombineCode(brotherCombineCode);
+			orderCombines = freightOrderCombineBiz.findByCondition(searchCombine);
+			if (null == orderCombines || orderCombines.isEmpty()) {
+				if (logger.isWarnEnabled()) {
+					logger.warn("没有该订单组合号【" + brotherCombineCode + "】");
+				}
+				throw new BkgIaException("长期订单组合组合编号【"+brotherCombineCode+"】不存在。");
+			}
+			//进港或出港
+			FreightOrderCombineVo brotherCombineVo = orderCombines.get(0);
+			//更新组合
+			FreightOrderCombine update = new FreightOrderCombine();
+			update.setCreateTime(null);
+			update.setId(orderCombineVo.getId());
+			update.setBrotherOrderCombineCode(brotherCombineCode);
+			freightOrderCombineService.updateById(update);
+			//更新兄弟组合
+			update = new FreightOrderCombine();
+			update.setCreateTime(null);
+			update.setId(brotherCombineVo.getId());
+			update.setBrotherOrderCombineCode(combineCode);
+			freightOrderCombineService.updateById(update);
+			//设置对应组合编号
+			orderCombineVo.setBrotherOrderCombineCode(brotherCombineCode);
+			brotherCombineVo.setBrotherOrderCombineCode(combineCode);
+			//异步调用
+			iaConfBiz.asyncRunOrderCombine(orderCombineVo,brotherCombineVo);
+		}else {
+			//异步调用
+			iaConfBiz.asyncRunOrderCombine(orderCombineVo);
+		}
+		return;
+	}
+	
+	/**
+	 * 
+	 * 校验该组合是否在执行中
+	 * @param combineCode
+	 * @author laizhendong
+	 * @date 2017年11月30日 下午8:41:35
+	 */
+	private void checkIaMonitor(String combineCode){
+		IaMonitorVo dbIaMonitorVo = iaMonitorBiz.findByCombineCode(combineCode);
+		if (null != dbIaMonitorVo) {
+			String status = dbIaMonitorVo.getStatus();
+			//执行中
+			if (BkgConstants.MONITOR_STATUS_RUNNING.equals(status)) {
+				throw new BkgModuleException("该组合正在执行中,请稍后。。。");
+			}
+			//执行完成
+			if (BkgConstants.MONITOR_STATUS_SUCCESS.equals(status)) {
+				throw new BkgModuleException("该组合已执行完成,请刷新数据！");
+			}
+		}
+	}
+}

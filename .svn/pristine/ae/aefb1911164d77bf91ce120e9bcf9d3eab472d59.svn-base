@@ -1,0 +1,450 @@
+package cn.uce.suc.common.vo;
+
+import cn.uce.base.vo.BaseVo;
+
+import java.util.Date;
+
+/**
+ * @Description: 货运需求常用信息表Vo类
+ * @author yanglei
+ * @date 2017年12月01日 下午03:23:45
+ */
+public class FreightDemandOftenVo extends BaseVo {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * id 
+	 */
+	private Long id;
+    /** 
+	 * 是否拼车(默认 是 1,否 0) 
+	 */
+	private Boolean isCarpool;
+   /** 
+	 * 业务类型，进港出港
+	 */
+	private String businessMode;
+    /** 
+	 * 出发点名称 
+	 */
+	private String beginStation;
+    /** 
+	 * 出发点编码 
+	 */
+	private String beginStationCode;
+    /** 
+	 * 到达点名称 
+	 */
+	private String endStation;
+    /** 
+	 * 到达点编码 
+	 */
+	private String endStationCode;
+    /** 
+	 * 关联网点名称 
+	 */
+	private String carpoolSites;
+    /** 
+	 * 关联网点编码 
+	 */
+	private String carpoolSitesCodes;
+    /** 
+	 * 出发时间 
+	 */
+	private Date departureTime;
+    /** 
+	 * 到达时间 
+	 */
+	private Date arrivalTime;
+    /** 
+	 * 装卸货耗时(分钟) 
+	 */
+	private Integer layTime;
+    /** 
+	 * 备注，目前存放的是常用信息的简介和title 
+	 */
+	private String remark;
+    /** 
+	 * 删除标识(删除:1,默认0) 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建人 
+	 */
+	private String createEmp;
+    /** 
+	 * 创建时间 
+	 */
+	private Date createTime;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新人 
+	 */
+	private String updateEmp;
+    /** 
+	 * 更新时间 
+	 */
+	private Date updateTime;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+   /** 
+	 * 所属网点名称 
+	 */
+	private String belongStation;
+    /** 
+	 * 所属网点编码 
+	 */
+	private String belongStationCode;
+	
+	 /** 
+		 * 所属网点 
+		 */
+	public String getBelongStation() {
+		return belongStation;
+	}
+	 /** 
+		 * 所属网点
+		 */
+	public void setBelongStation(String belongStation) {
+		this.belongStation = belongStation;
+	}
+	 /** 
+		 * 所属网点
+		 */
+	public String getBelongStationCode() {
+		return belongStationCode;
+	}
+	 /** 
+		 * 所属网点 
+		 */
+	public void setBelongStationCode(String belongStationCode) {
+		this.belongStationCode = belongStationCode;
+	}
+
+	/**
+	 * 获取 id
+	 */
+	public Long getId() {
+		return id;
+	}
+	
+	/**
+	 * 设置 id
+	 */
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	/** 
+	 * 获取业务模式
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+
+	/** 
+	 * 业务模式
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+
+	/**
+	 * 获取 是否拼车(默认 是 1,否 0)
+	 */
+	public Boolean getIsCarpool() {
+		return isCarpool;
+	}
+	
+	/**
+	 * 设置 是否拼车(默认 是 1,否 0)
+	 */
+	public void setIsCarpool(Boolean isCarpool) {
+		this.isCarpool = isCarpool;
+	}
+
+	
+	/**
+	 * 获取 出发点名称
+	 */
+	public String getBeginStation() {
+		return beginStation;
+	}
+	
+	/**
+	 * 设置 出发点名称
+	 */
+	public void setBeginStation(String beginStation) {
+		this.beginStation = beginStation;
+	}
+
+	
+	/**
+	 * 获取 出发点编码
+	 */
+	public String getBeginStationCode() {
+		return beginStationCode;
+	}
+	
+	/**
+	 * 设置 出发点编码
+	 */
+	public void setBeginStationCode(String beginStationCode) {
+		this.beginStationCode = beginStationCode;
+	}
+
+	
+	/**
+	 * 获取 到达点名称
+	 */
+	public String getEndStation() {
+		return endStation;
+	}
+	
+	/**
+	 * 设置 到达点名称
+	 */
+	public void setEndStation(String endStation) {
+		this.endStation = endStation;
+	}
+
+	
+	/**
+	 * 获取 到达点编码
+	 */
+	public String getEndStationCode() {
+		return endStationCode;
+	}
+	
+	/**
+	 * 设置 到达点编码
+	 */
+	public void setEndStationCode(String endStationCode) {
+		this.endStationCode = endStationCode;
+	}
+
+	
+	/**
+	 * 获取 关联网点名称
+	 */
+	public String getCarpoolSites() {
+		return carpoolSites;
+	}
+	
+	/**
+	 * 设置 关联网点名称
+	 */
+	public void setCarpoolSites(String carpoolSites) {
+		this.carpoolSites = carpoolSites;
+	}
+
+	
+	/**
+	 * 获取 关联网点编码
+	 */
+	public String getCarpoolSitesCodes() {
+		return carpoolSitesCodes;
+	}
+	
+	/**
+	 * 设置 关联网点编码
+	 */
+	public void setCarpoolSitesCodes(String carpoolSitesCodes) {
+		this.carpoolSitesCodes = carpoolSitesCodes;
+	}
+
+	
+	/**
+	 * 获取 出发时间
+	 */
+	public Date getDepartureTime() {
+		return departureTime;
+	}
+	
+	/**
+	 * 设置 出发时间
+	 */
+	public void setDepartureTime(Date departureTime) {
+		this.departureTime = departureTime;
+	}
+
+	
+	/**
+	 * 获取 到达时间
+	 */
+	public Date getArrivalTime() {
+		return arrivalTime;
+	}
+	
+	/**
+	 * 设置 到达时间
+	 */
+	public void setArrivalTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+	
+	/**
+	 * 获取 装卸货耗时(分钟)
+	 */
+	public Integer getLayTime() {
+		return layTime;
+	}
+	
+	/**
+	 * 设置 装卸货耗时(分钟)
+	 */
+	public void setLayTime(Integer layTime) {
+		this.layTime = layTime;
+	}
+
+	
+	/**
+	 * 获取 备注，目前存放的是常用信息的简介和title
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注，目前存放的是常用信息的简介和title
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
+	
+	/**
+	 * 获取 删除标识(删除:1,默认0)
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 删除标识(删除:1,默认0)
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+
+	
+	/**
+	 * 获取 创建人
+	 */
+	public String getCreateEmp() {
+		return createEmp;
+	}
+	
+	/**
+	 * 设置 创建人
+	 */
+	public void setCreateEmp(String createEmp) {
+		this.createEmp = createEmp;
+	}
+
+	
+	/**
+	 * 获取 创建时间
+	 */
+	public Date getCreateTime() {
+		return createTime;
+	}
+	
+	/**
+	 * 设置 创建时间
+	 */
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+
+	
+	/**
+	 * 获取 更新人
+	 */
+	public String getUpdateEmp() {
+		return updateEmp;
+	}
+	
+	/**
+	 * 设置 更新人
+	 */
+	public void setUpdateEmp(String updateEmp) {
+		this.updateEmp = updateEmp;
+	}
+
+	
+	/**
+	 * 获取 更新时间
+	 */
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	
+	/**
+	 * 设置 更新时间
+	 */
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
+	}
+
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	
+}

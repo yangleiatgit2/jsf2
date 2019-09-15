@@ -1,0 +1,158 @@
+package cn.uce.suc.bkg.control.datamain;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.excel.entity.vo.NormalExcelConstants;
+import cn.uce.core.poi.excel.entity.ExportParams;
+import cn.uce.suc.bkg.biz.datamain.IOperationTimeBiz;
+import cn.uce.suc.bkg.entity.datamain.OperationTime;
+import cn.uce.suc.bkg.vo.datamain.OperationTimeVo;
+import cn.uce.suc.common.util.DataConversionUtil;
+import cn.uce.web.common.base.BaseController;
+import cn.uce.web.common.util.WebUtil;
+/**
+ * 
+ * @Description: 分拨中心时刻表controller
+ * @author zhangqiang
+ * @date 2017年10月27日 下午6:22:00
+ */
+@Controller
+@RequestMapping("/operationTime")
+public class OperationTimeController extends BaseController {
+	/**
+	 * 车辆管理biz
+	 */
+	@Resource
+	private IOperationTimeBiz operationTimeBiz;
+	/**
+	 * 
+	 * @Description: 页面跳转
+	 * @param request
+	 * @param response
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月27日 下午6:27:14
+	 */
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/operationTime";
+	}
+	/**
+	 * 
+	 * @Description: 根据条件查询时刻
+	 * @param page
+	 * @param carManageVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 上午10:38:20
+	 */
+	@RequestMapping(value = "findByCondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(Page page,OperationTimeVo operationTimeVo){
+		Pagination<OperationTime> times = operationTimeBiz.findByCondition(operationTimeVo,page);
+		return returnSuccess(times);
+	}
+	/**
+	 * 
+	 * @Description: 添加时刻表
+	 * @param operationTime
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 下午1:28:15
+	 */
+	@RequestMapping(value = "addOperaTime")
+	@ResponseBody
+	public Map<String, Object> addOperaTime(OperationTime operationTime){
+		int row = operationTimeBiz.addOperationTime(operationTime);
+		return returnSuccess(row);
+	}
+	/**
+	 * 
+	 * @Description: 修改时刻表
+	 * @param operationTime
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 下午1:42:39
+	 */
+	@RequestMapping(value = "updateOperaTime")
+	@ResponseBody
+	public Map<String, Object> updateOperaTime(OperationTime operationTime){
+		int row = operationTimeBiz.updateOperationTime(operationTime);
+		return returnSuccess(row);
+	}
+	/**
+	 * 
+	 * @Description: 根据ID查询分拨时刻
+	 * @param id
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 下午2:52:26
+	 */
+	@RequestMapping(value = "findById")
+	@ResponseBody
+	public Map<String, Object> findById(Integer id){
+		OperationTime operationTime = operationTimeBiz.findById(id.longValue());
+		return returnSuccess(operationTime);
+	}
+	/**
+	 * 
+	 * @Description: 删除
+	 * @param operationTime
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月8日 下午3:07:45
+	 */
+	@RequestMapping(value = "deleteOperaTime")
+	@ResponseBody
+	public Map<String, Object> deleteOperaTime(Long id){
+		int row = operationTimeBiz.deleteOperationTime(id);
+		return returnSuccess(row);
+	}
+	/**
+	 * 
+	 * @Description: 导出分拨时刻
+	 * @param carManageVo
+	 * @param request
+	 * @param response
+	 * @param map
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月30日 下午4:11:41
+	 */
+	@RequestMapping("exportXls")
+	public String exportXls(OperationTimeVo carManageVo, HttpServletRequest request, HttpServletResponse response, ModelMap map) {
+		List<OperationTimeVo> cars = operationTimeBiz.findByExport(carManageVo);
+		map.put(NormalExcelConstants.FILE_NAME, "分拨时刻表");
+		//List<CarExportVo> usersVos = ObjectConvertUtil.convertList(pageUsers.getData(), CarExportVo.class);
+		map.put(NormalExcelConstants.CLASS, OperationTimeVo.class);
+		map.put(NormalExcelConstants.PARAMS, new ExportParams("分拨时刻表", "导出人:"+DataConversionUtil.getUserInfo(WebUtil.getCurrentUser()).getEmpName() , "导出信息"));
+		map.put(NormalExcelConstants.DATA_LIST, cars);
+		return NormalExcelConstants.JEECG_EXCEL_VIEW;
+	}
+	/**
+	 * 
+	 * @Description: 查询分拨是否维护
+	 * @param operationCenterCode
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月8日 下午2:39:07
+	 */
+	@RequestMapping(value = "findCountByCenterCode")
+	@ResponseBody
+	public Map<String, Object> findCountByCenterCode(OperationTime operationTime){
+		Integer num = operationTimeBiz.findCountByCenterCode(operationTime);
+		return returnSuccess(num);
+	}
+}

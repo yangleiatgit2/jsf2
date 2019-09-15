@@ -1,0 +1,77 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandCombineBiz;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+
+/**
+ * 
+ * @Description: 货运需求组合表BIZ实现类 
+ * @author wangzhijun
+ * @date 2017年12月7日 下午2:50:04
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class FreightDemandCombineBizTest extends AbstractJUnit4SpringContextTests{
+	
+	/**
+	 * 注入biz对象
+	 */
+	@Resource
+	private IFreightDemandCombineBiz freightDemandCombineBiz;
+	
+	/**
+	 * 申明变量
+	 */
+	FreightDemandCombineVo freightDemandCombineVo;
+	Page page;
+	/**
+	 * 
+	 * @Description: 初始化对象赋值 
+	 * @author wangzhijun
+	 * @date 2017年12月7日 下午2:52:20
+	 */
+	@Before
+	public void init(){
+		freightDemandCombineVo = new FreightDemandCombineVo();
+		freightDemandCombineVo.setAutoGenerateRule("20171207001");
+		freightDemandCombineVo.setDemandCombineName("测试20171207001");
+		freightDemandCombineVo.setDemandCombineType("01");
+		
+		page = new Page();
+		page.setCurrentPage(1);
+	}
+	
+	/**
+	 * 
+	 * @Description: 单元测试执行
+	 * @author wangzhijun
+	 * @date 2017年12月7日 下午2:52:34
+	 */
+	@Test
+	public void test(){
+		freightDemandCombineBiz.addFreightDemandCombine(freightDemandCombineVo);
+		freightDemandCombineBiz.autoCombineLongTermDemands();
+		freightDemandCombineBiz.autoCombineShortTermDemands();
+		freightDemandCombineBiz.findByCondition(freightDemandCombineVo);
+		freightDemandCombineBiz.findById(freightDemandCombineVo.getId());
+		freightDemandCombineBiz.findByPagination(freightDemandCombineVo, page);
+		try {
+			freightDemandCombineBiz.updateFreightDemandCombine(freightDemandCombineVo);
+		} catch (Exception e) {
+			logger.info(e.getMessage());
+		}
+		freightDemandCombineBiz.deleteFreightDemandCombine(freightDemandCombineVo.getId());
+	}
+}

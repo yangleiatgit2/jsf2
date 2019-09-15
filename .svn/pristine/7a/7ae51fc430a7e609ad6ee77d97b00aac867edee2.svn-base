@@ -1,0 +1,195 @@
+package cn.uce.suc.dot.control;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IFreightDemandBiz;
+import cn.uce.suc.bkg.entity.operation.FreightDemand;
+import cn.uce.suc.bkg.service.operation.FreightDemandService;
+import cn.uce.suc.bkg.vo.operation.FreightDemandVo;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.service.MobileuserService;
+import cn.uce.suc.common.util.BaseAppController;
+import cn.uce.web.common.util.DateUtil;
+/**
+ * 
+ * @Description: 货运需求控制器
+ * @author zds
+ * @date 2017年10月18日 上午10:09:27
+ */
+@RestController
+@RequestMapping("/app/freightDemand")
+public class DotFreightDemandController extends BaseAppController{
+	
+	/**
+	 * 注入IFreightDemandBiz对象
+	 */
+	@Resource
+	private IFreightDemandBiz freightDemandBiz;
+	/**
+	 * 注入IFreightDemandBiz对象
+	 */
+	@Resource
+	private FreightDemandService freightDemandService;
+	
+	/**
+	 * 注入mobileUserService
+	 */
+	@Resource
+	private MobileuserService mobileUserService;
+	/**
+	 * 
+	 * @Description:  长/短期货运需求的增加
+	 * @param freightDemand
+	 * @return
+	 * @author zhandesheng
+	 * @date 2017年10月24日 下午8:27:25
+	 */
+	@PostMapping(value="addFreightDemand")
+	@ResponseBody
+	public  Map<String, Object> addLongFreightDemand(@RequestBody FreightDemandVo freightDemandVo ){
+		freightDemandVo.setCreateTime(new Date());
+		/*给需求的结束时间赋值  长期需求*/
+		if(null !=freightDemandVo.getDemandBeginTime()&&BkgConstants.DEMAND_TYPE_LONG.equals(freightDemandVo.getDemandType())){
+			Calendar cal =  Calendar.getInstance();
+			cal.setTime(freightDemandVo.getDemandBeginTime());
+			cal.add(Calendar.MONTH, 1);  
+		    cal.set(Calendar.DAY_OF_MONTH, 0);
+		    freightDemandVo.setDemandEndTime(cal.getTime());
+		}
+		/*给需求的结束时间赋值  临时需求*/
+		if(null !=freightDemandVo.getDemandBeginTime()&&BkgConstants.DEMAND_TYPE_TEMP.equals(freightDemandVo.getDemandType())){
+			freightDemandVo.setDemandEndTime(freightDemandVo.getDemandBeginTime());
+		}
+		freightDemandVo.setDemandStatus(BkgConstants.DEMAND_COMBINE_STATUS_CREATE);
+		int addFreightDemand = freightDemandBiz.appAddFreightDemand(freightDemandVo);
+		if(addFreightDemand==1){
+			return returnSuccess("货量预报提交成功!");
+		}else{
+			return returnError("货量预报提交失败!");
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description:  网点确认/终止需求
+	 * @param demandId 需求id
+	 * @param demandStatus 1代表网点已确认 2 代表终止
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月6日 下午5:28:22
+	 */
+	@GetMapping(value = "updateDemandStatusBySite")
+	@ResponseBody 
+	public Map<String, Object> UpdateFreightDemand(@RequestParam(value="demandId", required=true) String demandId ,@RequestParam(value="demandStatus", required=true)String demandStatus){
+		FreightDemandVo freightDemandVo = new FreightDemandVo();
+		freightDemandVo.setId(Long.valueOf(demandId));
+		freightDemandVo.setDemandStatus(demandStatus);
+		if("1".equals(demandStatus)){//网点已确认  
+			freightDemandVo.setDemandStatus(BkgConstants.DEMAND_STATUS_SITE_COMFIRM);
+		}
+		if("2".equals(demandStatus)){//网点已取消  
+			freightDemandVo.setDemandStatus(BkgConstants.DEMAND_STATUS_SITE_CANCALE);
+		}
+		int res = freightDemandBiz.appUpdateFreightDemand(freightDemandVo);
+		if(res>0){
+			if("1".equals(demandStatus)){//网点已确认
+				return returnSuccess("运输需求确认成功!");
+			}else{//网点已取消
+				return returnSuccess("运输需求取消成功!");
+			}
+		}else{
+			if("2".equals(demandStatus)){//网点已确认
+				return returnError("msg","运输需求确认失败!");
+			}else{//网点已取消
+				return returnError("msg","运输需求取消失败!");
+			}
+		}
+	}
+	
+	/**
+	 * 
+	 * @Description: 分页 查询 网点 的 货运需求
+	 * @param mobilePhone  网点手机号
+	 * @param demandStatus 需求状态
+	 * @param page 分页
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月7日 下午1:24:58
+	 */
+	@GetMapping(value = "findByPagination/{demandSiteCode}/{demandStatus}/{currentPage}/{pageSize}/{departTime}")
+	@ResponseBody
+	public  Map<String, Object> findByPagination(@PathVariable(value="demandSiteCode") String demandSiteCode, 
+			@PathVariable(value="demandStatus") String demandStatus ,
+			@PathVariable(value="currentPage" ,required=false) int currentPage,
+			@PathVariable(value="pageSize" ,required=false) int pageSize,
+			@PathVariable(value="departTime" ,required=false)String departTime){
+		FreightDemandVo vo = new FreightDemandVo();
+		if(null != demandStatus&&!demandStatus.isEmpty()){
+			if(BkgConstants.DEMAND_STATUS_QUOTE_YES.equals(demandStatus)){
+				String[] demandStatusList = new String[]{BkgConstants.DEMAND_STATUS_QUOTE_YES,BkgConstants.DEMAND_STATUS_SITE_COMFIRM,
+						BkgConstants.DEMAND_STATUS_CHECKED,BkgConstants.DEMAND_STATUS_LOCKED};
+				vo.setDemandStatusList(demandStatusList );
+				vo.setDemandStatus("");
+			}else if(BkgConstants.DEMAND_STATUS_SUBMIT.equals(demandStatus)){
+				String[] demandStatusList = new String[]{BkgConstants.DEMAND_STATUS_SUBMIT,BkgConstants.DEMAND_STATUS_QUOTE_NO};
+				vo.setDemandStatusList(demandStatusList );
+				vo.setDemandStatus("");
+			}else if(BkgConstants.DEMAND_STATUS_END.equals(demandStatus)){
+				String[] demandStatusList = new String[]{BkgConstants.DEMAND_STATUS_SITE_CANCALE,BkgConstants.DEMAND_STATUS_END};
+				vo.setDemandStatusList(demandStatusList);
+				vo.setDemandStatus("");
+			}
+		}
+		vo.setDemandSiteCode(demandSiteCode);
+		Page page = new Page();
+		page.setCurrentPage(currentPage);
+		page.setPageSize(pageSize);
+		/**根据月份 生成月份的第一天和最后一天*/
+		Calendar cal = Calendar.getInstance();
+		if(StringUtils.isNotBlank(departTime)){
+			Date parseDate = DateUtil.stringToDate(departTime);
+			cal.setTime(parseDate);
+			cal.set(Calendar.DAY_OF_MONTH, cal.getActualMinimum(Calendar.DAY_OF_MONTH));
+			Date beginTime = cal.getTime();
+			cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+			Date endTime = cal.getTime();
+			vo.setDemandBeginTime(beginTime);
+			vo.setDemandEndTime(endTime);
+		}
+		Pagination<FreightDemandVo> pagination = freightDemandService.findDotByPagination(vo, page);
+		return returnSuccess(pagination);
+		
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据ID查询 货运需求
+	 * @param id
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月7日 下午1:28:13
+	 */
+	@GetMapping(value = "findById")
+	@ResponseBody
+	public  Map<String, Object> findById(@RequestParam(value="id", required=true) String id){
+		FreightDemand FreightDemand = freightDemandService.findById( Long.valueOf(id));
+		return returnSuccess(FreightDemand);
+	}
+	
+	
+}

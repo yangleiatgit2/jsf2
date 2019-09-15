@@ -1,0 +1,214 @@
+package cn.uce.suc.bkg.service.operation;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.dao.operation.IFreightOrderDao;
+import cn.uce.suc.bkg.entity.operation.FreightOrder;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+
+/**
+ * @Description: 货运需求订单表Service类
+ * @author liwei
+ * @date 2017年10月21日 上午10:45:42
+ */
+@Service("freightOrderService")
+public class FreightOrderService {
+	
+	/**
+	 * 注入货运需求订单表Dao
+	 */
+	@Resource
+	private IFreightOrderDao freightOrderDao;
+	
+	/**
+	 * @Description: 新增货运需求订单表
+	 * @param freightOrder 货运需求订单表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public int addFreightOrder(FreightOrder freightOrder) {
+		return freightOrderDao.insert(freightOrder);
+	}
+	
+	/**
+	 * @Description: 修改货运需求订单表
+	 * @param freightOrder 货运需求订单表
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public int updateById(FreightOrder freightOrder) {
+		return freightOrderDao.updateById(freightOrder);
+	}
+	
+	/**
+	 * @Description: 删除货运需求订单表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public int deleteById(Long id) {
+		return freightOrderDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询货运需求订单表
+	 * @param id 主键
+	 * @return 货运需求订单表
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public FreightOrder findById(Long id) {
+		return freightOrderDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询货运需求订单表
+	 * @param freightOrderVo 货运需求订单表
+	 * @param page 分页参数
+	 * @return 货运需求订单表
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public Pagination<FreightOrder> findByPagination(FreightOrderVo freightOrderVo, Page page) {
+		Pagination<FreightOrder> paginationFreightOrder = freightOrderDao.findByPagination(freightOrderVo, page);
+		return paginationFreightOrder;
+	}
+	/**
+	 * @Description: 分页查询货运需求订单表
+	 * @param freightOrderVo 货运需求订单表
+	 * @return 货运需求订单表
+	 * @author liwei
+	 * @date 2017年10月21日 上午10:45:42
+	 */
+	public List<FreightOrder> findByCondtion(FreightOrderVo freightOrderVo) {
+		List<FreightOrder> freightOrders = freightOrderDao.findByCondtion(freightOrderVo);
+		return freightOrders;
+	}
+	/**
+	 * 
+	 * @Description: 根据订单编号进行更新
+	 * @param orderCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月25日 下午7:11:24
+	 */
+	public int updateByOrderCode(FreightOrder freightOrder){
+		return freightOrderDao.updateByOrderCode(freightOrder);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据组合查询订单 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年10月27日 上午12:01:08
+	 */
+	public List<FreightOrderVo> findByCombine(FreightOrderVo freightOrderVo){
+		return freightOrderDao.findByCombine(freightOrderVo);
+	}
+	
+	public List<FreightOrderVo> findByVo(FreightOrderVo freightOrderVo){
+		return freightOrderDao.findByVo(freightOrderVo);
+	}
+
+
+	/**
+	 * 
+	 * @Description: 出港
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月6日 上午9:41:41
+	 */
+    public List<String> findEndStationCode(FreightOrderVo freightOrderVo){
+    	return freightOrderDao.findEndStationCode(freightOrderVo);
+    }
+	/**
+	 * 
+	 * @Description: 进港
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月6日 上午9:41:45
+	 */
+	public List<String> findbeginStationCode(FreightOrderVo freightOrderVo){
+		return freightOrderDao.findbeginStationCode(freightOrderVo);
+	}
+	/**
+	 * 
+	 * @Description:  查询
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月4日 下午11:15:34
+	 */
+	public Pagination<FreightOrder> findCombineByPagination(FreightOrderVo freightOrderVo, Page page) {
+		return freightOrderDao.findCombineByPagination(freightOrderVo, page);
+	}
+	/**
+	 * 
+	 * @Description: TODO根据网点 查询网点的订单分页
+	 * @param freightOrderVo
+	 * @param page
+	 * @return
+	 * @author lixueyuan
+	 * @date 2017年11月9日 上午8:49:07
+	 */
+	public Pagination<FreightOrderVo> findByDemandSiteCodePagination(FreightOrderVo freightOrderVo, Page page){
+		return freightOrderDao.findByDemandSiteCodePagination(freightOrderVo, page);
+	}
+	/**
+	 * 
+	 * @Description: 根据组合编号更新订单状态 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月8日 下午2:10:27
+	 */
+	public int updStatusByCombineCode(FreightOrderVo freightOrderVo){
+		return freightOrderDao.updStatusByCombineCode(freightOrderVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据组号查询并根据订单时间倒序排序
+	 * @param freightOrderVo
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月1日 下午9:24:22
+	 */
+	public List<FreightOrderVo> findByOderNoTimeDesc(FreightOrderVo freightOrderVo){
+		return freightOrderDao.findByOderNoTimeDesc(freightOrderVo);
+	}
+	
+	/**
+	 * 
+	 * @Description: 根据订单编号更新订单执行时间 
+	 * @param freightOrderVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月16日 下午11:49:55
+	 */
+	public int updateTimeByOrderCode(List<FreightOrderVo>  freightOrderVo){
+		return freightOrderDao.updateTimeByOrderCode(freightOrderVo);
+	}
+	/**
+	 * 
+	 * @Description: 根据订单编号进行查询
+	 * @param orderCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月25日 下午7:11:24
+	 */
+	public FreightOrder findByOrderCode(String  orderCode){
+		return freightOrderDao.findByOrderCode(orderCode);
+	}
+}

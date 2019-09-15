@@ -1,0 +1,98 @@
+package cn.uce.suc.common.service;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.suc.common.biz.ISystemConfigBiz;
+import cn.uce.suc.common.entity.SystemConfig;
+import cn.uce.utils.StringUtil;
+
+/**
+ * 
+ * @Description: 手机号码校验方法
+ * @author liwei
+ * @date 2017年12月7日 下午4:38:06
+ */
+@Service("phoneFormatCheckService")
+public class PhoneFormatCheckService {
+	/**
+	 * 系统配置项
+	 */
+	@Resource
+	private ISystemConfigBiz systemConfigBiz;
+
+	/**
+	 * 大陆号码或香港号码均可
+	 */
+	public boolean isPhoneLegal(String str) throws PatternSyntaxException {
+		return isChinaPhoneLegal(str) || isHKPhoneLegal(str);
+	}
+
+	/**
+	 * 大陆手机号码11位数，匹配格式：前三位固定格式+后8位任意数 此方法中前三位格式有： 13+任意数 15+除4的任意数 18+除1和4的任意数
+	 * 17+除9的任意数 147
+	 */
+	/**
+	 * 
+	 * @Description: 大陆手机号码校验
+	 * @param str
+	 * @return
+	 * @throws PatternSyntaxException
+	 * @author liwei
+	 * @date 2017年12月11日 下午1:55:36
+	 */
+	public boolean isChinaPhoneLegal(String str) throws PatternSyntaxException {
+
+		if (StringUtil.isBlank(str) || str.length() != 11) {
+			return false;
+		}
+		// String ChinaRegex =
+		// "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0,2,5-9]))\\d{8}$";
+		//获取中国大陆手机号码格式
+		SystemConfig systemConfig = systemConfigBiz.findCacheByCode("CHINA_MAINLAND_PHONE_FORMAT");
+		if (null == systemConfig || StringUtil.isBlank(systemConfig.getConfigValue())) {
+			return true;
+		}
+		// 获取系统配置项
+		String ChinaRegex = systemConfig.getConfigValue();
+		Pattern p = Pattern.compile(ChinaRegex);
+		Matcher m = p.matcher(str);
+		return m.matches();
+	}
+
+	/**
+	 * 香港手机号码8位数，5|6|8|9开头+7位任意数
+	 */
+	/**
+	 * 
+	 * @Description: 香港手机号码格式校验 
+	 * @param str
+	 * @return
+	 * @throws PatternSyntaxException
+	 * @author liwei
+	 * @date 2017年12月11日 下午1:55:57
+	 */
+	public boolean isHKPhoneLegal(String str) throws PatternSyntaxException {
+		// String hKPhoneregExp = "^(5|6|8|9)\\d{7}$";
+		if (StringUtil.isBlank(str) || str.length() != 8) {
+			return false;
+		}
+		//获取中国香港手机号码格式
+		SystemConfig systemConfig = systemConfigBiz.findCacheByCode("CHINA_HK_PHONE_FORMAT");
+		//非空校验
+		if (null == systemConfig || StringUtil.isBlank(systemConfig.getConfigValue())) {
+			return true;
+		}
+		// 获取系统配置项
+		String hKPhoneregExp = systemConfig.getConfigValue();
+		Pattern p = Pattern.compile(hKPhoneregExp);
+		Matcher m = p.matcher(str);
+		return m.matches();
+	}
+
+}

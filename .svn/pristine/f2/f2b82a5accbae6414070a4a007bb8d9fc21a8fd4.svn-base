@@ -1,0 +1,68 @@
+package cn.uce.suc.common.biz;
+
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.BeanUtils;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import cn.uce.base.page.Page;
+import cn.uce.suc.common.biz.imp.ActivityAdvertBiz;
+import cn.uce.suc.common.entity.ActivityAdvert;
+import cn.uce.suc.common.vo.ActivityAdvertVo;
+
+/**
+ * 
+ * @Description: TODO(这里用一句话描述这个类的作用)
+ * @author yanglei
+ * @date 2017年12月1日 下午3:36:22
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class ActivityAdvertBizTest extends AbstractJUnit4SpringContextTests {
+	@Resource
+	private ActivityAdvertBiz activityAdvertBiz;  //活动广告宣传biz
+	/**
+	 * 异常实体
+	 */
+	private ActivityAdvert entity;
+	private ActivityAdvertVo vo;
+	@Before
+	public void before() {
+		vo=new ActivityAdvertVo();
+		vo.setAppType("dot");
+		vo.setAppVersion("12");
+		vo.setCreateEmp("god");
+		vo.setCreateTime(new Date());
+		vo.setImageUrlOriginal("a08b87d6277f9e2f930650031430e924b899f38e.jpg");
+
+	}
+	/**
+	 * 
+	 * @Description: 测试流程
+	 * @author liwei
+	 * @date 2017年12月1日 下午3:39:21
+	 */
+	@Test
+	public void testPro(){
+		activityAdvertBiz.addActivityAdvert(vo);
+		entity=new ActivityAdvert();
+		BeanUtils.copyProperties(vo, entity);
+		activityAdvertBiz.findById(entity.getId());
+		entity.setUpdateTime(new Date());
+		vo=new ActivityAdvertVo();
+		//activityAdvertBiz.updateActivityAdvert(vo);
+		
+		Page page=new Page();
+		activityAdvertBiz.findByPagination(vo, page);
+		activityAdvertBiz.deleteActivityAdvert(entity.getId());
+	}
+}

@@ -1,0 +1,29 @@
+package cn.uce.suc.common.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.common.entity.FreightDemandOften;
+import cn.uce.suc.common.vo.FreightDemandOftenVo;
+
+/**
+ * @Description: 货运需求常用信息表DAO接口类
+ * @author yanglei
+ * @date 2017年12月01日 下午03:23:45
+ */
+@Repository("freightDemandOftenDao")
+public interface IFreightDemandOftenDao extends IBaseDao<FreightDemandOften, Long> {
+	
+	/**
+	 * @Description: 分页查询货运需求常用信息表
+	 * @param freightDemandOftenVo 货运需求常用信息表
+	 * @param page 分页参数
+	 * @return 货运需求常用信息表
+	 * @author yanglei
+	 * @date 2017年12月01日 下午03:23:45
+	 */
+	public Pagination<FreightDemandOften> findByPagination(FreightDemandOftenVo freightDemandOftenVo, Page page);
+	
+}

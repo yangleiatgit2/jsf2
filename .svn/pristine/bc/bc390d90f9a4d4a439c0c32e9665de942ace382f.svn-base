@@ -1,0 +1,26 @@
+package cn.uce.suc.common.biz;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.OmgCmsOrgDetail;
+import cn.uce.suc.common.vo.OmgCmsOrgDetailVo;
+
+/**
+ * @Description: 乾坤机构详情BIZ接口类
+ * @author liwei
+ * @date 2017年10月15日 下午09:56:38
+ */
+public interface IOmgCmsOrgDetailBiz {
+	
+	
+	/**
+	 * @Description: 分页查询乾坤机构详情
+	 * @param omgCmsOrgDetailVo 乾坤机构详情
+	 * @param page 分页参数
+	 * @return 乾坤机构详情
+	 * @author liwei
+	 * @date 2017年10月15日 下午09:56:38
+	 */
+	public Pagination<OmgCmsOrgDetail> findByPagination(OmgCmsOrgDetailVo omgCmsOrgDetailVo, Page page);
+	
+}

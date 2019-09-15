@@ -1,0 +1,68 @@
+package cn.uce.suc.bkg.biz.impl.operation;
+
+import javax.annotation.Resource;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+
+import com.alibaba.fastjson.JSON;
+import com.sun.tools.internal.ws.wsdl.document.jaxws.Exception;
+
+import cn.jpush.api.TestOrder;
+import cn.uce.base.page.Page;
+import cn.uce.suc.bkg.biz.operation.IIaMonitorBiz;
+import cn.uce.suc.bkg.entity.operation.FreightDemandCombine;
+import cn.uce.suc.bkg.entity.operation.FreightOrderCombine;
+import cn.uce.suc.bkg.entity.operation.IaMonitor;
+import cn.uce.suc.bkg.exception.BkgIaException;
+import cn.uce.suc.bkg.exception.BkgIaMonitorException;
+import cn.uce.suc.bkg.exception.BkgModuleException;
+import cn.uce.suc.bkg.exception.BkgPriceRuleException;
+import cn.uce.suc.bkg.vo.operation.FreightDemandCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.IaMonitorVo;
+import cn.uce.web.common.util.ObjectConvertUtil;
+
+
+/**
+ * 
+ * @Description: 算法参数
+ * @author laizhendong
+ * @date 2017年10月21日 下午2:50:04
+ */
+@WebAppConfiguration
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath*:spring-*.xml", "classpath*:*/spring-*.xml" })
+public class IaExceptionTest extends AbstractJUnit4SpringContextTests {
+	
+	/**
+	 * 
+	 * @Description: 异常单元测试 
+	 * @author laizhendong
+	 * @date 2017年12月19日 上午11:30:48
+	 */
+	@Test
+	public void testExceptoin(){
+		Throwable e= new Throwable("测试");
+		//算法异常
+		new BkgIaException("001");
+		new BkgIaException("001", "001");
+		new BkgIaException("001", "001",e);
+		//算法监控异常
+		new BkgIaMonitorException("001");
+		new BkgIaMonitorException("001", "001");
+		new BkgIaMonitorException("001", "001",e);
+		//定价异常
+		new BkgPriceRuleException("001");
+		new BkgPriceRuleException("001", "001");
+		new BkgPriceRuleException("001", "001",e);
+		//bkg模块异常
+		new BkgModuleException("001");
+		new BkgModuleException("001", "001");
+		new BkgModuleException("001", "001",e);
+	}
+}

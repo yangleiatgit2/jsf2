@@ -1,0 +1,960 @@
+package cn.uce.suc.bkg.entity.operation;
+
+import cn.uce.base.entity.BaseEntity;
+import cn.uce.core.db.annotion.Table;
+
+import java.util.Date;
+
+/**
+ * @Description: 货运需求表Entity类
+ * @author UCE-lixueyuan
+ * @date 2017年10月21日 下午02:44:30
+ */
+@Table("t_suc_bkg_freight_demand")
+public class FreightDemand extends BaseEntity {
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1L;
+	
+    /** 
+	 * 需求编码 
+	 */
+	private String demandCode;
+    /** 
+	 * 需求名称 
+	 */
+	private String demandName;
+    /** 
+	 * 需求类型 长期需求 1 , 临时需求 2 
+	 */
+	private String demandType;
+    /** 
+	 * 需求网点名称 
+	 */
+	private String demandSite;
+    /** 
+	 * 需求网点编号 
+	 */
+	private String demandSiteCode;
+	/**
+	 * 车型管理编码
+	 */
+	private String truckManageCode;
+	/**
+	 * 车型成本名称
+	 */
+	private String truckCostName;
+    /** 
+	 * 需求状态 1 已提报、2未报价、3已报价 、4网点已确定、5已核准、6已锁定、7已终止
+	 */
+	private String demandStatus;
+    /** 
+	 * 是否拼车(默认 是 1,否 0) 
+	 */
+	private Boolean isCarpool;
+    /** 
+	 * 出发点名称 
+	 */
+	private String beginStation;
+    /** 
+	 * 出发点编码 
+	 */
+	private String beginStationCode;
+    /** 
+	 * 到达点名称 
+	 */
+	private String endStation;
+    /** 
+	 * 到达点编码 
+	 */
+	private String endStationCode;
+    /** 
+	 * 关联网点名称 
+	 */
+	private String carpoolSites;
+    /** 
+	 * 关联网点编码 
+	 */
+	private String carpoolSitesCodes;
+    /** 
+	 * 出发时间 
+	 */
+	private Date departureTime;
+    /** 
+	 * 到达时间 
+	 */
+	private Date arrivalTime;
+    /** 
+	 * 实际出发时间 
+	 */
+	private Date actualDepartureTime;
+    /** 
+	 * 实际到达时间 
+	 */
+	private Date actualArrivalTime;
+    /** 
+	 * 装卸货耗时(分钟) 
+	 */
+	private Integer layTime;
+    /** 
+	 * 需求组合号 
+	 */
+	private String demandCombineCode;
+	/** 
+	 * 需求组合名称
+	 */
+	private String demandCombineName;
+    /** 
+	 * 班次编号 
+	 */
+	private String lineGroupCode;
+    /** 
+	 * 价格 
+	 */
+	private Double price;
+    /** 
+	 * 需求开始时间 
+	 */
+	private Date demandBeginTime;
+    /** 
+	 * 需求结束时间 
+	 */
+	private Date demandEndTime;
+    /** 
+	 * 需求实际执行开始时间 
+	 */
+	private Date executeBeginTime;
+    /** 
+	 * 需求实际执行结束时间 
+	 */
+	private Date executeEndTime;
+    /** 
+	 * 调整后价格 
+	 */
+	private Double adjustPrice;
+    /** 
+	 * 业务模式 1进港、2出港 
+	 */
+	private String businessMode;
+    /** 
+	 * 周一重量 
+	 */
+	private Double mondayWeight;
+    /** 
+	 * 周一方数 
+	 */
+	private Double mondayVolume;
+    /** 
+	 * 周二重量 
+	 */
+	private Double tuesdayWeight;
+    /** 
+	 * 周二方数 
+	 */
+	private Double tuesdayVolume;
+    /** 
+	 * 周三重量 
+	 */
+	private Double wednesdayWeight;
+    /** 
+	 * 周三方数 
+	 */
+	private Double wednesdayVolume;
+    /** 
+	 * 周四重量 
+	 */
+	private Double thursdayWeight;
+    /** 
+	 * 周四方数 
+	 */
+	private Double thursdayVolume;
+    /** 
+	 * 周五重量 
+	 */
+	private Double fridayWeight;
+    /** 
+	 * 周五方数 
+	 */
+	private Double fridayVolume;
+    /** 
+	 * 周六重量 
+	 */
+	private Double saturdayWeight;
+    /** 
+	 * 周六方数 
+	 */
+	private Double saturdayVolume;
+    /** 
+	 * 周日重量 
+	 */
+	private Double sundayWeight;
+    /** 
+	 * 周日方数 
+	 */
+	private Double sundayVolume;
+    /** 
+	 * l临时重量 
+	 */
+	private Double dayWeight;
+    /** 
+	 * 临时方数 
+	 */
+	private Double dayVolume;
+    /** 
+	 * 备注 
+	 */
+	private String remark;
+	/**
+	 * 报价规则
+	 */
+	private String quotationRule;
+    /** 
+	 * 删除标识(删除:1,默认0) 
+	 */
+	private Boolean delFlag;
+    /** 
+	 * 版本 
+	 */
+	private Integer version;
+    /** 
+	 * 创建机构 
+	 */
+	private String createOrg;
+    /** 
+	 * 更新机构 
+	 */
+	private String updateOrg;
+	
+	
+	/**
+	 * 获取 需求编码
+	 */
+	public String getDemandCode() {
+		return demandCode;
+	}
+	
+	/**
+	 * 设置 需求编码
+	 */
+	public void setDemandCode(String demandCode) {
+		this.demandCode = demandCode;
+	}
+	
+	/**
+	 * 获取 需求名称
+	 */
+	public String getDemandName() {
+		return demandName;
+	}
+	
+	/**
+	 * 设置 需求名称
+	 */
+	public void setDemandName(String demandName) {
+		this.demandName = demandName;
+	}
+	
+	/**
+	 * 获取 需求类型 长期需求 1 , 临时需求 2
+	 */
+	public String getDemandType() {
+		return demandType;
+	}
+	
+	/**
+	 * 设置 需求类型 长期需求 1 , 临时需求 2
+	 */
+	public void setDemandType(String demandType) {
+		this.demandType = demandType;
+	}
+	
+	/**
+	 * 获取 需求网点名称
+	 */
+	public String getDemandSite() {
+		return demandSite;
+	}
+	
+	/**
+	 * 设置 需求网点名称
+	 */
+	public void setDemandSite(String demandSite) {
+		this.demandSite = demandSite;
+	}
+	
+	/**
+	 * 获取 需求网点编号
+	 */
+	public String getDemandSiteCode() {
+		return demandSiteCode;
+	}
+	
+	/**
+	 * 设置 需求网点编号
+	 */
+	public void setDemandSiteCode(String demandSiteCode) {
+		this.demandSiteCode = demandSiteCode;
+	}
+	
+	/**
+	 * 获取 需求状态 1 已提报、2未报价、3已报价、4已核准、5已锁定 、6网点已确定、7网点已取消
+	 */
+	public String getDemandStatus() {
+		return demandStatus;
+	}
+	
+	/**
+	 * 设置 需求状态 1 已提报、2未报价、3已报价、4已核准、5已锁定 、6网点已确定、7网点已取消
+	 */
+	public void setDemandStatus(String demandStatus) {
+		this.demandStatus = demandStatus;
+	}
+	
+	/**
+	 * 获取 是否拼车(默认 是 1,否 0)
+	 */
+	public Boolean getIsCarpool() {
+		return isCarpool;
+	}
+	
+	/**
+	 * 设置 是否拼车(默认 是 1,否 0)
+	 */
+	public void setIsCarpool(Boolean isCarpool) {
+		this.isCarpool = isCarpool;
+	}
+	
+	/**
+	 * 获取 出发点名称
+	 */
+	public String getBeginStation() {
+		return beginStation;
+	}
+	
+	/**
+	 * 设置 出发点名称
+	 */
+	public void setBeginStation(String beginStation) {
+		this.beginStation = beginStation;
+	}
+	
+	/**
+	 * 获取 出发点编码
+	 */
+	public String getBeginStationCode() {
+		return beginStationCode;
+	}
+	
+	/**
+	 * 设置 出发点编码
+	 */
+	public void setBeginStationCode(String beginStationCode) {
+		this.beginStationCode = beginStationCode;
+	}
+	
+	/**
+	 * 获取 到达点名称
+	 */
+	public String getEndStation() {
+		return endStation;
+	}
+	
+	/**
+	 * 设置 到达点名称
+	 */
+	public void setEndStation(String endStation) {
+		this.endStation = endStation;
+	}
+	
+	/**
+	 * 获取 到达点编码
+	 */
+	public String getEndStationCode() {
+		return endStationCode;
+	}
+	
+	/**
+	 * 设置 到达点编码
+	 */
+	public void setEndStationCode(String endStationCode) {
+		this.endStationCode = endStationCode;
+	}
+	
+	/**
+	 * 获取 关联网点名称
+	 */
+	public String getCarpoolSites() {
+		return carpoolSites;
+	}
+	
+	/**
+	 * 设置 关联网点名称
+	 */
+	public void setCarpoolSites(String carpoolSites) {
+		this.carpoolSites = carpoolSites;
+	}
+	
+	/**
+	 * 获取 关联网点编码
+	 */
+	public String getCarpoolSitesCodes() {
+		return carpoolSitesCodes;
+	}
+	
+	/**
+	 * 设置 关联网点编码
+	 */
+	public void setCarpoolSitesCodes(String carpoolSitesCodes) {
+		this.carpoolSitesCodes = carpoolSitesCodes;
+	}
+	
+	/**
+	 * 获取 出发时间
+	 */
+	public Date getDepartureTime() {
+		return departureTime;
+	}
+	
+	/**
+	 * 设置 出发时间
+	 */
+	public void setDepartureTime(Date departureTime) {
+		this.departureTime = departureTime;
+	}
+	
+	/**
+	 * 获取 到达时间
+	 */
+	public Date getArrivalTime() {
+		return arrivalTime;
+	}
+	
+	/**
+	 * 设置 到达时间
+	 */
+	public void setArrivalTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+	
+	/**
+	 * 获取 实际出发时间
+	 */
+	public Date getActualDepartureTime() {
+		return actualDepartureTime;
+	}
+	
+	/**
+	 * 设置 实际出发时间
+	 */
+	public void setActualDepartureTime(Date actualDepartureTime) {
+		this.actualDepartureTime = actualDepartureTime;
+	}
+	
+	/**
+	 * 获取 实际到达时间
+	 */
+	public Date getActualArrivalTime() {
+		return actualArrivalTime;
+	}
+	
+	/**
+	 * 设置 实际到达时间
+	 */
+	public void setActualArrivalTime(Date actualArrivalTime) {
+		this.actualArrivalTime = actualArrivalTime;
+	}
+	
+	/**
+	 * 获取 装卸货耗时(分钟)
+	 */
+	public Integer getLayTime() {
+		return layTime;
+	}
+	
+	/**
+	 * 设置 装卸货耗时(分钟)
+	 */
+	public void setLayTime(Integer layTime) {
+		this.layTime = layTime;
+	}
+	
+	/**
+	 * 获取 需求组合号
+	 */
+	public String getDemandCombineCode() {
+		return demandCombineCode;
+	}
+	
+	/**
+	 * 设置 需求组合号
+	 */
+	public void setDemandCombineCode(String demandCombineCode) {
+		this.demandCombineCode = demandCombineCode;
+	}
+	
+	/**
+	 * 获取 班次编号
+	 */
+	public String getLineGroupCode() {
+		return lineGroupCode;
+	}
+	
+	/**
+	 * 设置 班次编号
+	 */
+	public void setLineGroupCode(String lineGroupCode) {
+		this.lineGroupCode = lineGroupCode;
+	}
+	
+	/**
+	 * 获取 价格
+	 */
+	public Double getPrice() {
+		return price;
+	}
+	
+	/**
+	 * 设置 价格
+	 */
+	public void setPrice(Double price) {
+		this.price = price;
+	}
+	
+	/**
+	 * 获取 需求开始时间
+	 */
+	public Date getDemandBeginTime() {
+		return demandBeginTime;
+	}
+	
+	/**
+	 * 设置 需求开始时间
+	 */
+	public void setDemandBeginTime(Date demandBeginTime) {
+		this.demandBeginTime = demandBeginTime;
+	}
+	
+	/**
+	 * 获取 需求结束时间
+	 */
+	public Date getDemandEndTime() {
+		return demandEndTime;
+	}
+	
+	/**
+	 * 设置 需求结束时间
+	 */
+	public void setDemandEndTime(Date demandEndTime) {
+		this.demandEndTime = demandEndTime;
+	}
+	
+	/**
+	 * 获取 需求实际执行开始时间
+	 */
+	public Date getExecuteBeginTime() {
+		return executeBeginTime;
+	}
+	
+	/**
+	 * 设置 需求实际执行开始时间
+	 */
+	public void setExecuteBeginTime(Date executeBeginTime) {
+		this.executeBeginTime = executeBeginTime;
+	}
+	
+	/**
+	 * 获取 需求实际执行结束时间
+	 */
+	public Date getExecuteEndTime() {
+		return executeEndTime;
+	}
+	
+	/**
+	 * 设置 需求实际执行结束时间
+	 */
+	public void setExecuteEndTime(Date executeEndTime) {
+		this.executeEndTime = executeEndTime;
+	}
+	
+	/**
+	 * 获取 调整后价格
+	 */
+	public Double getAdjustPrice() {
+		return adjustPrice;
+	}
+	
+	/**
+	 * 设置 调整后价格
+	 */
+	public void setAdjustPrice(Double adjustPrice) {
+		this.adjustPrice = adjustPrice;
+	}
+	
+	/**
+	 * 获取 业务模式 1进港、2出港
+	 */
+	public String getBusinessMode() {
+		return businessMode;
+	}
+	
+	/**
+	 * 设置 业务模式 1进港、2出港
+	 */
+	public void setBusinessMode(String businessMode) {
+		this.businessMode = businessMode;
+	}
+	
+	/**
+	 * 获取 周一重量
+	 */
+	public Double getMondayWeight() {
+		return mondayWeight;
+	}
+	
+	/**
+	 * 设置 周一重量
+	 */
+	public void setMondayWeight(Double mondayWeight) {
+		this.mondayWeight = mondayWeight;
+	}
+	
+	/**
+	 * 获取 周一方数
+	 */
+	public Double getMondayVolume() {
+		return mondayVolume;
+	}
+	
+	/**
+	 * 设置 周一方数
+	 */
+	public void setMondayVolume(Double mondayVolume) {
+		this.mondayVolume = mondayVolume;
+	}
+	
+	/**
+	 * 获取 周二重量
+	 */
+	public Double getTuesdayWeight() {
+		return tuesdayWeight;
+	}
+	
+	/**
+	 * 设置 周二重量
+	 */
+	public void setTuesdayWeight(Double tuesdayWeight) {
+		this.tuesdayWeight = tuesdayWeight;
+	}
+	
+	/**
+	 * 获取 周二方数
+	 */
+	public Double getTuesdayVolume() {
+		return tuesdayVolume;
+	}
+	
+	/**
+	 * 设置 周二方数
+	 */
+	public void setTuesdayVolume(Double tuesdayVolume) {
+		this.tuesdayVolume = tuesdayVolume;
+	}
+	
+	/**
+	 * 获取 周三重量
+	 */
+	public Double getWednesdayWeight() {
+		return wednesdayWeight;
+	}
+	
+	/**
+	 * 设置 周三重量
+	 */
+	public void setWednesdayWeight(Double wednesdayWeight) {
+		this.wednesdayWeight = wednesdayWeight;
+	}
+	
+	/**
+	 * 获取 周三方数
+	 */
+	public Double getWednesdayVolume() {
+		return wednesdayVolume;
+	}
+	
+	/**
+	 * 设置 周三方数
+	 */
+	public void setWednesdayVolume(Double wednesdayVolume) {
+		this.wednesdayVolume = wednesdayVolume;
+	}
+	
+	/**
+	 * 获取 周四重量
+	 */
+	public Double getThursdayWeight() {
+		return thursdayWeight;
+	}
+	
+	/**
+	 * 设置 周四重量
+	 */
+	public void setThursdayWeight(Double thursdayWeight) {
+		this.thursdayWeight = thursdayWeight;
+	}
+	
+	/**
+	 * 获取 周四方数
+	 */
+	public Double getThursdayVolume() {
+		return thursdayVolume;
+	}
+	
+	/**
+	 * 设置 周四方数
+	 */
+	public void setThursdayVolume(Double thursdayVolume) {
+		this.thursdayVolume = thursdayVolume;
+	}
+	
+	/**
+	 * 获取 周五重量
+	 */
+	public Double getFridayWeight() {
+		return fridayWeight;
+	}
+	
+	/**
+	 * 设置 周五重量
+	 */
+	public void setFridayWeight(Double fridayWeight) {
+		this.fridayWeight = fridayWeight;
+	}
+	
+	/**
+	 * 获取 周五方数
+	 */
+	public Double getFridayVolume() {
+		return fridayVolume;
+	}
+	
+	/**
+	 * 设置 周五方数
+	 */
+	public void setFridayVolume(Double fridayVolume) {
+		this.fridayVolume = fridayVolume;
+	}
+	
+	/**
+	 * 获取 周六重量
+	 */
+	public Double getSaturdayWeight() {
+		return saturdayWeight;
+	}
+	
+	/**
+	 * 设置 周六重量
+	 */
+	public void setSaturdayWeight(Double saturdayWeight) {
+		this.saturdayWeight = saturdayWeight;
+	}
+	
+	/**
+	 * 获取 周六方数
+	 */
+	public Double getSaturdayVolume() {
+		return saturdayVolume;
+	}
+	
+	/**
+	 * 设置 周六方数
+	 */
+	public void setSaturdayVolume(Double saturdayVolume) {
+		this.saturdayVolume = saturdayVolume;
+	}
+	
+	/**
+	 * 获取 周日重量
+	 */
+	public Double getSundayWeight() {
+		return sundayWeight;
+	}
+	
+	/**
+	 * 设置 周日重量
+	 */
+	public void setSundayWeight(Double sundayWeight) {
+		this.sundayWeight = sundayWeight;
+	}
+	
+	/**
+	 * 获取 周日方数
+	 */
+	public Double getSundayVolume() {
+		return sundayVolume;
+	}
+	
+	/**
+	 * 设置 周日方数
+	 */
+	public void setSundayVolume(Double sundayVolume) {
+		this.sundayVolume = sundayVolume;
+	}
+	
+	/**
+	 * 获取 l临时重量
+	 */
+	public Double getDayWeight() {
+		return dayWeight;
+	}
+	
+	/**
+	 * 设置 l临时重量
+	 */
+	public void setDayWeight(Double dayWeight) {
+		this.dayWeight = dayWeight;
+	}
+	
+	/**
+	 * 获取 临时方数
+	 */
+	public Double getDayVolume() {
+		return dayVolume;
+	}
+	
+	/**
+	 * 设置 临时方数
+	 */
+	public void setDayVolume(Double dayVolume) {
+		this.dayVolume = dayVolume;
+	}
+	
+	/**
+	 * 获取 备注
+	 */
+	public String getRemark() {
+		return remark;
+	}
+	
+	/**
+	 * 设置 备注
+	 */
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
+	/**
+	 * 获取 删除标识(删除:1,默认0)
+	 */
+	public Boolean getDelFlag() {
+		return delFlag;
+	}
+	
+	/**
+	 * 设置 删除标识(删除:1,默认0)
+	 */
+	public void setDelFlag(Boolean delFlag) {
+		this.delFlag = delFlag;
+	}
+	
+	/**
+	 * 获取 版本
+	 */
+	public Integer getVersion() {
+		return version;
+	}
+	
+	/**
+	 * 设置 版本
+	 */
+	public void setVersion(Integer version) {
+		this.version = version;
+	}
+	
+	/**
+	 * 获取 创建机构
+	 */
+	public String getCreateOrg() {
+		return createOrg;
+	}
+	
+	/**
+	 * 设置 创建机构
+	 */
+	public void setCreateOrg(String createOrg) {
+		this.createOrg = createOrg;
+	}
+	
+	/**
+	 * 获取 更新机构
+	 */
+	public String getUpdateOrg() {
+		return updateOrg;
+	}
+	
+	/**
+	 * 设置 更新机构
+	 */
+	public void setUpdateOrg(String updateOrg) {
+		this.updateOrg = updateOrg;
+	}
+
+	/** 
+	* @return quotationRule 
+	*/
+	public String getQuotationRule() {
+		return quotationRule;
+	}
+
+	/**
+	 * @param quotationRule the quotationRule to set
+	 */
+	public void setQuotationRule(String quotationRule) {
+		this.quotationRule = quotationRule;
+	}
+
+	/** 
+	* @return demandCombineName 
+	*/
+	public String getDemandCombineName() {
+		return demandCombineName;
+	}
+
+	/**
+	 * @param demandCombineName the demandCombineName to set
+	 */
+	public void setDemandCombineName(String demandCombineName) {
+		this.demandCombineName = demandCombineName;
+	}
+
+
+	/** 
+	* @return truckCostName 
+	*/
+	public String getTruckCostName() {
+		return truckCostName;
+	}
+
+	/**
+	 * @param truckCostName the truckCostName to set
+	 */
+	public void setTruckCostName(String truckCostName) {
+		this.truckCostName = truckCostName;
+	}
+
+	/** 
+	* @return truckManageCode 
+	*/
+	public String getTruckManageCode() {
+		return truckManageCode;
+	}
+
+	/**
+	 * @param truckManageCode the truckManageCode to set
+	 */
+	public void setTruckManageCode(String truckManageCode) {
+		this.truckManageCode = truckManageCode;
+	}
+	
+	
+}

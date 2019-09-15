@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.bkg.dao.operation.ILineGroupDetailDao">
+	
+	<sql id="Base_Column_List">
+			id,line_group_code,way_point_code,
+			way_point_name,way_point_zone_code,way_point_zone_name,
+			volume,weight,end_time,
+			load_unload_time,distance,runing_time,
+			next_way_distance,version,delete_flag,
+			create_org,create_emp,create_time,
+			update_org,update_emp,update_time,sort,requi_combin_code,
+			order_combin_code
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="lineGroupCode != null">
+		and line_group_code = #{lineGroupCode}
+		</if>
+	    <if test="wayPointCode != null">
+		and way_point_code = #{wayPointCode}
+		</if>
+	    <if test="wayPointName != null">
+		and way_point_name = #{wayPointName}
+		</if>
+	    <if test="requiCombinCode != null  and  requiCombinCode != ''">
+		and requi_combin_code = #{requiCombinCode}
+		</if>
+	    <if test="orderCombinCode != null and  orderCombinCode != ''">
+		and order_combin_code = #{orderCombinCode}
+		</if>
+	    <if test="wayPointZoneCode != null">
+		and way_point_zone_code = #{wayPointZoneCode}
+		</if>
+	    <if test="wayPointZoneName != null">
+		and way_point_zone_name = #{wayPointZoneName}
+		</if>
+	    <if test="volume != null">
+		and volume = #{volume}
+		</if>
+	    <if test="weight != null">
+		and weight = #{weight}
+		</if>
+	    <if test="endTime != null">
+		and end_time = #{endTime}
+		</if>
+	    <if test="loadUnloadTime != null">
+		and load_unload_time = #{loadUnloadTime}
+		</if>
+	    <if test="distance != null">
+		and distance = #{distance}
+		</if>
+	    <if test="runingTime != null">
+		and runing_time = #{runingTime}
+		</if>
+	    <if test="nextWayDistance != null">
+		and next_way_distance = #{nextWayDistance}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="deleteFlag != null">
+		and delete_flag = #{deleteFlag}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createDate != null">
+		and create_time = #{createDate}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateDate != null">
+		and update_time = #{updateDate}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupDetailVo">
+	UPDATE t_suc_bkg_line_group_detail
+	<set>
+		<if test="lineGroupCode != null">
+		line_group_code = #{lineGroupCode},
+		</if>
+		<if test="wayPointCode != null">
+		way_point_code = #{wayPointCode},
+		</if>
+		<if test="wayPointName != null">
+		way_point_name = #{wayPointName},
+		</if>
+		<if test="wayPointZoneCode != null">
+		way_point_zone_code = #{wayPointZoneCode},
+		</if>
+		<if test="wayPointZoneName != null">
+		way_point_zone_name = #{wayPointZoneName},
+		</if>
+		<if test="volume != null">
+		volume = #{volume},
+		</if>
+		<if test="weight != null">
+		weight = #{weight},
+		</if>
+		<if test="endTime != null">
+		end_time = #{endTime},
+		</if>
+		<if test="loadUnloadTime != null">
+		load_unload_time = #{loadUnloadTime},
+		</if>
+		<if test="distance != null">
+		distance = #{distance},
+		</if>
+		<if test="requiCombinCode != null">
+		requi_combin_code = #{requiCombinCode},
+		</if>
+		<if test="orderCombinCode != null">
+		order_combin_code = #{orderCombinCode},
+		</if>
+		<if test="runingTime != null">
+		runing_time = #{runingTime},
+		</if>
+		<if test="nextWayDistance != null">
+		next_way_distance = #{nextWayDistance},
+		</if>
+		<if test="version != null">
+		version = #{version},
+		</if>
+		<if test="deleteFlag != null">
+		delete_flag = #{deleteFlag},
+		</if>
+		<if test="createOrg != null">
+		create_org = #{createOrg},
+		</if>
+		<if test="createEmp != null">
+		create_emp = #{createEmp},
+		</if>
+		<if test="createTime != null">
+		create_time = #{createTime},
+		</if>
+		<if test="updateOrg != null">
+		update_org = #{updateOrg},
+		</if>
+		<if test="updateEmp != null">
+		update_emp = #{updateEmp},
+		</if>
+		<if test="updateTime != null">
+		update_time = #{updateTime},
+		</if>
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.bkg.vo.operation.LineGroupDetailVo" resultType="cn.uce.suc.bkg.vo.operation.LineGroupDetailVo">
+	select id,	line_group_code,way_point_code,
+			way_point_name,way_point_zone_code,way_point_zone_name,
+			volume,weight,end_time,
+			load_unload_time,distance,runing_time,
+			next_way_distance from t_suc_bkg_line_group_detail
+	where 1=1
+		<if test="lineGroupCode != null and lineGroupCode !=''">
+			and line_group_code = #{lineGroupCode}
+		</if>
+		<if test="wayPointZoneName != null and wayPointZoneName != ''">
+			and way_point_zone_name = #{wayPointZoneName}
+		</if>
+		<if test="wayPointName != null and wayPointName != ''">
+			and way_point_name = #{wayPointName}
+		</if>
+		and (delete_flag!='1' or delete_flag is null)
+
+	</select>
+	
+	
+	<select id="findPageByPagination" parameterType="java.lang.String" resultType="cn.uce.suc.bkg.entity.operation.LineGroupDetail">
+			select <include refid="Base_Column_List" /> from t_suc_bkg_line_group_detail
+		where 
+	       <if test="_parameter != null" >  
+	         line_group_code = #{_parameter,jdbcType=VARCHAR}  
+	        </if> 
+
+	</select>
+	
+<select id="queryByWorkDetailId" parameterType="java.lang.String" resultType="cn.uce.suc.bkg.entity.operation.LineGroupDetail">
+	select <include refid="Base_Column_List" /> from t_suc_bkg_line_group_detail
+	where 
+ <if test="_parameter != null" >  
+         line_group_code = #{_parameter,jdbcType=VARCHAR}  
+        </if> 
+	</select>
+		
+			
+	
+	<insert id="addLineGroupDetail" parameterType="cn.uce.suc.bkg.entity.operation.LineGroupDetail">
+		insert  into t_suc_bkg_line_group_detail
+		(
+			<include refid="Base_Column_List"></include>
+			)values(
+				<choose>
+				<when test="lineGroupCode != null">#{lineGroupCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="wayPointCode != null">#{wayPointCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="wayPointName != null">#{wayPointName},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="wayPointZoneCode != null">#{wayPointZoneCode},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="wayPointZoneName != null">#{wayPointZoneName},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="volume != null">#{volume},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="weight != null">#{weight},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="endTime != null">#{endTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="loadUnloadTime != null">#{loadUnloadTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="distance != null">#{distance},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="runingTime != null">#{runingTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="nextWayDistance != null">#{nextWayDistance},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+			<choose>
+				<when test="version != null">#{version},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+					<choose>
+				<when test="deleteFlag != null">#{deleteFlag},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+						<choose>
+				<when test="createOrg != null">#{createOrg},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="createEmp != null">#{createEmp},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="createTime != null">#{createTime},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="updateOrg != null">#{updateOrg},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="updateEmp != null">#{updateEmp},</when>
+				<otherwise>null,</otherwise>
+			</choose>
+				<choose>
+				<when test="updateTime != null">#{updateTime},</when>
+				<otherwise>null</otherwise>
+			</choose>
+			)
+	
+	</insert>
+	<!-- 用来获取未排班的路段（班次编号为空） -->
+	<select id="findGroupDetailByGroupcodeIsNull"  parameterType="cn.uce.suc.bkg.vo.operation.LineGroupDetailVo" resultType="cn.uce.suc.bkg.entity.operation.LineGroupDetail">
+	select * from t_suc_bkg_line_group_detail d where (d.line_group_code is null or d.line_group_code = '' ) and order_combin_code=#{orderCombinCode}
+	
+	</select>
+</mapper>

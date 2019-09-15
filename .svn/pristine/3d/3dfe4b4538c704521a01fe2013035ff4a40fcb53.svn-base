@@ -1,0 +1,82 @@
+package cn.uce.suc.bkg.biz.price;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.price.PricingRuleDetail;
+import cn.uce.suc.bkg.vo.price.PricingRuleDetailVo;
+
+/**
+ * @Description: 定价规则详情BIZ接口类
+ * @author laizhendong
+ * @date 2017年11月01日 下午09:07:39
+ */
+public interface IPricingRuleDetailBiz {
+	
+	/**
+	 * @Description: 新增定价规则详情
+	 * @param pricingRuleDetail
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public int addPricingRuleDetail(PricingRuleDetail pricingRuleDetail);
+	
+	/**
+	 * @Description: 修改定价规则详情
+	 * @param pricingRuleDetail 定价规则详情
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public int updatePricingRuleDetail(PricingRuleDetailVo pricingRuleDetailVo);
+	
+	/**
+	 * @Description: 删除定价规则详情
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public int deletePricingRuleDetail(Long id);
+	
+	/**
+	 * @Description: 根据ID查询定价规则详情
+	 * @param id 主键
+	 * @return 定价规则详情
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public PricingRuleDetail findById(Long id);
+	
+	/**
+	 * @Description: 分页查询定价规则详情
+	 * @param pricingRuleDetailVo 定价规则详情
+	 * @param page 分页参数
+	 * @return 定价规则详情
+	 * @author laizhendong
+	 * @date 2017年11月01日 下午09:07:39
+	 */
+	public Pagination<PricingRuleDetailVo> findByPagination(PricingRuleDetailVo pricingRuleDetailVo, Page page);
+	/**
+	 * 
+	 * @Description: 根据定价分类分组分页查询
+	 * @param pricingRuleDetailVo
+	 * @param page
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 上午11:24:12
+	 */
+	public Pagination<PricingRuleDetailVo> findByPriceTypeGroup(PricingRuleDetailVo pricingRuleDetailVo, Page page);
+	/**
+	 * 
+	 * @Description: 根据条件查询定价规则详情
+	 * @param pricingRuleDetailVo
+	 * @return
+	 * @author laizhendong
+	 * @date 2017年11月5日 下午5:48:34
+	 */
+	public List<PricingRuleDetailVo> findByCondition(PricingRuleDetailVo pricingRuleDetailVo);
+	
+}

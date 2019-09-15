@@ -1,0 +1,38 @@
+package cn.uce.suc.app.dao;
+
+import org.springframework.stereotype.Repository;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.core.db.IBaseDao;
+import cn.uce.suc.app.entity.Captcha;
+import cn.uce.suc.app.vo.CaptchaVo;
+
+/**
+ * @Description: 验证码DAO接口类
+ * @author liwei
+ * @date 2017年11月05日 下午08:45:38
+ */
+@Repository("captchaDao")
+public interface ICaptchaDao extends IBaseDao<Captcha, Long> {
+	
+	/**
+	 * @Description: 分页查询验证码
+	 * @param captchaVo 验证码
+	 * @param page 分页参数
+	 * @return 验证码
+	 * @author liwei
+	 * @date 2017年11月05日 下午08:45:38
+	 */
+	public Pagination<Captcha> findByPagination(CaptchaVo captchaVo, Page page);
+	/**
+	 * 
+	 * @Description: TODO(这里用一句话描述这个方法的作用) 
+	 * @param captchaVo
+	 * @return
+	 * @author liwei
+	 * @date 2017年11月5日 下午9:44:33
+	 */
+	public Captcha findByCondtion(CaptchaVo captchaVo);
+	
+}

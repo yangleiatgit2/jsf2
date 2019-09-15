@@ -1,0 +1,95 @@
+package cn.uce.suc.common.service;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.common.entity.NoticeRule;
+import cn.uce.suc.common.vo.NoticeRuleVo;
+import cn.uce.suc.common.dao.INoticeRuleDao;
+
+/**
+ * @Description: 消息模板Service类
+ * @author liwei
+ * @date 2017年10月30日 下午10:17:24
+ */
+@Service("noticeRuleService")
+public class NoticeRuleService {
+	
+	/**
+	 * 注入消息模板Dao
+	 */
+	@Resource
+	private INoticeRuleDao noticeRuleDao;
+	
+	/**
+	 * @Description: 新增消息模板
+	 * @param noticeRule 消息模板
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public int addNoticeRule(NoticeRule noticeRule) {
+		return noticeRuleDao.insert(noticeRule);
+	}
+	
+	/**
+	 * @Description: 修改消息模板
+	 * @param noticeRule 消息模板
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public int updateById(NoticeRule noticeRule) {
+		return noticeRuleDao.updateById(noticeRule);
+	}
+	
+	/**
+	 * @Description: 删除消息模板
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public int deleteById(Long id) {
+		return noticeRuleDao.deleteById(id);
+	}
+	
+	/**
+	 * @Description: 根据ID查询消息模板
+	 * @param id 主键
+	 * @return 消息模板
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public NoticeRule findById(Long id) {
+		return noticeRuleDao.findById(id);
+	}
+	
+	/**
+	 * @Description: 分页查询消息模板
+	 * @param noticeRuleVo 消息模板
+	 * @param page 分页参数
+	 * @return 消息模板
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:17:24
+	 */
+	public Pagination<NoticeRule> findByPagination(NoticeRuleVo noticeRuleVo, Page page) {
+		Pagination<NoticeRule> paginationNoticeRule = noticeRuleDao.findByPagination(noticeRuleVo, page);
+		return paginationNoticeRule;
+	}
+	/**
+	 * 
+	 * @Description: 根据消息规则code获取对应的规则
+	 * @param ruleCode
+	 * @return
+	 * @author liwei
+	 * @date 2017年10月30日 下午10:30:11
+	 */
+	public NoticeRule findByPagination(String ruleCode){
+		return noticeRuleDao.findByCode(ruleCode);
+	}
+	
+}

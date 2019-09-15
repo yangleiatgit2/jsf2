@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC 
+	"-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.uce.suc.common.dao.IMobileuserDao">
+	
+	<sql id="Base_Column_List">
+			id,mobilePhone,password,base_org_code,org_name,certifi_flag,avatar,
+			Id_card,dot_type,dpt_type,
+			tokenId,name,utf1,
+			utf2,utf3,version,
+			del_flag,create_emp,create_time,
+			create_org,update_emp,update_time,
+			update_org,user_name
+	</sql>
+	
+	<sql id="Base_Column_Where">
+	<where>
+	    <if test="id != null">
+		and id = #{id}
+		</if>
+	    <if test="mobilephone != null">
+		and mobilePhone = #{mobilephone}
+		</if>
+	    <if test="password != null">
+		and password = #{password}
+		</if>
+		<if test="avatar != null">
+		and avatar = #{avatar}
+		</if>
+		<if test="baseOrgCode != null">
+		and base_org_Code = #{baseOrgCode}
+		</if>
+		<if test="orgName != null">
+		and org_name = #{orgName}
+		</if>
+		<if test="certifiFlag != null">
+		and certifi_flag = #{certifiFlag}
+		</if>
+	    <if test="idCard != null">
+		and Id_card = #{idCard}
+		</if>
+	    <if test="dotType != null">
+		and dot_type = #{dotType}
+		</if>
+	    <if test="dptType != null">
+		and dpt_type = #{dptType}
+		</if>
+	    <if test="tokenid != null">
+		and tokenId = #{tokenid}
+		</if>
+	    <if test="name != null">
+		and name = #{name}
+		</if>
+	    <if test="utf1 != null">
+		and utf1 = #{utf1}
+		</if>
+	    <if test="utf2 != null">
+		and utf2 = #{utf2}
+		</if>
+	    <if test="utf3 != null">
+		and utf3 = #{utf3}
+		</if>
+	    <if test="version != null">
+		and version = #{version}
+		</if>
+	    <if test="delFlag != null">
+		and del_flag = #{delFlag}
+		</if>
+	    <if test="createEmp != null">
+		and create_emp = #{createEmp}
+		</if>
+	    <if test="createTime != null">
+		and create_time = #{createTime}
+		</if>
+	    <if test="createOrg != null">
+		and create_org = #{createOrg}
+		</if>
+	    <if test="updateEmp != null">
+		and update_emp = #{updateEmp}
+		</if>
+	    <if test="updateTime != null">
+		and update_time = #{updateTime}
+		</if>
+	    <if test="updateOrg != null">
+		and update_org = #{updateOrg}
+		</if>
+	</where>
+	</sql>
+	
+	<update id="updateById" parameterType="cn.uce.suc.common.entity.Mobileuser">
+	UPDATE t_suc_app_mobileUser
+	<set>
+	    <if test="mobilephone != null">
+		 mobilePhone = #{mobilephone},
+		</if>
+	    <if test="password != null">
+		 password = #{password},
+		</if>
+		<if test="baseOrgCode != null">
+		 base_org_Code = #{baseOrgCode},
+		</if>
+		<if test="avatar != null and avatar!='' ">
+		 avatar = #{avatar},
+		</if>
+		<if test="orgName != null">
+		 org_name = #{orgName},
+		</if>
+		<if test="userName != null">
+		 user_name = #{userName},
+		</if>
+		<if test="certifiFlag != null">
+		 certifi_flag = #{certifiFlag},
+		</if>
+	    <if test="idCard != null">
+		 Id_card = #{idCard},
+		</if>
+	    <if test="dotType != null">
+		 dot_type = #{dotType},
+		</if>
+	    <if test="dptType != null">
+		 dpt_type = #{dptType},
+		</if>
+	    <if test="tokenid != null">
+		 tokenId = #{tokenid},
+		</if>
+	    <if test="name != null">
+		 name = #{name},
+		</if>
+	    <if test="utf1 != null">
+		 utf1 = #{utf1},
+		</if>
+	    <if test="utf2 != null">
+		 utf2 = #{utf2},
+		</if>
+	    <if test="utf3 != null">
+		 utf3 = #{utf3},
+		</if>
+	    <if test="version != null">
+		 version = #{version},
+		</if>
+	    <if test="delFlag != null">
+		 del_flag = #{delFlag},
+		</if>
+	    <if test="createEmp != null">
+		 create_emp = #{createEmp},
+		</if>
+	    <if test="createTime != null">
+		 create_time = #{createTime},
+		</if>
+	    <if test="createOrg != null">
+		 create_org = #{createOrg},
+		</if>
+	    <if test="updateEmp != null">
+		 update_emp = #{updateEmp},
+		</if>
+	    <if test="updateTime != null">
+		 update_time = #{updateTime},
+		</if>
+	    <if test="updateOrg != null">
+		 update_org = #{updateOrg},
+		</if>
+		
+	</set>
+	WHERE id = #{id}
+	</update>
+	
+	<select id="findByPagination" parameterType="cn.uce.suc.common.vo.MobileuserVo" resultType="cn.uce.suc.common.vo.MobileuserVo">
+	select <include refid="Base_Column_List" /> from t_suc_app_mobileUser
+	<where> 1=1
+		<if test="q != null and q != ''">
+			and mobilePhone like  "%"#{q}"%"   or  user_name   like "%"#{q}"%"
+		</if>
+		<if test="baseOrgCode != null and baseOrgCode != ''">
+			and base_org_code=#{baseOrgCode}
+		</if>
+		<if test="dptType != null and dptType!= ''">
+			and dpt_type=#{dptType}
+		</if>
+		<if test="dotType != null and dotType!= ''">
+			and dot_type=#{dotType}
+		</if>
+	</where>
+	</select>
+	<select id="findByMobilephone" parameterType="java.lang.String" resultType="cn.uce.suc.common.entity.Mobileuser">
+	select 
+		sm.* 
+	from 
+		t_suc_app_mobileUser sm
+	where 
+		mobilePhone = #{mobilephone}
+	
+	</select>
+	<select id="findMobileUser" parameterType="cn.uce.suc.common.entity.Mobileuser" resultType="Long">
+	SELECT
+			count(1)
+	from 
+		t_suc_app_mobileUser sm
+	where 
+		sm.mobilePhone = #{mobilephone}
+	<if test="dotType != null">
+		and sm.dot_type = #{dotType}
+	</if>
+	<if test="dptType != null">
+		and sm.dpt_type = #{dptType}
+	</if>
+	</select>
+	
+	<!--根据网点编码 已认证的  批量查询网点手机号-->
+	<select id="findPhoneByBaseOrgCode" parameterType="java.util.List" resultType="cn.uce.suc.common.entity.Mobileuser">
+		select
+			mobilePhone,base_org_code
+	  	from t_suc_app_mobileUser
+ 	 	where del_flag=0 and dot_type =1 and certifi_flag =1 and base_org_code  in
+ 	 	<if test="siteCodes != null">
+	 		<foreach collection="siteCodes" index="index" item="obj" separator="," open="(" close=")">
+	     		 #{obj}
+	  		</foreach>
+ 	 	</if>
+	</select>
+	
+	<!--根据条件 mobile和用户类型 查询 mobileuser 以及所属分拨中-->
+	<select id="findByUserMobilephone" parameterType="cn.uce.suc.common.vo.MobileuserVo" resultType="cn.uce.suc.common.vo.MobileuserVo">
+	select 
+		t.id,t.mobilePhone,t.password,t.base_org_code,t.org_name,t.certifi_flag,
+			t.Id_card,t.dot_Type,t.dpt_Type,
+			t.tokenId,t.user_name,t.utf1,
+			t.utf2,t.utf3,t.version,
+			t.del_flag,t.create_emp,t.create_time,
+			t.create_org,t.update_emp,t.update_time,
+			t.update_org, a.operate_center_code
+	from 
+		t_suc_app_mobileUser t
+		left outer join omg_cms_org a on t.base_org_code =a.BASE_ORG_CODE
+	<where>
+		t.del_flag=0 and 
+		t.mobilePhone = #{mobilephone} 
+		<if test="dotType != null">
+			and t.dot_type = #{dotType}
+		</if>
+		<if test="dptType != null">
+			and t.dpt_type = #{dptType}
+		</if>
+	</where>
+	
+	</select>
+	<!-- 登陆方法 -->
+		<select id="appLogin" parameterType="cn.uce.suc.common.entity.LoginEntity"
+	resultType="cn.uce.suc.common.vo.MobileuserVo">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		t_suc_app_mobileuser smb
+		where 
+		<if test="mobilePhone != null">
+		and smb.mobilePhone =#{mobilePhone}
+		</if>
+		<if test="password != null ">
+		and smb.password = #{password}
+		</if>
+		<if test="1==1">
+		and smb.del_flag = 0
+		</if>
+		<if test="dotType != null">
+			and sm.dot_type = #{dotType}
+		</if>
+		<if test="dptType != null">
+			and sm.dpt_type = #{dptType}
+		</if>
+</select>
+
+	<!-- 组合查询 -->
+	<select id="findByCondition" parameterType="cn.uce.suc.common.vo.MobileuserVo" resultType="cn.uce.suc.common.vo.MobileuserVo">
+	select <include refid="Base_Column_List" /> from t_suc_app_mobileUser <include refid="Base_Column_Where" />
+	</select>
+	<!-- 查看手机号是否注册 -->
+	<select id="findCountByMobilephone" parameterType="String" resultType="Integer">
+		select count(*) from t_suc_app_mobileUser
+		where mobilePhone = #{mobilephone} and  dpt_type = 1
+	</select>
+	
+	
+	<!-- 通过手机号和用户类型 校验用户是否唯一-->
+	<select id="checkExistsByMobileAndUserType" parameterType="cn.uce.suc.common.vo.MobileuserVo" resultType="cn.uce.suc.common.vo.MobileuserVo">
+		select <include refid="Base_Column_List" />
+		from t_suc_app_mobileUser
+		<where>
+			1=1
+			and mobilePhone=#{mobilephone}
+			<choose>
+			<when test="dptType !=null and dptType !=''">
+				and dpt_type=1
+			</when>
+			<when test="dotType !=null and dptType !=''">
+				and dot_type=1
+			</when>
+		</choose>
+		</where>
+		
+		
+	</select>
+</mapper>

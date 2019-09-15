@@ -1,0 +1,127 @@
+package cn.uce.suc.bkg.biz.datamain;
+
+import java.util.List;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.entity.datamain.CarManage;
+import cn.uce.suc.bkg.entity.datamain.CarManager;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+
+/**
+ * @Description: 车辆信息表BIZ接口类
+ * @author UCE-CodeGenerator
+ * @date 2017年10月25日 下午05:08:33
+ */
+public interface ICarManageBiz {
+	
+	/**
+	 * @Description: 新增车辆信息表
+	 * @param carManage
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月25日 下午05:08:33
+	 */
+	public int addCarManage(CarManage carManage);
+	
+	/**
+	 * @Description: 修改车辆信息表
+	 * @param carManage 车辆信息表
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月25日 下午05:08:33
+	 */
+	public int updateCarManage(CarManage carManage);
+	
+	/**
+	 * @Description: 删除车辆信息表
+	 * @param id 主键
+	 * @return 受影响行数
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月25日 下午05:08:33
+	 */
+	public int deleteCarManage(Long id);
+	
+	/**
+	 * @Description: 根据ID查询车辆信息表
+	 * @param id 主键
+	 * @return 车辆信息表
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月25日 下午05:08:33
+	 */
+	public CarManage findById(Long id);
+	
+	/**
+	 * @Description: 分页查询车辆信息表
+	 * @param carManageVo 车辆信息表
+	 * @param page 分页参数
+	 * @return 车辆信息表
+	 * @author UCE-CodeGenerator
+	 * @date 2017年10月25日 下午05:08:33
+	 */
+	public Pagination<CarManage> findByPagination(CarManageVo carManageVo, Page page);
+	/**
+	 * 
+	 * @Description: 查询所有车辆信息
+	 * @return
+	 * @author zhandesheng
+	 * @date 2017年10月27日 上午11:44:37
+	 */
+	public List<CarManager> findCarManage();
+	/**
+	 * 
+	 * @Description: 根据条件查询车辆信息
+	 * @param carManageVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月25日 下午6:20:27
+	 */
+	public Pagination<CarManage> findByCondition(CarManageVo carManageVo, Page page);
+	/**
+	 * 
+	 * @Description: 查询一个月到期和已经到期车辆
+	 * @param carManageVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月25日 下午9:49:41
+	 */
+	public Pagination<CarManage> findByInsurance(CarManageVo carManageVo, Page page);
+	/**
+	 * 
+	 * @Description: 不分页查询用于导出
+	 * @param carManageVo
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年10月25日 下午10:16:29
+	 */
+	public List<CarManageVo> findByExport(CarManageVo carManageVo);
+	/**
+	 * 
+	 * @Description: 车辆下拉公共控件
+	 * @param carManageVo
+	 * @param page
+	 * @return
+	 * @author zhangqiang
+	 * @date 2017年11月2日 下午1:44:55
+	 */
+	public Pagination<CarManage> findCarByCmbgd(CarManageVo carManageVo, Page page);
+	/**
+	 * @Description: 根据编号和司机等查询车辆
+	 * @param carManageVo
+	 * @return CarManageVo
+	 * @author yanglei
+	 * @date 2017年11月19日 下午05:05:42
+	 */
+	public List<CarManageVo> findByVo(CarManageVo carManageVo);
+	
+	/**
+	 * @Description: 根据车牌号查询是否存在 
+	 * @param plateNumber
+	 * @return
+	 * @author xiesonglin
+	 * @date 2017年12月26日 下午12:22:53
+	 */
+	public CarManageVo checkeExistsByPlateNumber(CarManageVo carManageVo);
+}

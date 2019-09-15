@@ -1,0 +1,71 @@
+package cn.uce.suc.bkg.control.operation;
+
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanBiz;
+import cn.uce.suc.bkg.biz.impl.operation.DirvingPlanDetailBiz;
+import cn.uce.suc.bkg.entity.operation.DirvingPlan;
+import cn.uce.suc.bkg.entity.operation.DirvingPlanDetail;
+import cn.uce.web.common.base.BaseController;
+/**
+ * 
+ * @Description: 发车计划异常处理--调整各个状态 
+ * @author liwei
+ * @date 2017年11月16日 下午1:37:10
+ */
+@Controller
+@RequestMapping("/planExce")
+public class DriverPlanExcepProcessController  extends BaseController{
+	
+/**
+ * 发车计划
+ */
+	@Resource
+	DirvingPlanBiz dirvingPlanBiz;
+	/**
+	 * 发车计划详情
+	 */
+	@Resource
+	DirvingPlanDetailBiz dirvingPlanDetailBiz; 
+	/**
+	 * 进入发车计划页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/forward")
+	public String forward(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/planExcepProcess";
+	}
+	/**
+	 * 进入发车计划页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/updatePlan")
+	@ResponseBody
+	public Map<String, Object> updatePlan(DirvingPlan dirvingPlan) {
+		dirvingPlanBiz.updateDirvingPlan(dirvingPlan);
+		return returnSuccess("common.update.success");
+	}
+	/**
+	 * 进入发车计划页面
+	 * @param request
+	 * @param response
+	 * @return
+	 */
+	@RequestMapping(value = "/updatePlanDetail")
+	public  Map<String, Object> updatePlanDetail(DirvingPlanDetail dirvingPlanDetail) {
+		dirvingPlanDetailBiz.updateByid(dirvingPlanDetail);
+		return returnSuccess("common.update.success");
+	}
+}

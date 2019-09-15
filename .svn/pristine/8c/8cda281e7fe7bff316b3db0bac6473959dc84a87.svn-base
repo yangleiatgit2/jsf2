@@ -1,0 +1,294 @@
+package cn.uce.suc.bkg.control.datamain;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import cn.uce.base.page.Page;
+import cn.uce.base.page.Pagination;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderBiz;
+import cn.uce.suc.bkg.biz.operation.IFreightOrderCombineBiz;
+import cn.uce.suc.bkg.biz.operation.ILineGroupBiz;
+import cn.uce.suc.bkg.vo.datamain.CarManageVo;
+import cn.uce.suc.bkg.vo.operation.CarVolumeVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderCombineVo;
+import cn.uce.suc.bkg.vo.operation.FreightOrderVo;
+import cn.uce.suc.bkg.vo.operation.LineGroupVo;
+import cn.uce.suc.common.biz.IOmgCmsOrgBiz;
+import cn.uce.suc.common.constants.BkgConstants;
+import cn.uce.suc.common.vo.OmgCmsOrgVo;
+import cn.uce.web.common.base.BaseController;
+/**
+ * 
+ * @Description: 运力需求查询控制器
+ * @author yanglei
+ * @date 2017年11月8日 上午10:09:27
+ */
+@Controller
+@RequestMapping("/capacityDemandRequired")
+public class CapacityDemandRequiredController extends BaseController{
+	
+	/**
+	 * 注入ICapacityGapManagementBiz对象
+	 */
+	@Resource
+	private ILineGroupBiz lineGroupBiz;  //班次biz
+	@Resource
+	private IOmgCmsOrgBiz omgCmsOrgBiz; //乾坤机构 biz
+	@Resource
+	private  IFreightOrderBiz freightOrderBiz; //订单 biz
+	@Resource
+	private  IFreightOrderCombineBiz  freightOrderCombineBiz; //订单组合biz
+	
+	private  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	
+	@RequestMapping(value = "/forward")
+	public String get(HttpServletRequest request, HttpServletResponse response) {
+		return "bkg/capacityDemandRequired";
+	}
+	
+	@RequestMapping(value = "/findBycondition")
+	@ResponseBody
+	public Map<String, Object> findByCondition(LineGroupVo lineGroupVo, Page page) {
+		Integer requiType=lineGroupVo.getRequiType();
+		if(requiType==null){
+			requiType=0;
+		}
+		int count=getOrderCombineVoCount(lineGroupVo.getOrderCombinCode(),lineGroupVo.getStartOrgCode(),requiType,lineGroupVo.getBusinessMode());
+		List<FreightOrderCombineVo> orderCombineList = getOrderCombineVo(lineGroupVo.getOrderCombinCode(),lineGroupVo.getStartOrgCode(),requiType,lineGroupVo.getBusinessMode(),page);
+		List<CarVolumeVo> list= new ArrayList<CarVolumeVo>();
+		if(CollectionUtils.isNotEmpty(orderCombineList)){
+			for(FreightOrderCombineVo orderCombine:orderCombineList){
+				FreightOrderVo freightOrderVo=new FreightOrderVo();
+				freightOrderVo.setOrderCombinCode(orderCombine.getOrderCombineCode());
+			    List<FreightOrderVo> orderList=freightOrderBiz.findByOderNoTimeDesc(freightOrderVo);
+				String timeSection="";
+			    // 得到时间最早时间和最晚时间
+			    if(CollectionUtils.isNotEmpty(orderList)){
+			    	FreightOrderVo early=orderList.get(orderList.size()-1);
+				    FreightOrderVo lasted=orderList.get(0);
+				    Date earLyTime= early.getExecuteStartTime();
+				    Date lastTime= lasted.getExecuteStartTime();
+				    if(earLyTime!=null&&lastTime!=null){
+				    	 timeSection=sdf.format(earLyTime)+" ~ " +sdf.format(lastTime) ;
+				    }else if(earLyTime!=null){
+				    	 timeSection=sdf.format(earLyTime);
+				    }else if(lastTime!=null){
+				    	timeSection=sdf.format(lastTime);
+				    }
+			    }
+				String  orderCombinCode = orderCombine.getOrderCombineCode();
+				int fourDotTwoExpected = 0,sixDotEightExpected = 0,sevenDotSixExpected = 0,nineDotSixExpected = 0;
+				if(StringUtils.isNotBlank(orderCombinCode)){
+					//查询班次表获得对某种车型的数量需求
+					fourDotTwoExpected =getExpectedNum(orderCombinCode,"1");// 4.2型号车辆需求
+					sixDotEightExpected=getExpectedNum(orderCombinCode,"2");// 6.5型号车辆需求
+					sevenDotSixExpected=getExpectedNum(orderCombinCode,"3");// 7.6型号车辆需求
+					nineDotSixExpected=getExpectedNum(orderCombinCode,"4");// 9.6型号车辆需求
+				}
+				
+				CarVolumeVo carVolumeVo =new CarVolumeVo();
+				carVolumeVo.setTimeSection(timeSection);
+				carVolumeVo.setFourDotTwoExpected(fourDotTwoExpected);
+				carVolumeVo.setSixDotEightExpected(sixDotEightExpected);
+				carVolumeVo.setSevenDotSixExpected(sevenDotSixExpected);
+				carVolumeVo.setNineDotSixExpected(nineDotSixExpected);
+				String operatioinCenterCode=orderCombine.getOperStationCode();
+				if(StringUtils.isNoneBlank(operatioinCenterCode)){
+					OmgCmsOrgVo orgvo=omgCmsOrgBiz.findByBaseOrgCode(operatioinCenterCode);
+					if(orgvo!=null){
+						carVolumeVo.setDemandSite(orgvo.getOrgName());
+						carVolumeVo.setDemandSiteCode(orgvo.getBaseOrgCode());
+					}	
+				}
+				carVolumeVo.setBusinessMode(orderCombine.getBusinessMode());
+				carVolumeVo.setResource(orderCombine.getOrderCombineType());
+				carVolumeVo.setOrderCombinCode(orderCombine.getOrderCombineCode());
+				list.add(carVolumeVo);
+			}
+		}
+		Pagination<CarVolumeVo> pagination = new Pagination();
+		page.setTotal(count);
+		pagination.setPage(page);
+		pagination.setData(list);
+		return returnSuccess(pagination);	
+	}
+	
+	private List<FreightOrderCombineVo> getOrderCombineVo(String orderCombineCode,String demandSiteCode,int requiType, String businessMode, Page page){
+		FreightOrderCombineVo searchCombine = new FreightOrderCombineVo();
+		if(1==requiType){
+			searchCombine.setOrderCombineTypes(new String []{"1","01"});
+		}
+		if(2==requiType){
+			searchCombine.setOrderCombineTypes(new String []{"2","02"});
+		}
+		String[] orderCombineStatuses=new String[]{BkgConstants.ORDER_COMBINE_STATUS_CREATE};
+		//searchCombine.setOrderCombineStatus(BkgConstants.ORDER_COMBINE_STATUS_CREATE);
+		searchCombine.setOrderCombineStatuses(orderCombineStatuses);
+		
+		if(StringUtils.isNoneBlank(demandSiteCode)){
+			searchCombine.setOperStationCode(demandSiteCode);
+		}
+		if(StringUtils.isNoneBlank(businessMode)){
+			searchCombine.setBusinessMode(businessMode);
+		}
+		if(StringUtils.isNoneBlank(orderCombineCode)){
+			searchCombine.setOrderCombineCode(orderCombineCode);
+		}
+		List<FreightOrderCombineVo> orderCombines = freightOrderCombineBiz.findByConditionMultiCombineType(searchCombine, page);
+		return orderCombines;
+	}
+	/**
+	 * @Description: 根据分拨编号和业务类型，业务模式等查询订单组合的数量
+	 * @param demandSiteCode  
+	 * @param  orderCombineType
+	 * @param  businessMode
+	 * @return count
+	 * @author yanglei
+	 * @date 2017年11月19日 下午03:24:55
+	 */
+	private int getOrderCombineVoCount(String orderCombineCode,String demandSiteCode,int requiType, String businessMode){
+		FreightOrderCombineVo searchCombine = new FreightOrderCombineVo();
+		if(1==requiType){
+			searchCombine.setOrderCombineTypes(new String []{"1","01"});
+		}
+		if(2==requiType){
+			searchCombine.setOrderCombineTypes(new String []{"2","02"});
+		}
+		searchCombine.setOrderCombineStatus(BkgConstants.ORDER_COMBINE_STATUS_CREATE);
+		if(StringUtils.isNoneBlank(demandSiteCode)){
+			searchCombine.setOperStationCode(demandSiteCode);
+		}
+		if(StringUtils.isNoneBlank(businessMode)){
+			searchCombine.setBusinessMode(businessMode);
+		}
+		if(StringUtils.isNoneBlank(orderCombineCode)){
+			searchCombine.setOrderCombineCode(orderCombineCode);
+		}
+		int count= freightOrderCombineBiz.getOrderCombineVoCount(searchCombine);
+		return count;
+	}
+	/**
+	 * 
+	 * @Description: 根据传入的订单组合编号，卡车类型，获取班次所需的该类型卡车数量，运力池中该型号卡车的数量以及运力缺口
+	 * @param 
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月9日 下午7:23:21
+	 */
+	private int  getExpectedNum(String orderCombinCode, String carType){
+		LineGroupVo vo=new LineGroupVo();
+		//vo.setChargeStartTime(startDate);//用来跟页面上的日期时间做比较做赛选
+		vo.setOrderCombinCode(orderCombinCode);
+		vo.setCarType(carType);
+		int expected=lineGroupBiz.countByLineGroupVo(vo); // 需求
+		return expected;
+	}
+	
+	@RequestMapping(value = "/openCapacityGapByDay")
+	@ResponseBody
+	public Map<String, Object>  openCapacityGapByDay(String  demandSiteCode,String demandSite,String timeSection) {
+		  String stringDates []=timeSection.split("~");
+		  Date startDate=new Date();
+		  Date endDate=new Date();
+		try {
+			startDate = sdf.parse(stringDates[0].substring(0, stringDates[0].length()-1));
+			endDate=sdf.parse(stringDates[1].substring(1));
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			LineGroupVo vo =new LineGroupVo();
+			CarManageVo carManageVo =new CarManageVo();
+			carManageVo.setCapacityStartTime(startDate);
+			carManageVo.setCapacityEndTime(endDate);
+			carManageVo.setUsableFlag("1");
+			vo.setOrderCombinCode(demandSiteCode);
+			
+			vo.setCarType("4.2");
+			int fourDotTwoExpected=lineGroupBiz.countByLineGroupVo(vo); // 需求
+			carManageVo.setCarType("4.2");
+			
+			vo.setCarType("6.5");
+			int sixDotEightExpected=lineGroupBiz.countByLineGroupVo(vo); // 需求
+			carManageVo.setCarType("6.5");
+			
+			vo.setCarType("7.6");
+			int sevenDotSixExpected=lineGroupBiz.countByLineGroupVo(vo); // 需求
+			carManageVo.setCarType("7.6");
+			
+			vo.setCarType("9.6");
+			int nineDotSixExpected=lineGroupBiz.countByLineGroupVo(vo); // 需求
+			carManageVo.setCarType("9.6");
+			
+			CarVolumeVo carVolumeVo=new CarVolumeVo();
+			carVolumeVo.setTimeSection(sdf.format(startDate));
+			carVolumeVo.setRequiCombinCode("xuqiu bianma ");
+			carVolumeVo.setAdjustType("yunshu xuqiu bianhao");
+			carVolumeVo.setFourDotTwoExpected(fourDotTwoExpected);
+			carVolumeVo.setSixDotEightExpected(sixDotEightExpected);
+			carVolumeVo.setSevenDotSixExpected(sevenDotSixExpected);
+			carVolumeVo.setNineDotSixExpected(nineDotSixExpected);
+			carVolumeVo.setDemandSite(demandSite);
+			carVolumeVo.setDemandSiteCode(demandSiteCode);
+			carVolumeVo.setBusinessMode("进港");
+			carVolumeVo.setCarType("长期需求");
+			List<CarVolumeVo> list1= new ArrayList<CarVolumeVo>();
+			list1.add(carVolumeVo);
+			Pagination<CarVolumeVo> pagination = new Pagination();
+			Page page1=new Page();
+			page1.setTotal(list1.size());
+			page1.setCurrentPage(0);
+			pagination.setPage(page1);
+			pagination.setData(list1);
+			return returnSuccess(pagination);
+	}
+	
+	/**
+	 * 
+	 * @Description: 获取当前月的第一天和最后一天
+	 * @param 
+	 * @return
+	 * @author yanglei
+	 * @date 2017年11月13日 下午7:23:21
+	 */
+	private Date [] getDateSection(){
+		//获取当前月第一天：
+        Calendar c = Calendar.getInstance();    
+        c.add(Calendar.MONTH, 0);
+        c.set(Calendar.DAY_OF_MONTH,1);//设置为1号,当前日期既为本月第一天 
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        Date first=c.getTime();
+        String first1 = sdf.format(c.getTime());
+         
+      //获取当前月最后一天
+        Calendar ca = Calendar.getInstance();    
+        ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));  
+        ca.set(Calendar.HOUR_OF_DAY, 23);
+        ca.set(Calendar.MINUTE, 59);
+        ca.set(Calendar.SECOND, 59);
+        String last = sdf.format(ca.getTime());
+        Date last1=ca.getTime();
+        Date [] dateSection=new Date[2];
+        dateSection[0]=first;
+        dateSection[1]=last1;
+        System.out.println(first1+" , "+last);
+        return dateSection;
+	}
+}
