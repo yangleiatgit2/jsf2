@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.jeesite.test.InitFilemanagerData
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.893 sec - in com.jeesite.test.InitFilemanagerData
